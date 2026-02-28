@@ -1,14 +1,35 @@
 export class RedisKey {
-  private static prefix: string = process.env.REDIS_KEY_PREFIX || 'app';
+  private static readonly prefix: string = process.env.REDIS_KEY_PREFIX?.trim() || 'app';
 
-  /** Builds a Redis key with the format: {prefix}:{resource}:{...parts} */
-  static build(resource: string, ...parts: string[]): string {
-    const cleanParts = parts.filter(Boolean).map(p => p.toString().trim());
-    return `${RedisKey.prefix}:${resource}:${cleanParts.join(':')}`;
+  /**
+   * Builds a Redis key with the format: {prefix}:{resource}:{part1}:{part2}:...
+   * If no meaningful parts are provided, returns the pattern {prefix}:{resource}:*
+   *
+   * @example
+   * RedisKey.build('users')           → "app:users:*"
+   * RedisKey.build('users', '123')    → "app:users:123"
+   * RedisKey.build('users', '')       → "app:users:*"   (empty after trim)
+   */
+  static build(resource: string, ...parts: (string | undefined | number)[]): string {
+    const cleanParts = parts
+      .filter(p => p !== undefined && p !== null)
+      .map(p => p.toString().trim())
+      .filter(Boolean);
+
+    const base: string = `${this.prefix}:${resource}`;
+
+    return cleanParts.length === 0
+      ? `${base}:*`
+      : `${base}:${cleanParts.join(':')}`;
   }
 
-  /** Builds users key or pattern (e.g. app:users:123 or app:users:*) */
+  /** Builds users key or pattern
+   * @example
+   * RedisKey.users()        → "app:users:*"
+   * RedisKey.users("123")   → "app:users:123"
+   * RedisKey.users("123", " ")   → "app:users:123"
+   */
   static users(id?: string): string {
-    return RedisKey.build("users", id || "*");
+    return this.build("users", id);
   }
 }
