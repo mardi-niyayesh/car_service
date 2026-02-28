@@ -2,6 +2,8 @@ import * as Modules from "./modules";
 import {throttlerConfig} from "@/lib";
 import {APP_GUARD} from "@nestjs/core";
 import {ScheduleModule} from "@nestjs/schedule";
+import {CacheModule} from "@nestjs/cache-manager";
+import {redisStore} from "cache-manager-ioredis-yet";
 import {EventEmitterModule} from "@nestjs/event-emitter";
 import {ThrottlerModule, ThrottlerGuard} from "@nestjs/throttler";
 import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
@@ -11,6 +13,18 @@ import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware} from "./common"
   imports: [
     // Throttler Module -Rate Limits
     ThrottlerModule.forRoot(throttlerConfig),
+
+    // Cache Manager
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: async () => ({
+        store: await redisStore({
+          host: '127.0.0.1',
+          port: process.env.REDIS_PORT!,
+          ttl: 1000 * 60 // 1 minutes
+        })
+      })
+    }),
 
     // Event Emitter -Events
     EventEmitterModule.forRoot(),
