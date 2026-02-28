@@ -5,3 +5,4 @@ export * from "./common";
 export * from "./normalize-client-info";
 export * from "./date";
 export * from "./buildEmailHtml";
+export * from "./redis";
