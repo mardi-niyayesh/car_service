@@ -1,4 +1,4 @@
-import imgQuestion from "../../../../assets/questin.png";
+//components
 import BoxComponentQuestion from "./BoxComponentQuestion";
 
 const ItemComponentQuestion = [
@@ -43,7 +43,7 @@ const ComponentQuestion = () => {
             );
           })}
         </div>
-        <img src={imgQuestion} alt="img Question" />
+   
       </div>
     </>
   );
