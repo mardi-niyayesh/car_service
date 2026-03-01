@@ -1,5 +1,7 @@
+//hooks
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
+//components
 import Logo from "./Components/Logo";
 import DesktopMenu from "./Components/DesktopMenu";
 import MobileMenu from "./Components/MobileMenu";
@@ -14,12 +16,24 @@ const HeaderBar = () => {
 
   const getPageTitle = () => {
     switch (location.pathname) {
-      case "/": return "صفحه اصلی";
-      case "/about": return "درباره ما";
-      case "/contact": return "تماس با ما";
-      case "/roles": return "قوانین و مقررات";
-      case "/questionPage": return "سوالات متدوال";
-      default: return "اتورنت";
+      case "/":
+        return "صفحه اصلی";
+      case "/about":
+        return "درباره ما";
+      case "/contact":
+        return "تماس با ما";
+      case "/roles":
+        return "قوانین و مقررات";
+      case "/questionPage":
+        return "سوالات متدوال";
+      case "/register":
+        return " ثبت نام";
+      case "/login":
+        return "  ورود";
+           case "/forgot-password":
+        return " فراموشی رمز عبور";
+      default:
+        return "اتورنت";
     }
   };
 
@@ -49,9 +63,15 @@ const HeaderBar = () => {
               className="flex flex-col justify-center items-center w-10 h-10 rounded-lg hover:bg-gray-100 transition-colors"
               aria-label="منو"
             >
-              <span className={`bg-[#194BF0] h-1 w-6 rounded-full transition-all duration-300 ${isMenuOpen ? "rotate-45 translate-y-2" : ""}`} />
-              <span className={`bg-[#194BF0] h-1 w-6 rounded-full my-1 transition-all duration-300 ${isMenuOpen ? "opacity-0" : "opacity-100"}`} />
-              <span className={`bg-[#194BF0] h-1 w-6 rounded-full transition-all duration-300 ${isMenuOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+              <span
+                className={`bg-[#194BF0] h-1 w-6 rounded-full transition-all duration-300 ${isMenuOpen ? "rotate-45 translate-y-2" : ""}`}
+              />
+              <span
+                className={`bg-[#194BF0] h-1 w-6 rounded-full my-1 transition-all duration-300 ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
+              />
+              <span
+                className={`bg-[#194BF0] h-1 w-6 rounded-full transition-all duration-300 ${isMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}
+              />
             </button>
           </div>
         </div>
