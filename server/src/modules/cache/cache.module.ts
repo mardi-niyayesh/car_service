@@ -1,5 +1,6 @@
 import {ONE_MINUTE_MS} from "@/lib";
 import {Module} from "@nestjs/common";
+import {CacheService} from "./cache.service";
 import {redisStore} from "cache-manager-ioredis-yet";
 import {CacheModule as RedisCache} from "@nestjs/cache-manager";
 
@@ -10,11 +11,13 @@ import {CacheModule as RedisCache} from "@nestjs/cache-manager";
       useFactory: async () => ({
         store: await redisStore({
           host: '127.0.0.1',
-          port: process.env.REDIS_PORT!,
+          port: Number(process.env.REDIS_PORT!),
           ttl: ONE_MINUTE_MS * 5 // 5 minutes
         })
       })
     }),
-  ]
+  ],
+  providers: [CacheService],
+  exports: [CacheService],
 })
 export class CacheModule {}
