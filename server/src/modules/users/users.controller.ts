@@ -87,7 +87,7 @@ export class UsersController {
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse("users/profile")})
   getProfile(
     @Req() req: AccessRequest
-  ) {
+  ): Promise<ApiResponse<UserResponse>> {
     return this.usersService.findOne(req.user.userId);
   }
 
@@ -135,6 +135,27 @@ export class UsersController {
     @Param(new ZodPipe(UUID4Schema)) params: UUID4Type,
   ): Promise<ApiResponse<UserResponse>> {
     return this.usersService.findOne(params.id);
+  }
+
+  @Permission({
+    permissions: [PERMISSIONS.USER_VIEW]
+  })
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  @CacheKey(c => paramCacheKey({
+    paramKey: null,
+    ctx: c,
+    resource: "users",
+    self: false,
+  }))
+  @ApiOperation({
+    summary: 'get all users info',
+    description: 'get all users info. **Access restricted to users with permission: (owner or user.view) only.**',
+    operationId: 'get_users',
+    tags: ["User"],
+  })
+  findAll(): string {
+    return "test";
   }
 
   /**
