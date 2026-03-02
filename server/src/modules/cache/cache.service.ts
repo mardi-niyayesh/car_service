@@ -9,8 +9,8 @@ export class CacheService {
     return await this.cache.get(key);
   }
 
-  async set<T>(key: string, value: T, ttl?: number): Promise<void> {
-    await this.cache.set(key, value, ttl);
+  async set<T>(key: string, value: T, ttl?: number): Promise<T> {
+    return await this.cache.set(key, value, ttl);
   }
 
   async del(key: string): Promise<void> {
