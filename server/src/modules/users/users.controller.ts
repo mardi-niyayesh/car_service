@@ -69,8 +69,8 @@ export class UsersController {
   })
   @Get("profile")
   @HttpCode(HttpStatus.OK)
-  @CacheKey(c => paramCacheKey(c, "id", "users"))
-  @CacheTTL(ONE_MINUTE_MS * 10)
+  @CacheKey(c => paramCacheKey(c, null, "users"))
+  @CacheTTL(ONE_MINUTE_MS * 121)
   @ApiOperation({
     summary: 'get user info by self',
     description: 'get user info accessToken. **Access restricted to users with role: (self) only.**',
@@ -94,6 +94,8 @@ export class UsersController {
   })
   @Get(":id")
   @HttpCode(HttpStatus.OK)
+  @CacheKey(c => paramCacheKey(c, "id", "users"))
+  @CacheTTL(ONE_MINUTE_MS * 121)
   @ApiOperation({
     summary: 'get user info',
     description: 'get user info with id. **Access restricted to users with permission: (owner or user.view) only.**',
@@ -121,6 +123,7 @@ export class UsersController {
   findOne(
     @Param(new ZodPipe(UUID4Schema)) params: UUID4Type,
   ): Promise<ApiResponse<UserResponse>> {
+    console.log("test");
     return this.usersService.findOne(params.id);
   }
 

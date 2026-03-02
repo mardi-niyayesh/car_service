@@ -1,4 +1,4 @@
-import type {Request} from "express";
+import type {AccessRequest} from "@/types";
 import {ExecutionContext} from "@nestjs/common";
 
 export class RedisKey {
@@ -37,8 +37,10 @@ export class RedisKey {
   }
 }
 
-export function paramCacheKey(ctx: ExecutionContext, paramKey: string, resource: string) {
-  const req = ctx.switchToHttp().getRequest<Request>();
+export function paramCacheKey(ctx: ExecutionContext, paramKey: string | null, resource: string) {
+  const req = ctx.switchToHttp().getRequest<AccessRequest>();
+
+  if (paramKey === null) return RedisKey.build(resource, req.user.userId);
 
   const rawParam: string | string[] = req.params[paramKey];
 
