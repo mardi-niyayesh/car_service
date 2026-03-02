@@ -69,7 +69,11 @@ export class UsersController {
   })
   @Get("profile")
   @HttpCode(HttpStatus.OK)
-  @CacheKey(c => paramCacheKey(c, null, "users"))
+  @CacheKey(c => paramCacheKey({
+    resource: "users",
+    self: true,
+    ctx: c,
+  }))
   @CacheTTL(ONE_MINUTE_MS * 121)
   @ApiOperation({
     summary: 'get user info by self',
@@ -94,7 +98,11 @@ export class UsersController {
   })
   @Get(":id")
   @HttpCode(HttpStatus.OK)
-  @CacheKey(c => paramCacheKey(c, "id", "users"))
+  @CacheKey(c => paramCacheKey({
+    paramKey: "id",
+    ctx: c,
+    resource: "users"
+  }))
   @CacheTTL(ONE_MINUTE_MS * 121)
   @ApiOperation({
     summary: 'get user info',
