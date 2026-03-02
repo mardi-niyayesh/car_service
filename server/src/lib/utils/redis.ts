@@ -37,10 +37,21 @@ export class RedisKey {
   }
 }
 
-export function paramCacheKey(ctx: ExecutionContext, paramKey: string | null, resource: string) {
+interface ParamCacheKeyType {
+  ctx: ExecutionContext;
+  resource: string;
+  self: boolean;
+  paramKey: string | null;
+}
+
+export function paramCacheKey(params: ParamCacheKeyType) {
+  const {ctx, resource, self, paramKey} = params;
+
   const req = ctx.switchToHttp().getRequest<AccessRequest>();
 
-  if (paramKey === null) return RedisKey.build(resource, req.user.userId);
+  if (self) return RedisKey.build(resource, req.user.userId);
+
+  if (paramKey === null) return RedisKey.build(resource);
 
   const rawParam: string | string[] = req.params[paramKey];
 

@@ -3,6 +3,14 @@ import {SetMetadata} from "@nestjs/common";
 
 export const CACHE_EVICT_KEY = "CACHE_EVICT_KEY";
 
+interface CacheEvictDecoratorTypeBase {
+  resource: string;
+}
+
+interface CacheEvictDecoratorTypeWithParam extends CacheEvictDecoratorTypeBase {
+  param: string;
+}
+
 /** Build Key Cache for Delete
  * @example
  - @CacheEvict("users", "id")
