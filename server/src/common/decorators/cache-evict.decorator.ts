@@ -3,7 +3,7 @@ import {type ParamCacheKeyType} from "@/lib";
 
 export const CACHE_EVICT_KEY = "CACHE_EVICT_KEY";
 
-export type CacheEvictDecoratorType = Omit<ParamCacheKeyType, "ctx">;
+export type CacheEvictDecoratorType = Omit<ParamCacheKeyType, "ctx">[];
 
 /** Build Key Cache for Delete
  * @example

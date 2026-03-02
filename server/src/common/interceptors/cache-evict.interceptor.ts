@@ -22,10 +22,11 @@ export class CacheEvictInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap(() => {
-        const {self, paramKey, resource} = cacheParams;
-        const key: string = paramCacheKey({ctx, self, paramKey, resource});
+        const keys: string[] = cacheParams.map(k => paramCacheKey({
+          ctx, self: k.self, paramKey: k.paramKey, resource: k.resource
+        }));
 
-        this.cache.del(key).then(() => {}).catch(() => console.error(`Internal Server Error in: ${CacheEvictInterceptor.name}`, key));
+        this.cache.delMany(keys).then(() => {}).catch(() => console.error(`Internal Server Error in: ${CacheEvictInterceptor.name}`, keys));
       })
     );
   }

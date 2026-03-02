@@ -59,6 +59,8 @@ import type {AccessRequest, ApiResponse, UserResponse} from "@/types";
 @Controller('users')
 @ApiBearerAuth("accessToken")
 export class UsersController {
+  private static resource = "users";
+
   constructor(private readonly usersService: UsersService) {}
 
   /**
@@ -175,11 +177,10 @@ export class UsersController {
   })
   @Post(":id/roles")
   @HttpCode(HttpStatus.OK)
-  @CacheEvict({
-    self: false,
-    paramKey: "id",
-    resource: "users",
-  })
+  @CacheEvict([
+    {self: false, paramKey: "id", resource: UsersController.resource},
+    {self: false, paramKey: null, resource: UsersController.resource}
+  ])
   @ApiOperation({
     summary: 'Assign roles to a user',
     description: `
@@ -241,11 +242,10 @@ export class UsersController {
   })
   @Delete(":id/roles")
   @HttpCode(HttpStatus.OK)
-  @CacheEvict({
-    self: false,
-    paramKey: "id",
-    resource: "users",
-  })
+  @CacheEvict([
+    {self: false, paramKey: "id", resource: UsersController.resource},
+    {self: false, paramKey: null, resource: UsersController.resource}
+  ])
   @ApiOperation({
     summary: 'Revoke roles from a user',
     description: `

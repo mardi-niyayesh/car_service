@@ -16,4 +16,8 @@ export class CacheService {
   async del(key: string): Promise<void> {
     await this.cache.del(key);
   }
+
+  async delMany(keys: string[]): Promise<void> {
+    await this.cache.mdel(keys);
+  }
 }
