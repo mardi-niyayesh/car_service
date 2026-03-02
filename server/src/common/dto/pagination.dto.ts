@@ -3,9 +3,22 @@ import {ApiQueryOptions} from "@nestjs/swagger";
 
 /** Validate Pagination in Query Params */
 export const PaginationValidator = z.object({
-  page: z.number().min(1).optional().default(1),
-  limit: z.number().min(1).max(100).optional().default(10),
-  orderBy: z.enum(["asc", "desc"]).optional().default("desc"),
+  page: z
+    .string()
+    .optional()
+    .transform(Number)
+    .pipe(z.number().min(1))
+    .default(1),
+  limit: z
+    .string()
+    .optional()
+    .transform(Number)
+    .pipe(z.number().min(1).max(100))
+    .default(100),
+  orderBy: z
+    .enum(["asc", "desc"])
+    .optional()
+    .default("desc"),
 });
 
 /** @typeof Validate Pagination in Query Params */
@@ -31,16 +44,33 @@ export function paginationDto(params: PaginationDtoType): ApiQueryOptions {
     required,
     description,
     maximum,
-    minimum
+    minimum,
+    schema: {
+      type: "integer",
+      default: d,
+      maximum,
+      minimum
+    }
   };
 }
 
 export const pagePaginationDto: ApiQueryOptions = paginationDto({
-  type: "number", default: 1, name: "page", description: "current page", required: false, minimum: 1
+  type: "number",
+  default: 1,
+  name: "page",
+  description: "current page",
+  required: false,
+  minimum: 1
 });
 
 export const limitPaginationDto: ApiQueryOptions = paginationDto({
-  type: "number", default: 10, name: "limit", description: "limit of pages", required: false, minimum: 1, maximum: 100
+  type: "number",
+  default: 10,
+  name: "limit",
+  description: "limit of pages",
+  required: false,
+  minimum: 1,
+  maximum: 100
 });
 
 export const orderByPaginationDto: ApiQueryOptions = {

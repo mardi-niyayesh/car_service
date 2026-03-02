@@ -7,7 +7,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  Controller,
+  Controller, Query,
 } from '@nestjs/common';
 
 import {
@@ -18,9 +18,14 @@ import {
   Permission,
   UUID4Schema,
   type UUID4Type,
+  pagePaginationDto,
+  limitPaginationDto,
+  PaginationValidator,
   getForbiddenResponse,
+  orderByPaginationDto,
   getUnauthorizedResponse,
   getBadRequestUUIDParams,
+  type PaginationValidatorType,
 } from "@/common";
 
 import {
@@ -34,7 +39,7 @@ import {
   ApiNotFoundResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
-  ApiUnauthorizedResponse,
+  ApiUnauthorizedResponse, ApiQuery,
 } from "@nestjs/swagger";
 
 import * as UserDto from "./dto";
@@ -155,6 +160,9 @@ export class UsersController {
     operationId: 'get_users',
     tags: ["User"],
   })
+  @ApiQuery(pagePaginationDto)
+  @ApiQuery(limitPaginationDto)
+  @ApiQuery(orderByPaginationDto)
   @ApiUnauthorizedResponse({
     type: getUnauthorizedResponse("users"),
     description: 'Invalid or missing authentication token.'
@@ -163,7 +171,10 @@ export class UsersController {
     type: getForbiddenResponse("users"),
     description: 'when target user not access to get all users'
   })
-  async findAll(): Promise<ApiResponse<{ users: UserResponse[] }>> {
+  async findAll(
+    @Query(new ZodPipe(PaginationValidator)) query: PaginationValidatorType
+  ): Promise<ApiResponse<{ users: UserResponse[] }>> {
+    console.log(query);
     return this.usersService.findAll();
   }
 
