@@ -1,5 +1,5 @@
-import {SetMetadata} from "@nestjs/common";
 import {RedisKey} from "@/lib";
+import {SetMetadata} from "@nestjs/common";
 
 export const CACHE_EVICT_KEY = "CACHE_EVICT_KEY";
 
