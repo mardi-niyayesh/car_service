@@ -121,7 +121,6 @@ export class UsersController {
   findOne(
     @Param(new ZodPipe(UUID4Schema)) params: UUID4Type,
   ): Promise<ApiResponse<UserResponse>> {
-    console.log("test");
     return this.usersService.findOne(params.id);
   }
 
