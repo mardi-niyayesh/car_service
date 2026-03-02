@@ -158,6 +158,10 @@ export class UsersController {
     type: getUnauthorizedResponse("users"),
     description: 'Invalid or missing authentication token.'
   })
+  @ApiForbiddenResponse({
+    type: getForbiddenResponse("users"),
+    description: 'when target user not access to get all users'
+  })
   findAll(): string {
     return "test";
   }
