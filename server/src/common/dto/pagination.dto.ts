@@ -1,24 +1,5 @@
 import z from "zod";
-import {ApiParamOptions, ApiQueryOptions} from "@nestjs/swagger";
-
-/** validate for uuid4 in params */
-export const UUID4Schema = z.object({
-  id: z.uuidv4()
-}).overwrite(data => ({id: data.id.trim()}));
-
-/** type for validate uuidV4 in Params */
-export type UUID4Type = z.infer<typeof UUID4Schema>;
-
-/** Swagger Params UUIDv4 */
-export function UUID4Dto(name: string): ApiParamOptions {
-  return {
-    name: "id",
-    type: String,
-    description: `${name} UUID version 4`,
-    example: "d228cc19-b8c9-41c4-8c70-c2c6effb05ca",
-    required: true,
-  };
-}
+import {ApiQueryOptions} from "@nestjs/swagger";
 
 /** Validate Pagination in Query Params */
 export const PaginationValidator = z.object({
@@ -41,7 +22,6 @@ interface PaginationDtoType {
 /** @schema Validate Pagination in Query Params */
 export function paginationDto(params: PaginationDtoType): ApiQueryOptions {
   const {default: d, required, type, description, name} = params;
-
   return {
     default: d,
     name,
