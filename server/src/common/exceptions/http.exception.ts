@@ -1,7 +1,7 @@
 import type {Request, Response} from 'express';
 import {getDefaultMessage, getServerTime} from "@/lib";
-import {BaseResponse, ZodExceptionRes, BaseExceptionRes} from "@/types";
-import {Catch, HttpException, ExceptionFilter, ArgumentsHost, HttpStatus} from "@nestjs/common";
+import {BaseException, BaseExceptionRes, BaseResponse, ZodExceptionRes} from "@/types";
+import {ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus} from "@nestjs/common";
 
 @Catch()
 export class ResponseException implements ExceptionFilter {
@@ -36,6 +36,13 @@ export class ResponseException implements ExceptionFilter {
         message: exceptionZod.message,
         errors: exceptionZod.errors,
       } as ZodExceptionRes;
+
+    } else if (body !== null && status === HttpStatus.NOT_FOUND && (body as BaseException).message.startsWith("Cannot")) {
+      finalResponse = {
+        ...baseErrorResponse,
+        message: "Method or Route Not Found",
+        error: "Not Found, route/method",
+      };
     } else {
       const message: string = typeof body === 'string'
         ? body

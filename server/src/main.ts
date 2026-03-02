@@ -7,7 +7,7 @@ import {NestFactory} from '@nestjs/core';
 import cookieParser from "cookie-parser";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {NestExpressApplication} from "@nestjs/platform-express";
-import {ResponseInterceptors, ResponseException, NotFoundException} from "./common";
+import {ResponseInterceptors, ResponseException} from "./common";
 
 /** run application */
 async function bootstrap(): Promise<void> {
@@ -16,22 +16,19 @@ async function bootstrap(): Promise<void> {
   });
 
   // base url
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api/v1');
 
   // serve static files in public directory
   app.useStaticAssets(path.join(process.cwd(), "public"), {
     prefix: '/static/',
   });
 
-  /** global configs */
+  // global configs
   app.use(helmet());
   app.use(cookieParser());
 
   // change response structure
-  app.useGlobalFilters(
-    new NotFoundException(),
-    new ResponseException(),
-  );
+  app.useGlobalFilters(new ResponseException());
   app.useGlobalInterceptors(new ResponseInterceptors());
 
   // Swagger Version 1
@@ -54,7 +51,7 @@ async function bootstrap(): Promise<void> {
   const document = SwaggerModule.createDocument(app, swaggerConfigV1);
 
   if (process.env.NODE_ENV !== "test") {
-    SwaggerModule.setup("api/docs", app, document, {
+    SwaggerModule.setup("api/v1/docs", app, document, {
       swaggerOptions: {
         withCredentials: true,
         persistAuthorization: true,
@@ -72,5 +69,5 @@ async function bootstrap(): Promise<void> {
 
 // bootstrap and run application
 bootstrap()
-  .then(() => console.log(`nest successfully started on http://localhost:${process.env.PORT ?? 3000}/api/docs`))
+  .then(() => console.log(`nest successfully started on http://localhost:${process.env.PORT ?? 3000}/api/v1/docs`))
   .catch(e => console.error(e));
