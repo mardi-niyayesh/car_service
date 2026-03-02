@@ -1,3 +1,6 @@
+import type {Request} from "express";
+import {ExecutionContext} from "@nestjs/common";
+
 export class RedisKey {
   private static readonly prefix: string = process.env.REDIS_KEY_PREFIX?.trim() || 'app';
 
@@ -32,4 +35,14 @@ export class RedisKey {
   static users(id?: string): string {
     return this.build("users", id);
   }
+}
+
+export function paramCacheKey(ctx: ExecutionContext, paramKey: string, resource: string) {
+  const req = ctx.switchToHttp().getRequest<Request>();
+
+  const rawParam: string | string[] = req.params[paramKey];
+
+  const param: string = Array.isArray(rawParam) ? rawParam[0] : rawParam;
+
+  return RedisKey.build(resource, param);
 }
