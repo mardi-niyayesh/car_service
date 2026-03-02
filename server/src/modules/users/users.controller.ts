@@ -41,7 +41,7 @@ import * as UserDto from "./dto";
 import {UsersService} from "./users.service";
 import {paramCacheKey, ONE_MINUTE_MS} from "@/lib";
 import {CacheKey, CacheTTL} from "@nestjs/cache-manager";
-import type {AccessRequest, ApiResponse, UserResponse} from "@/types";
+import type {AccessRequest, ApiResponse, SafeUser, UserResponse} from "@/types";
 
 /**
  * User management endpoints for retrieving user information.
@@ -162,8 +162,8 @@ export class UsersController {
     type: getForbiddenResponse("users"),
     description: 'when target user not access to get all users'
   })
-  findAll(): string {
-    return "test";
+  async findAll(): Promise<ApiResponse<{ users: SafeUser[] }>> {
+    return this.usersService.findAll();
   }
 
   /**

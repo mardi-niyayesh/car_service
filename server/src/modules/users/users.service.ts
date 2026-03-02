@@ -1,6 +1,6 @@
 import {ROLES} from "@/common";
 import {PrismaService} from "../prisma/prisma.service";
-import {ApiResponse, BaseException, UserAccess, UserResponse} from "@/types";
+import {ApiResponse, BaseException, SafeUser, UserAccess, UserResponse} from "@/types";
 import {BadRequestException, ConflictException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
 
 interface ModifyRoleServiceParams {
@@ -68,6 +68,22 @@ export class UsersService {
     return {
       message: 'User found successfully',
       data,
+    };
+  }
+
+  /** get all users info
+   * - only users with role (owner or role_manager) can accessibility to this route
+   */
+  async findAll(): Promise<ApiResponse<{ users: SafeUser[] }>> {
+    const users = await this.prisma.user.findMany({
+      omit: {password: true}
+    });
+
+    return {
+      message: "Users Successfully find.",
+      data: {
+        users
+      }
     };
   }
 
