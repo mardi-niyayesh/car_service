@@ -38,6 +38,8 @@ import {
 
 import * as UserDto from "./dto";
 import {UsersService} from "./users.service";
+import {paramCacheKey, ONE_MINUTE_MS} from "@/lib";
+import {CacheKey, CacheTTL} from "@nestjs/cache-manager";
 import type {AccessRequest, ApiResponse, UserResponse} from "@/types";
 
 /**
@@ -67,6 +69,8 @@ export class UsersController {
   })
   @Get("profile")
   @HttpCode(HttpStatus.OK)
+  @CacheKey(c => paramCacheKey(c, "id", "users"))
+  @CacheTTL(ONE_MINUTE_MS * 10)
   @ApiOperation({
     summary: 'get user info by self',
     description: 'get user info accessToken. **Access restricted to users with role: (self) only.**',
@@ -117,6 +121,7 @@ export class UsersController {
   findOne(
     @Param(new ZodPipe(UUID4Schema)) params: UUID4Type,
   ): Promise<ApiResponse<UserResponse>> {
+    console.log("test");
     return this.usersService.findOne(params.id);
   }
 
