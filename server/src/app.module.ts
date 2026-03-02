@@ -6,7 +6,7 @@ import {APP_GUARD, APP_INTERCEPTOR} from "@nestjs/core";
 import {EventEmitterModule} from "@nestjs/event-emitter";
 import {ThrottlerModule, ThrottlerGuard} from "@nestjs/throttler";
 import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
-import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware} from "./common";
+import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware, CACHE_EVICT_KEY, CacheEvictInterceptor} from "./common";
 
 @Module({
   imports: [
@@ -51,6 +51,10 @@ import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware} from "./common"
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor
+    },
+    {
+      provide: CACHE_EVICT_KEY,
+      useClass: CacheEvictInterceptor
     }
   ]
 })
