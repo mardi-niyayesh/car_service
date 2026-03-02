@@ -18,7 +18,7 @@ import {isProduction} from "@/lib";
 import {AuthService} from "./auth.service";
 import type {CookieOptions, Response} from "express";
 import {Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UseGuards} from '@nestjs/common';
-import {RefreshTokenGuard, ZodPipe, TooManyRequestResponse, Public, NormalizeClientInfo} from "@/common";
+import {RefreshTokenGuard, ZodPipe, TooManyRequestResponse, Public, NormalizeClientInfo, CacheEvict} from "@/common";
 import type {RefreshRequest, LoginResponse, ApiResponse, UserResponse, NormalizedClientInfo} from "@/types";
 
 /**
@@ -53,6 +53,9 @@ export class AuthController {
    */
   @Post("register")
   @HttpCode(HttpStatus.CREATED)
+  @CacheEvict([
+    {self: false, paramKey: null, resource: "users"}
+  ])
   @ApiOperation({
     summary: 'Register a new user',
     description: 'Creates a new user record in the database and returns the created user.',
