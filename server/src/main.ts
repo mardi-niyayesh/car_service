@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import helmet from "helmet";
-import Redis from 'ioredis';
 import path from "node:path";
 import {Logger} from "@nestjs/common";
 import {AppModule} from './app.module';
@@ -9,8 +8,6 @@ import cookieParser from "cookie-parser";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {NestExpressApplication} from "@nestjs/platform-express";
 import {ResponseInterceptors, ResponseException} from "./common";
-import {asyncWrapProviders} from "node:async_hooks";
-import {async} from "rxjs";
 
 /** run application */
 async function bootstrap(): Promise<void> {
