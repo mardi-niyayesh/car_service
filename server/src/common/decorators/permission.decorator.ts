@@ -1,7 +1,7 @@
 import {PermissionsType} from "@/common";
 import {SetMetadata} from "@nestjs/common";
 
-export const PERMISSION_METADATA = "permission";
+export const PERMISSION_METADATA = "PERMISSIONS";
 
 export interface PermissionDecoratorParams {
   requiredAll?: boolean;

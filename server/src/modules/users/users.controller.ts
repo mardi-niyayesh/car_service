@@ -13,6 +13,7 @@ import {
 import {
   ZodPipe,
   UUID4Dto,
+  CacheEvict,
   PERMISSIONS,
   Permission,
   UUID4Schema,
@@ -145,6 +146,11 @@ export class UsersController {
   })
   @Post(":id/roles")
   @HttpCode(HttpStatus.OK)
+  @CacheEvict({
+    self: false,
+    paramKey: "id",
+    resource: "users",
+  })
   @ApiOperation({
     summary: 'Assign roles to a user',
     description: `
@@ -206,6 +212,11 @@ export class UsersController {
   })
   @Delete(":id/roles")
   @HttpCode(HttpStatus.OK)
+  @CacheEvict({
+    self: false,
+    paramKey: "id",
+    resource: "users",
+  })
   @ApiOperation({
     summary: 'Revoke roles from a user',
     description: `
