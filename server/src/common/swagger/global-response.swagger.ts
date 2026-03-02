@@ -44,13 +44,13 @@ export function getNormalErrorResponse(props: GetNormalErrorTypes) {
   return NormalErrorResponse;
 }
 
-function getDynamicClassName(source, path: string): string {
+function getDynamicClassName(source: string, path: string): string {
   return `${source}_${path.replace(/[:/]/g, "_")}`;
 }
 
 /** example response when user not authorized */
 export function getUnauthorizedResponse(path: string) {
-  const className = getDynamicClassName("Unauthorized", path);
+  const className: string = getDynamicClassName("Unauthorized", path);
   return {
     [className]: class extends getNormalErrorResponse({
       message: "Access token missing or expired.",
@@ -71,7 +71,7 @@ export class TooManyRequestResponse extends getNormalErrorResponse({
 
 /** get schema for swagger when not allowed */
 export function getForbiddenResponse(path: string) {
-  const className = getDynamicClassName("Forbidden", path);
+  const className: string = getDynamicClassName("Forbidden", path);
   return {
     [className]: class extends getNormalErrorResponse({
       message: "Your role not access to this action.",
@@ -155,7 +155,7 @@ export function getBaseErrorBodyResponseSchema(props: GetZodErrorTypes) {
 }
 
 export function getBadRequestUUIDParams(path: string) {
-  const className = getDynamicClassName("BadRequest", path);
+  const className: string = getDynamicClassName("BadRequest", path);
 
   return {
     [className]: class extends getBaseErrorBodyResponseSchema({
