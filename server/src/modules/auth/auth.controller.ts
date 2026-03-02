@@ -18,8 +18,8 @@ import {isProduction} from "@/lib";
 import {AuthService} from "./auth.service";
 import type {CookieOptions, Response} from "express";
 import {Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UseGuards} from '@nestjs/common';
-import {RefreshTokenGuard, ZodPipe, TooManyRequestResponse, Public, NormalizeClientInfo, CacheEvict} from "@/common";
 import type {RefreshRequest, LoginResponse, ApiResponse, UserResponse, NormalizedClientInfo} from "@/types";
+import {RefreshTokenGuard, ZodPipe, TooManyRequestResponse, Public, NormalizeClientInfo, CacheEvict} from "@/common";
 
 /**
  * Authentication endpoints for user registration, login, and token refresh.
