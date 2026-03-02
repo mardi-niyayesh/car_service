@@ -73,6 +73,7 @@ export class UsersController {
     resource: "users",
     self: true,
     ctx: c,
+    paramKey: null
   }))
   @CacheTTL(ONE_MINUTE_MS * 121)
   @ApiOperation({
@@ -101,7 +102,8 @@ export class UsersController {
   @CacheKey(c => paramCacheKey({
     paramKey: "id",
     ctx: c,
-    resource: "users"
+    resource: "users",
+    self: false,
   }))
   @CacheTTL(ONE_MINUTE_MS * 121)
   @ApiOperation({
@@ -131,7 +133,6 @@ export class UsersController {
   findOne(
     @Param(new ZodPipe(UUID4Schema)) params: UUID4Type,
   ): Promise<ApiResponse<UserResponse>> {
-    console.log("test");
     return this.usersService.findOne(params.id);
   }
 

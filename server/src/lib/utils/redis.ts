@@ -37,22 +37,12 @@ export class RedisKey {
   }
 }
 
-interface ParamCacheKeyTypeBase {
+export interface ParamCacheKeyType {
   ctx: ExecutionContext;
   resource: string;
+  self: boolean;
+  paramKey: string | null;
 }
-
-interface ParamCacheKeyTypeSelf extends ParamCacheKeyTypeBase{
-  self?: boolean;
-  paramKey?: never;
-}
-
-interface ParamCacheKeyTypeParams extends ParamCacheKeyTypeBase {
-  self?: never;
-  paramKey?: string | null;
-}
-
-type ParamCacheKeyType = ParamCacheKeyTypeSelf | ParamCacheKeyTypeParams;
 
 export function paramCacheKey(params: ParamCacheKeyType): string {
   const {ctx, resource, self, paramKey} = params;
