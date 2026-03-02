@@ -43,6 +43,7 @@ export class ResponseException implements ExceptionFilter {
         message: "Method or Route Not Found",
         error: "Not Found, route/method",
       };
+
     } else {
       const message: string = typeof body === 'string'
         ? body

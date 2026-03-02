@@ -154,6 +154,10 @@ export class UsersController {
     operationId: 'get_users',
     tags: ["User"],
   })
+  @ApiUnauthorizedResponse({
+    type: getUnauthorizedResponse("users"),
+    description: 'Invalid or missing authentication token.'
+  })
   findAll(): string {
     return "test";
   }
