@@ -11,6 +11,7 @@ import {CacheModule as RedisCache} from "@nestjs/cache-manager";
       useFactory: async () => ({
         store: await redisStore({
           host: process.env.REDIS_HOST!,
+          db: Number(process.env.REDIS_DB) || undefined,
           port: Number(process.env.REDIS_PORT!),
           ttl: ONE_MINUTE_MS * 5 // 5 minutes
         })

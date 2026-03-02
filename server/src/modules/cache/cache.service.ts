@@ -1,9 +1,9 @@
-import {Inject, Injectable} from "@nestjs/common";
-import {Cache, CACHE_MANAGER} from "@nestjs/cache-manager";
+import {Injectable} from "@nestjs/common";
+import {Cache} from "@nestjs/cache-manager";
 
 @Injectable()
 export class CacheService {
-  constructor(@Inject(CACHE_MANAGER) private readonly cache: Cache) {}
+  constructor(private readonly cache: Cache) {}
 
   async get<T>(key: string): Promise<T | undefined> {
     return await this.cache.get(key);
