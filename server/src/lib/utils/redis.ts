@@ -6,12 +6,12 @@ export class RedisKey {
 
   /**
    * Builds a Redis key with the format: {prefix}:{resource}:{part1}:{part2}:...
-   * If no meaningful parts are provided, returns the pattern {prefix}:{resource}:*
+   * If no meaningful parts are provided, returns the pattern {prefix}:{resource}:list
    *
    * @example
-   * RedisKey.build('users')           → "app:users:*"
+   * RedisKey.build('users')           → "app:users:list"
    * RedisKey.build('users', '123')    → "app:users:123"
-   * RedisKey.build('users', '')       → "app:users:*"   (empty after trim)
+   * RedisKey.build('users', '')       → "app:users:list"   (empty after trim)
    */
   static build(resource: string, ...parts: (string | undefined | number)[]): string {
     const cleanParts = parts
@@ -22,13 +22,13 @@ export class RedisKey {
     const base: string = `${this.prefix}:${resource}`;
 
     return cleanParts.length === 0
-      ? `${base}:*`
+      ? `${base}:list`
       : `${base}:${cleanParts.join(':')}`;
   }
 
   /** Builds users key or pattern
    * @example
-   * RedisKey.users()        → "app:users:*"
+   * RedisKey.users()        → "app:users:list"
    * RedisKey.users("123")   → "app:users:123"
    * RedisKey.users("123", " ")   → "app:users:123"
    */

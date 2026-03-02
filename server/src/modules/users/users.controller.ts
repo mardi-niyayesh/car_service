@@ -78,7 +78,7 @@ export class UsersController {
     ctx: c,
     paramKey: null
   }))
-  @CacheTTL(ONE_MINUTE_MS * 121)
+  @CacheTTL(ONE_MINUTE_MS * 122)
   @ApiOperation({
     summary: 'get user info by self',
     description: 'get user info accessToken. **Access restricted to users with role: (self) only.**',
@@ -108,7 +108,7 @@ export class UsersController {
     resource: "users",
     self: false,
   }))
-  @CacheTTL(ONE_MINUTE_MS * 121)
+  @CacheTTL(ONE_MINUTE_MS * 122)
   @ApiOperation({
     summary: 'get user info',
     description: 'get user info with id. **Access restricted to users with permission: (owner or user.view) only.**',
@@ -144,12 +144,13 @@ export class UsersController {
   })
   @Get()
   @HttpCode(HttpStatus.OK)
-  @CacheKey(c => paramCacheKey({
+  @CacheKey(ctx => paramCacheKey({
     paramKey: null,
-    ctx: c,
+    ctx,
     resource: "users",
     self: false,
   }))
+  @CacheTTL(ONE_MINUTE_MS * 122)
   @ApiOperation({
     summary: 'get all users info',
     description: 'get all users info. **Access restricted to users with permission: (owner or user.view) only.**',
