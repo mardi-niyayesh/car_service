@@ -10,7 +10,7 @@ import {CacheModule as RedisCache} from "@nestjs/cache-manager";
       isGlobal: true,
       useFactory: async () => ({
         store: await redisStore({
-          host: '127.0.0.1',
+          host: process.env.REDIS_HOST!,
           port: Number(process.env.REDIS_PORT!),
           ttl: ONE_MINUTE_MS * 5 // 5 minutes
         })
