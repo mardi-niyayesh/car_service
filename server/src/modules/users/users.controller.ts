@@ -59,8 +59,6 @@ import type {AccessRequest, ApiResponse, UserResponse} from "@/types";
 @Controller('users')
 @ApiBearerAuth("accessToken")
 export class UsersController {
-  private static resource = "users";
-
   constructor(private readonly usersService: UsersService) {}
 
   /**
@@ -136,6 +134,7 @@ export class UsersController {
   findOne(
     @Param(new ZodPipe(UUID4Schema)) params: UUID4Type,
   ): Promise<ApiResponse<UserResponse>> {
+    console.log("findOne", params.id);
     return this.usersService.findOne(params.id);
   }
 
@@ -179,8 +178,8 @@ export class UsersController {
   @Post(":id/roles")
   @HttpCode(HttpStatus.OK)
   @CacheEvict([
-    {self: false, paramKey: "id", resource: UsersController.resource},
-    {self: false, paramKey: null, resource: UsersController.resource}
+    {self: false, paramKey: "id", resource: "users"},
+    {self: false, paramKey: null, resource: "users"}
   ])
   @ApiOperation({
     summary: 'Assign roles to a user',
@@ -244,8 +243,8 @@ export class UsersController {
   @Delete(":id/roles")
   @HttpCode(HttpStatus.OK)
   @CacheEvict([
-    {self: false, paramKey: "id", resource: UsersController.resource},
-    {self: false, paramKey: null, resource: UsersController.resource}
+    {self: false, paramKey: "id", resource: "users"},
+    {self: false, paramKey: null, resource: "users"}
   ])
   @ApiOperation({
     summary: 'Revoke roles from a user',

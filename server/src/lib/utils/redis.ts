@@ -1,3 +1,4 @@
+import {Resource} from "@/common";
 import type {AccessRequest} from "@/types";
 import {ExecutionContext} from "@nestjs/common";
 
@@ -39,7 +40,7 @@ export class RedisKey {
 
 export interface ParamCacheKeyType {
   ctx: ExecutionContext;
-  resource: string;
+  resource: Resource;
   self: boolean;
   paramKey: string | null;
 }
