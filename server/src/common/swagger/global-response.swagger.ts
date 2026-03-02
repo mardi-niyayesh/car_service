@@ -4,9 +4,9 @@ import {ApiResponse, BaseApiResponseData, ZodFieldError} from "@/types";
 
 function getFormatPath(path: string): string {
   if (path.startsWith("/")) {
-    return `/api${path}`;
+    return `/api/v1${path}`;
   }
-  return `/api/${path}`;
+  return `/api/v1/${path}`;
 }
 
 interface GetNormalErrorTypes {
