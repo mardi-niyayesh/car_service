@@ -54,7 +54,7 @@ export class AuthController {
   @Post("register")
   @HttpCode(HttpStatus.CREATED)
   @CacheEvict([
-    {self: false, paramKey: null, resource: "users"}
+    {resource: "users"}
   ])
   @ApiOperation({
     summary: 'Register a new user',
