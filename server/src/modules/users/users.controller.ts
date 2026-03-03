@@ -184,7 +184,7 @@ export class UsersController {
   @Post(":id/roles")
   @HttpCode(HttpStatus.OK)
   @CacheEvict([
-    {resource: "users"},
+    {resource: "users", force: true},
     {paramsKey: ["id"], resource: "users"},
   ])
   @ApiOperation({
@@ -249,7 +249,7 @@ export class UsersController {
   @Delete(":id/roles")
   @HttpCode(HttpStatus.OK)
   @CacheEvict([
-    {resource: "users"},
+    {resource: "users", force: true},
     {paramsKey: ["id"], resource: "users"},
   ])
   @ApiOperation({
