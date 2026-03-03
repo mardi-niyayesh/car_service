@@ -3,9 +3,11 @@ import {type ParamCacheKeyType} from "@/lib";
 
 export const CACHE_EVICT_KEY = "CACHE_EVICT_KEY";
 
-export type CacheEvictDecoratorType = Omit<ParamCacheKeyType, "ctx"> & {
+type CacheEvictDecoratorBaseType = Omit<ParamCacheKeyType, "ctx"> & {
   force?: boolean;
 }
+
+export type CacheEvictDecoratorType = CacheEvictDecoratorBaseType[];
 
 /** Build Key Cache for Delete
  * @example
@@ -18,6 +20,6 @@ export type CacheEvictDecoratorType = Omit<ParamCacheKeyType, "ctx"> & {
  * @return
  * "app:users:id"
  * */
-export function CacheEvict(params: CacheEvictDecoratorType[]) {
+export function CacheEvict(params: CacheEvictDecoratorType) {
   return SetMetadata(CACHE_EVICT_KEY, params);
 }

@@ -1,5 +1,5 @@
 import {paramCacheKey} from "@/lib";
-import {Observable, tap} from "rxjs";
+import {map, Observable} from "rxjs";
 import {Reflector} from "@nestjs/core";
 import {CacheService} from "@/modules/cache/cache.service";
 import {CACHE_EVICT_KEY, type CacheEvictDecoratorType} from "@/common";
@@ -21,12 +21,14 @@ export class CacheEvictInterceptor implements NestInterceptor {
     if (!cacheParams) return next.handle();
 
     return next.handle().pipe(
-      tap(() => {
+      map(async data => {
         const keys: string[] = cacheParams.map(k => paramCacheKey({
-          ctx, self: k.self, paramKey: k.paramKey, resource: k.resource
+          ctx, self: k.self, paramsKey: k.paramsKey, resource: k.resource
         }));
 
-        this.cache.delMany(keys).then(() => {}).catch(() => console.error(`Internal Server Error in: ${CacheEvictInterceptor.name}`, keys));
+        await this.cache.delMany(keys);
+
+        return data;
       })
     );
   }
