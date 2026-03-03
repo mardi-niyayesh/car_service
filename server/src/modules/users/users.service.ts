@@ -1,5 +1,6 @@
-import {ROLES} from "@/common";
 import {PrismaService} from "../prisma/prisma.service";
+import {ROLES, PaginationValidatorType} from "@/common";
+import {Prisma} from "@/modules/prisma/generated/client";
 import {ApiResponse, BaseException, UserAccess, UserResponse} from "@/types";
 import {BadRequestException, ConflictException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
 
@@ -72,23 +73,31 @@ export class UsersService {
   /** get all users info
    * - only users with role (owner or role_manager) can accessibility to this route
    */
-  async findAll(): Promise<ApiResponse<{ users: UserResponse[] }>> {
-    const result = await this.prisma.$queryRaw<UserResponse[]>`
-        SELECT u.id,
-               u.email,
-               u.display_name,
-               u.age,
-               u.created_at,
-               u.updated_at,
-               ARRAY_AGG(DISTINCT r.name) AS roles,
-               ARRAY_AGG(DISTINCT p.name) AS permissions
-        FROM users u
-                 INNER JOIN user_roles ur ON u.id = ur.user_id
-                 INNER JOIN roles r ON ur.role_id = r.id
-                 INNER JOIN role_permission rp ON r.id = rp.role_id
-                 INNER JOIN permissions p ON rp.permission_id = p.id
-        GROUP BY u.id
-        ORDER BY u.created_at DESC;`;
+  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<{ users: UserResponse[] }>> {
+    const {orderBy, limit, offset} = pagination;
+
+    const orderDirection = orderBy === 'desc' ? 'DESC' : 'ASC';
+
+    const result = await this.prisma.$queryRaw<UserResponse[]>(
+      Prisma.sql`
+          SELECT u.id,
+                 u.email,
+                 u.display_name,
+                 u.age,
+                 u.created_at,
+                 u.updated_at,
+                 ARRAY_AGG(DISTINCT r.name) AS roles,
+                 ARRAY_AGG(DISTINCT p.name) AS permissions
+          FROM users u
+                   INNER JOIN user_roles ur ON u.id = ur.user_id
+                   INNER JOIN roles r ON ur.role_id = r.id
+                   INNER JOIN role_permission rp ON r.id = rp.role_id
+                   INNER JOIN permissions p ON rp.permission_id = p.id
+          GROUP BY u.id
+          ORDER BY u.created_at ${Prisma.sql([orderDirection])}
+          LIMIT ${limit}
+          OFFSET ${offset}`
+    );
 
     return {
       message: "Users Successfully find.",

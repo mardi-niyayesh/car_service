@@ -19,6 +19,13 @@ export const PaginationValidator = z.object({
     .enum(["asc", "desc"])
     .optional()
     .default("desc"),
+}).transform(data => {
+  return {
+    page: data.page,
+    limit: data.limit,
+    orderBy: data.orderBy,
+    offset: data.limit * (data.page - 1)
+  };
 });
 
 /** @typeof Validate Pagination in Query Params */

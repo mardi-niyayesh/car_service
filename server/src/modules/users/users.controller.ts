@@ -174,8 +174,7 @@ export class UsersController {
   async findAll(
     @Query(new ZodPipe(PaginationValidator)) query: PaginationValidatorType
   ): Promise<ApiResponse<{ users: UserResponse[] }>> {
-    console.log(query);
-    return this.usersService.findAll();
+    return this.usersService.findAll(query);
   }
 
   /**
