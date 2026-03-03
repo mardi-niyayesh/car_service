@@ -79,7 +79,6 @@ export class UsersController {
     resource: "users",
     self: true,
     ctx: c,
-    paramKey: null
   }))
   @CacheTTL(ONE_MINUTE_MS * 122)
   @ApiOperation({
@@ -106,10 +105,9 @@ export class UsersController {
   @Get(":id")
   @HttpCode(HttpStatus.OK)
   @CacheKey(c => paramCacheKey({
-    paramKey: "id",
     ctx: c,
     resource: "users",
-    self: false,
+    paramsKey: ["id"],
   }))
   @CacheTTL(ONE_MINUTE_MS * 122)
   @ApiOperation({
@@ -148,10 +146,9 @@ export class UsersController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @CacheKey(ctx => paramCacheKey({
-    paramKey: null,
     ctx,
-    resource: "users",
     self: false,
+    resource: "users",
   }))
   @CacheTTL(ONE_MINUTE_MS * 122)
   @ApiOperation({
@@ -187,8 +184,8 @@ export class UsersController {
   @Post(":id/roles")
   @HttpCode(HttpStatus.OK)
   @CacheEvict([
-    {self: false, paramKey: "id", resource: "users"},
-    {self: false, paramKey: null, resource: "users"}
+    {resource: "users"},
+    {paramsKey: ["id"], resource: "users"},
   ])
   @ApiOperation({
     summary: 'Assign roles to a user',
@@ -252,8 +249,8 @@ export class UsersController {
   @Delete(":id/roles")
   @HttpCode(HttpStatus.OK)
   @CacheEvict([
-    {self: false, paramKey: "id", resource: "users"},
-    {self: false, paramKey: null, resource: "users"}
+    {resource: "users"},
+    {paramsKey: ["id"], resource: "users"},
   ])
   @ApiOperation({
     summary: 'Revoke roles from a user',
