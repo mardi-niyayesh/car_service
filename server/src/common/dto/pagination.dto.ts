@@ -54,6 +54,7 @@ export function paginationDto(params: PaginationDtoType): ApiQueryOptions {
   };
 }
 
+/** page query param example schema for swagger */
 export const pagePaginationDto: ApiQueryOptions = paginationDto({
   type: "number",
   default: 1,
@@ -63,6 +64,7 @@ export const pagePaginationDto: ApiQueryOptions = paginationDto({
   minimum: 1
 });
 
+/** limit query param example schema for swagger */
 export const limitPaginationDto: ApiQueryOptions = paginationDto({
   type: "number",
   default: 10,
@@ -73,6 +75,7 @@ export const limitPaginationDto: ApiQueryOptions = paginationDto({
   maximum: 100
 });
 
+/** orderBy query param example schema for swagger */
 export const orderByPaginationDto: ApiQueryOptions = {
   type: "string",
   enum: ["asc", "desc"],
