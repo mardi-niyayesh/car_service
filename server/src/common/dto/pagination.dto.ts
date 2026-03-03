@@ -14,7 +14,7 @@ export const PaginationValidator = z.object({
     .optional()
     .transform(Number)
     .pipe(z.number().min(1).max(100))
-    .default(100),
+    .default(10),
   orderBy: z
     .enum(["asc", "desc"])
     .optional()

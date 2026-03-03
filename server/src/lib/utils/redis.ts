@@ -1,6 +1,6 @@
 import {Resource} from "@/common";
-import type {AccessRequest} from "@/types";
-import {ExecutionContext} from "@nestjs/common";
+import type {AccessRequest, BaseException} from "@/types";
+import {ExecutionContext, InternalServerErrorException} from "@nestjs/common";
 
 export class RedisKey {
   private static readonly prefix: string = process.env.REDIS_KEY_PREFIX?.trim() || 'app';
@@ -41,22 +41,42 @@ export class RedisKey {
 export interface ParamCacheKeyType {
   ctx: ExecutionContext;
   resource: Resource;
-  self: boolean;
-  paramKey: string | null;
+  self?: boolean;
+  paramsKey?: string[] | null;
+  pagination?: boolean;
 }
 
-export function paramCacheKey(params: ParamCacheKeyType): string {
-  const {ctx, resource, self, paramKey} = params;
+export function paramCacheKey({ctx, resource, self = false, paramsKey = null, pagination = false}: ParamCacheKeyType): string {
+  const parts: string[] = [];
 
   const req = ctx.switchToHttp().getRequest<AccessRequest>();
 
-  if (self) return RedisKey.build(resource, req.user.userId);
+  if (self) {
+    const selfId: string = req.user.userId;
 
-  if (paramKey === null || paramKey === undefined) return RedisKey.build(resource);
+    if (!selfId) throw new InternalServerErrorException({
+      message: "userId not found in request",
+      error: "in paramCacheKey function. when create a cache key",
+    } as BaseException);
 
-  const rawParam: string | string[] = req.params[paramKey];
+    parts.push(selfId);
+    return RedisKey.build(resource, ...parts);
+  }
 
-  const param: string = Array.isArray(rawParam) ? rawParam[0] : rawParam;
+  if (paramsKey !== null) {
+    const params: string[] = paramsKey.map(p => Array.isArray(req.params[p])
+      ? `${p}=${req.params[p][0]}`
+      : `${p}=${req.params[p]}`
+    );
+    parts.push(...params);
+  }
 
-  return RedisKey.build(resource, param);
+  if (pagination !== undefined) {
+    const page = (req.query.page === undefined || req.query.page === null) ? "1" : req.query.page as string;
+    const limit = (req.query.limit === undefined || req.query.limit === null) ? "10" : req.query.limit as string;
+    const orderBy = (req.query.orderBy === undefined || req.query.orderBy === null) ? "desc" : req.query.orderBy as string;
+    parts.push(`p=${page}`, `l=${limit}`, `o=${orderBy}`);
+  }
+
+  return RedisKey.build(resource, ...parts);
 }
