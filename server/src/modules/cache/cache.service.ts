@@ -1,4 +1,3 @@
-import {Redis} from "ioredis";
 import {Injectable} from "@nestjs/common";
 import {Cache} from "@nestjs/cache-manager";
 
@@ -6,12 +5,14 @@ import {Cache} from "@nestjs/cache-manager";
 export class CacheService {
   constructor(private readonly cache: Cache) {}
 
-  async get<T>(key: string): Promise<T | undefined> {
-    return await this.cache.get(key);
+  prefix(key: string): string {
+    return `${process.env.REDIS_KEY_PREFIX || "app"}:${key}`;
   }
 
-  getPrefix(key: string) {
-    return this.cache.stores.keys();
+  async get<T>(key: string): Promise<T | undefined> {
+    const f = this.cache.stores;
+    console.log(f);
+    return await this.cache.get(key);
   }
 
   async set<T>(key: string, value: T, ttl?: number): Promise<T> {
@@ -25,8 +26,4 @@ export class CacheService {
   async delMany(keys: string[]): Promise<boolean> {
     return await this.cache.mdel(keys);
   }
-
-  // async delForce(key: string): Promise<boolean> {
-  //   return await this.cache.stores.map(s => s.useKeyPrefix())
-  // }
 }

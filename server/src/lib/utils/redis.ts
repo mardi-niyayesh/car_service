@@ -63,7 +63,7 @@ export function paramCacheKey({ctx, resource, self = false, paramsKey = null, pa
     return RedisKey.build(resource, ...parts);
   }
 
-  if (paramsKey !== null) {
+  if (Array.isArray(paramsKey) && paramsKey.length > 0) {
     const params: string[] = paramsKey.map(p => Array.isArray(req.params[p])
       ? `${p}=${req.params[p][0]}`
       : `${p}=${req.params[p]}`
@@ -71,12 +71,16 @@ export function paramCacheKey({ctx, resource, self = false, paramsKey = null, pa
     parts.push(...params);
   }
 
-  if (pagination !== undefined) {
+  if (pagination) {
     const page = (req.query.page === undefined || req.query.page === null) ? "1" : req.query.page as string;
     const limit = (req.query.limit === undefined || req.query.limit === null) ? "10" : req.query.limit as string;
     const orderBy = (req.query.orderBy === undefined || req.query.orderBy === null) ? "desc" : req.query.orderBy as string;
     parts.push(`p=${page}`, `l=${limit}`, `o=${orderBy}`);
   }
 
-  return RedisKey.build(resource, ...parts);
+  const key = RedisKey.build(resource, ...parts);
+
+  console.log(key);
+
+  return key;
 }

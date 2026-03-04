@@ -22,9 +22,13 @@ export class CacheEvictInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map(async data => {
-        const keys: string[] = cacheParams.map(k => paramCacheKey({
+        const keys: string[] = cacheParams.filter(k => !k.force).map(k => paramCacheKey({
           ctx, self: k.self, paramsKey: k.paramsKey, resource: k.resource
         }));
+
+        const forceKeys = cacheParams.filter(k => k.force);
+
+        console.log(await this.cache.get("users"));
 
         await this.cache.delMany(keys);
 

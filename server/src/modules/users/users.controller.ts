@@ -4,10 +4,11 @@ import {
   Post,
   Body,
   Param,
+  Query,
   Delete,
   HttpCode,
   HttpStatus,
-  Controller, Query,
+  Controller,
 } from '@nestjs/common';
 
 import {
@@ -31,6 +32,7 @@ import {
 import {
   ApiBody,
   ApiTags,
+  ApiQuery,
   ApiParam,
   ApiOperation,
   ApiBearerAuth,
@@ -39,7 +41,7 @@ import {
   ApiNotFoundResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
-  ApiUnauthorizedResponse, ApiQuery,
+  ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 
 import * as UserDto from "./dto";
@@ -147,8 +149,8 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @CacheKey(ctx => paramCacheKey({
     ctx,
-    self: false,
     resource: "users",
+    pagination: true
   }))
   @CacheTTL(ONE_MINUTE_MS * 122)
   @ApiOperation({
