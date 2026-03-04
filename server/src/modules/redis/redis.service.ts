@@ -30,7 +30,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   /** set cache value with key */
   async set<T>(key: string, value: T, ttl?: number): Promise<"OK"> {
     const stringValue: string = JSON.stringify(value);
+
     if (ttl === undefined) return await this.client.set(key, stringValue);
+
     return await this.client.set(key, stringValue, "PX", ttl);
   }
 
