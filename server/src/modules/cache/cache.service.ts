@@ -1,11 +1,11 @@
-import {Injectable} from "@nestjs/common";
-import {Cache} from "@nestjs/cache-manager";
+import {Inject, Injectable} from "@nestjs/common";
+import {Cache, CACHE_MANAGER} from "@nestjs/cache-manager";
 
 @Injectable()
 export class CacheService {
-  private static readonly key: string = process.env.REDIS_KEY_PREFIX || "app";
+  private static readonly key: string = process.env.REDIS_KEY_PREFIX?.trim() || "app";
 
-  constructor(private readonly cache: Cache) {}
+  constructor(@Inject(CACHE_MANAGER) private readonly cache: Cache) {}
 
   prefix(key: string): string {
     if (key.startsWith(CacheService.key)) return key;
@@ -13,6 +13,7 @@ export class CacheService {
   }
 
   async get<T>(key: string): Promise<T | undefined> {
+    console.log(this.prefix(key));
     return await this.cache.get(this.prefix(key));
   }
 
