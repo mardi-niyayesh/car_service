@@ -1,6 +1,6 @@
 import Redis from "ioredis";
-import {Injectable, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
 import {ONE_MINUTE_MS} from "@/lib";
+import {Injectable, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
 
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {
@@ -44,5 +44,10 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   /** delete many cache value with key */
   async delete(...key: string[]): Promise<number> {
     return await this.client.del(...key);
+  }
+
+  /** get all keys with prefix */
+  async getKeyPrefix(keyPrefix: string): Promise<string[] | null> {
+    return await this.client.keys(`${keyPrefix}*`);
   }
 }
