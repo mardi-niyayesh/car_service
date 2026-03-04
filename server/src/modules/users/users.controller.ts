@@ -26,7 +26,7 @@ import {
   orderByPaginationDto,
   getUnauthorizedResponse,
   getBadRequestUUIDParams,
-  type PaginationValidatorType,
+  type PaginationValidatorType, Cacheable,
 } from "@/common";
 
 import {
@@ -106,12 +106,11 @@ export class UsersController {
   })
   @Get(":id")
   @HttpCode(HttpStatus.OK)
-  @CacheKey(c => RedisKey.keyPrefix({
-    ctx: c,
+  @Cacheable({
     resource: "users",
     paramsKey: ["id"],
-  }))
-  @CacheTTL(ONE_MINUTE_MS * 122)
+    ttl: ONE_MINUTE_MS * 122
+  })
   @ApiOperation({
     summary: 'get user info',
     description: 'get user info with id. **Access restricted to users with permission: (owner or user.view) only.**',
@@ -147,12 +146,11 @@ export class UsersController {
   })
   @Get()
   @HttpCode(HttpStatus.OK)
-  @CacheKey(ctx => RedisKey.keyPrefix({
-    ctx,
+  @Cacheable({
     resource: "users",
-    pagination: true
-  }))
-  @CacheTTL(ONE_MINUTE_MS * 122)
+    pagination: true,
+    ttl: ONE_MINUTE_MS * 122
+  })
   @ApiOperation({
     summary: 'get all users info',
     description: 'get all users info. **Access restricted to users with permission: (owner or user.view) only.**',
