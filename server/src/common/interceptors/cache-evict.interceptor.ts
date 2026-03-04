@@ -26,7 +26,7 @@ export class CacheEvictInterceptor implements NestInterceptor {
           ctx, self: k.self, paramsKey: k.paramsKey, extraKeys: k.extraKeys, resource: k.resource, pagination: k.pagination
         }));
 
-        const forceKeys = cacheParams.filter(k => k.force).map(k => k.resource);
+        // const forceKeys = cacheParams.filter(k => k.force).map(k => k.resource);
 
         if (keys.length > 0) await this.cache.delMany(keys);
 

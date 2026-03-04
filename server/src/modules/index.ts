@@ -6,3 +6,4 @@ export * from "./scheduler";
 export * from "./cli";
 export * from "./email";
 export * from "./cache";
+export * from "./redis";

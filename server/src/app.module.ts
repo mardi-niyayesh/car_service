@@ -31,6 +31,7 @@ import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware, CacheEvictInter
 
     // Core App Modules
     Modules.PrismaModule,
+    Modules.RedisModule,
     Modules.AuthModule,
     Modules.UsersModule,
     Modules.RolesModule,
