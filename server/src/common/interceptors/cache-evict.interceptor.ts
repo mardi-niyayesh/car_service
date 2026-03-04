@@ -1,4 +1,4 @@
-import {paramCacheKey} from "@/lib";
+import {RedisKey} from "@/lib";
 import {map, Observable} from "rxjs";
 import {Reflector} from "@nestjs/core";
 import {CacheService} from "@/modules/cache/cache.service";
@@ -22,13 +22,11 @@ export class CacheEvictInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map(async data => {
-        const keys: string[] = cacheParams.filter(k => !k.force).map(k => paramCacheKey({
-          ctx, self: k.self, paramsKey: k.paramsKey, resource: k.resource
+        const keys: string[] = cacheParams.filter(k => !k.force).map(k => RedisKey.keyPrefix({
+          ctx, self: k.self, paramsKey: k.paramsKey, extraKeys: k.extraKeys, resource: k.resource, pagination: k.pagination
         }));
 
-        const forceKeys = cacheParams.filter(k => k.force);
-
-        console.log(await this.cache.get("users"));
+        // const forceKeys = cacheParams.filter(k => k.force);
 
         await this.cache.delMany(keys);
 

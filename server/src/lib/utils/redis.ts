@@ -6,6 +6,7 @@ export interface ParamCacheKeyType {
   ctx: ExecutionContext;
   resource: Resource;
   self?: boolean;
+  extraKeys?: string[];
   paramsKey?: string[] | null;
   pagination?: boolean;
 }
@@ -45,8 +46,22 @@ export class RedisKey {
     return this.build("users", id);
   }
 
-  static keyPrefix({ctx, resource, self = false, paramsKey = null, pagination = false}: ParamCacheKeyType): string {
+  /** Builds key patterns for redis cache
+   * @example
+   * RedisKey.keyPrefix([
+   *   {paramsKey: ["id"], resource: "users"},
+   *   {resource: "users", extraKeys: ["sale", "rent"], paramsKey: ["id"]},
+   * ]) → [
+   * "app:users:id=5b570b4b-2da6-4d7c-826b-be0f7323611b"
+   * "app:users:sale:rent:id=5b570b4b-2da6-4d7c-826b-be0f7323611b",
+   * ]
+   */
+  static keyPrefix({ctx, resource, extraKeys, self = false, paramsKey = null, pagination = false}: ParamCacheKeyType): string {
     const parts: string[] = [];
+
+    if (extraKeys !== undefined && extraKeys.length > 0) {
+      parts.push(...extraKeys);
+    }
 
     const req = ctx.switchToHttp().getRequest<AccessRequest>();
 
@@ -55,7 +70,7 @@ export class RedisKey {
 
       if (!selfId) throw new InternalServerErrorException({
         message: "userId not found in request",
-        error: "in paramCacheKey function. when create a cache key",
+        error: `in ${this.keyPrefix.name} function. when create a cache key`,
       } as BaseException);
 
       parts.push(selfId);
@@ -77,7 +92,7 @@ export class RedisKey {
       parts.push(`p=${page}`, `l=${limit}`, `o=${orderBy}`);
     }
 
-    const key = RedisKey.build(resource, ...parts);
+    const key: string = RedisKey.build(resource, ...parts);
 
     console.log(key);
 
