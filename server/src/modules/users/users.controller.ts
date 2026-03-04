@@ -46,7 +46,7 @@ import {
 
 import * as UserDto from "./dto";
 import {UsersService} from "./users.service";
-import {paramCacheKey, ONE_MINUTE_MS} from "@/lib";
+import {RedisKey, ONE_MINUTE_MS} from "@/lib";
 import {CacheKey, CacheTTL} from "@nestjs/cache-manager";
 import type {AccessRequest, ApiResponse, UserResponse} from "@/types";
 
@@ -77,7 +77,7 @@ export class UsersController {
   })
   @Get("profile")
   @HttpCode(HttpStatus.OK)
-  @CacheKey(c => paramCacheKey({
+  @CacheKey(c => RedisKey.keyPrefix({
     resource: "users",
     self: true,
     ctx: c,
@@ -106,7 +106,7 @@ export class UsersController {
   })
   @Get(":id")
   @HttpCode(HttpStatus.OK)
-  @CacheKey(c => paramCacheKey({
+  @CacheKey(c => RedisKey.keyPrefix({
     ctx: c,
     resource: "users",
     paramsKey: ["id"],
@@ -147,7 +147,7 @@ export class UsersController {
   })
   @Get()
   @HttpCode(HttpStatus.OK)
-  @CacheKey(ctx => paramCacheKey({
+  @CacheKey(ctx => RedisKey.keyPrefix({
     ctx,
     resource: "users",
     pagination: true
