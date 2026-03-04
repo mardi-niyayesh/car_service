@@ -3,14 +3,17 @@ import {type ParamCacheKeyType} from "@/lib";
 
 export const CACHEABLE_KEY = "CACHEABLE_KEY";
 
-export type CacheableDecoratorType = Omit<ParamCacheKeyType, "ctx">;
+export type CacheableDecoratorType = Omit<ParamCacheKeyType, "ctx"> & {
+  ttl?: number;
+};
 
 /** Build Key Cache for set a new cache
  * @example
- - @CacheEvict({
+ - @Cacheable({
  self: false,
  paramKey: "id",
- resource: "users"
+ resource: "users",
+ ttl: 60_000 in millisecond
  })
 
  * @return

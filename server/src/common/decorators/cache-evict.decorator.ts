@@ -11,14 +11,14 @@ export type CacheEvictDecoratorType = CacheEvictDecoratorBaseType[];
 
 /** Build Key Cache for Delete
  * @example
- - @CacheEvict({
+ - @CacheEvict([{
  self: false,
  paramKey: "id",
  resource: "users"
- })
+ }])
 
  * @return
- * "app:users:id"
+ * ["app:users:id"]
  * */
 export function CacheEvict(params: CacheEvictDecoratorType) {
   return SetMetadata(CACHE_EVICT_KEY, params);
