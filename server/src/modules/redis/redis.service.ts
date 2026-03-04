@@ -4,13 +4,14 @@ import {Injectable, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {
   private client: Redis;
+  private prefix: string = process.env.REDIS_KEY_PREFIX?.trim() + ":" || "app:";
 
   onModuleInit(): void {
     this.client = new Redis({
       host: process.env.REDIS_HOST || '127.0.0.1',
       db: Number(process.env.REDIS_DB) || 0,
       port: Number(process.env.REDIS_PORT) || 6379,
-      keyPrefix: process.env.REDIS_KEY_PREFIX?.trim() + ":" || "app:",
+      keyPrefix: this.prefix,
     });
 
     this.client.on("connect", () => {
@@ -47,13 +48,22 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
   /** get all keys with prefix */
   async getKeyPrefix(keyPrefix: string): Promise<string[] | null> {
-    return await this.client.keys(`${keyPrefix}*`);
+    return await this.client.keys(`${this.prefix}${keyPrefix}*`);
   }
 
   /** delete many values with key prefix */
   async deletePrefix(prefix: string): Promise<number | null> {
     const keys: string[] | null = await this.getKeyPrefix(prefix);
-    if (keys === null) return keys;
-    return await this.client.del(...keys);
+
+    if (keys === null || keys.length === 0) return null;
+
+    // clean prefix in start
+    const cleanKeys: string[] = this.cleanPrefix(...keys);
+
+    return await this.delete(...cleanKeys);
+  }
+
+  cleanPrefix(...keys: string[]): string[] {
+    return keys.map(k => k.startsWith(this.prefix) ? k.split(this.prefix)[1] : k);
   }
 }
