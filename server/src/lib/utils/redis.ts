@@ -2,6 +2,14 @@ import {Resource} from "@/common";
 import type {AccessRequest, BaseException} from "@/types";
 import {ExecutionContext, InternalServerErrorException} from "@nestjs/common";
 
+export interface ParamCacheKeyType {
+  ctx: ExecutionContext;
+  resource: Resource;
+  self?: boolean;
+  paramsKey?: string[] | null;
+  pagination?: boolean;
+}
+
 export class RedisKey {
   private static readonly prefix: string = process.env.REDIS_KEY_PREFIX?.trim() || 'app';
 
@@ -36,51 +44,43 @@ export class RedisKey {
   static users(id?: string): string {
     return this.build("users", id);
   }
-}
 
-export interface ParamCacheKeyType {
-  ctx: ExecutionContext;
-  resource: Resource;
-  self?: boolean;
-  paramsKey?: string[] | null;
-  pagination?: boolean;
-}
+  static keyPrefix({ctx, resource, self = false, paramsKey = null, pagination = false}: ParamCacheKeyType): string {
+    const parts: string[] = [];
 
-export function paramCacheKey({ctx, resource, self = false, paramsKey = null, pagination = false}: ParamCacheKeyType): string {
-  const parts: string[] = [];
+    const req = ctx.switchToHttp().getRequest<AccessRequest>();
 
-  const req = ctx.switchToHttp().getRequest<AccessRequest>();
+    if (self) {
+      const selfId: string = req.user.userId;
 
-  if (self) {
-    const selfId: string = req.user.userId;
+      if (!selfId) throw new InternalServerErrorException({
+        message: "userId not found in request",
+        error: "in paramCacheKey function. when create a cache key",
+      } as BaseException);
 
-    if (!selfId) throw new InternalServerErrorException({
-      message: "userId not found in request",
-      error: "in paramCacheKey function. when create a cache key",
-    } as BaseException);
+      parts.push(selfId);
+      return RedisKey.build(resource, ...parts);
+    }
 
-    parts.push(selfId);
-    return RedisKey.build(resource, ...parts);
+    if (Array.isArray(paramsKey) && paramsKey.length > 0) {
+      const params: string[] = paramsKey.map(p => Array.isArray(req.params[p])
+        ? `${p}=${req.params[p][0]}`
+        : `${p}=${req.params[p]}`
+      );
+      parts.push(...params);
+    }
+
+    if (pagination) {
+      const page = (req.query.page === undefined || req.query.page === null) ? "1" : req.query.page as string;
+      const limit = (req.query.limit === undefined || req.query.limit === null) ? "10" : req.query.limit as string;
+      const orderBy = (req.query.orderBy === undefined || req.query.orderBy === null) ? "desc" : req.query.orderBy as string;
+      parts.push(`p=${page}`, `l=${limit}`, `o=${orderBy}`);
+    }
+
+    const key = RedisKey.build(resource, ...parts);
+
+    console.log(key);
+
+    return key;
   }
-
-  if (Array.isArray(paramsKey) && paramsKey.length > 0) {
-    const params: string[] = paramsKey.map(p => Array.isArray(req.params[p])
-      ? `${p}=${req.params[p][0]}`
-      : `${p}=${req.params[p]}`
-    );
-    parts.push(...params);
-  }
-
-  if (pagination) {
-    const page = (req.query.page === undefined || req.query.page === null) ? "1" : req.query.page as string;
-    const limit = (req.query.limit === undefined || req.query.limit === null) ? "10" : req.query.limit as string;
-    const orderBy = (req.query.orderBy === undefined || req.query.orderBy === null) ? "desc" : req.query.orderBy as string;
-    parts.push(`p=${page}`, `l=${limit}`, `o=${orderBy}`);
-  }
-
-  const key = RedisKey.build(resource, ...parts);
-
-  console.log(key);
-
-  return key;
 }
