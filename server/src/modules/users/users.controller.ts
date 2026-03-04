@@ -14,6 +14,7 @@ import {
 import {
   ZodPipe,
   UUID4Dto,
+  Cacheable,
   CacheEvict,
   PERMISSIONS,
   Permission,
@@ -26,7 +27,7 @@ import {
   orderByPaginationDto,
   getUnauthorizedResponse,
   getBadRequestUUIDParams,
-  type PaginationValidatorType, Cacheable,
+  type PaginationValidatorType,
 } from "@/common";
 
 import {
@@ -45,9 +46,9 @@ import {
 } from "@nestjs/swagger";
 
 import * as UserDto from "./dto";
+import {ONE_MINUTE_MS} from "@/lib";
 import {UsersService} from "./users.service";
-import {RedisKey, ONE_MINUTE_MS} from "@/lib";
-import {CacheKey, CacheTTL} from "@nestjs/cache-manager";
+import {CacheTTL} from "@nestjs/cache-manager";
 import type {AccessRequest, ApiResponse, UserResponse} from "@/types";
 
 /**
@@ -77,12 +78,12 @@ export class UsersController {
   })
   @Get("profile")
   @HttpCode(HttpStatus.OK)
-  @CacheKey(c => RedisKey.keyPrefix({
+  @CacheTTL(ONE_MINUTE_MS * 122)
+  @Cacheable({
     resource: "users",
     self: true,
-    ctx: c,
-  }))
-  @CacheTTL(ONE_MINUTE_MS * 122)
+    ttl: ONE_MINUTE_MS * 122
+  })
   @ApiOperation({
     summary: 'get user info by self',
     description: 'get user info accessToken. **Access restricted to users with role: (self) only.**',
