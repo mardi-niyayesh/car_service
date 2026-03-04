@@ -188,7 +188,6 @@ export class UsersController {
   @CacheEvict([
     {resource: "users", force: true},
     {paramsKey: ["id"], resource: "users"},
-    {resource: "users", extraKeys: ["sale", "rent"], paramsKey: ["id"]},
   ])
   @ApiOperation({
     summary: 'Assign roles to a user',
@@ -254,7 +253,6 @@ export class UsersController {
   @CacheEvict([
     {resource: "users", force: true},
     {paramsKey: ["id"], resource: "users"},
-    {resource: "users", extraKeys: ["sale", "rent"], paramsKey: ["id"]},
   ])
   @ApiOperation({
     summary: 'Revoke roles from a user',

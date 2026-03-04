@@ -18,7 +18,7 @@ export class CacheEvictInterceptor implements NestInterceptor {
       ctx.getHandler()
     ]);
 
-    if (!cacheParams) return next.handle();
+    if (!cacheParams || cacheParams.length === 0) return next.handle();
 
     return next.handle().pipe(
       map(async data => {
@@ -26,9 +26,9 @@ export class CacheEvictInterceptor implements NestInterceptor {
           ctx, self: k.self, paramsKey: k.paramsKey, extraKeys: k.extraKeys, resource: k.resource, pagination: k.pagination
         }));
 
-        // const forceKeys = cacheParams.filter(k => k.force);
+        const forceKeys = cacheParams.filter(k => k.force).map(k => k.resource);
 
-        await this.cache.delMany(keys);
+        if (keys.length > 0) await this.cache.delMany(keys);
 
         return data;
       })
