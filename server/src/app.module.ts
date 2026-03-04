@@ -1,12 +1,11 @@
 import * as Modules from "./modules";
 import {throttlerConfig} from "@/lib";
 import {ScheduleModule} from "@nestjs/schedule";
-import {CacheInterceptor} from "@nestjs/cache-manager";
 import {APP_GUARD, APP_INTERCEPTOR} from "@nestjs/core";
 import {EventEmitterModule} from "@nestjs/event-emitter";
 import {ThrottlerModule, ThrottlerGuard} from "@nestjs/throttler";
 import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
-import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware, CacheEvictInterceptor} from "./common";
+import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware, CacheableInterceptor, CacheEvictInterceptor} from "./common";
 
 @Module({
   imports: [
@@ -51,7 +50,7 @@ import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware, CacheEvictInter
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor
+      useClass: CacheableInterceptor
     },
     {
       provide: APP_INTERCEPTOR,
