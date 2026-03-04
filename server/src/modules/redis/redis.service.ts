@@ -1,7 +1,5 @@
 import Redis from "ioredis";
-import {ONE_MINUTE_MS} from "@/lib";
 import {Injectable, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
-import {asyncWrapProviders} from "node:async_hooks";
 
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {
