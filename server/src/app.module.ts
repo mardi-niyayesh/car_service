@@ -12,9 +12,6 @@ import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware, CacheableInterc
     // Throttler Module -Rate Limits
     ThrottlerModule.forRoot(throttlerConfig),
 
-    // Cache Manager
-    Modules.CacheModule,
-
     // Event Emitter -Events
     EventEmitterModule.forRoot(),
 
