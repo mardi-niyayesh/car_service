@@ -17,14 +17,15 @@ export class CacheService {
   }
 
   async set<T>(key: string, value: T, ttl?: number): Promise<T> {
-    return await this.cache.set(th, value, ttl);
+    return await this.cache.set(this.prefix(key), value, ttl);
   }
 
   async del(key: string): Promise<boolean> {
-    return await this.cache.del(key);
+    return await this.cache.del(this.prefix(key));
   }
 
   async delMany(keys: string[]): Promise<boolean> {
-    return await this.cache.mdel(keys);
+    const prefixKeys: string[] = keys.map(k => this.prefix(k));
+    return await this.cache.mdel(prefixKeys);
   }
 }
