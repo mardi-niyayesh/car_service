@@ -12,8 +12,6 @@ export interface ParamCacheKeyType {
 }
 
 export class RedisKey {
-  private static readonly prefix: string = process.env.REDIS_KEY_PREFIX?.trim() || 'app';
-
   /**
    * Builds a Redis key with the format: {prefix}:{resource}:{part1}:{part2}:...
    * If no meaningful parts are provided, returns the pattern {prefix}:{resource}:list
@@ -29,21 +27,9 @@ export class RedisKey {
       .map(p => p.toString().trim())
       .filter(Boolean);
 
-    const base: string = `${this.prefix}:${resource}`;
-
     return cleanParts.length === 0
-      ? `${base}:list`
-      : `${base}:${cleanParts.join(':')}`;
-  }
-
-  /** Builds users key or pattern
-   * @example
-   * RedisKey.users()        → "app:users:list"
-   * RedisKey.users("123")   → "app:users:123"
-   * RedisKey.users("123", " ")   → "app:users:123"
-   */
-  static users(id?: string): string {
-    return this.build("users", id);
+      ? `${resource}:list`
+      : `${resource}:${cleanParts.join(':')}`;
   }
 
   /** Builds key patterns for redis cache
@@ -92,10 +78,6 @@ export class RedisKey {
       parts.push(`p=${page}`, `l=${limit}`, `o=${orderBy}`);
     }
 
-    const key: string = RedisKey.build(resource, ...parts);
-
-    console.log(key);
-
-    return key;
+    return RedisKey.build(resource, ...parts);
   }
 }
