@@ -6,13 +6,13 @@ import {CACHEABLE_KEY, type CacheableDecoratorType} from "@/common";
 import {CallHandler, ExecutionContext, Injectable, NestInterceptor} from "@nestjs/common";
 
 @Injectable()
-export class CacheableInterceptor implements NestInterceptor {
+export class CacheableInterceptor<T> implements NestInterceptor {
   constructor(
     private readonly reflector: Reflector,
     private readonly redisService: RedisService,
   ) {}
 
-  async intercept(ctx: ExecutionContext, next: CallHandler<unknown>): Promise<Observable<unknown>> {
+  async intercept(ctx: ExecutionContext, next: CallHandler<T>): Promise<Observable<T> | Observable<Promise<T>>> {
     const cacheableKey = this.reflector.getAllAndOverride<CacheableDecoratorType>(CACHEABLE_KEY, [
       ctx.getClass(),
       ctx.getHandler(),
@@ -31,7 +31,7 @@ export class CacheableInterceptor implements NestInterceptor {
     });
 
     // check exist cached
-    const cacheValue = await this.redisService.get(key);
+    const cacheValue = await this.redisService.get<T>(key);
 
     // exist cached
     if (cacheValue !== null) return from([cacheValue]);
