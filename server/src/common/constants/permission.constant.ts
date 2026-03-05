@@ -1,3 +1,7 @@
+const OWNER = {
+  OWNER_ALL: "owner.all",
+} as const;
+
 const USER = {
   USER_SELF: "user.self",
   USER_VIEW: 'user.view',
@@ -26,6 +30,7 @@ const PRODUCT = {
 } as const;
 
 export const PERMISSIONS = {
+  ...OWNER,
   ...USER,
   ...ROLE,
   ...CATEGORY,
