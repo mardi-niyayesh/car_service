@@ -1,7 +1,7 @@
 import {isAllowedAction} from "@/lib";
 import {Reflector} from "@nestjs/core";
 import {AccessRequest, BaseException} from "@/types";
-import {IS_PUBLIC_KEY, PERMISSION_METADATA, type PermissionDecoratorParams} from "@/common";
+import {IS_PUBLIC_KEY, PERMISSION_METADATA, type PermissionDecoratorParams, PermissionsType} from "@/common";
 import {CanActivate, ExecutionContext, ForbiddenException, Injectable, InternalServerErrorException} from "@nestjs/common";
 
 @Injectable()
@@ -28,14 +28,12 @@ export class PermissionGuard implements CanActivate {
       error: "Role Not Send",
     } as BaseException);
 
-    const roles: string[] = req.user.roles;
-    const actionPermissions: string[] = req.user.permissions;
+    const actionPermissions = req.user.permissions as PermissionsType[];
 
     const isAllowed: boolean = isAllowedAction({
       requiredAll,
       requiredPermissions,
       actionPermissions,
-      roles
     });
 
     if (!isAllowed) throw new ForbiddenException({

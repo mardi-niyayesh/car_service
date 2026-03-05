@@ -1,10 +1,9 @@
-import {ROLES} from "@/common";
+import {PERMISSIONS, PermissionsType} from "@/common";
 
 interface IsAllowedActionParams {
-  roles: string[];
   requiredAll?: boolean;
-  actionPermissions: string[];
-  requiredPermissions: string[];
+  actionPermissions: PermissionsType[];
+  requiredPermissions: PermissionsType[];
 }
 
 export function isAllowedAction(
@@ -12,14 +11,12 @@ export function isAllowedAction(
     actionPermissions,
     requiredPermissions,
     requiredAll = false,
-    roles,
   }: IsAllowedActionParams
 ): boolean {
-  const isOwner: boolean = roles.some(r => r === ROLES.OWNER);
-
-  if (isOwner) return true;
-
   const permissionSet = new Set(actionPermissions);
+
+  // if owner
+  if (permissionSet.has(PERMISSIONS.OWNER_ALL)) return true;
 
   if (requiredAll) return requiredPermissions.every(p => permissionSet.has(p));
 
