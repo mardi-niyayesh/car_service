@@ -1,16 +1,26 @@
-import {UserRoleIncludeType, UserResponse} from "@/types";
+import {UserRoleIncludeType, UserResponse, RoleIncludeType} from "@/types";
 
-/** get users info and receive */
-export function getSafeUser(user: UserRoleIncludeType): UserResponse {
-  const roles = user.userRoles.map(r => r.role.name);
+export function getSafeRoles(allRoles: RoleIncludeType[]) {
+  const roles: string[] = allRoles.map(r => r.name);
 
-  const rolePermissions = user.userRoles.map(r => r.role.rolePermissions);
+  const rolePermissions = allRoles.map(r => r.rolePermissions);
 
-  const permissions = [...new Set(
+  const permissions: string[] = [...new Set(
     rolePermissions.map(rp => rp
       .map(p => p.permission.name)
     ).flat()
   )];
+
+  return {
+    roles,
+    permissions,
+  };
+}
+
+/** get users info and receive */
+export function getSafeUser(user: UserRoleIncludeType): UserResponse {
+  const allRoles = user.userRoles.map(r => r.role);
+  const roleAndPermissions = getSafeRoles(allRoles);
 
   return {
     user: {
@@ -20,8 +30,7 @@ export function getSafeUser(user: UserRoleIncludeType): UserResponse {
       id: user.id,
       email: user.email,
       display_name: user.display_name,
-      roles,
-      permissions
+      ...roleAndPermissions
     }
   };
 }
