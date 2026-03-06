@@ -1,8 +1,8 @@
 import {getSafeRoles, getSafeUser} from "@/lib";
 import {PrismaService} from "../prisma/prisma.service";
-import {ROLES, PaginationValidatorType, PERMISSIONS} from "@/common";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams} from "@/types";
+import {ROLES, PaginationValidatorType, PERMISSIONS, USER_PERMISSIONS, ROLE_PERMISSIONS} from "@/common";
 import {BadRequestException, ConflictException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
 
 @Injectable()
@@ -168,19 +168,23 @@ export class UsersService {
         } as BaseException);
       }
 
-      const rolesManagerStrict: string[] = [ROLES.ROLE_MANAGER, ROLES.USER_MANAGER, ROLES.OWNER];
+      const permissionsManagerStrict: string[] = [
+        PERMISSIONS.OWNER_ALL,
+        ...Object.values(USER_PERMISSIONS),
+        ...Object.values(ROLE_PERMISSIONS),
+      ];
 
       const isActorOwner: boolean = actionPayload.permissions.includes(PERMISSIONS.OWNER_ALL);
-      const isTargetManager: boolean = targetUser.permissions.some(r => rolesManagerStrict.includes(r));
-      const isNewRoleManager: boolean = newRoles.some(r => rolesManagerStrict.includes(r));
+      const isTargetManager: boolean = targetUser.permissions.some(r => permissionsManagerStrict.includes(r));
+      const isNewPermissionsManager: boolean = newPermissions.some(r => permissionsManagerStrict.includes(r));
 
       /**
-       * action role != 'owner':
-       * - if new role = 'role_manager' | 'user_manager' or
-       * - if target user role = 'role_manager' | 'user_manager' | 'owner'
+       * action permission != 'PERMISSIONS.OWNER_ALL':
+       * - if new permissions in 'permissionsManagerStrict' or
+       * - if target user permissions in 'permissionsManagerStrict'
        */
-      if (!isActorOwner && (isTargetManager || isNewRoleManager)) throw new ForbiddenException({
-        message: `Management level protection: You don't have enough privilege to ${action} high-level roles (role_manager, user_manager).`,
+      if (!isActorOwner && (isTargetManager || isNewPermissionsManager)) throw new ForbiddenException({
+        message: `Management level protection: You don't have enough privilege to ${action} high-level permissions in (role_manager, user_manager) role.`,
         error: "Permission Denied",
       } as BaseException);
 
@@ -199,7 +203,7 @@ export class UsersService {
         });
       }
 
-      const newUserData = await tx.user.findUnique({
+      const newUserDataRecord = await tx.user.findUnique({
         where: {id: userId},
         include: {
           userRoles: {
@@ -217,37 +221,16 @@ export class UsersService {
         omit: {password: true}
       });
 
-      if (!newUserData) throw new InternalServerErrorException({
+      if (!newUserDataRecord) throw new InternalServerErrorException({
         message: "User Not Found in database",
         error: "Something went wrong",
       } as BaseException);
 
-      const newTargetRoles: string[] = newUserData.userRoles.map(r => r.role.name);
-
-      const newTargetRolePermissions = newUserData.userRoles.map(r => r.role.rolePermissions);
-
-      const newTargetPermissions: string[] = [...new Set(
-        newTargetRolePermissions.map(rp => rp
-          .map(p => p.permission.name)
-        ).flat()
-      )];
-
-      const data: UserResponse = {
-        user: {
-          updated_at: newUserData.updated_at,
-          created_at: newUserData.created_at,
-          age: newUserData.age,
-          id: newUserData.id,
-          email: newUserData.email,
-          display_name: newUserData.display_name,
-          roles: newTargetRoles,
-          permissions: newTargetPermissions
-        }
-      };
+      const newUserData = getSafeUser(newUserDataRecord);
 
       return {
         message: `Roles successfully ${action === 'assign' ? 'assigned to' : 'revoked from'} this user.`,
-        data
+        data: newUserData
       };
     });
   }

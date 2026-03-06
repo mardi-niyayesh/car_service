@@ -1,9 +1,9 @@
-const OWNER_PERMISSIONS = {
+const BASE_PERMISSIONS = {
   OWNER_ALL: "owner.all",
+  USER_SELF: "user.self",
 } as const;
 
 export const USER_PERMISSIONS = {
-  USER_SELF: "user.self",
   USER_VIEW: 'user.view',
   USER_DELETE: 'user.delete',
   ROLE_ASSIGN: "role.assign",
@@ -30,7 +30,7 @@ const PRODUCT_PERMISSIONS = {
 } as const;
 
 export const PERMISSIONS = {
-  ...OWNER_PERMISSIONS,
+  ...BASE_PERMISSIONS,
   ...USER_PERMISSIONS,
   ...ROLE_PERMISSIONS,
   ...CATEGORY_PERMISSIONS,
