@@ -1,15 +1,8 @@
 import {PrismaService} from "../prisma/prisma.service";
 import {ROLES, PaginationValidatorType} from "@/common";
 import {Prisma} from "@/modules/prisma/generated/client";
-import {ApiResponse, BaseException, UserAccess, UserResponse} from "@/types";
+import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams} from "@/types";
 import {BadRequestException, ConflictException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
-
-interface ModifyRoleServiceParams {
-  actionPayload: UserAccess;
-  userId: string;
-  rolesId: string[];
-  action: "revoke" | "assign";
-}
 
 @Injectable()
 export class UsersService {

@@ -1,32 +1,26 @@
-import {RefreshToken, User} from "@/modules/prisma/generated/client";
+import {UserAccess, BaseTokens} from "@/types";
+import {User} from "@/modules/prisma/generated/client";
 
-interface BaseTokens {
-  roles: string[];
-  permissions: string[];
-}
-
-/** AccessToken payload on JWT */
-export interface AccessTokenPayload extends BaseTokens {
-  sub: string;
-  display_name?: string;
-  iat?: number;
-  exp?: number;
-  jti?: string;
-}
-
-export interface RefreshTokenPayload extends BaseTokens {
-  refreshRecord: RefreshToken;
-  user: SafeUser;
-}
-
+/** User type without password */
 export type SafeUser = Omit<User, "password">;
 
+/** user safe type responses in db */
 export type UserResponse = {
   user: SafeUser & BaseTokens;
 }
 
+/** login response type */
 export interface LoginResponse extends UserResponse {
   accessToken: string;
 }
 
+/** login user type */
 export type LoginUserSchemaType = { user: SafeUser & BaseTokens; accessToken: string; };
+
+/** modify roles types in users services */
+export interface ModifyRoleServiceParams {
+  actionPayload: UserAccess;
+  userId: string;
+  rolesId: string[];
+  action: "revoke" | "assign";
+}
