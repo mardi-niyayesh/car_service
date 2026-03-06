@@ -1,3 +1,4 @@
+import {getSafeUser} from "@/lib";
 import {PrismaService} from "../prisma/prisma.service";
 import {ROLES, PaginationValidatorType} from "@/common";
 import {Prisma} from "@/modules/prisma/generated/client";
@@ -26,6 +27,9 @@ export class UsersService {
             }
           }
         }
+      },
+      omit: {
+        password: true,
       }
     });
 
@@ -34,28 +38,7 @@ export class UsersService {
       error: "User Not Found",
     } as BaseException);
 
-    const roles = user.userRoles.map(r => r.role.name);
-
-    const rolePermissions = user.userRoles.map(r => r.role.rolePermissions);
-
-    const permissions = [...new Set(
-      rolePermissions.map(rp => rp
-        .map(p => p.permission.name)
-      ).flat()
-    )];
-
-    const data: UserResponse = {
-      user: {
-        updated_at: user.updated_at,
-        created_at: user.created_at,
-        age: user.age,
-        id: user.id,
-        email: user.email,
-        display_name: user.display_name,
-        roles,
-        permissions
-      }
-    };
+    const data = getSafeUser(user);
 
     return {
       message: 'User found successfully',
@@ -88,8 +71,7 @@ export class UsersService {
                    INNER JOIN permissions p ON rp.permission_id = p.id
           GROUP BY u.id
           ORDER BY u.created_at ${Prisma.sql([orderDirection])}
-          LIMIT ${limit}
-          OFFSET ${offset}`
+          LIMIT ${limit} OFFSET ${offset}`
     );
 
     return {
@@ -113,7 +95,13 @@ export class UsersService {
         },
         include: {
           userRoles: {
-            include: {role: true}
+            include: {
+              role: {
+                include: {
+                  rolePermissions: {include: {permission: true}}
+                }
+              },
+            }
           }
         },
         omit: {password: true}
@@ -123,6 +111,9 @@ export class UsersService {
         message: "User not exist in database",
         error: "User Not Found",
       });
+
+      const targetUserInfo = getSafeUser(targetUser);
+
 
       // Prevent self-assignment
       if (targetUser.id === actionPayload.userId) throw new ForbiddenException({
