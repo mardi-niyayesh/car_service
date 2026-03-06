@@ -138,7 +138,7 @@ export class UsersService {
 
       // Block restricted roles
       if (newPermissions.some(r => basePermissions.includes(r))) throw new ForbiddenException({
-        message: `role with permissions '${basePermissions[0]}' or '${basePermissions[1]}' cannot be ${action}ed`,
+        message: `role with permissions (${basePermissions.join(", ")}) cannot be ${action}ed`,
         error: 'Permission Denied',
       } as BaseException);
 
@@ -184,7 +184,7 @@ export class UsersService {
        * - if target user permissions in 'permissionsManagerStrict'
        */
       if (!isActorOwner && (isTargetManager || isNewPermissionsManager)) throw new ForbiddenException({
-        message: `Management level protection: You don't have enough privilege to ${action} high-level permissions in (role_manager, user_manager) role.`,
+        message: `High-level role protection: You don't have OWNER privileges required to ${action} permissions affecting management-level roles (${permissionsManagerStrict.join(", ")}).`,
         error: "Permission Denied",
       } as BaseException);
 
