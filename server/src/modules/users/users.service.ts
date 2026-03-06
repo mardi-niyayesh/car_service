@@ -2,7 +2,7 @@ import {getSafeRoles, getSafeUser} from "@/lib";
 import {PrismaService} from "../prisma/prisma.service";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams} from "@/types";
-import {ROLES, PaginationValidatorType, PERMISSIONS, USER_PERMISSIONS, ROLE_PERMISSIONS} from "@/common";
+import {ROLES, PaginationValidatorType, PERMISSIONS, USER_PERMISSIONS, ROLE_PERMISSIONS, BASE_PERMISSIONS} from "@/common";
 import {BadRequestException, ConflictException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
 
 @Injectable()
@@ -133,12 +133,12 @@ export class UsersService {
         error: 'Role Not Found',
       } as BaseException);
 
-      const basedRoles: string[] = [ROLES.OWNER, ROLES.SELF];
+      const basePermissions: string[] = Object.values(BASE_PERMISSIONS);
       const {roles: newRoles, permissions: newPermissions} = getSafeRoles(newRolesRecord);
 
       // Block restricted roles
-      if (newRoles.some(r => basedRoles.includes(r))) throw new ForbiddenException({
-        message: `owner and self roles cannot be ${action}ed`,
+      if (newPermissions.some(r => basePermissions.includes(r))) throw new ForbiddenException({
+        message: `role with permissions ${basePermissions[0]} or ${basePermissions[1]} cannot be ${action}ed`,
         error: 'Permission Denied',
       } as BaseException);
 

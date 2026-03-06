@@ -1,4 +1,4 @@
-const BASE_PERMISSIONS = {
+export const BASE_PERMISSIONS = {
   OWNER_ALL: "owner.all",
   USER_SELF: "user.self",
 } as const;
