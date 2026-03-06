@@ -1,4 +1,4 @@
-import {SafeUser} from "@/types/users.types";
+import {UserResponse} from "@/types/users.types";
 import {RefreshToken} from "@/modules/prisma/generated/client";
 
 /** base token types */
@@ -17,7 +17,6 @@ export interface AccessTokenPayload extends RolesAndPermissions {
 }
 
 /** refreshToken Type */
-export interface RefreshTokenPayload extends RolesAndPermissions {
+export interface RefreshTokenPayload extends UserResponse {
   refreshRecord: RefreshToken;
-  user: SafeUser;
 }

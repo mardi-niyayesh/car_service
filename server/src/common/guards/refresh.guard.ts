@@ -57,16 +57,6 @@ export class RefreshTokenGuard implements CanActivate {
       } as BaseException);
     }
 
-    const roles: string[] = tokenRecord.user.userRoles.map(r => r.role.name);
-
-    const rolePermissions = tokenRecord.user.userRoles.map(r => r.role.rolePermissions);
-
-    const permissions = [...new Set(
-      rolePermissions.map(rp => rp
-        .map(p => p.permission.name)
-      ).flat()
-    )];
-
     const getUserInfo = getSafeUser(tokenRecord.user);
 
     req.refreshPayload = {
@@ -80,16 +70,7 @@ export class RefreshTokenGuard implements CanActivate {
         user_id: tokenRecord.user_id,
         token: tokenRecord.token,
       },
-      user: {
-        id: tokenRecord.user.id,
-        created_at: tokenRecord.user.created_at,
-        updated_at: tokenRecord.user.updated_at,
-        display_name: tokenRecord.user.display_name,
-        email: tokenRecord.user.email,
-        age: tokenRecord.user.age,
-      },
-      roles,
-      permissions
+      user: getUserInfo.user
     } as RefreshTokenPayload;
 
     return true;
