@@ -138,7 +138,7 @@ export class UsersService {
 
       // Block restricted roles
       if (newPermissions.some(r => basePermissions.includes(r))) throw new ForbiddenException({
-        message: `role with permissions ${basePermissions[0]} or ${basePermissions[1]} cannot be ${action}ed`,
+        message: `role with permissions '${basePermissions[0]}' or '${basePermissions[1]}' cannot be ${action}ed`,
         error: 'Permission Denied',
       } as BaseException);
 
@@ -146,7 +146,7 @@ export class UsersService {
       const targetPermissions: string[] = targetUser.permissions.map(r => r);
 
       if (targetPermissions.some(r => r === PERMISSIONS.OWNER_ALL)) throw new ForbiddenException({
-        message: `Users with the ${PERMISSIONS.OWNER_ALL} permission have immutable privileges; modifications to their account are strictly prohibited.`,
+        message: `Users with the '${PERMISSIONS.OWNER_ALL}' permission have immutable privileges; modifications to their account are strictly prohibited.`,
         error: 'Permission Denied',
       } as BaseException);
 
