@@ -21,7 +21,7 @@ export class UserRevokeBadReqRes extends getNormalErrorResponse({
 
 /** forbidden response */
 export class UserRoleRevokedForbiddenRes extends getNormalErrorResponse({
-  message: "Management level protection: You don't have enough privilege to revoke high-level roles (role_manager, user_manager).",
+  message: "High-level role protection: You don't have OWNER privileges required to revoke permissions affecting management-level roles (owner.all, user.view, user.delete, role.assign, role.revoke, role.create, role.view, role.update, role.delete).",
   statusCode: 403,
   error: "Permission Denied",
   path: "users/:id/roles"
