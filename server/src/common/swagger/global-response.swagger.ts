@@ -1,5 +1,5 @@
-import {getDefaultMessage} from "@/lib";
 import {ApiProperty} from "@nestjs/swagger";
+import {getDefaultMessage} from "@/lib/utils/response";
 import {ApiResponse, BaseApiResponseData, ZodFieldError} from "@/types";
 
 function getFormatPath(path: string): string {
