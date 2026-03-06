@@ -1,5 +1,5 @@
 import type {Request} from "express";
-import {RefreshTokenPayload, AccessTokenPayload} from "./users.types";
+import {RefreshTokenPayload, AccessTokenPayload} from "@/types";
 
 export interface NormalizedClientInfo {
   ip: string | null;
