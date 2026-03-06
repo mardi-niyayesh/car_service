@@ -137,10 +137,13 @@ export class UsersService {
       const {roles: newRoles, permissions: newPermissions} = getSafeRoles(newRolesRecord);
 
       // Block restricted roles
-      if (newPermissions.some(r => basePermissions.includes(r))) throw new ForbiddenException({
-        message: `role with permissions (${basePermissions.join(", ")}) cannot be ${action}ed`,
-        error: 'Permission Denied',
-      } as BaseException);
+      const restricted: string[] = newPermissions.filter(r => basePermissions.includes(r));
+
+      if (restricted.length)
+        throw new ForbiddenException({
+          message: `Roles containing base permissions (${restricted.join(", ")}) cannot be ${action}ed.`,
+          error: "Permission Denied",
+        } as BaseException);
 
       // Target Roles in Array
       const targetPermissions: string[] = targetUser.permissions.map(r => r);
@@ -154,7 +157,7 @@ export class UsersService {
         const existingRoles: string[] = newRoles.filter(r => targetUser.roles.includes(r));
 
         // Check for duplicate assignments
-        if (existingRoles.length > 0) throw new ConflictException({
+        if (existingRoles.length) throw new ConflictException({
           message: `User already has these roles: ${existingRoles.join(", ")}`,
           error: 'Conflict User Roles',
         } as BaseException);
@@ -162,7 +165,7 @@ export class UsersService {
         const missingRoles: string[] = newRoles.filter(r => !targetUser.roles.includes(r));
 
         // Check exist all roles in targetRoles
-        if (missingRoles.length > 0) throw new BadRequestException({
+        if (missingRoles.length) throw new BadRequestException({
           message: `User does not have these roles: ${missingRoles.join(", ")}`,
           error: 'Roles Not Found in Target Roles',
         } as BaseException);
