@@ -89,7 +89,7 @@ export class UsersService {
     return this.prisma.$transaction(async tx => {
       const {rolesId, userId, action, actionPayload} = params;
 
-      const targetUser = await tx.user.findUnique({
+      const targetUserRecord = await tx.user.findUnique({
         where: {
           id: userId
         },
@@ -107,13 +107,12 @@ export class UsersService {
         omit: {password: true}
       });
 
-      if (!targetUser) throw new NotFoundException({
+      if (!targetUserRecord) throw new NotFoundException({
         message: "User not exist in database",
         error: "User Not Found",
       });
 
-      const targetUserInfo = getSafeUser(targetUser);
-
+      const {user: targetUser} = getSafeUser(targetUserRecord);
 
       // Prevent self-assignment
       if (targetUser.id === actionPayload.userId) throw new ForbiddenException({
@@ -121,18 +120,21 @@ export class UsersService {
         error: "Permission Denied",
       } as BaseException);
 
-      const roles = await tx.role.findMany({
+      const newRoles = await tx.role.findMany({
         where: {id: {in: rolesId}},
+        include: {
+          rolePermissions: {include: {permission: true}}
+        }
       });
 
       // Validate all roles exist
-      if (roles.length !== rolesId.length) throw new NotFoundException({
+      if (newRoles.length !== rolesId.length) throw new NotFoundException({
         message: 'One or many Roles does not exist in database',
         error: 'Role Not Found',
       } as BaseException);
 
       const restrictedRoles: string[] = [ROLES.OWNER, ROLES.SELF];
-      const newRolesName: string[] = roles.map(r => r.name);
+      const newRolesName: string[] = newRoles.map(r => r.name);
 
       // Block restricted roles
       if (newRolesName.some(r => restrictedRoles.includes(r))) throw new ForbiddenException({
@@ -141,7 +143,7 @@ export class UsersService {
       } as BaseException);
 
       // Target Roles in Array
-      const targetRoles: string[] = targetUser.userRoles.map(r => r.role.name);
+      const targetRoles: string[] = targetUser.roles.map(r => r);
 
       if (targetRoles.some(r => r === ROLES.OWNER)) throw new ForbiddenException({
         message: "The 'owner' role is immutable; modifications to this account's privileges are strictly prohibited.",
