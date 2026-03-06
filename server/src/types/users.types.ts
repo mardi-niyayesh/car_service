@@ -17,8 +17,8 @@ export interface LoginResponse extends UserResponse {
 /** login user type */
 export type LoginUserSchemaType = { user: SafeUser & BaseTokens; accessToken: string; };
 
-/** user full type in prisma */
-export type UserFullType = Prisma.UserGetPayload<{
+/** user full role type in prisma */
+export type UserRoleIncludeType = Prisma.UserGetPayload<{
   include: {
     userRoles: {
       include: {
@@ -31,6 +31,9 @@ export type UserFullType = Prisma.UserGetPayload<{
         }
       }
     }
+  };
+  omit: {
+    password: true;
   }
 }>;
 

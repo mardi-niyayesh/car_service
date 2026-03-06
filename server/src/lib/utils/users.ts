@@ -1,7 +1,7 @@
-import {UserFullType, UserResponse} from "@/types";
+import {UserRoleIncludeType, UserResponse} from "@/types";
 
 /** get users info and receive */
-export function getSafeUser(user: UserFullType): UserResponse {
+export function getSafeUser(user: UserRoleIncludeType): UserResponse {
   const roles = user.userRoles.map(r => r.role.name);
 
   const rolePermissions = user.userRoles.map(r => r.role.rolePermissions);
