@@ -1,5 +1,5 @@
 import {UserAccess, BaseTokens} from "@/types";
-import {User} from "@/modules/prisma/generated/client";
+import {Prisma, User} from "@/modules/prisma/generated/client";
 
 /** User type without password */
 export type SafeUser = Omit<User, "password">;
@@ -16,6 +16,23 @@ export interface LoginResponse extends UserResponse {
 
 /** login user type */
 export type LoginUserSchemaType = { user: SafeUser & BaseTokens; accessToken: string; };
+
+/** user full type in prisma */
+export type UserFullType = Prisma.UserGetPayload<{
+  include: {
+    userRoles: {
+      include: {
+        role: {
+          include: {
+            rolePermissions: {
+              include: { permission: true }
+            }
+          }
+        }
+      }
+    }
+  }
+}>;
 
 /** modify roles types in users services */
 export interface ModifyRoleServiceParams {
