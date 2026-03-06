@@ -16,7 +16,7 @@ export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
   /** get user info
-   * - only users with role (owner or role_manager) can accessibility to this route
+   * - only users with permission (owner.all or user.view) can accessibility to this route
    */
   async findOne(id: string): Promise<ApiResponse<UserResponse>> {
     const user = await this.prisma.user.findUnique({
@@ -71,7 +71,7 @@ export class UsersService {
   }
 
   /** get all users info
-   * - only users with role (owner or role_manager) can accessibility to this route
+   * - only users with permission (owner.all or user.view) can accessibility to this route
    */
   async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<{ users: UserResponse[] }>> {
     const {orderBy, limit, offset} = pagination;
