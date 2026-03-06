@@ -1,4 +1,4 @@
-import {hashSecretToken} from '@/lib';
+import {getSafeUser, hashSecretToken} from '@/lib';
 import {PrismaService} from '@/modules/prisma/prisma.service';
 import {BaseException, RefreshRequest, RefreshTokenPayload} from '@/types';
 import {CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException} from '@nestjs/common';
@@ -66,6 +66,8 @@ export class RefreshTokenGuard implements CanActivate {
         .map(p => p.permission.name)
       ).flat()
     )];
+
+    const getUserInfo = getSafeUser(tokenRecord.user);
 
     req.refreshPayload = {
       refreshRecord: {

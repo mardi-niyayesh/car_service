@@ -2,13 +2,13 @@ import {SafeUser} from "@/types/users.types";
 import {RefreshToken} from "@/modules/prisma/generated/client";
 
 /** base token types */
-export interface BaseTokens {
+export interface RolesAndPermissions {
   roles: string[];
   permissions: string[];
 }
 
 /** AccessToken payload on JWT */
-export interface AccessTokenPayload extends BaseTokens {
+export interface AccessTokenPayload extends RolesAndPermissions {
   sub: string;
   display_name?: string;
   iat?: number;
@@ -17,7 +17,7 @@ export interface AccessTokenPayload extends BaseTokens {
 }
 
 /** refreshToken Type */
-export interface RefreshTokenPayload extends BaseTokens {
+export interface RefreshTokenPayload extends RolesAndPermissions {
   refreshRecord: RefreshToken;
   user: SafeUser;
 }
