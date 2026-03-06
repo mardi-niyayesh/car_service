@@ -133,11 +133,11 @@ export class UsersService {
         error: 'Role Not Found',
       } as BaseException);
 
-      const restrictedRoles: string[] = [ROLES.OWNER, ROLES.SELF];
+      const basedRoles: string[] = [ROLES.OWNER, ROLES.SELF];
       const {roles: newRoles, permissions: newPermissions} = getSafeRoles(newRolesRecord);
 
       // Block restricted roles
-      if (newRoles.some(r => restrictedRoles.includes(r))) throw new ForbiddenException({
+      if (newRoles.some(r => basedRoles.includes(r))) throw new ForbiddenException({
         message: `owner and self roles cannot be ${action}ed`,
         error: 'Permission Denied',
       } as BaseException);
@@ -151,7 +151,7 @@ export class UsersService {
       } as BaseException);
 
       if (action === "assign") {
-        const existingRoles = newRoles.filter(r => targetRoles.includes(r));
+        const existingRoles: string[] = newRoles.filter(r => targetUser.roles.includes(r));
 
         // Check for duplicate assignments
         if (existingRoles.length > 0) throw new ConflictException({
@@ -159,7 +159,7 @@ export class UsersService {
           error: 'Conflict User Roles',
         } as BaseException);
       } else {
-        const missingRoles = newRoles.filter(role => !targetRoles.includes(role));
+        const missingRoles: string[] = newRoles.filter(r => !targetUser.roles.includes(r));
 
         // Check exist all roles in targetRoles
         if (missingRoles.length > 0) throw new BadRequestException({
@@ -170,8 +170,8 @@ export class UsersService {
 
       const rolesManagerStrict: string[] = [ROLES.ROLE_MANAGER, ROLES.USER_MANAGER, ROLES.OWNER];
 
-      const isActorOwner: boolean = actionPayload.roles.includes(ROLES.OWNER);
-      const isTargetManager: boolean = targetRoles.some(r => rolesManagerStrict.includes(r));
+      const isActorOwner: boolean = actionPayload.permissions.includes(PERMISSIONS.OWNER_ALL);
+      const isTargetManager: boolean = targetUser.permissions.some(r => rolesManagerStrict.includes(r));
       const isNewRoleManager: boolean = newRoles.some(r => rolesManagerStrict.includes(r));
 
       /**
