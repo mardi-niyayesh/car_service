@@ -131,14 +131,14 @@ export class AuthController {
 
     const data: LoginResponse = {
       user: {
-        roles: req.refreshPayload.roles,
+        roles: req.refreshPayload.user.roles,
         display_name: req.refreshPayload.user.display_name,
         created_at: req.refreshPayload.user.created_at,
         age: req.refreshPayload.user.age,
         updated_at: req.refreshPayload.user.updated_at,
         email: req.refreshPayload.user.email,
         id: req.refreshPayload.user.id,
-        permissions: req.refreshPayload.permissions
+        permissions: req.refreshPayload.user.permissions
       },
       accessToken
     };

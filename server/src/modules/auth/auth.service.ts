@@ -229,8 +229,8 @@ export class AuthService {
     const payload: AccessTokenPayload = {
       sub: refreshPayload.user.id,
       jti: randomUUID() + Date.now(),
-      roles: refreshPayload.roles,
-      permissions: refreshPayload.permissions,
+      roles: refreshPayload.user.roles,
+      permissions: refreshPayload.user.permissions,
       display_name: refreshPayload.user.display_name ?? "",
     };
 
