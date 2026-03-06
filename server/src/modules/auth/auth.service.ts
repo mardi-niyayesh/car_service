@@ -7,7 +7,7 @@ import {User} from "../prisma/generated/client";
 import {EventEmitter2} from "@nestjs/event-emitter";
 import {PrismaService} from "../prisma/prisma.service";
 import {EmailService} from "@/modules/email/email.service";
-import {buildEmailHtml, compareSecret, generateRandomToken, hashSecret, hashSecretToken} from "@/lib";
+import {buildEmailHtml, compareSecret, generateRandomToken, getSafeUser, hashSecret, hashSecretToken} from "@/lib";
 import type {AccessTokenPayload, RefreshTokenPayload, ApiResponse, UserResponse, LoginResponse, BaseException, NormalizedClientInfo} from "@/types";
 import {BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException} from '@nestjs/common';
 
@@ -84,14 +84,14 @@ export class AuthService {
 
       const data: UserResponse = {
         user: {
-          roles: [roles.role.name],
           updated_at: newUser.updated_at,
           created_at: newUser.created_at,
           age: newUser.age,
           id: newUser.id,
           email: newUser.email,
           display_name: newUser.display_name,
-          permissions
+          roles: [roles.role.name],
+          permissions,
         }
       };
 
@@ -151,26 +151,18 @@ export class AuthService {
       error: "Invalid Credentials"
     } as BaseException);
 
-    const rolePermissions = user.userRoles.map(r => r.role.rolePermissions);
-
-    const permissions = [...new Set(
-      rolePermissions.map(rp => rp
-        .map(p => p.permission.name)
-      ).flat()
-    )];
-
-    const roles: string[] = user.userRoles.map(r => r.role.name);
+    const {user: userData} = getSafeUser(user);
 
     const accessTokenPayload: AccessTokenPayload = {
       sub: user.id,
       jti: randomUUID() + Date.now(),
       display_name: user.display_name ?? "",
-      roles,
-      permissions
+      roles: userData.roles,
+      permissions: userData.permissions,
     };
 
-    const accessToken: string = this.generateAccessToken(accessTokenPayload);
     const refreshToken: string = generateRandomToken();
+    const accessToken: string = this.generateAccessToken(accessTokenPayload);
 
     const expires_at: Date = new Date(
       Date.now() + (
@@ -216,8 +208,8 @@ export class AuthService {
         display_name: user.display_name,
         created_at: user.created_at,
         updated_at: user.updated_at,
-        roles,
-        permissions
+        roles: userData.roles,
+        permissions: userData.permissions,
       },
       accessToken,
       refreshToken,
