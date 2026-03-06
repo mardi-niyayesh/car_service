@@ -1,6 +1,6 @@
-import {getSafeUser} from "@/lib";
+import {getSafeRoles, getSafeUser} from "@/lib";
 import {PrismaService} from "../prisma/prisma.service";
-import {ROLES, PaginationValidatorType} from "@/common";
+import {ROLES, PaginationValidatorType, PERMISSIONS} from "@/common";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams} from "@/types";
 import {BadRequestException, ConflictException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
@@ -120,7 +120,7 @@ export class UsersService {
         error: "Permission Denied",
       } as BaseException);
 
-      const newRoles = await tx.role.findMany({
+      const newRolesRecord = await tx.role.findMany({
         where: {id: {in: rolesId}},
         include: {
           rolePermissions: {include: {permission: true}}
@@ -128,30 +128,30 @@ export class UsersService {
       });
 
       // Validate all roles exist
-      if (newRoles.length !== rolesId.length) throw new NotFoundException({
+      if (newRolesRecord.length !== rolesId.length) throw new NotFoundException({
         message: 'One or many Roles does not exist in database',
         error: 'Role Not Found',
       } as BaseException);
 
       const restrictedRoles: string[] = [ROLES.OWNER, ROLES.SELF];
-      const newRolesName: string[] = newRoles.map(r => r.name);
+      const {roles: newRoles, permissions: newPermissions} = getSafeRoles(newRolesRecord);
 
       // Block restricted roles
-      if (newRolesName.some(r => restrictedRoles.includes(r))) throw new ForbiddenException({
+      if (newRoles.some(r => restrictedRoles.includes(r))) throw new ForbiddenException({
         message: `owner and self roles cannot be ${action}ed`,
         error: 'Permission Denied',
       } as BaseException);
 
       // Target Roles in Array
-      const targetRoles: string[] = targetUser.roles.map(r => r);
+      const targetPermissions: string[] = targetUser.permissions.map(r => r);
 
-      if (targetRoles.some(r => r === ROLES.OWNER)) throw new ForbiddenException({
-        message: "The 'owner' role is immutable; modifications to this account's privileges are strictly prohibited.",
+      if (targetPermissions.some(r => r === PERMISSIONS.OWNER_ALL)) throw new ForbiddenException({
+        message: `Users with the ${PERMISSIONS.OWNER_ALL} permission have immutable privileges; modifications to their account are strictly prohibited.`,
         error: 'Permission Denied',
       } as BaseException);
 
       if (action === "assign") {
-        const existingRoles = newRolesName.filter(r => targetRoles.includes(r));
+        const existingRoles = newRoles.filter(r => targetRoles.includes(r));
 
         // Check for duplicate assignments
         if (existingRoles.length > 0) throw new ConflictException({
@@ -159,7 +159,7 @@ export class UsersService {
           error: 'Conflict User Roles',
         } as BaseException);
       } else {
-        const missingRoles = newRolesName.filter(role => !targetRoles.includes(role));
+        const missingRoles = newRoles.filter(role => !targetRoles.includes(role));
 
         // Check exist all roles in targetRoles
         if (missingRoles.length > 0) throw new BadRequestException({
@@ -172,7 +172,7 @@ export class UsersService {
 
       const isActorOwner: boolean = actionPayload.roles.includes(ROLES.OWNER);
       const isTargetManager: boolean = targetRoles.some(r => rolesManagerStrict.includes(r));
-      const isNewRoleManager: boolean = newRolesName.some(r => rolesManagerStrict.includes(r));
+      const isNewRoleManager: boolean = newRoles.some(r => rolesManagerStrict.includes(r));
 
       /**
        * action role != 'owner':
