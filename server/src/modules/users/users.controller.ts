@@ -86,7 +86,7 @@ export class UsersController {
   })
   @ApiOperation({
     summary: 'get user info by self',
-    description: 'get user info accessToken. **Access restricted to users with role: (self) only.**',
+    description: 'get user info accessToken. **Access restricted to users with permission: (user.self) only.**',
     operationId: 'get_profile',
     tags: ["User"],
   })
@@ -114,7 +114,7 @@ export class UsersController {
   })
   @ApiOperation({
     summary: 'get user info',
-    description: 'get user info with id. **Access restricted to users with permission: (owner or user.view) only.**',
+    description: 'get user info with id. **Access restricted to users with permission: (owner.all or user.view) only.**',
     operationId: 'get_user',
     tags: ["User"],
   })
@@ -154,7 +154,7 @@ export class UsersController {
   })
   @ApiOperation({
     summary: 'get all users info',
-    description: 'get all users info. **Access restricted to users with permission: (owner or user.view) only.**',
+    description: 'get all users info. **Access restricted to users with permission: (owner.all or user.view) only.**',
     operationId: 'get_users',
     tags: ["User"],
   })
@@ -200,6 +200,8 @@ export class UsersController {
   Other managers cannot grant these specific privileges to prevent peer-level 
   escalation, though they may assign other authorized management roles.
   - All roles must exist; invalid role IDs will result in a 404 error.
+  - **Access control**: This endpoint is only accessible to users who have the 
+    **"role.assign"** or **"owner.all"** permission in their permissions list.
 
   This endpoint ensures role integrity, prevents privilege escalation, 
   and enforces organizational security policies.
@@ -267,6 +269,8 @@ export class UsersController {
     This prevents unauthorized managers from de-authorizing their peers or superiors.
   - **Atomic updates**: The system ensures that role removal is reflected immediately 
     across all associated permissions.
+    - **Access control**: This endpoint is only accessible to users who have the 
+    **"role.revoke"** or **"owner.all"** permission in their permissions list.
   
   This endpoint maintains the principle of least privilege and prevents 
   unauthorized restructuring of the organizational hierarchy.
