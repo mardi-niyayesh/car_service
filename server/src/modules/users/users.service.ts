@@ -187,7 +187,8 @@ export class UsersService {
        * - if target user permissions in 'permissionsManagerStrict'
        */
       if (!isActorOwner && (isTargetManager || isNewPermissionsManager)) throw new ForbiddenException({
-        message: `High-level role protection: You don't have OWNER privileges required to ${action} permissions affecting management-level roles (${permissionsManagerStrict.join(", ")}).`,
+        message: `High-level role protection: 
+        You don't have OWNER privileges required to ${action} permissions affecting management-level roles (${permissionsManagerStrict.join(", ")}).`,
         error: "Permission Denied",
       } as BaseException);
 
