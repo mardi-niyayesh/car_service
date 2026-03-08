@@ -1,4 +1,6 @@
+//img or icon
 import reservCar from "../../../assets/reservCar.png";
+//components
 import ComponentReservAutorent from "./ComponentReservAutorent";
 
 const feacherData = [
