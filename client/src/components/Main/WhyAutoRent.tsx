@@ -1,3 +1,4 @@
+//components
 import ComponentWhyAutoRent from "./ComponentWhyAutoRent";
 
 const WhyAutoRent = () => {
