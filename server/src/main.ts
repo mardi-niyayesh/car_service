@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import helmet from "helmet";
 import path from "node:path";
-import {Logger} from "@nestjs/common";
 import {AppModule} from './app.module';
 import {NestFactory} from '@nestjs/core';
 import cookieParser from "cookie-parser";
@@ -62,10 +61,7 @@ async function bootstrap(): Promise<void> {
       customCssUrl: "/static/styles/swagger.css"
     });
   }
-
-  const logger = new Logger("bootstrap");
-  logger.log("Application started.");
-
+  
   // listen app on default port
   await app.listen(PORT ?? 3000);
 }
