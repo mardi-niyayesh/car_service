@@ -1,3 +1,4 @@
+import {ONE_MINUTE_MS} from '@/lib';
 import {PrismaPg} from '@prisma/adapter-pg';
 import {PrismaClient} from './generated/client';
 import {Injectable, OnModuleInit, OnModuleDestroy} from '@nestjs/common';
@@ -15,6 +16,9 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
       adapter,
       errorFormat: 'minimal',
       log: ['info', 'error', 'warn'],
+      transactionOptions: {
+        timeout: ONE_MINUTE_MS / 2,
+      }
     });
   }
 
