@@ -8,8 +8,8 @@ import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {NestExpressApplication} from "@nestjs/platform-express";
 import {ResponseInterceptors, ResponseException} from "./common";
 
-const PORT: string = process.env.PORT!;
-const BASE_URL: string = process.env.BASE_URL!;
+const PORT: string = process.env.PORT ?? "3000";
+const BASE_URL: string = process.env.BASE_URL ?? "api/v1";
 
 /** run application */
 async function bootstrap(): Promise<void> {
@@ -61,7 +61,7 @@ async function bootstrap(): Promise<void> {
       customCssUrl: "/static/styles/swagger.css"
     });
   }
-  
+
   // listen app on default port
   await app.listen(PORT ?? 3000);
 }
