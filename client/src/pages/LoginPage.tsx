@@ -57,7 +57,7 @@ function LoginPage() {
       }
       //other error
       else {
-        // console.error("ساختار نامعتبر پاسخ:", data);
+        // console.error("پاسخ:", data);
         setErrorMessage("خطایی در ورود رخ داد. لطفاً مجدداً تلاش کنید.");
         setIsErrorModalOpen(true);
       }
@@ -80,7 +80,7 @@ function LoginPage() {
     setIsModalOpen(false);
     navigate("/dashboard");
   };
-  //SuccessModal
+  //ErrorModal
   const handleCloseErrorModal = () => {
     setIsErrorModalOpen(false);
   };
