@@ -2,220 +2,102 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
+import {ROLES} from "@/common";
 import "tsconfig-paths/register";
+import {hashSecret} from "@/lib";
 import {NestFactory} from "@nestjs/core";
+import {CreateUser} from "@/modules/auth/dto";
 import {CliModule} from "@/modules/cli/cli.module";
-import {INestApplicationContext} from "@nestjs/common";
-import {DefaultArgs} from "@prisma/client/runtime/client";
+import * as readline from "node:readline/promises";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {PrismaClient} from "@/modules/prisma/generated/client";
-import {PERMISSIONS, ROLES, RolesType, PermissionsType} from "@/common";
 
-interface SeedCreateRoleParams {
-  app: INestApplicationContext;
-  prisma: Omit<PrismaClient<never, undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$transaction" | "$extends"> | PrismaService;
-  role: RolesType;
-  permissions: PermissionsType;
-  not?: PermissionsType[];
-  advanced?: PermissionsType[];
-  description: string;
+async function ask<T extends keyof typeof CreateUser.shape>(
+  rl: readline.Interface,
+  q: string,
+  field: T,
+): Promise<string> {
+  while (true) {
+    const answer: string = await rl.question(q);
+
+    const validate = CreateUser.shape[field].safeParse(answer);
+
+    if (!validate.success) {
+      console.log(`the ${field} not valid.`, validate.error.issues[0].message);
+      continue;
+    }
+
+    return answer;
+  }
 }
 
-/** create roles */
-async function createNewRole(data: SeedCreateRoleParams): Promise<void> {
-  const {app, prisma, role, permissions, not, advanced, description} = data;
-
-  if (role === ROLES.OWNER || role === ROLES.SELF) {
-    console.log(`Cannot create a new role with name: ${role} in ${createNewRole.name}, Cause this route create in ${bootstrap.name}`);
-    await app.close();
-    process.exit(1);
-  }
-
-  const newRole = await prisma.role.upsert({
-    where: {
-      name: role,
-    },
-    update: {},
-    create: {
-      name: role,
-      description
-    }
-  });
-
-  if (!newRole) {
-    console.log(`⚠ Something went wrong in Server! ${role} not created!`);
-    await app.close();
-    process.exit(1);
-  }
-
-  type Exact = { name: PermissionsType }[];
-  type Contains = { name: { contains: PermissionsType } }[];
-
-  const NOT: Contains = (not || []).map(n => ({name: {contains: n}}));
-
-  const exactPermissions: Exact = (advanced || []).map(p => ({name: p}));
-
-  const newRolePermissions = await prisma.permission.findMany({
-    where: {
-      AND: [
-        {
-          OR: [
-            {name: {startsWith: permissions.split(".")[0]}},
-            ...exactPermissions
-          ]
-        },
-        ...(NOT.length > 0 ? [{NOT}] : []),
-      ]
-    }
-  });
-
-  if (!newRolePermissions) {
-    console.log(`⚠ Something went wrong in Server! permissions for ${role} not created`);
-    await app.close();
-    process.exit(1);
-  }
-
-  if (newRolePermissions.length > 0) {
-    await prisma.rolePermission.createMany({
-      data: newRolePermissions.map(p => ({
-        role_id: newRole.id,
-        permission_id: p.id,
-      }))
-    });
-  }
-
-  console.log(`✅ Role "${role}" created with ${newRolePermissions.length} permissions`);
-}
-
-async function bootstrap(): Promise<void> {
+async function bootstrap() {
   const app = await NestFactory.createApplicationContext(CliModule);
 
-  const prisma = app.get(PrismaService);
-
-  const permissions = Object.entries(PERMISSIONS)
-    .filter(p => p[1] !== PERMISSIONS.USER_SELF && p[1] !== PERMISSIONS.OWNER_ALL)
-    .map(p => p[1]);
+  const prisma: PrismaService = app.get(PrismaService);
 
   await prisma.$transaction(async tx => {
-    for (const p of permissions) {
-      await tx.permission.upsert({
-        where: {
-          name: p
-        },
-        update: {},
-        create: {
-          name: p,
-          description: `this permission allows ${p.split(".")[1]} on ${p.split(".")[0]}`,
-        }
-      });
-    }
-
-    const selfPermission = await tx.permission.upsert({
-      where: {
-        name: PERMISSIONS.USER_SELF
-      },
-      update: {},
-      create: {
-        name: PERMISSIONS.USER_SELF,
-        description: "Basic permission for users to view and update their own personal information"
-      }
+    const ownerRole = await tx.role.findUnique({
+      where: {name: ROLES.OWNER}
     });
 
-    const ownerPermission = await tx.permission.upsert({
-      where: {
-        name: PERMISSIONS.OWNER_ALL
-      },
-      update: {},
-      create: {
-        name: PERMISSIONS.OWNER_ALL,
-        description: "this permission allows to access all routes"
-      }
+    const selfRole = await tx.role.findUnique({
+      where: {name: ROLES.SELF}
     });
 
-    const selfRole = await tx.role.upsert({
-      where: {
-        name: ROLES.SELF
-      },
-      update: {},
-      create: {
-        name: ROLES.SELF,
-        description: "Basic role for users to view and update their own personal information",
-      }
-    });
-
-    const ownerRole = await tx.role.upsert({
-      where: {
-        name: ROLES.OWNER
-      },
-      update: {},
-      create: {
-        name: ROLES.OWNER,
-        description: "System owner with full access to all resources"
-      }
-    });
-
-    if (!ownerRole || !selfPermission || !selfRole || !ownerRole) {
-      console.log("⚠ Something went wrong in Server! ownerRole or selfPermission or selfRole or userManagerRole not created");
+    if (!ownerRole || !selfRole) {
+      console.log("⚠ 'owner' or 'self' role not exists in database!");
       await app.close();
       process.exit(1);
     }
 
-    await tx.rolePermission.create({
-      data: {
-        role_id: selfRole.id,
-        permission_id: selfPermission.id,
+    const exist = await tx.userRole.findFirst({
+      where: {role_id: ownerRole.id},
+      include: {
+        user: {
+          omit: {password: true}
+        }
       }
     });
 
-    await tx.rolePermission.create({
+    if (exist) {
+      console.log("Owner already exists");
+      console.log(exist.user);
+      await app.close();
+      return process.exit(0);
+    }
+
+    console.log(`creating owner...`);
+
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    const email: string = await ask(rl, "enter email: ", "email");
+    const password: string = await ask(rl, "enter password: ", "password");
+
+    const hashedPassword: string = await hashSecret(password);
+
+    const owner = await tx.user.create({
       data: {
-        role_id: ownerRole.id,
-        permission_id: ownerPermission.id
+        email,
+        password: hashedPassword,
+        display_name: "owner",
       }
     });
 
-    await createNewRole({
-      app,
-      prisma: tx,
-      role: ROLES.USER_MANAGER,
-      permissions: PERMISSIONS.USER_VIEW,
-      not: [PERMISSIONS.USER_SELF],
-      advanced: [PERMISSIONS.ROLE_ASSIGN, PERMISSIONS.ROLE_REVOKE],
-      description: "Full administrative access to manage all users in the system",
+    await tx.userRole.createMany({
+      data: [
+        {role_id: ownerRole.id, user_id: owner.id},
+        {role_id: selfRole.id, user_id: owner.id},
+      ]
     });
 
-    await createNewRole({
-      app,
-      prisma: tx,
-      role: ROLES.ROLE_MANAGER,
-      permissions: PERMISSIONS.ROLE_VIEW,
-      not: [PERMISSIONS.ROLE_ASSIGN, PERMISSIONS.ROLE_REVOKE],
-      description: "Full administrative access to manage all roles in the system",
-    });
-
-    await createNewRole({
-      app,
-      prisma: tx,
-      role: ROLES.CATEGORY_MANAGER,
-      permissions: PERMISSIONS.CATEGORY_CREATE,
-      description: "Full administrative access to manage all categories in the system",
-    });
-
-    await createNewRole({
-      app,
-      prisma: tx,
-      role: ROLES.PRODUCT_MANAGER,
-      permissions: PERMISSIONS.PRODUCT_CREATE,
-      description: "Full administrative access to manage all products in the system",
-    });
-
-    console.log("✅ Seed completed: Default roles and permissions have been created successfully.");
-
-    await app.close();
+    console.log(`✅ owner created:\nemail: ${owner.email}\nid: ${owner.id}\nrole: ${ownerRole.name}`);
     process.exit(0);
   });
 }
 
 bootstrap()
-  .then(() => console.log("running roles script"))
+  .then(() => console.log("running owner script"))
   .catch(e => console.error(e));
