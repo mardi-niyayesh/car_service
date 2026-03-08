@@ -1,10 +1,6 @@
-type descriptionWhyAutoRenttype={
-  logo:string;
-  name:string;
-  description:string;
-  id?: number;
-}
-const DescriptionWhyAutoRent = (props:descriptionWhyAutoRenttype) => {
+//Types
+import { type descriptionWhyAutoRenttype } from "../../types/auth.types";
+const DescriptionWhyAutoRent = (props: descriptionWhyAutoRenttype) => {
   return (
     <div>
       <div className="bg-white border border-[#D7D7D7] p-4 md:p-6 w-full max-w-[320px] md:w-[320px] rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
@@ -17,10 +13,10 @@ const DescriptionWhyAutoRent = (props:descriptionWhyAutoRenttype) => {
             />
           </div>
           <h3 className="font-bold text-[14px] md:text-[16px] text-[#414141] text-center mb-2">
-           {props.name}
+            {props.name}
           </h3>
           <p className="text-[#757575] text-[12px] md:text-[13px] text-center leading-relaxed">
-           {props.description}
+            {props.description}
           </p>
         </div>
       </div>

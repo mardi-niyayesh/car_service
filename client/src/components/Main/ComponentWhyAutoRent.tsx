@@ -1,11 +1,8 @@
+//components
 import DescriptionWhyAutoRent from "./descriptionWhyAutoRent";
+//Types
+import {type feacherWhyAutoRent } from "../../types/auth.types";
 
-type feacherWhyAutoRent = {
-  name: string;
-  logo: string;
-  description: string;
-  id: number;
-};
 const feacherWhyAutoRent: feacherWhyAutoRent[] = [
   {
     name: "تحویل در محل",
