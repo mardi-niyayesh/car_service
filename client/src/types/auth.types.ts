@@ -46,3 +46,25 @@ export type ResetPasswordtype={
   password:string,
   token:string
 }
+//type ReservAutorent
+ export type ReservAutorentType = {
+  logo: string;
+  firstname: string;
+  secondname: string;
+  descripton: string;
+  id?:number
+};
+//type feacherWhyAutoRent
+ export type feacherWhyAutoRent = {
+  name: string;
+  logo: string;
+  description: string;
+  id: number;
+};
+//type descriptionWhyAutoRenttype
+ export type descriptionWhyAutoRenttype={
+  logo:string;
+  name:string;
+  description:string;
+  id?: number;
+}
