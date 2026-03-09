@@ -7,7 +7,7 @@
     "**/*spec.ts"
   ],
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "@/*": [
         "src/*"
