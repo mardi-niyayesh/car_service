@@ -1,5 +1,6 @@
 import {ONE_MINUTE_MS} from '@/lib';
 import {PrismaPg} from '@prisma/adapter-pg';
+import {ConfigService} from "@nestjs/config";
 import {PrismaClient} from './generated/client';
 import {Injectable, OnModuleInit, OnModuleDestroy} from '@nestjs/common';
 
@@ -8,9 +9,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
   private static initialize: boolean = false;
 
-  constructor() {
+  constructor(readonly config: ConfigService) {
+    const connectionString: string = config.get<string>("DATABASE_URL") ?? "";
+
     const adapter: PrismaPg = new PrismaPg({
-      connectionString: process.env.DATABASE_URL as string,
+      connectionString,
     });
     super({
       adapter,
