@@ -6,7 +6,8 @@ import {ConfigModule, ConfigService} from "@nestjs/config";
 @Module({
   imports: [
     MailerModule.forRootAsync({
-      inject: [ConfigModule],
+      imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         transport: {
           host: config.get<string>("EMAIL_HOST"),
