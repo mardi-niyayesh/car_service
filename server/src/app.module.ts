@@ -10,9 +10,11 @@ import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware, CacheableInterc
 
 @Module({
   imports: [
+    // Config Service for Environment
     ConfigModule.forRoot({
-      isGlobal: true,
+      isGlobal: true
     }),
+
     // Throttler Module -Rate Limits
     ThrottlerModule.forRoot(throttlerConfig),
 

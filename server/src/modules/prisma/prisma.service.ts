@@ -1,6 +1,6 @@
-import {ONE_MINUTE_MS} from '@/lib';
 import {PrismaPg} from '@prisma/adapter-pg';
 import {ConfigService} from "@nestjs/config";
+import {ONE_MINUTE_MS} from '@/lib/utils/date';
 import {PrismaClient} from './generated/client';
 import {Injectable, OnModuleInit, OnModuleDestroy} from '@nestjs/common';
 
