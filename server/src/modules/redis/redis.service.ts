@@ -1,16 +1,27 @@
 import Redis from "ioredis";
+import {ConfigService} from "@nestjs/config";
 import {Injectable, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
 
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {
   private client: Redis;
-  private prefix: string = process.env.REDIS_KEY_PREFIX?.trim() + ":" || "app:";
+  private readonly db: number;
+  private readonly port: number;
+  private readonly host: string;
+  private readonly prefix: string;
+
+  constructor(readonly config: ConfigService) {
+    this.db = Number(this.config.get<string>("REDIS_DB")) || 0;
+    this.host = this.config.get<string>("REDIS_HOST") || '127.0.0.1';
+    this.prefix = config.get<string>("REDIS_KEY_PREFIX") ?? "app" + ":";
+    this.port = Number(this.config.get<string>("REDIS_PORT")) || 6379;
+  }
 
   onModuleInit(): void {
     this.client = new Redis({
-      host: process.env.REDIS_HOST || '127.0.0.1',
-      db: Number(process.env.REDIS_DB) || 0,
-      port: Number(process.env.REDIS_PORT) || 6379,
+      db: this.db,
+      host: this.host,
+      port: this.port,
       keyPrefix: this.prefix,
     });
 
@@ -28,12 +39,12 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   }
 
   /** set cache value with key */
-  async set<T>(key: string, value: T, ttl?: number): Promise<"OK"> {
+  set<T>(key: string, value: T, ttl?: number): Promise<"OK"> {
     const stringValue: string = JSON.stringify(value);
 
-    if (ttl === undefined) return await this.client.set(key, stringValue);
+    if (ttl === undefined) return this.client.set(key, stringValue);
 
-    return await this.client.set(key, stringValue, "PX", ttl);
+    return this.client.set(key, stringValue, "PX", ttl);
   }
 
   /** get cache value with key */
@@ -44,13 +55,13 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   }
 
   /** delete many cache value with key */
-  async delete(...keys: string[]): Promise<number> {
-    return await this.client.del(...keys);
+  delete(...keys: string[]): Promise<number> {
+    return this.client.del(...keys);
   }
 
   /** get all keys with prefix */
-  async getKeyPrefix(keyPrefix: string): Promise<string[] | null> {
-    return await this.client.keys(`${this.prefix}${keyPrefix}*`);
+  getKeyPrefix(keyPrefix: string): Promise<string[] | null> {
+    return this.client.keys(`${this.prefix}${keyPrefix}*`);
   }
 
   /** delete many values with key prefix */
