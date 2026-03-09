@@ -1,6 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {OnEvent} from "@nestjs/event-emitter";
 import {MailerService} from "@nestjs-modules/mailer";
+import {ConfigService} from "@nestjs/config";
 
 interface PayloadEventEmail {
   email: string;
@@ -10,10 +11,16 @@ interface PayloadEventEmail {
 
 @Injectable()
 export class EmailService {
-  private readonly defaultReplay: string = process.env.EMAIL_REPLAY!;
-  private readonly defaultFrom: string = process.env.EMAIL_FROM!;
+  private readonly defaultFrom: string;
+  private readonly defaultReplay: string;
 
-  constructor(private readonly miler: MailerService) {}
+  constructor(
+    private readonly miler: MailerService,
+    private readonly config: ConfigService,
+  ) {
+    this.defaultFrom = this.config.get<string>("EMAIL_FROM") ?? "";
+    this.defaultReplay = this.config.get<string>("EMAIL_REPLAY") ?? "";
+  }
 
   @OnEvent("signup.welcome")
   @OnEvent("login.welcome")
