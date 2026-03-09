@@ -3,6 +3,7 @@ import * as AuthDto from "./dto";
 import type {StringValue} from "ms";
 import {randomUUID} from "node:crypto";
 import {JwtService} from "@nestjs/jwt";
+import {ConfigService} from "@nestjs/config";
 import {User} from "../prisma/generated/client";
 import {EventEmitter2} from "@nestjs/event-emitter";
 import {PrismaService} from "../prisma/prisma.service";
@@ -14,17 +15,18 @@ import {BadRequestException, ConflictException, HttpStatus, Injectable, Internal
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly config: ConfigService,
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService,
-    private readonly eventEmitter: EventEmitter2
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   /** generate new accessToken with payload */
   generateAccessToken(payload: AccessTokenPayload): string {
     return this.jwtService.sign(payload, {
-      secret: process.env.JWT_SECRET!,
-      expiresIn: process.env.JWT_EXPIRES as StringValue,
+      secret: this.config.get("JWT_SECRET") ?? "JWT_SECRET",
+      expiresIn: this.config.get<StringValue>("JWT_EXPIRES") ?? "1h",
     });
   }
 
@@ -96,16 +98,18 @@ export class AuthService {
       };
 
       try {
+        const clientName: string = this.config.get<string>("CLIENT_NAME") ?? "car service";
+
         this.eventEmitter.emit("signup.welcome", {
           email: data.user.email,
           html: buildEmailHtml({
-            title: `Welcome To ${process.env.CLIENT_NAME!}`,
+            title: `Welcome To ${}`,
             clientInfo,
             contentName: "welcome",
             extra: {
-              titleText: "Welcome to " + process.env.CLIENT_NAME!,
+              titleText: "Welcome to " + this.config.get("CLIENT_NAME")!,
               messageText: "Your account has been successfully created.",
-              dashboardLink: process.env.CLIENT_DASHBOARD!,
+              dashboardLink: this.config.get("CLIENT_DASHBOARD")!,
             }
           })
         });
@@ -194,7 +198,7 @@ export class AuthService {
           extra: {
             titleText: "New Login Detected",
             messageText: "Your account was just accessed. If this was you, no action is needed.",
-            dashboardLink: process.env.CLIENT_DASHBOARD!,
+            dashboardLink: this.config.get("CLIENT_DASHBOARD")!,
           }
         })
       });
@@ -272,7 +276,7 @@ export class AuthService {
       const token: string = generateRandomToken();
       const hashedToken: string = hashSecretToken(token);
 
-      const resetLink: string = `${process.env.CLIENT_RESET_PASSWORD}?token=${token}`;
+      const resetLink: string = `${this.config.get("CLIENT_RESET_PASSWORD")}?token=${token}`;
 
       const html: string = buildEmailHtml({
         contentName: "forgot-password",
