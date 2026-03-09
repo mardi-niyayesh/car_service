@@ -1,5 +1,6 @@
 import * as Modules from "./modules";
 import {throttlerConfig} from "@/lib";
+import {ConfigModule} from "@nestjs/config";
 import {ScheduleModule} from "@nestjs/schedule";
 import {APP_GUARD, APP_INTERCEPTOR} from "@nestjs/core";
 import {EventEmitterModule} from "@nestjs/event-emitter";
@@ -9,6 +10,9 @@ import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware, CacheableInterc
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     // Throttler Module -Rate Limits
     ThrottlerModule.forRoot(throttlerConfig),
 
