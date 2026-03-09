@@ -1,5 +1,4 @@
 //components
-import ComponentsPanelAdmin from "../Components/ComponentsPanelAdmin";
 import ComponentCategoryDatailUser from "../Components/ComponentCategoryDatailUser";
 import ComponentFormUpdateUser from "../Components/ComponentFormUpdateUser";
 //icon or logo
@@ -10,11 +9,6 @@ import { Link } from "react-router-dom";
 const DetalisUserPage = () => {
   return (
     <div className="flex flex-col md:flex-row  md:gap-4 p-3 md:p-4 min-h-screen">
-      {/*Components PanelAdmin */}
-      <div className=" md:block md:w-64 lg:w-72 xl:w-80">
-        <ComponentsPanelAdmin />
-      </div>
-
       <div className="flex-1">
         {/* header User*/}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between  p-3 sm:p-4">

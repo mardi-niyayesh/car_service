@@ -1,5 +1,3 @@
-//components
-import DashboardSidebar from "../Components/DashboardSidebar";
 //hooks
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -93,11 +91,6 @@ const LogoutPage = () => {
       className="flex flex-col md:flex-row min-h-screen bg-gray-50"
       dir="rtl"
     >
-      {/* components DashboardSidebar */}
-      <div className="md:w-64 lg:w-72 flex-shrink-0">
-        <DashboardSidebar />
-      </div>
-
       <div className="flex-1 p-4 sm:p-6 md:p-8">
         {/* title Pages*/}
         <div className="mb-6 md:mb-8">
