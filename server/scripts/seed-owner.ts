@@ -2,8 +2,8 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-import "tsconfig-paths/register";
 import {ROLES} from "@/common";
+import "tsconfig-paths/register";
 import {hashSecret} from "@/lib";
 import {NestFactory} from "@nestjs/core";
 import {CreateUser} from "@/modules/auth/dto";
@@ -33,61 +33,77 @@ async function ask<T extends keyof typeof CreateUser.shape>(
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(CliModule);
 
-  const prisma = app.get(PrismaService);
+  const prisma: PrismaService = app.get(PrismaService);
 
-  const ownerRole = await prisma.role.findUnique({
-    where: {name: ROLES.OWNER}
-  });
+  try {
+    await prisma.$transaction(async tx => {
+      const ownerRole = await tx.role.findUnique({
+        where: {name: ROLES.OWNER}
+      });
 
-  const selfRole = await prisma.role.findUnique({
-    where: {name: ROLES.SELF}
-  });
+      const selfRole = await tx.role.findUnique({
+        where: {name: ROLES.SELF}
+      });
 
-  if (!ownerRole || !selfRole) {
-    console.log("⚠ 'owner' or 'self' role not exists in database!");
+      if (!ownerRole || !selfRole) {
+        console.log("⚠ 'owner' or 'self' role not exists in database!");
+        await app.close();
+        process.exit(1);
+      }
+
+      const exist = await tx.userRole.findFirst({
+        where: {role_id: ownerRole.id},
+        include: {
+          user: {
+            omit: {password: true}
+          }
+        }
+      });
+
+      if (exist) {
+        console.log("Owner already exists");
+        console.log(exist.user);
+        await app.close();
+        return process.exit(0);
+      }
+
+      console.log(`creating owner...`);
+
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+      });
+
+      const email: string = await ask(rl, "enter email: ", "email");
+      const password: string = await ask(rl, "enter password: ", "password");
+
+      const hashedPassword: string = await hashSecret(password);
+
+      const owner = await tx.user.create({
+        data: {
+          email,
+          password: hashedPassword,
+          display_name: "owner",
+        }
+      });
+
+      await tx.userRole.createMany({
+        data: [
+          {role_id: ownerRole.id, user_id: owner.id},
+          {role_id: selfRole.id, user_id: owner.id},
+        ]
+      });
+
+      console.log(`✅ owner created:\nemail: ${owner.email}\nid: ${owner.id}\nrole: ${ownerRole.name}`);
+    });
+  } catch (e) {
+    console.log(e);
     await app.close();
     process.exit(1);
-  }
-
-  const exist = await prisma.userRole.findFirst({
-    where: {role_id: ownerRole.id}
-  });
-
-  if (exist) {
-    console.log("Owner already exists");
+  } finally {
     await app.close();
-    return process.exit(0);
+    process.exit(0);
   }
-
-  console.log(`creating owner...`);
-
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
-  const email: string = await ask(rl, "enter email: ", "email");
-  const password: string = await ask(rl, "enter password: ", "password");
-
-  const hashedPassword: string = await hashSecret(password);
-
-  const owner = await prisma.user.create({
-    data: {
-      email,
-      password: hashedPassword,
-      display_name: "owner",
-    }
-  });
-
-  await prisma.userRole.createMany({
-    data: [
-      {role_id: ownerRole.id, user_id: owner.id},
-      {role_id: selfRole.id, user_id: owner.id},
-    ]
-  });
-
-  console.log(`✅ owner created:\nemail: ${owner.email}\nid: ${owner.id}\nrole: ${ownerRole.name}`);
-  process.exit(0);
 }
 
 bootstrap()
