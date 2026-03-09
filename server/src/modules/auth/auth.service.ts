@@ -98,18 +98,19 @@ export class AuthService {
       };
 
       try {
-        const clientName: string = this.config.get<string>("CLIENT_NAME") ?? "car service";
+        const clientName: string = this.config.get<string>("CLIENT_NAME") ?? "Car Service";
+        const dashboardLink: string = this.config.get<string>("CLIENT_DASHBOARD") ?? "http://localhost:5173/dashboard";
 
         this.eventEmitter.emit("signup.welcome", {
           email: data.user.email,
           html: buildEmailHtml({
-            title: `Welcome To ${}`,
+            title: `Welcome To ${clientName}`,
             clientInfo,
             contentName: "welcome",
             extra: {
-              titleText: "Welcome to " + this.config.get("CLIENT_NAME")!,
+              titleText: "Welcome to " + clientName,
               messageText: "Your account has been successfully created.",
-              dashboardLink: this.config.get("CLIENT_DASHBOARD")!,
+              dashboardLink,
             }
           })
         });
