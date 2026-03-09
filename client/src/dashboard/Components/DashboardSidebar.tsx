@@ -61,7 +61,7 @@ const DashboardSidebar = () => {
         </Link>
 
         {/* items reserve*/}
-        <Link to="/dashboard/reserve">
+        <Link to="reserve">
           <div className="flex justify-between items-center p-2 md:p-3 border-b-2 border-[#F3F3F3] hover:bg-blue-600 transition-all duration-300 rounded-lg cursor-pointer group">
             <div className="flex items-center gap-2 md:gap-3">
               <img
@@ -82,7 +82,7 @@ const DashboardSidebar = () => {
         </Link>
 
         {/* item address*/}
-        <Link to="/dashboard/address">
+        <Link to="address">
           <div className="flex justify-between items-center p-2 md:p-3 border-b-2 border-[#F3F3F3] hover:bg-blue-600 transition-all duration-300 rounded-lg cursor-pointer group">
             <div className="flex items-center gap-2 md:gap-3">
               <img
@@ -103,7 +103,7 @@ const DashboardSidebar = () => {
         </Link>
 
         {/* items card*/}
-        <Link to="/dashboard/card">
+        <Link to="card">
           <div className="flex justify-between items-center p-2 md:p-3 border-b-2 border-[#F3F3F3] hover:bg-blue-600 transition-all duration-300 rounded-lg cursor-pointer group">
             <div className="flex items-center gap-2 md:gap-3">
               <img
@@ -124,7 +124,7 @@ const DashboardSidebar = () => {
         </Link>
 
         {/* item comment*/}
-        <Link to="/dashboard/comment">
+        <Link to="comment">
           <div className="flex justify-between items-center p-2 md:p-3 border-b-2 border-[#F3F3F3] hover:bg-blue-600 transition-all duration-300 rounded-lg cursor-pointer group">
             <div className="flex items-center gap-2 md:gap-3">
               <img
@@ -145,7 +145,7 @@ const DashboardSidebar = () => {
         </Link>
 
         {/* item logout*/}
-        <Link to="/dashboard/logout">
+        <Link to="logout">
           <div className="flex items-center gap-2 md:gap-3 p-2 md:p-3 hover:bg-red-500 transition-all duration-300 rounded-lg cursor-pointer group">
             <img
               src={logout}
