@@ -18,7 +18,7 @@ const ComponentTableUser = () => {
             <td className="px-4 py-3">niya</td>
             <td className="px-4 py-3">niya@gmail.com</td>
             <td className="px-4 py-3 text-green-600 font-medium">ادمین</td>
-            <Link to="/panel/users/detail">
+            <Link to="users/detail">
               <td className="px-3 py-1 bg-blue-400 rounded-2xl text-amber-50 m-auto">
                 بیش تر...
               </td>

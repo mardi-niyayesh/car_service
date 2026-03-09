@@ -33,7 +33,7 @@ const ComponentsPanelAdmin = () => {
       <div className="mt-5 w-full max-w-[400px] bg-[#EDEDED] rounded-2xl p-2 md:p-3">
        
         {/* items users*/}
-        <Link to="/panel/users">
+        <Link to="users">
           <div className="flex justify-between items-center p-2 md:p-3 border-b-2 border-[#F3F3F3] hover:bg-blue-500 transition-all duration-300 rounded-lg cursor-pointer group">
             <div className="flex items-center gap-2 md:gap-3">
               {/* <img
@@ -54,7 +54,7 @@ const ComponentsPanelAdmin = () => {
         </Link>
 
         {/* item products*/}
-        <Link to="/panel/product">
+        <Link to="product">
           <div className="flex justify-between items-center p-2 md:p-3 border-b-2 border-[#F3F3F3] hover:bg-blue-500 transition-all duration-300 rounded-lg cursor-pointer group">
             <div className="flex items-center gap-2 md:gap-3">
               {/* <img
@@ -75,7 +75,7 @@ const ComponentsPanelAdmin = () => {
         </Link>
 
         {/* item categori*/}
-        <Link to="/panel/category">
+        <Link to="category">
           <div className="flex justify-between items-center p-2 md:p-3  hover:bg-blue-500 transition-all duration-300 rounded-lg cursor-pointer group">
             <div className="flex items-center gap-2 md:gap-3">
               {/* <img
