@@ -13,7 +13,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   constructor(readonly config: ConfigService) {
     this.db = Number(this.config.get<string>("REDIS_DB")) || 0;
     this.host = this.config.get<string>("REDIS_HOST") || '127.0.0.1';
-    this.prefix = config.get<string>("REDIS_KEY_PREFIX") ?? "app" + ":";
+    this.prefix = (config.get<string>("REDIS_KEY_PREFIX") ?? "app") + ":";
     this.port = Number(this.config.get<string>("REDIS_PORT")) || 6379;
   }
 
