@@ -47,7 +47,6 @@ import {
 import * as UserDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
 import {UsersService} from "./users.service";
-import {CacheTTL} from "@nestjs/cache-manager";
 import type {AccessRequest, ApiResponse, UserResponse} from "@/types";
 
 /**
@@ -77,7 +76,6 @@ export class UsersController {
   })
   @Get("profile")
   @HttpCode(HttpStatus.OK)
-  @CacheTTL(ONE_MINUTE_MS * 30)
   @Cacheable({
     resource: "users",
     self: true,
