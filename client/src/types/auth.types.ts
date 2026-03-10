@@ -16,7 +16,6 @@ export type RegisterFormData = {
   firstname: string;
   age: number;
   rules: boolean;
-  s
 };
 
 //type for Login Form
@@ -68,3 +67,16 @@ export type ResetPasswordtype={
   description:string;
   id?: number;
 }
+
+ export type User = {
+  name: string;
+  email: string;
+  age: number;
+};
+// type for  UserContext
+ export type UserContextType = {
+  user: User | null;
+  isLoggedIn: boolean;
+  setUser: (user: User | null) => void;
+  logout: () => void;
+};
