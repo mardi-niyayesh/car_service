@@ -99,26 +99,28 @@ export class UsersController {
   }
 
   /**
-   * Get user by ID.
-   * Admin only endpoint. Validates UUID format.
+   * Get user by ID or Email.
+   * - **Admin only endpoint. Validates UUID format.**
+   * - **Access restricted to users with permission: (owner.all or user.view) only.**
    */
   @Permission({
     permissions: [PERMISSIONS.USER_VIEW]
   })
-  @Get(":id")
+  @Get('get')
   @HttpCode(HttpStatus.OK)
   @Cacheable({
     resource: "users",
-    paramsKey: ["id"],
-    ttl: ONE_MINUTE_MS * 122
+    ttl: ONE_MINUTE_MS * 122,
+    query: ['id', 'email'],
   })
   @ApiOperation({
     summary: 'get user info',
-    description: 'get user info with id. **Access restricted to users with permission: (owner.all or user.view) only.**',
+    description: 'get user info with id or email. **Access restricted to users with permission: (owner.all or user.view) only.**',
     operationId: 'get_user',
     tags: ["User"],
   })
-  @ApiParam(UUID4Dto("user"))
+  @ApiQuery(UserDto.GetOneUserIdQuery)
+  @ApiQuery(UserDto.GetOneUserEmailQuery)
   @ApiOkResponse({type: UserDto.GetUserOkResponse})
   @ApiBadRequestResponse({
     type: getBadRequestUUIDParams("users/:id"),
@@ -137,11 +139,14 @@ export class UsersController {
     description: 'The requested user does not exist in the database.'
   })
   findOne(
-    @Param(new ZodPipe(UUID4Schema)) params: UUID4Type,
+    @Query(new ZodPipe(UserDto.GetOneUserValidator)) query: UserDto.GetOneUserType,
   ): Promise<ApiResponse<UserResponse>> {
-    return this.usersService.findOne(params.id);
+    return this.usersService.findOne(query.id, query.email);
   }
 
+  /** get all user info.
+   * - **Access restricted to users with permission: (owner.all or user.view) only.**
+   * */
   @Permission({
     permissions: [PERMISSIONS.USER_VIEW]
   })
@@ -153,7 +158,7 @@ export class UsersController {
     ttl: ONE_MINUTE_MS * 122
   })
   @ApiOperation({
-    summary: 'get all users info',
+    summary: 'get all user info',
     description: 'get all users info. **Access restricted to users with permission: (owner.all or user.view) only.**',
     operationId: 'get_users',
     tags: ["User"],
