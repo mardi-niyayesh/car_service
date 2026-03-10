@@ -1,7 +1,7 @@
 //hooks
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useState } from "react";
 //context
 import { useUser } from "../hooks/useUser";
 //components
@@ -17,6 +17,7 @@ import WarningModal from "../components/common/WarningModal ";
 
 function LoginPage() {
   const navigate = useNavigate();
+  //use az context for send infomation user if succcess login
   const { setUser, setToken } = useUser();
   //SuccessModal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -71,9 +72,7 @@ function LoginPage() {
 
     onError: (error: Error) => {
       console.error("خطا:", error);
-      setErrorMessage(
-        "خطایی در ورود رخ داد. لطفاً مجدداً تلاش کنید.",
-      );
+      setErrorMessage("خطایی در ورود رخ داد. لطفاً مجدداً تلاش کنید.");
       setIsErrorModalOpen(true);
     },
   });
