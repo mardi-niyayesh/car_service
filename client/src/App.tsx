@@ -1,5 +1,8 @@
+//context
+import UserProvider from "./Context/UserContext";
+//hooks
 import { Routes, Route } from "react-router-dom";
-
+//layout components
 import MainLayout from "./Layouts/MainLayout";
 import AuthLayout from "./Layouts/AuthLayout";
 import DashboardLayout from "./dashboard/Components/DashboardLayout";
@@ -24,7 +27,6 @@ import WalletPages from "./dashboard/Pages/WalletPages";
 import CardPages from "./dashboard/Pages/CardPages";
 import LogoutPage from "./dashboard/Pages/LogoutPage";
 //pages for panelAdmin
-
 import DetalisUserPage from "./PanelAdmin/Pages/DetalisUserPage";
 import ProductPage from "./PanelAdmin/Pages/ProductPage";
 import CategoryPage from "./PanelAdmin/Pages/CategoryPage";
@@ -32,42 +34,44 @@ import UsersPage from "./PanelAdmin/Pages/UsersPage";
 function App() {
   return (
     <>
-      <Routes>
-        {/* ------- Public Layout ------- */}
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/roles" element={<RolsPage />} />
-          <Route path="/questionPage" element={<QuestionPage />} />
-        </Route>
+      <UserProvider>
+        <Routes>
+          {/* ------- Public Layout ------- */}
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/roles" element={<RolsPage />} />
+            <Route path="/questionPage" element={<QuestionPage />} />
+          </Route>
 
-        {/* ------- Auth Layout ------- */}
-        <Route element={<AuthLayout />}>
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-        </Route>
-        {/* ------- Dashboard Layout ------- */}
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route path="address" element={<AddressPages />} />
-          <Route path="comment" element={<CommentPages />} />
-          <Route path="reserve" element={<ReservePages />} />
-          <Route path="wallet" element={<WalletPages />} />
-          <Route path="card" element={<CardPages />} />
-          <Route path="logout" element={<LogoutPage />} />
-        </Route>
-        {/* ------- Panel Admin Layout ------- */}
-        <Route path="/panel" element={<PanelAdminLayout />}>
-         <Route path="users" element={<UsersPage />} />
-          <Route path="users/detail" element={<DetalisUserPage />} />
-          <Route path="product" element={<ProductPage />} />
-          <Route path="category" element={<CategoryPage />} />
-        </Route>
-        {/* ------- 404 ------- */}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+          {/* ------- Auth Layout ------- */}
+          <Route element={<AuthLayout />}>
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+          </Route>
+          {/* ------- Dashboard Layout ------- */}
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route path="address" element={<AddressPages />} />
+            <Route path="comment" element={<CommentPages />} />
+            <Route path="reserve" element={<ReservePages />} />
+            <Route path="wallet" element={<WalletPages />} />
+            <Route path="card" element={<CardPages />} />
+            <Route path="logout" element={<LogoutPage />} />
+          </Route>
+          {/* ------- Panel Admin Layout ------- */}
+          <Route path="/panel" element={<PanelAdminLayout />}>
+            <Route path="users" element={<UsersPage />} />
+            <Route path="users/detail" element={<DetalisUserPage />} />
+            <Route path="product" element={<ProductPage />} />
+            <Route path="category" element={<CategoryPage />} />
+          </Route>
+          {/* ------- 404 ------- */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </UserProvider>
     </>
   );
 }
