@@ -77,11 +77,11 @@ export class UsersController {
   })
   @Get("profile")
   @HttpCode(HttpStatus.OK)
-  @CacheTTL(ONE_MINUTE_MS * 122)
+  @CacheTTL(ONE_MINUTE_MS * 30)
   @Cacheable({
     resource: "users",
     self: true,
-    ttl: ONE_MINUTE_MS * 122
+    ttl: ONE_MINUTE_MS * 30
   })
   @ApiOperation({
     summary: 'get user info by self',
@@ -109,7 +109,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @Cacheable({
     resource: "users",
-    ttl: ONE_MINUTE_MS * 122,
+    ttl: ONE_MINUTE_MS * 30,
     query: ['id', 'email'],
   })
   @ApiOperation({
@@ -154,7 +154,7 @@ export class UsersController {
   @Cacheable({
     resource: "users",
     pagination: true,
-    ttl: ONE_MINUTE_MS * 122
+    ttl: ONE_MINUTE_MS * 30
   })
   @ApiOperation({
     summary: 'get all user info',

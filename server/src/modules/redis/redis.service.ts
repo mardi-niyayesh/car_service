@@ -1,5 +1,6 @@
 import Redis from "ioredis";
 import {ConfigService} from "@nestjs/config";
+import {ONE_MINUTE_MS} from "@/lib/utils/date";
 import {Injectable, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
 
 @Injectable()
@@ -9,12 +10,14 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   private readonly port: number;
   private readonly host: string;
   private readonly prefix: string;
+  private readonly defaultTTL: number;
 
   constructor(readonly config: ConfigService) {
     this.db = Number(this.config.get<string>("REDIS_DB")) || 0;
     this.host = this.config.get<string>("REDIS_HOST") || '127.0.0.1';
     this.prefix = (config.get<string>("REDIS_KEY_PREFIX") ?? "app") + ":";
     this.port = Number(this.config.get<string>("REDIS_PORT")) || 6379;
+    this.defaultTTL = ONE_MINUTE_MS * 5;
   }
 
   onModuleInit(): void {
@@ -40,11 +43,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
   /** set cache value with key */
   set<T>(key: string, value: T, ttl?: number): Promise<"OK"> {
-    const stringValue: string = JSON.stringify(value);
-
-    if (ttl === undefined) return this.client.set(key, stringValue);
-
-    return this.client.set(key, stringValue, "PX", ttl);
+    return this.client.set(key, JSON.stringify(value), "PX", ttl ?? this.defaultTTL);
   }
 
   /** get cache value with key */
