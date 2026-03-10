@@ -9,6 +9,7 @@ export interface ParamCacheKeyType {
   extraKeys?: string[];
   paramsKey?: string[];
   pagination?: boolean;
+  query?: string[];
 }
 
 export class RedisKey {
@@ -42,10 +43,10 @@ export class RedisKey {
    * "app:users:sale:rent:id=5b570b4b-2da6-4d7c-826b-be0f7323611b",
    * ]
    */
-  static keyPrefix({ctx, resource, extraKeys, self = false, paramsKey, pagination = false}: ParamCacheKeyType): string {
-    const parts: string[] = [];
+  static keyPrefix({ctx, resource, extraKeys, self = false, paramsKey, pagination = false, query}: ParamCacheKeyType): string {
+    const parts: (string | undefined)[] = [];
 
-    if (extraKeys !== undefined && extraKeys.length > 0) {
+    if (extraKeys !== undefined && extraKeys.length) {
       parts.push(...extraKeys);
     }
 
@@ -63,12 +64,21 @@ export class RedisKey {
       return RedisKey.build(resource, ...parts);
     }
 
-    if (paramsKey !== undefined && paramsKey.length > 0) {
+    if (paramsKey !== undefined && paramsKey.length) {
       const params: string[] = paramsKey.map(p => Array.isArray(req.params[p])
         ? `${p}=${req.params[p][0]}`
         : `${p}=${req.params[p]}`
       );
       parts.push(...params);
+    }
+
+    if (query !== undefined && query.length) {
+      const allQuery: (string | undefined)[] = query.map(q =>
+        typeof req.query[q] === 'string'
+          ? `${q}=${req.query[q]}`
+          : undefined
+      );
+      parts.push(...allQuery);
     }
 
     if (pagination) {

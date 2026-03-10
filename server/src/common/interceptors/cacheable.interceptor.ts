@@ -28,6 +28,7 @@ export class CacheableInterceptor<T> implements NestInterceptor {
       resource: cacheableKey.resource,
       pagination: cacheableKey.pagination,
       self: cacheableKey.self,
+      query: cacheableKey.query,
     });
 
     // check exist cached
