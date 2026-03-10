@@ -26,7 +26,6 @@ import {
   getForbiddenResponse,
   orderByPaginationDto,
   getUnauthorizedResponse,
-  getBadRequestUUIDParams,
   type PaginationValidatorType,
 } from "@/common";
 
@@ -50,7 +49,6 @@ import {ONE_MINUTE_MS} from "@/lib";
 import {UsersService} from "./users.service";
 import {CacheTTL} from "@nestjs/cache-manager";
 import type {AccessRequest, ApiResponse, UserResponse} from "@/types";
-import {GetOneUserBadReqRes} from "./dto";
 
 /**
  * User management endpoints for retrieving user information.
