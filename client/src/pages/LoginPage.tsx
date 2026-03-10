@@ -1,7 +1,9 @@
 //hooks
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
+//context
+import { useUser } from "../hooks/useUser";
 //components
 import AuthForm from "../components/common/AuthForm";
 //api
@@ -15,6 +17,7 @@ import WarningModal from "../components/common/WarningModal ";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { setUser, setToken } = useUser();
   //SuccessModal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -29,6 +32,7 @@ function LoginPage() {
     mutationFn: loginUser,
     onSuccess: (data) => {
       const token = data?.response?.data?.accessToken;
+      const userData = data?.response?.data?.user;
       //error 400
       if (data.statusCode === 400) {
         setWarningMessage(`مشکلی در اطلاعات ورود وجود داره:
@@ -48,8 +52,10 @@ function LoginPage() {
         setIsErrorModalOpen(true);
       }
       //success
-      else if (token) {
-        localStorage.setItem("token", token);
+      else if (token && userData) {
+        //save token to context
+        setToken(token);
+        setUser(userData);
         setModalMessage(
           "ورود شما با موفقیت انجام شد! به خانواده کارسرویس خوش آمدید.",
         );
@@ -66,7 +72,7 @@ function LoginPage() {
     onError: (error: Error) => {
       console.error("خطا:", error);
       setErrorMessage(
-        error.message || "خطایی در ورود رخ داد. لطفاً مجدداً تلاش کنید.",
+        "خطایی در ورود رخ داد. لطفاً مجدداً تلاش کنید.",
       );
       setIsErrorModalOpen(true);
     },
