@@ -1,5 +1,6 @@
 import z from "zod";
 import {ApiQueryOptions} from "@nestjs/swagger";
+import {getBaseErrorBodyResponseSchema} from "@/common";
 
 /** get one user validator */
 export const GetOneUserValidator = z.object({
@@ -28,3 +29,17 @@ export const GetOneUserIdQuery: ApiQueryOptions = {
   format: 'uuid',
   pattern: GetOneUserValidator.shape.id._zod.pattern.source
 };
+
+export const GetOneUserBadReqRes = getBaseErrorBodyResponseSchema({
+  path: 'users/get?email=email&id=id',
+  errors: [
+    {
+      field: "id",
+      error: "Invalid UUID"
+    },
+    {
+      field: "email",
+      error: "Invalid email address"
+    }
+  ]
+});

@@ -50,6 +50,7 @@ import {ONE_MINUTE_MS} from "@/lib";
 import {UsersService} from "./users.service";
 import {CacheTTL} from "@nestjs/cache-manager";
 import type {AccessRequest, ApiResponse, UserResponse} from "@/types";
+import {GetOneUserBadReqRes} from "./dto";
 
 /**
  * User management endpoints for retrieving user information.
@@ -123,8 +124,8 @@ export class UsersController {
   @ApiQuery(UserDto.GetOneUserEmailQuery)
   @ApiOkResponse({type: UserDto.GetUserOkResponse})
   @ApiBadRequestResponse({
-    type: getBadRequestUUIDParams("users/:id"),
-    description: 'Validation failed. Ensure the ID is a valid UUIDv4.'
+    type: UserDto.GetOneUserBadReqRes,
+    description: 'Validation failed. Ensure the ID is a valid UUIDv4 and email.'
   })
   @ApiUnauthorizedResponse({
     type: getUnauthorizedResponse("users/:id"),
