@@ -85,7 +85,7 @@ export class RedisKey {
       const page = (req.query.page === undefined || req.query.page === null) ? "1" : req.query.page as string;
       const limit = (req.query.limit === undefined || req.query.limit === null) ? "10" : req.query.limit as string;
       const orderBy = (req.query.orderBy === undefined || req.query.orderBy === null) ? "desc" : req.query.orderBy as string;
-      parts.push(`p=${page}`, `l=${limit}`, `o=${orderBy}`);
+      parts.push('list', `p=${page}`, `l=${limit}`, `o=${orderBy}`);
     }
 
     return RedisKey.build(resource, ...parts);
