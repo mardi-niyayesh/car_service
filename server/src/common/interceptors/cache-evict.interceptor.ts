@@ -36,7 +36,8 @@ export class CacheEvictInterceptor implements NestInterceptor {
           });
 
           try {
-            await this.redisService.delete(key);
+            const res = await this.redisService.delete(key);
+            console.log('key: ', res);
           } catch (e) {
             throw new InternalServerErrorException({
               message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a cache key',
@@ -47,7 +48,8 @@ export class CacheEvictInterceptor implements NestInterceptor {
 
         if ('force' in cacheParams && cacheParams.force && cacheParams.resource) {
           try {
-            await this.redisService.deletePrefix(cacheParams.resource);
+            const res = await this.redisService.deletePrefix(cacheParams.resource);
+            console.log('force: ', res);
           } catch (e) {
             throw new InternalServerErrorException({
               message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a resource cache',
@@ -58,7 +60,8 @@ export class CacheEvictInterceptor implements NestInterceptor {
 
         if ('prefix' in cacheParams && cacheParams.prefix?.trim()) {
           try {
-            await this.redisService.delete(cacheParams.prefix);
+            const res = await this.redisService.deletePrefix(cacheParams.prefix);
+            console.log('prefix: ', res);
           } catch (e) {
             throw new InternalServerErrorException({
               message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a prefix cache',
