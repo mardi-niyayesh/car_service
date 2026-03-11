@@ -1,9 +1,10 @@
 import {RedisKey} from "@/lib";
 import {map, Observable} from "rxjs";
+import {BaseException} from "@/types";
 import {Reflector} from "@nestjs/core";
 import {RedisService} from "@/modules/redis/redis.service";
 import {CACHE_EVICT_KEY, type CacheEvictDecoratorType} from "@/common";
-import {CallHandler, ExecutionContext, Injectable, NestInterceptor} from "@nestjs/common";
+import {CallHandler, ExecutionContext, Injectable, InternalServerErrorException, NestInterceptor} from "@nestjs/common";
 
 @Injectable()
 export class CacheEvictInterceptor implements NestInterceptor {
@@ -37,11 +38,25 @@ export class CacheEvictInterceptor implements NestInterceptor {
 
         const forceKeys = cacheParams.filter(k => k.force).map(k => k.resource);
 
-        if (forceKeys.length > 0) {
-          for (const f of forceKeys) await this.redisService.deletePrefix(f);
+        try {
+          if (forceKeys.length > 0) {
+            for (const f of forceKeys) await this.redisService.deletePrefix(f);
+          }
+        } catch (e) {
+          throw new InternalServerErrorException({
+            message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor',
+            error: (e as Error).name ?? 'error in deleting cache',
+          } as BaseException);
         }
 
-        if (keys.length > 0) await this.redisService.delete(...keys);
+        try {
+          if (keys.length > 0) await this.redisService.delete(...keys);
+        } catch (e) {
+          throw new InternalServerErrorException({
+            message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor',
+            error: (e as Error).name ?? 'error in deleting cache',
+          } as BaseException);
+        }
 
         return data;
       })
