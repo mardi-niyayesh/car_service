@@ -106,6 +106,7 @@ export class UsersController {
     operationId: 'update_profile',
     tags: ["User"],
   })
+  @ApiBody({type: UserDto.UpdateProfileDto})
   updateProfile(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UpdateProfileValidator)) data: UserDto.UpdateProfileType
