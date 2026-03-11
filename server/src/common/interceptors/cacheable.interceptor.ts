@@ -3,7 +3,8 @@ import {Reflector} from "@nestjs/core";
 import {map, Observable, from} from "rxjs";
 import {RedisService} from "@/modules/redis/redis.service";
 import {CACHEABLE_KEY, type CacheableDecoratorType} from "@/common";
-import {CallHandler, ExecutionContext, Injectable, NestInterceptor} from "@nestjs/common";
+import {CallHandler, ExecutionContext, Injectable, InternalServerErrorException, NestInterceptor} from "@nestjs/common";
+import {BaseException} from "@/types";
 
 @Injectable()
 export class CacheableInterceptor<T> implements NestInterceptor {
@@ -40,8 +41,15 @@ export class CacheableInterceptor<T> implements NestInterceptor {
     return next.handle().pipe(
       map(async data => {
 
-        // set value with key
-        await this.redisService.set(key, data, cacheableKey.ttl);
+        try {
+          // set value with key
+          await this.redisService.set(key, data, cacheableKey.ttl);
+        } catch (e) {
+          throw new InternalServerErrorException({
+            message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor',
+            error: (e as Error).name ?? 'error in deleting cache',
+          } as BaseException);
+        }
 
         return data;
       })
