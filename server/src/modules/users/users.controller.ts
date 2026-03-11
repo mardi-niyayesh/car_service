@@ -107,8 +107,10 @@ export class UsersController {
     tags: ["User"],
   })
   updateProfile(
-    @Req() req: AccessRequest
+    @Req() req: AccessRequest,
+    @Body(new ZodPipe(UserDto.UpdateProfileValidator)) data: UserDto.UpdateProfileType
   ) {
+    console.log(data);
     return this.usersService.findOne(req.user.userId);
   }
 
