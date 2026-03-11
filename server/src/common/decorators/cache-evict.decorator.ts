@@ -11,9 +11,17 @@ type CacheEvictDecoratorForce = Omit<ParamCacheKeyType, "ctx"> & {
 type CacheEvictDecoratorPrefix = Omit<ParamCacheKeyType, "resource" | 'ctx'> & {
   force?: never;
   prefix?: string;
+};
+
+interface FindPrefix {
+  param: string;
 }
 
-export type CacheEvictDecorator = CacheEvictDecoratorPrefix | CacheEvictDecoratorForce;
+type CacheEvictDecoratorFindPrefix = Omit<CacheEvictDecoratorPrefix, "prefix"> & {
+  findPrefix: FindPrefix;
+};
+
+export type CacheEvictDecorator = CacheEvictDecoratorPrefix | CacheEvictDecoratorForce | CacheEvictDecoratorFindPrefix;
 
 /** Build Key Cache for Delete
  * @example
