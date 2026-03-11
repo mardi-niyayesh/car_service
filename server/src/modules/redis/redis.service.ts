@@ -58,24 +58,17 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     return this.client.del(...keys);
   }
 
-  /** get all keys with prefix */
-  getKeyPrefix(keyPrefix: string): Promise<string[] | null> {
-    return this.client.keys(`${this.prefix}${keyPrefix}*`);
+  async getKeyPrefix(prefix: string): Promise<string[]> {
+    const [_nextCursor, keys] = await this.client.scan(0, 'MATCH', `*${prefix}*`);
+    return keys;
   }
 
   /** delete many values with key prefix */
   async deletePrefix(prefix: string): Promise<number | null> {
-    const keys: string[] | null = await this.getKeyPrefix(prefix);
+    const keys: string[] = await this.getKeyPrefix(prefix);
 
-    if (keys === null || keys.length === 0) return null;
+    if (!keys.length) return null;
 
-    // clean prefix in start
-    const cleanKeys: string[] = this.cleanPrefix(...keys);
-
-    return await this.delete(...cleanKeys);
-  }
-
-  cleanPrefix(...keys: string[]): string[] {
-    return keys.map(k => k.startsWith(this.prefix) ? k.split(this.prefix)[1] : k);
+    return await this.delete(...keys);
   }
 }
