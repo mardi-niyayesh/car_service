@@ -32,11 +32,18 @@ export class CacheableInterceptor<T> implements NestInterceptor {
       query: cacheableKey.query,
     });
 
-    // check exist cached
-    const cacheValue = await this.redisService.get<T>(key);
+    try {
+      // check exist cached
+      const cacheValue = await this.redisService.get<T>(key);
 
-    // exist cached
-    if (cacheValue !== null) return from([cacheValue]);
+      // exist cached
+      if (cacheValue !== null) return from([cacheValue]);
+    } catch (e) {
+      throw new InternalServerErrorException({
+        message: (e as Error).message ?? (e as Error).cause ?? 'error in cacheable.interceptor',
+        error: (e as Error).name ?? 'error in setting cache',
+      } as BaseException);
+    }
 
     return next.handle().pipe(
       map(async data => {
