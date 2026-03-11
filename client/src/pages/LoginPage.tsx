@@ -18,7 +18,7 @@ import WarningModal from "../components/common/WarningModal ";
 function LoginPage() {
   const navigate = useNavigate();
   //use az context for send infomation user if succcess login
-  const { setUser, setToken } = useUser();
+  const { setUser, setToken, user, token } = useUser();
   //SuccessModal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -34,16 +34,9 @@ function LoginPage() {
     onSuccess: (data) => {
       const token = data?.response?.data?.accessToken;
       const userData = data?.response?.data?.user;
-      //error 400
-      if (data.statusCode === 400) {
-        setWarningMessage(`مشکلی در اطلاعات ورود وجود داره:
-          ایمیل رو با فرمت صحیح وارد کن
-      رمز عبور باید حداقل ۶ تا حرف و عدد داشته باشه
-      مقدار "مرا به خاطر بسپار" رو درست انتخاب کن `);
-        setIsErrorModalOpen(true);
-      }
+
       //error 401
-      else if (data.statusCode === 401) {
+      if (data.statusCode === 401) {
         setModalMessage("اییمل یا رمز عبور اشتباه است لطفا مجدد تلاش کنید");
         setIsWarningModalOpen(true);
       }
