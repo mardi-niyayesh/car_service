@@ -186,9 +186,9 @@ export class UsersController {
   })
   @Post(":id/roles")
   @HttpCode(HttpStatus.OK)
-  @CacheEvict([
-    {resource: "users", force: true}
-  ])
+  @CacheEvict({
+    findPrefix: {param: 'id'}
+  })
   @ApiOperation({
     summary: 'Assign roles to a user',
     description: `
@@ -252,9 +252,9 @@ export class UsersController {
   })
   @Delete(":id/roles")
   @HttpCode(HttpStatus.OK)
-  @CacheEvict([
-    {resource: "users", force: true}
-  ])
+  @CacheEvict({
+    findPrefix: {param: 'id'}
+  })
   @ApiOperation({
     summary: 'Revoke roles from a user',
     description: `
