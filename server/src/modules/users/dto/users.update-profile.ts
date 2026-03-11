@@ -1,7 +1,7 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
 import {BaseUserSchema} from "./users.validators";
-import {getBaseErrorBodyResponseSchema} from "@/common";
+import {getBaseErrorBodyResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** body in update profile */
 export const UpdateProfileValidator = BaseUserSchema.pick({
@@ -31,4 +31,11 @@ export class UpdateProfileBadReqRes extends getBaseErrorBodyResponseSchema({
       error: "Invalid input: expected string, received number"
     }
   ]
+}) {}
+
+export class UpdateProfileConflictRes extends getNormalErrorResponse({
+  path: 'users/profile',
+  statusCode: 409,
+  message: "No changes detected in the provided data. Please update at least one field.",
+  error: "Data Unchanged (age, display_name)"
 }) {}

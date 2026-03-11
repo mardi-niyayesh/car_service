@@ -89,7 +89,7 @@ export class UsersController {
     tags: ["User"],
   })
   @ApiOkResponse({type: UserDto.GetMeOkResponse})
-  @ApiUnauthorizedResponse({type: getUnauthorizedResponse("users/profile")})
+  @ApiUnauthorizedResponse({type: getUnauthorizedResponse("users/getProfile")})
   getProfile(
     @Req() req: AccessRequest
   ): Promise<ApiResponse<UserResponse>> {
@@ -108,6 +108,8 @@ export class UsersController {
   })
   @ApiBody({type: UserDto.UpdateProfileDto})
   @ApiBadRequestResponse({type: UserDto.UpdateProfileBadReqRes})
+  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('users/updateProfile')})
+  @ApiConflictResponse({type: UserDto.UpdateProfileConflictRes})
   updateProfile(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UpdateProfileValidator)) data: UserDto.UpdateProfileType
