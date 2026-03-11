@@ -96,6 +96,9 @@ export class UsersController {
     return this.usersService.findOne(req.user.userId);
   }
 
+  @Permission({
+    permissions: [PERMISSIONS.USER_SELF]
+  })
   @Patch("profile")
   @ApiOperation({
     summary: 'update user info by self',
