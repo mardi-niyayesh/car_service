@@ -3,7 +3,7 @@ import {map, Observable} from "rxjs";
 import {BaseException} from "@/types";
 import {Reflector} from "@nestjs/core";
 import {RedisService} from "@/modules/redis/redis.service";
-import {CACHE_EVICT_KEY, type CacheEvictDecoratorType} from "@/common";
+import {CACHE_EVICT_KEY, type CacheEvictDecorator} from "@/common";
 import {CallHandler, ExecutionContext, Injectable, InternalServerErrorException, NestInterceptor} from "@nestjs/common";
 
 @Injectable()
@@ -14,48 +14,57 @@ export class CacheEvictInterceptor implements NestInterceptor {
   ) {}
 
   intercept(ctx: ExecutionContext, next: CallHandler<unknown>): Observable<unknown> | Promise<Observable<unknown>> {
-    const cacheParams: CacheEvictDecoratorType = this.reflector.getAllAndOverride<CacheEvictDecoratorType>(CACHE_EVICT_KEY, [
+    const cacheParams = this.reflector.getAllAndOverride<CacheEvictDecorator>(CACHE_EVICT_KEY, [
       ctx.getClass(),
       ctx.getHandler()
     ]);
 
-    if (!cacheParams || cacheParams.length === 0) return next.handle();
+    if (!cacheParams) return next.handle();
 
     return next.handle().pipe(
       map(async data => {
-        const keys: string[] = cacheParams
-          .filter(k => !k.force)
-          .map(k => RedisKey.keyPrefix({
-              ctx,
-              self: k.self,
-              paramsKey: k.paramsKey,
-              extraKeys: k.extraKeys,
-              resource: k.resource,
-              pagination: k.pagination,
-              query: k.query
-            })
-          );
 
-        const forceKeys = cacheParams.filter(k => k.force).map(k => k.resource);
+        if ('resource' in cacheParams && cacheParams.resource) {
+          const key: string = RedisKey.keyPrefix({
+            ctx,
+            resource: cacheParams.resource,
+            pagination: cacheParams.pagination,
+            query: cacheParams.query,
+            self: cacheParams.self,
+            paramsKey: cacheParams.paramsKey,
+            extraKeys: cacheParams.extraKeys,
+          });
 
-        try {
-          if (forceKeys.length > 0) {
-            for (const f of forceKeys) await this.redisService.deletePrefix(f);
+          try {
+            await this.redisService.delete(key);
+          } catch (e) {
+            throw new InternalServerErrorException({
+              message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a cache key',
+              error: (e as Error).name ?? 'error in deleting cache',
+            } as BaseException);
           }
-        } catch (e) {
-          throw new InternalServerErrorException({
-            message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor',
-            error: (e as Error).name ?? 'error in deleting cache',
-          } as BaseException);
         }
 
-        try {
-          if (keys.length > 0) await this.redisService.delete(...keys);
-        } catch (e) {
-          throw new InternalServerErrorException({
-            message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor',
-            error: (e as Error).name ?? 'error in deleting cache',
-          } as BaseException);
+        if ('force' in cacheParams && cacheParams.force && cacheParams.resource) {
+          try {
+            await this.redisService.deletePrefix(cacheParams.resource);
+          } catch (e) {
+            throw new InternalServerErrorException({
+              message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a resource cache',
+              error: (e as Error).name ?? 'error in deleting cache',
+            } as BaseException);
+          }
+        }
+
+        if ('prefix' in cacheParams && cacheParams.prefix?.trim()) {
+          try {
+            await this.redisService.delete(cacheParams.prefix);
+          } catch (e) {
+            throw new InternalServerErrorException({
+              message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a prefix cache',
+              error: (e as Error).name ?? 'error in deleting cache',
+            } as BaseException);
+          }
         }
 
         return data;
