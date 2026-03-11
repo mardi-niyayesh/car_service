@@ -253,7 +253,7 @@ export class UsersController {
   })
   assignRole(
     @Req() req: AccessRequest,
-    @Body(new ZodPipe(UserDto.UserRoleAssigned)) body: UserDto.UserRoleAssignedType,
+    @Body(new ZodPipe(UserDto.UsersRoleAssigned)) body: UserDto.UserRoleAssignedType,
     @Param(new ZodPipe(UUID4Schema)) params: UUID4Type,
   ): Promise<ApiResponse<UserResponse>> {
     return this.usersService.modifyRole({
@@ -318,7 +318,7 @@ export class UsersController {
   })
   revokeRole(
     @Req() req: AccessRequest,
-    @Body(new ZodPipe(UserDto.UserRoleAssigned)) body: UserDto.UserRoleAssignedType,
+    @Body(new ZodPipe(UserDto.UsersRoleAssigned)) body: UserDto.UserRoleAssignedType,
     @Param(new ZodPipe(UUID4Schema)) params: UUID4Type,
   ) {
     return this.usersService.modifyRole({

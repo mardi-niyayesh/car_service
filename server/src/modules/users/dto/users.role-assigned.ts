@@ -5,7 +5,7 @@ import {createUserResponse} from "@/modules/auth/dto";
 import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** request body */
-export const UserRoleAssigned = z.object({
+export const UsersRoleAssigned = z.object({
   rolesId: z
     .array(z.uuidv4({error: "Invalid role ID format"}))
     .nonempty({error: "roles id Cannot be empty"})
@@ -14,10 +14,10 @@ export const UserRoleAssigned = z.object({
 });
 
 /** request body type */
-export type UserRoleAssignedType = z.infer<typeof UserRoleAssigned>;
+export type UserRoleAssignedType = z.infer<typeof UsersRoleAssigned>;
 
 /** request body swagger schema */
-export class UserRoleAssignedDto extends createZodDto(UserRoleAssigned) {}
+export class UserRoleAssignedDto extends createZodDto(UsersRoleAssigned) {}
 
 /** data response */
 export const userResponse = structuredClone(createUserResponse);
