@@ -59,8 +59,21 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   }
 
   async getKeyPrefix(prefix: string): Promise<string[]> {
-    const [_nextCursor, keys] = await this.client.scan(0, 'MATCH', `*${prefix}*`);
-    return keys;
+    const allKeys: string[] = [];
+    let cursor: string = '0';
+
+    do {
+      const [nextCursor, keys] = await this.client.scan(
+        cursor,
+        'MATCH', `*${prefix}*`,
+        'COUNT', 50
+      );
+
+      cursor = nextCursor;
+      allKeys.push(...keys);
+    } while (cursor !== '0');
+
+    return allKeys;
   }
 
   /** delete many values with key prefix */
