@@ -69,7 +69,7 @@ export type ResetPasswordtype={
 }
 
  export type User = {
-  name: string;
+  display_name: string;
   email: string;
   age: number;
 };
@@ -80,3 +80,8 @@ export type ResetPasswordtype={
   setUser: (user: User | null) => void;
   logout: () => void;
 };
+//type for menu hambergery
+ export type AuthButtonsProps= {
+  isMobile?: boolean;
+  onClose?: () => void;
+}
