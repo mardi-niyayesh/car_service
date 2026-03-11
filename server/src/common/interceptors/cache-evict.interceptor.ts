@@ -37,8 +37,7 @@ export class CacheEvictInterceptor implements NestInterceptor {
           });
 
           try {
-            const res = await this.redisService.delete(key);
-            console.log('key: ', res);
+            await this.redisService.delete(key);
           } catch (e) {
             throw new InternalServerErrorException({
               message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a cache key',
@@ -49,8 +48,7 @@ export class CacheEvictInterceptor implements NestInterceptor {
 
         if ('force' in cacheParams && cacheParams.force && cacheParams.resource) {
           try {
-            const res = await this.redisService.deletePrefix(cacheParams.resource);
-            console.log('force: ', res);
+            await this.redisService.deletePrefix(cacheParams.resource);
           } catch (e) {
             throw new InternalServerErrorException({
               message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a resource cache',
@@ -61,8 +59,7 @@ export class CacheEvictInterceptor implements NestInterceptor {
 
         if ('prefix' in cacheParams && cacheParams.prefix?.trim()) {
           try {
-            const res = await this.redisService.deletePrefix(cacheParams.prefix);
-            console.log('prefix: ', res);
+            await this.redisService.deletePrefix(`*${cacheParams.prefix}*`);
           } catch (e) {
             throw new InternalServerErrorException({
               message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a prefix cache',
@@ -76,8 +73,7 @@ export class CacheEvictInterceptor implements NestInterceptor {
           const rawReqPrefix = req.params[cacheParams.findPrefix.param];
           const reqPrefix: string = Array.isArray(rawReqPrefix) ? rawReqPrefix[0] : rawReqPrefix;
 
-          const res = await this.redisService.deletePrefix(reqPrefix);
-          console.log('findPrefix: ', res);
+          await this.redisService.deletePrefix(`*${reqPrefix}*`);
         }
 
         return data;

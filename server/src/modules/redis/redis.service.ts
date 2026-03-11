@@ -80,8 +80,6 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   async deletePrefix(prefix: string): Promise<number | null> {
     const keys: string[] = await this.getKeyPrefix(prefix);
 
-    console.log(keys);
-
     if (!keys.length) return null;
 
     const cleanKeys = this.cleanPrefix(keys);
