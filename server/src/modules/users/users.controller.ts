@@ -107,6 +107,7 @@ export class UsersController {
     tags: ["User"],
   })
   @ApiBody({type: UserDto.UpdateProfileDto})
+  @ApiBadRequestResponse({type: UserDto.UpdateProfileBadReqRes})
   updateProfile(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UpdateProfileValidator)) data: UserDto.UpdateProfileType
