@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Body,
+  Patch,
   Param,
   Query,
   Delete,
@@ -92,6 +93,13 @@ export class UsersController {
   getProfile(
     @Req() req: AccessRequest
   ): Promise<ApiResponse<UserResponse>> {
+    return this.usersService.findOne(req.user.userId);
+  }
+
+  @Patch("profile")
+  updateProfile(
+    @Req() req: AccessRequest
+  ) {
     return this.usersService.findOne(req.user.userId);
   }
 

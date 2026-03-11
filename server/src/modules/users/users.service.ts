@@ -52,6 +52,10 @@ export class UsersService {
     };
   }
 
+  updateProfile(id: string) {
+    return this.findOne(id);
+  }
+
   /** get all users info
    * - only users with permission (owner.all or user.view) can accessibility to this route
    */
