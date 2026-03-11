@@ -1,26 +1,63 @@
+//hooks
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useUser } from "../../../hooks/useUser";
+//types
+import { type AuthButtonsProps } from "../../../types/auth.types";
+//img
 import imglogin from "../../../../assets/login.png";
-
-interface AuthButtonsProps {
-  isMobile?: boolean;
-  onClose?: () => void;
-}
 
 const AuthButtons = ({ isMobile = false, onClose }: AuthButtonsProps) => {
   const [showLoginMenue, setShowLoginMenue] = useState(false);
 
+  const { user, logout } = useUser();
+
+  const handleButtonClick = () => {
+    setShowLoginMenue(!showLoginMenue);
+  };
+
   const desktopButton = (
     <div className="relative hidden lg:block">
       <button
-        onClick={() => setShowLoginMenue(!showLoginMenue)}
+        onClick={handleButtonClick}
         className="bg-[#194BF0] rounded-xl px-6 py-2 text-white font-medium hover:bg-[#1539c0] transition-colors"
       >
-        ورود / ثبت‌نام
+        {user ? (
+          <div className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+            <span className="flex items-center">
+              {user.display_name ? <>{user.display_name}</> : "profile User"}
+            </span>
+          </div>
+        ) : (
+          "ورود / ثبت‌نام"
+        )}
       </button>
       {showLoginMenue && (
         <div className="absolute top-full left-0 mt-2 z-50 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border-b-2 border-b-theme-color-dark overflow-hidden">
-          <LoginMenuItems setShowLoginMenue={setShowLoginMenue} />
+          {user ? (
+            <>
+              <Link to="/dashboard">
+                <div className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer flex items-center gap-3">
+                  <img src={imglogin} alt="" className="w-5 h-5 opacity-70" />
+                  <p> داشبورد</p>
+                </div>
+              </Link>
+
+              <hr className="border-gray-200 dark:border-gray-700" />
+
+              <div
+                className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer flex items-center gap-3"
+                onClick={() => {
+                  logout();
+                }}
+              >
+                <img src={imglogin} alt="" className="w-5 h-5 opacity-70" />
+                <p> خروج</p>
+              </div>
+            </>
+          ) : (
+            <LoginMenuItems />
+          )}
         </div>
       )}
     </div>
@@ -29,22 +66,62 @@ const AuthButtons = ({ isMobile = false, onClose }: AuthButtonsProps) => {
   const mobileButton = (
     <div className="relative mt-8">
       <button
-        onClick={() => setShowLoginMenue(!showLoginMenue)}
-        className="w-full bg-[#194BF0] rounded-xl py-3 text-[#FFFFFF] font-medium text-[18px] hover:bg-[#1539c0] transition-colors shadow-lg flex items-center justify-center gap-2"
+        onClick={handleButtonClick}
+        className={`w-full rounded-xl py-3 font-medium shadow-lg flex items-center justify-center gap-2 transition-colors ${
+          user
+            ? "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+            : "bg-[#194BF0] text-[#FFFFFF] hover:bg-[#1539c0]"
+        }`}
       >
-        <span>ورود / ثبت‌نام</span>
-        <svg
-          className={`w-5 h-5 transition-transform duration-300 ${showLoginMenue ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        {user ? (
+          <span className="flex items-center">
+            {user.display_name ? <>{user.display_name}</> : "profile User"}
+          </span>
+        ) : (
+          <>
+            <span>ورود / ثبت‌نام</span>
+            <svg
+              className={`w-5 h-5 transition-transform duration-300 ${showLoginMenue ? "rotate-180" : ""}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </>
+        )}
       </button>
       {showLoginMenue && (
         <div className="mt-2 w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg border-2 border-[#194BF0] overflow-hidden">
-          <LoginMenuItems setShowLoginMenue={setShowLoginMenue} onClose={onClose} isMobile />
+          {user ? (
+            <>
+              <Link to="/dashboard">
+                <div className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer flex items-center gap-3">
+                  <img src={imglogin} alt="" className="w-5 h-5 opacity-70" />
+                  <p> داشبورد</p>
+                </div>
+              </Link>
+
+              <hr className="border-gray-200 dark:border-gray-700" />
+
+              <div
+                className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer flex items-center gap-3"
+                onClick={() => {
+                  logout();
+                }}
+              >
+                <img src={imglogin} alt="" className="w-5 h-5 opacity-70" />
+                <p> خروج</p>
+              </div>
+            </>
+          ) : (
+            <LoginMenuItems />
+          )}
         </div>
       )}
     </div>
@@ -53,7 +130,11 @@ const AuthButtons = ({ isMobile = false, onClose }: AuthButtonsProps) => {
   return isMobile ? mobileButton : desktopButton;
 };
 
-const LoginMenuItems = ({ setShowLoginMenue, onClose, isMobile = false }: any) => {
+const LoginMenuItems = ({
+  setShowLoginMenue,
+  onClose,
+  isMobile = false,
+}: any) => {
   const handleClick = () => {
     setShowLoginMenue(false);
     onClose?.();
@@ -63,20 +144,26 @@ const LoginMenuItems = ({ setShowLoginMenue, onClose, isMobile = false }: any) =
     ? "flex items-center gap-3 px-4 py-4 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
     : "flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200";
 
+  const { user } = useUser();
+
   return (
     <ul className="flex flex-col divide-y divide-gray-200 dark:divide-gray-700">
-      <li>
-        <Link to="/login" onClick={handleClick} className={itemClass}>
-          <img src={imglogin} alt="" className="w-5 h-5 opacity-70" />
-          <span className="text-sm font-medium">ورود</span>
-        </Link>
-      </li>
-      <li>
-        <Link to="/register" onClick={handleClick} className={itemClass}>
-          <img src={imglogin} alt="" className="w-5 h-5 opacity-70" />
-          <span className="text-sm font-medium">ثبت‌نام</span>
-        </Link>
-      </li>
+      {!user && (
+        <>
+          <li>
+            <Link to="/login" onClick={handleClick} className={itemClass}>
+              <img src={imglogin} alt="" className="w-5 h-5 opacity-70" />
+              <span className="text-sm font-medium">ورود</span>
+            </Link>
+          </li>
+          <li>
+            <Link to="/register" onClick={handleClick} className={itemClass}>
+              <img src={imglogin} alt="" className="w-5 h-5 opacity-70" />
+              <span className="text-sm font-medium">ثبت‌نام</span>
+            </Link>
+          </li>
+        </>
+      )}
     </ul>
   );
 };
