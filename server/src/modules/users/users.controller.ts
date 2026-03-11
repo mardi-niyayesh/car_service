@@ -111,8 +111,7 @@ export class UsersController {
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UpdateProfileValidator)) data: UserDto.UpdateProfileType
   ) {
-    console.log(data);
-    return this.usersService.findOne(req.user.userId);
+    return this.usersService.updateProfile(req.user.userId, data);
   }
 
   /**

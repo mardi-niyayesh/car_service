@@ -1,3 +1,4 @@
+import * as UserDto from "./dto";
 import {getSafeRoles, getSafeUser} from "@/lib";
 import {PrismaService} from "../prisma/prisma.service";
 import {Prisma} from "@/modules/prisma/generated/client";
@@ -52,8 +53,57 @@ export class UsersService {
     };
   }
 
-  updateProfile(id: string) {
-    return this.findOne(id);
+  async updateProfile(id: string, {age, display_name}: UserDto.UpdateProfileType): Promise<ApiResponse<UserResponse>> {
+    return this.prisma.$transaction(async tx => {
+      const user = await tx.user.findUnique({
+        where: {id},
+        omit: {password: true},
+      });
+
+      if (!user) throw new NotFoundException({
+        message: "User not exist in database",
+        error: "User Not Found",
+      } as BaseException);
+
+      const conflictData: string[] = [];
+
+      if (age === user.age) conflictData.push('age');
+      if (display_name === user.display_name) conflictData.push('display_name');
+
+      if (conflictData.length) {
+        throw new ConflictException({
+          message: `No changes detected in the provided data. Please update at least one field.`,
+          error: `Data Unchanged (${conflictData.join(', ')})`
+        } as BaseException);
+      }
+
+      const newUserData = await tx.user.update({
+        where: {id},
+        data: {
+          age,
+          display_name,
+        },
+        include: {
+          userRoles: {
+            include: {
+              role: {
+                include: {
+                  rolePermissions: {include: {permission: true}}
+                }
+              }
+            }
+          }
+        },
+        omit: {password: true},
+      });
+
+      const safeUser = getSafeUser(newUserData);
+
+      return {
+        message: 'User profile updated successfully.',
+        data: safeUser,
+      };
+    });
   }
 
   /** get all users info
