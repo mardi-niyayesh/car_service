@@ -100,6 +100,7 @@ export class UsersController {
     permissions: [PERMISSIONS.USER_SELF]
   })
   @Patch("profile")
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'update user info by self',
     description: 'update user info accessToken. **Access restricted to users with permission: (user.self) only.**',
@@ -107,6 +108,7 @@ export class UsersController {
     tags: ["User"],
   })
   @ApiBody({type: UserDto.UpdateProfileDto})
+  @ApiOkResponse({type: UserDto.UpdateProfileOkResponse})
   @ApiBadRequestResponse({type: UserDto.UpdateProfileBadReqRes})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('users/updateProfile')})
   @ApiConflictResponse({type: UserDto.UpdateProfileConflictRes})
