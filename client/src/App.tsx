@@ -1,5 +1,5 @@
 //context
-import UserProvider from "./Context/UserContext";
+import UserProvider from "./Context/UserProvider";
 //hooks
 import { Routes, Route } from "react-router-dom";
 //layout components
