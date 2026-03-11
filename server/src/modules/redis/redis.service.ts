@@ -43,7 +43,6 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
   /** set cache value with key */
   set<T>(key: string, value: T, ttl?: number): Promise<"OK"> {
-    console.log(ttl ?? this.defaultTTL);
     return this.client.set(key, JSON.stringify(value), "PX", ttl ?? this.defaultTTL);
   }
 
