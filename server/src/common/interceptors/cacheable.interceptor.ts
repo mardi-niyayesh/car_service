@@ -41,7 +41,7 @@ export class CacheableInterceptor<T> implements NestInterceptor {
     } catch (e) {
       throw new InternalServerErrorException({
         message: (e as Error).message ?? (e as Error).cause ?? 'error in cacheable.interceptor',
-        error: (e as Error).name ?? 'error in setting cache',
+        error: (e as Error).name ?? 'error in getting cache',
       } as BaseException);
     }
 
