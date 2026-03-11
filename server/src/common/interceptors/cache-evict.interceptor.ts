@@ -1,5 +1,6 @@
 import {RedisKey} from "@/lib";
 import {map, Observable} from "rxjs";
+import type {Request} from "express";
 import {BaseException} from "@/types";
 import {Reflector} from "@nestjs/core";
 import {RedisService} from "@/modules/redis/redis.service";
@@ -68,6 +69,15 @@ export class CacheEvictInterceptor implements NestInterceptor {
               error: (e as Error).name ?? 'error in deleting cache',
             } as BaseException);
           }
+        }
+
+        if ('findPrefix' in cacheParams) {
+          const req = ctx.switchToHttp().getRequest<Request>();
+          const rawReqPrefix = req.params[cacheParams.findPrefix.param];
+          const reqPrefix: string = Array.isArray(rawReqPrefix) ? rawReqPrefix[0] : rawReqPrefix;
+
+          const res = await this.redisService.deletePrefix(reqPrefix);
+          console.log('findPrefix: ', res);
         }
 
         return data;
