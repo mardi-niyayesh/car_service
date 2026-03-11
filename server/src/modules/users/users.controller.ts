@@ -97,6 +97,12 @@ export class UsersController {
   }
 
   @Patch("profile")
+  @ApiOperation({
+    summary: 'update user info by self',
+    description: 'update user info accessToken. **Access restricted to users with permission: (user.self) only.**',
+    operationId: 'update_profile',
+    tags: ["User"],
+  })
   updateProfile(
     @Req() req: AccessRequest
   ) {
