@@ -131,6 +131,8 @@ export class UsersController {
     permissions: [PERMISSIONS.USER_SELF]
   })
   @Patch("password")
+  @HttpCode(HttpStatus.OK)
+  @ApiBody({type: UserDto.UpdatePasswordDto})
   updatePassword(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UpdatePasswordValidator)) data: UserDto.UpdatePasswordType
