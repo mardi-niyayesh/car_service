@@ -4,8 +4,9 @@ import {BaseUserSchema} from "./users.validators";
 import {getBaseErrorBodyResponseSchema} from "@/common";
 
 /** update password body */
-export const UpdatePasswordValidator = BaseUserSchema.pick({
-  password: true
+export const UpdatePasswordValidator = z.object({
+  oldPassword: BaseUserSchema.shape.password,
+  newPassword: BaseUserSchema.shape.password,
 });
 
 /** update password body type */

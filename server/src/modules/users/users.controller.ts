@@ -140,7 +140,7 @@ export class UsersController {
     @Body(new ZodPipe(UserDto.UpdatePasswordValidator)) data: UserDto.UpdatePasswordType
   ) {
     console.log(data);
-    return this.usersService.updatePassword(req.user.userId);
+    return this.usersService.updatePassword(req.user.userId, data);
   }
 
   /**

@@ -114,8 +114,30 @@ export class UsersService {
    * Update Current Password.
    * - **Requires authentication and "user.self" permission.**
    */
-  updatePassword(id: string) {
-    return this.findOne(id);
+  updatePassword(id: string, {oldPassword, newPassword}: UserDto.UpdatePasswordType): Promise<ApiResponse<UserResponse>> {
+    return this.prisma.$transaction(async tx => {
+      const user = await tx.user.findUnique({
+        where: {id},
+        include: {
+          userRoles: {
+            include: {
+              role: {
+                include: {
+                  rolePermissions: {include: {permission: true}}
+                }
+              }
+            }
+          }
+        }
+      });
+
+      if (!user) throw new NotFoundException({
+        message: "User not exist in database",
+        error: "User Not Found",
+      } as BaseException);
+
+
+    });
   }
 
   /** get all users info
