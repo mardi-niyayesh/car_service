@@ -3,3 +3,4 @@ export * from "./users.role-assigned";
 export * from "./users.role-revoked";
 export * from "./users.get-one";
 export * from "./users.update-profile";
+export * from "./users.update-password";
