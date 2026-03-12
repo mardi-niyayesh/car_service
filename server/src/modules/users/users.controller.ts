@@ -142,7 +142,7 @@ export class UsersController {
   @Permission({
     permissions: [PERMISSIONS.USER_VIEW]
   })
-  @Get('get')
+  @Get('find')
   @HttpCode(HttpStatus.OK)
   @Cacheable({
     resource: "users",
