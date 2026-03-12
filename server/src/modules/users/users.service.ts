@@ -1,10 +1,19 @@
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+  UnauthorizedException,
+  InternalServerErrorException,
+} from '@nestjs/common';
+
 import * as UserDto from "./dto";
-import {getSafeRoles, getSafeUser} from "@/lib";
 import {PrismaService} from "../prisma/prisma.service";
 import {Prisma} from "@/modules/prisma/generated/client";
+import {getSafeRoles, getSafeUser, compareSecret, hashSecret} from "@/lib";
 import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams} from "@/types";
 import {PaginationValidatorType, PERMISSIONS, USER_PERMISSIONS, ROLE_PERMISSIONS, BASE_PERMISSIONS} from "@/common";
-import {BadRequestException, ConflictException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
@@ -136,7 +145,28 @@ export class UsersService {
         error: "User Not Found",
       } as BaseException);
 
+      const isValidPassword: boolean = await compareSecret(oldPassword, user.password);
 
+      if (!isValidPassword) {
+        throw new UnauthorizedException({
+          message: "The provided old password does not match.",
+          error: "Invalid old password.",
+        } as BaseException);
+      }
+
+      const hashedNewPass: string = await hashSecret(newPassword);
+
+      await tx.user.update({
+        where: {id},
+        data: {
+          password: hashedNewPass
+        }
+      });
+
+      return {
+        message: 'User profile updated successfully.',
+        data: getSafeUser(user),
+      };
     });
   }
 
