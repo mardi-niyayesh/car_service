@@ -65,9 +65,9 @@ export class RedisKey {
     }
 
     if (paramsKey !== undefined && paramsKey.length) {
-      const params: string[] = paramsKey.map(p => Array.isArray(req.params[p])
-        ? `${p}=${req.params[p][0]}`
-        : `${p}=${req.params[p]}`
+      const params: (string | undefined)[] = paramsKey.map(p => Array.isArray(req.params[p])
+        ? req.params[p][0] !== undefined ? `${p}=${req.params[p][0]}` : undefined
+        : req.params[p] !== undefined ? `${p}=${req.params[p]}` : undefined
       );
       parts.push(...params);
     }
