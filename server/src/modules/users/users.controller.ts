@@ -133,6 +133,7 @@ export class UsersController {
   @Patch("password")
   @HttpCode(HttpStatus.OK)
   @ApiBody({type: UserDto.UpdatePasswordDto})
+  @ApiBadRequestResponse({type: UserDto.UpdatePasswordBadReqRes})
   updatePassword(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UpdatePasswordValidator)) data: UserDto.UpdatePasswordType
