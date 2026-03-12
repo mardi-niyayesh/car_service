@@ -7,6 +7,9 @@ import {getBaseErrorBodyResponseSchema} from "@/common";
 export const UpdatePasswordValidator = z.object({
   oldPassword: BaseUserSchema.shape.password,
   newPassword: BaseUserSchema.shape.password,
+}).refine( data => data.newPassword !== data.oldPassword, {
+  error: "New password must be different from old password",
+  path: ['newPassword'],
 });
 
 /** update password body type */
