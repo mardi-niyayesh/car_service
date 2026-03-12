@@ -1,7 +1,7 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
 import {BaseUserSchema} from "./users.validators";
-import {getBaseErrorBodyResponseSchema} from "@/common";
+import {getBaseErrorBodyResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** update password body */
 export const UpdatePasswordValidator = z.object({
@@ -28,4 +28,11 @@ export class UpdatePasswordBadReqRes extends getBaseErrorBodyResponseSchema({
       error: "Invalid input: expected string, received number"
     }
   ]
+}) {}
+
+export class UnauthorizedUpdatePasswordRes  extends getNormalErrorResponse({
+  path: 'users/password',
+  statusCode: 401,
+  message: "The provided old password does not match.",
+  error: "Invalid old password."
 }) {}
