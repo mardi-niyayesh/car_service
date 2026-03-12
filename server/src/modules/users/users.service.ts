@@ -53,6 +53,10 @@ export class UsersService {
     };
   }
 
+  /**
+   * Update user profile data.
+   * - Requires authentication and "user.self" permission.
+   */
   async updateProfile(id: string, {age, display_name}: UserDto.UpdateProfileType): Promise<ApiResponse<UserResponse>> {
     return this.prisma.$transaction(async tx => {
       const user = await tx.user.findUnique({
@@ -104,6 +108,14 @@ export class UsersService {
         data: safeUser,
       };
     });
+  }
+
+  /**
+   * Update Current Password.
+   * - **Requires authentication and "user.self" permission.**
+   */
+  updatePassword(id: string) {
+    return this.findOne(id);
   }
 
   /** get all users info

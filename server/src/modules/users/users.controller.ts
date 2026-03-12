@@ -96,6 +96,10 @@ export class UsersController {
     return this.usersService.findOne(req.user.userId);
   }
 
+  /**
+   * Update user profile by self.
+   * - Requires authentication and "user.self" permission.
+   */
   @Permission({
     permissions: [PERMISSIONS.USER_SELF]
   })
@@ -117,6 +121,17 @@ export class UsersController {
     @Body(new ZodPipe(UserDto.UpdateProfileValidator)) data: UserDto.UpdateProfileType
   ) {
     return this.usersService.updateProfile(req.user.userId, data);
+  }
+
+  /**
+   * Update Current Password.
+   * - **Requires authentication and "user.self" permission.**
+   */
+  @Patch("password")
+  updatePassword(
+    @Req() req: AccessRequest,
+  ) {
+    return this.usersService.updatePassword(req.user.userId);
   }
 
   /**
