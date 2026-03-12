@@ -127,6 +127,9 @@ export class UsersController {
    * Update Current Password.
    * - **Requires authentication and "user.self" permission.**
    */
+  @Permission({
+    permissions: [PERMISSIONS.USER_SELF]
+  })
   @Patch("password")
   updatePassword(
     @Req() req: AccessRequest,
