@@ -164,11 +164,7 @@ describe("UsersService", (): void => {
           action: "assign",
           userId: targetUserId,
           rolesId: [roleId],
-          actionPayload: {
-            ...adminPayload,
-            roles: [ROLES.OWNER],
-            permissions: [PERMISSIONS.ROLE_ASSIGN]
-          }
+          actionPayload: adminPayload
         })).rejects.toThrow(ConflictException);
       });
 
@@ -204,11 +200,7 @@ describe("UsersService", (): void => {
           action: "revoke",
           userId: targetUserId,
           rolesId: [roleId],
-          actionPayload: {
-            ...adminPayload,
-            roles: [ROLES.ROLE_MANAGER],
-            permissions: [PERMISSIONS.ROLE_ASSIGN]
-          }
+          actionPayload: adminPayload
         })).rejects.toThrow(BadRequestException);
       });
 
@@ -255,15 +247,22 @@ describe("UsersService", (): void => {
           name: ROLES.ROLE_MANAGER,
           created_at: exampleDate,
           updated_at: exampleDate,
-          description: null
-        }]);
+          description: null,
+          rolePermissions: [{
+            permission: {name: PERMISSIONS.ROLE_CREATE}
+          }]
+        }] as unknown as Role[]);
 
         // noinspection ES6RedundantAwait
         await expect(service.modifyRole({
           action: "assign",
           userId: targetUserId,
           rolesId: [roleId],
-          actionPayload: adminPayload
+          actionPayload: {
+            ...adminPayload,
+            roles: [ROLES.OWNER],
+            permissions: [PERMISSIONS.ROLE_ASSIGN]
+          }
         })).rejects.toThrow(ForbiddenException);
       });
     });
