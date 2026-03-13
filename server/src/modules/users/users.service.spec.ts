@@ -271,6 +271,14 @@ describe("UsersService", (): void => {
   describe("updatePassword()", (): void => {
     const targetId = 'target-id';
 
+    // ** should throw ConflictException if oldPassword === newPassword **
+    it('should throw ConflictException if oldPassword === newPassword', async () => {
+      prisma.user.findUnique.mockResolvedValue({id: targetId, password: 'oldPassword'} as unknown as User);
 
+      // noinspection ES6RedundantAwait
+      await expect(service.updatePassword(targetId, {
+        oldPassword: 'pass', newPassword: 'newPassword',
+      })).rejects.toThrow(UnauthorizedException);
+    });
   });
 });
