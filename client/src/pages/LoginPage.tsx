@@ -17,8 +17,8 @@ import WarningModal from "../components/common/WarningModal ";
 
 function LoginPage() {
   const navigate = useNavigate();
-  //use az context for send infomation user if succcess login
-  const { setUser, setToken, user, token } = useUser();
+  //use az context for send infomation user to context
+  const { setUser, setToken } = useUser();
   //SuccessModal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -46,15 +46,20 @@ function LoginPage() {
         setIsErrorModalOpen(true);
       }
       //success
+      
       else if (token && userData) {
+        console.log(userData)
+        console.log(token)
         //save token to context
         setToken(token);
         setUser(userData);
         setModalMessage(
           "ورود شما با موفقیت انجام شد! به خانواده کارسرویس خوش آمدید.",
         );
-        setIsModalOpen(true);
+        setIsModalOpen(true); // نمایش مودال موفقیت
+       
       }
+
       //other error
       else {
         // console.error("پاسخ:", data);
@@ -73,11 +78,13 @@ function LoginPage() {
   const handleLogin = (data: LoginFormData) => {
     mutation.mutate(data);
   };
+  
   //SuccessModal
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    navigate("/dashboard");
+    navigate("/"); 
   };
+
   //ErrorModal
   const handleCloseErrorModal = () => {
     setIsErrorModalOpen(false);
