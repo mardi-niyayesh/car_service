@@ -131,27 +131,42 @@ describe("UsersService", (): void => {
 
     // --- Logical Validation Tests ---
     describe("Logical Validation", (): void => {
-      it('should throw ConflictException if assigning an existing role', async () => {
+      it('should throw ConflictException if assigning an existing permissions', async () => {
         prisma.user.findUnique.mockResolvedValue({
           id: targetUserId,
-          userRoles: [{role: {name: "editor"}}]
+          userRoles: [{
+            role: {
+              name: "user_manager",
+              rolePermissions: [{
+                permission: {name: "role.assign"}
+              }]
+            }
+          }]
         } as unknown as User);
+
         prisma.role.findMany.mockResolvedValue([
           {
             id: roleId,
-            name: "editor",
+            name: "user_manager",
             created_at: exampleDate,
             updated_at: exampleDate,
-            description: "desc"
+            description: "desc",
+            rolePermissions: [{
+              permission: {name: "role.assign"}
+            }]
           }
-        ]);
+        ] as unknown as Role[]);
 
         // noinspection ES6RedundantAwait
         await expect(service.modifyRole({
           action: "assign",
           userId: targetUserId,
           rolesId: [roleId],
-          actionPayload: {...adminPayload, roles: [ROLES.OWNER]}
+          actionPayload: {
+            ...adminPayload,
+            roles: [ROLES.OWNER],
+            permissions: [PERMISSIONS.ROLE_ASSIGN]
+          }
         })).rejects.toThrow(ConflictException);
       });
 
