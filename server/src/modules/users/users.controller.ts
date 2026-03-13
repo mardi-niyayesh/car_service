@@ -139,6 +139,7 @@ export class UsersController {
     tags: ["User"],
   })
   @ApiBody({type: UserDto.UpdatePasswordDto})
+  @ApiOkResponse({type: UserDto.OkUpdatePasswordRes})
   @ApiBadRequestResponse({type: UserDto.UpdatePasswordBadReqRes})
   @ApiUnauthorizedResponse({type: UserDto.UnauthorizedUpdatePasswordRes})
   updatePassword(

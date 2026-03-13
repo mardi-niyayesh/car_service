@@ -1,7 +1,7 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
 import {BaseUserSchema} from "./users.validators";
-import {getBaseErrorBodyResponseSchema, getNormalErrorResponse} from "@/common";
+import {getBaseErrorBodyResponseSchema, getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** update password body */
 export const UpdatePasswordValidator = z.object({
@@ -18,10 +18,19 @@ export type UpdatePasswordType = z.infer<typeof UpdatePasswordValidator>;
 /** update password swagger schema */
 export class UpdatePasswordDto extends createZodDto(UpdatePasswordValidator) {}
 
+const path = 'users/password';
+
+/** ok example response */
+export class OkUpdatePasswordRes extends getBaseOkResponseSchema<void>({
+  path,
+  response: {
+    message: 'User password updated successfully.'
+  }
+}) {}
 
 /** bad request response example */
 export class UpdatePasswordBadReqRes extends getBaseErrorBodyResponseSchema({
-  path: 'users/password',
+  path,
   errors: [
     {
       field: "password",
@@ -30,8 +39,9 @@ export class UpdatePasswordBadReqRes extends getBaseErrorBodyResponseSchema({
   ]
 }) {}
 
+/** unauthorized response example */
 export class UnauthorizedUpdatePasswordRes  extends getNormalErrorResponse({
-  path: 'users/password',
+  path,
   statusCode: 401,
   message: "The provided old password does not match.",
   error: "Invalid old password."
