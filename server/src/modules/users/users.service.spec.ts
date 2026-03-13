@@ -212,25 +212,41 @@ describe("UsersService", (): void => {
         })).rejects.toThrow(BadRequestException);
       });
 
+      // ** should block modification if target user is an OWNER **
       it('should block modification if target user is an OWNER', async () => {
         prisma.user.findUnique.mockResolvedValue({
           id: targetUserId,
-          userRoles: [{role: {name: ROLES.OWNER}}]
+          userRoles: [{
+            role: {
+              name: ROLES.OWNER,
+              rolePermissions: [{
+                permission: {name: PERMISSIONS.OWNER_ALL}
+              }]
+            }
+          }]
         } as unknown as User);
 
         prisma.role.findMany.mockResolvedValue([{
-          id: roleId, name: "any-role",
-        }] as Role[]);
+          id: roleId,
+          name: "any-role",
+          rolePermissions: [{
+            permission: {name: PERMISSIONS.ROLE_ASSIGN}
+          }]
+        }] as unknown as Role[]);
 
         // noinspection ES6RedundantAwait
         await expect(service.modifyRole({
           action: "assign",
           userId: targetUserId,
           rolesId: [roleId],
-          actionPayload: {...adminPayload, roles: [ROLES.OWNER]}
+          actionPayload: {
+            ...adminPayload,
+            roles: [ROLES.OWNER]
+          }
         })).rejects.toThrow(ForbiddenException);
       });
 
+      // ** should prevent non-owner from assigning management roles **
       it('should prevent non-owner from assigning management roles', async () => {
         prisma.user.findUnique.mockResolvedValue({id: targetUserId, userRoles: []} as unknown as User);
 
