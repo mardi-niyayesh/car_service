@@ -1,5 +1,5 @@
 import z from "zod";
-import {UserResponse} from "@/types";
+import {SafeUser} from "@/types";
 import {createZodDto} from "nestjs-zod";
 import {BaseUserSchema} from "./users.validators";
 import {createUserResponse} from "@/modules/auth/dto";
@@ -21,12 +21,21 @@ export type UpdateProfileType = z.infer<typeof UpdateProfileValidator>;
 export class UpdateProfileDto extends createZodDto(UpdateProfileValidator) {}
 
 /** ok example for get one user by id */
-export class UpdateProfileOkResponse extends getBaseOkResponseSchema<UserResponse>({
+export class UpdateProfileOkResponse extends getBaseOkResponseSchema<{user: SafeUser}>({
   path: "users/profile",
   create: false,
   response: {
     message: "User profile updated successfully.",
-    data: createUserResponse.data
+    data: {
+      user: {
+        id: createUserResponse.data.user.id,
+        updated_at: createUserResponse.data.user.updated_at,
+        created_at: createUserResponse.data.user.created_at,
+        age: createUserResponse.data.user.age,
+        email: createUserResponse.data.user.email,
+        display_name: createUserResponse.data.user.display_name,
+      }
+    }
   }
 }) {}
 
