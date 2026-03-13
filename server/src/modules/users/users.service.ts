@@ -126,18 +126,7 @@ export class UsersService {
   updatePassword(id: string, {oldPassword, newPassword}: UserDto.UpdatePasswordType): Promise<ApiResponse<void>> {
     return this.prisma.$transaction(async (tx): Promise<ApiResponse<void>> => {
       const user = await tx.user.findUnique({
-        where: {id},
-        include: {
-          userRoles: {
-            include: {
-              role: {
-                include: {
-                  rolePermissions: {include: {permission: true}}
-                }
-              }
-            }
-          }
-        }
+        where: {id}
       });
 
       if (!user) throw new NotFoundException({
