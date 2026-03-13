@@ -1,27 +1,20 @@
 import axios from "axios";
 import type { AxiosResponse } from "axios";
+//types
+import type { RefreshResponse } from "../types/auth.types";
 
-const API_BASE_URL = "http://localhost:3000/api";
+// const API_BASE_URL = "http://localhost:3000/api";
 
-export async function refreshToken(): Promise<string | null> {
+  export async function refreshAuth(): Promise<RefreshResponse | null> {
   try {
-    const response: AxiosResponse<{
-      accessToken: string;
-      refreshToken?: string;
-    }> = await axios.post(`${API_BASE_URL}/auth/refresh`, {});
-
-    const newAccessToken = response.data.accessToken;
-
-    if (newAccessToken) {
-      localStorage.setItem("accessToken", newAccessToken);
-    }
-
-    return newAccessToken;
+    const response: AxiosResponse<RefreshResponse> = await axios.post(
+      `api/auth/refresh`,
+      {},
+    );    
+    console.log(response.data)
+   return response.data;
   } catch (error) {
-    console.error("Failed to refresh token:", error);
-
-    localStorage.removeItem("accessToken");
-
+    console.error("خطا در رفرش توکن و دریافت اطلاعات کاربر:", error);
     return null;
   }
 }
