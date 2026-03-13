@@ -1,13 +1,19 @@
 import {exampleDate} from "@/lib";
 import {PERMISSIONS, ROLES} from "@/common";
 import {UsersService} from "./users.service";
+import {hashSecret, compareSecret} from "@/lib/utils/crypto";
 import {Role, User} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {it, expect, describe, afterEach, beforeEach} from "vitest";
 import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
+import {it, expect, describe, afterEach, beforeEach, vi, Mock} from "vitest";
 import {BadRequestException, ConflictException, ForbiddenException, NotFoundException, UnauthorizedException} from "@nestjs/common";
 
 type PrismaMock = DeepMockProxy<PrismaService>;
+
+vi.mock('@/lib/utils/crypto', () => ({
+  hashSecret: vi.fn(),
+  compareSecret: vi.fn()
+}));
 
 describe("UsersService", (): void => {
   let service: UsersService;
@@ -271,14 +277,29 @@ describe("UsersService", (): void => {
   describe("updatePassword()", (): void => {
     const targetId = 'target-id';
 
-    // ** should throw ConflictException if oldPassword === newPassword **
-    it('should throw ConflictException if oldPassword === newPassword', async () => {
+    // ** should throw UnauthorizedException oldPassword !== user password **
+    it('should throw UnauthorizedException if oldPassword !== user password', async () => {
       prisma.user.findUnique.mockResolvedValue({id: targetId, password: 'oldPassword'} as unknown as User);
 
       // noinspection ES6RedundantAwait
       await expect(service.updatePassword(targetId, {
         oldPassword: 'pass', newPassword: 'newPassword',
       })).rejects.toThrow(UnauthorizedException);
+    });
+
+    // ** should update password and don't send user information **
+    it("should update password and don't send user information", async () => {
+      prisma.user.findUnique.mockResolvedValue({id: targetId, password: 'hashedOldPassword'} as unknown as User);
+
+      (compareSecret as Mock).mockResolvedValue(true);
+      (hashSecret as Mock).mockResolvedValue('hashedNewPassword');
+
+      const result = await service.updatePassword(targetId, {
+        newPassword: 'newPassword',
+        oldPassword: 'oldPassword',
+      });
+
+      expect(result.message).toBe('User password updated successfully.');
     });
   });
 });
