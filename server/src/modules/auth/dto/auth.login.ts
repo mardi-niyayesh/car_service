@@ -1,5 +1,5 @@
 import z from "zod";
-import {date} from "@/lib";
+import {exampleDate} from "@/lib";
 import {createZodDto} from "nestjs-zod";
 import {LoginUserSchemaType} from "@/types";
 import {BaseUserSchema} from "@/modules/users/dto/users.validators";
@@ -25,8 +25,8 @@ export const loginResponseSchema: LoginUserSchemaType = {
     email: "john@example.com",
     display_name: "john",
     age: 20,
-    created_at: date,
-    updated_at: date,
+    created_at: exampleDate,
+    updated_at: exampleDate,
     roles: ["self"],
     permissions: ["user.self"]
   },

@@ -1,4 +1,4 @@
-import {date} from "@/lib";
+import {exampleDate} from "@/lib";
 import {PERMISSIONS, ROLES} from "@/common";
 import {UsersService} from "./users.service";
 import {Role, User} from "@/modules/prisma/generated/client";
@@ -35,8 +35,8 @@ describe("UsersService", (): void => {
     it('should find user and don`t send password: ', async (): Promise<void> => {
       const fakeUser = {
         id: "2a55bda6-e1fc-4047-9725-aeec8fcc9ec4",
-        createdAt: date,
-        updatedAt: date,
+        createdAt: exampleDate,
+        updatedAt: exampleDate,
         email: "user@example.com",
         password: "example_password",
         display_name: "first user",
@@ -140,8 +140,8 @@ describe("UsersService", (): void => {
           {
             id: roleId,
             name: "editor",
-            created_at: date,
-            updated_at: date,
+            created_at: exampleDate,
+            updated_at: exampleDate,
             description: "desc"
           }
         ]);
@@ -164,8 +164,8 @@ describe("UsersService", (): void => {
           {
             id: roleId,
             name: "editor",
-            created_at: date,
-            updated_at: date,
+            created_at: exampleDate,
+            updated_at: exampleDate,
             description: "desc"
           }
         ]);
@@ -204,8 +204,8 @@ describe("UsersService", (): void => {
         prisma.role.findMany.mockResolvedValue([{
           id: roleId,
           name: ROLES.ROLE_MANAGER,
-          created_at: date,
-          updated_at: date,
+          created_at: exampleDate,
+          updated_at: exampleDate,
           description: null
         }]);
 
