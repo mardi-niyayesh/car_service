@@ -12,7 +12,7 @@ import * as UserDto from "./dto";
 import {PrismaService} from "../prisma/prisma.service";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {getSafeRoles, getSafeUser, compareSecret, hashSecret} from "@/lib";
-import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams} from "@/types";
+import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams, SafeUser} from "@/types";
 import {PaginationValidatorType, PERMISSIONS, USER_PERMISSIONS, ROLE_PERMISSIONS, BASE_PERMISSIONS} from "@/common";
 
 @Injectable()
@@ -66,8 +66,8 @@ export class UsersService {
    * Update user profile data.
    * - Requires authentication and "user.self" permission.
    */
-  async updateProfile(id: string, {age, display_name}: UserDto.UpdateProfileType): Promise<ApiResponse<UserResponse>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<UserResponse>> => {
+  async updateProfile(id: string, {age, display_name}: UserDto.UpdateProfileType): Promise<ApiResponse<{ user: SafeUser }>> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<{ user: SafeUser }>> => {
       const user = await tx.user.findUnique({
         where: {id},
         omit: {password: true},
@@ -96,25 +96,16 @@ export class UsersService {
           age,
           display_name,
         },
-        include: {
-          userRoles: {
-            include: {
-              role: {
-                include: {
-                  rolePermissions: {include: {permission: true}}
-                }
-              }
-            }
-          }
-        },
         omit: {password: true},
       });
 
-      const safeUser = getSafeUser(newUserData);
-
       return {
         message: 'User profile updated successfully.',
-        data: safeUser,
+        data: {
+          user: {
+            ...newUserData,
+          }
+        }
       };
     });
   }
