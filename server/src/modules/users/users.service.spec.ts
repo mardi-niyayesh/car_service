@@ -108,6 +108,7 @@ describe("UsersService", (): void => {
         PERMISSIONS.ROLE_ASSIGN,
       ]
     };
+
     const targetUserId = "target-id";
     const roleId = "role-id";
 
@@ -147,12 +148,12 @@ describe("UsersService", (): void => {
         prisma.role.findMany.mockResolvedValue([
           {
             id: roleId,
-            name: "user_manager",
+            name: ROLES.USER_MANAGER,
             created_at: exampleDate,
             updated_at: exampleDate,
             description: "desc",
             rolePermissions: [{
-              permission: {name: "role.assign"}
+              permission: {name: PERMISSIONS.ROLE_ASSIGN}
             }]
           }
         ] as unknown as Role[]);
@@ -173,8 +174,16 @@ describe("UsersService", (): void => {
       it('should throw BadRequestException if revoking a non-assigned role', async () => {
         prisma.user.findUnique.mockResolvedValue({
           id: targetUserId,
-          userRoles: [{role: {name: "viewer"}}]
+          userRoles: [{
+            role: {
+              name: "product_manager",
+              rolePermissions: [{
+                permission: {name: PERMISSIONS.PRODUCT_CREATE}
+              }]
+            }
+          }]
         } as unknown as User);
+
         prisma.role.findMany.mockResolvedValue([
           {
             id: roleId,
