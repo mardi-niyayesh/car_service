@@ -132,6 +132,7 @@ describe("UsersService", (): void => {
 
     // --- Logical Validation Tests ---
     describe("Logical Validation", (): void => {
+      // ** should throw ConflictException if assigning an existing permissions **
       it('should throw ConflictException if assigning an existing permissions', async () => {
         prisma.user.findUnique.mockResolvedValue({
           id: targetUserId,
@@ -171,6 +172,7 @@ describe("UsersService", (): void => {
         })).rejects.toThrow(ConflictException);
       });
 
+      // ** should throw BadRequestException if revoking a non-assigned role **
       it('should throw BadRequestException if revoking a non-assigned role', async () => {
         prisma.user.findUnique.mockResolvedValue({
           id: targetUserId,
@@ -187,19 +189,26 @@ describe("UsersService", (): void => {
         prisma.role.findMany.mockResolvedValue([
           {
             id: roleId,
-            name: "editor",
+            name: ROLES.CATEGORY_MANAGER,
             created_at: exampleDate,
             updated_at: exampleDate,
-            description: "desc"
+            description: "desc",
+            rolePermissions: [{
+              permission: {name: PERMISSIONS.CATEGORY_CREATE}
+            }]
           }
-        ]);
+        ] as unknown as Role[]);
 
         // noinspection ES6RedundantAwait
         await expect(service.modifyRole({
           action: "revoke",
           userId: targetUserId,
           rolesId: [roleId],
-          actionPayload: {...adminPayload, roles: [ROLES.OWNER]}
+          actionPayload: {
+            ...adminPayload,
+            roles: [ROLES.ROLE_MANAGER],
+            permissions: [PERMISSIONS.ROLE_ASSIGN]
+          }
         })).rejects.toThrow(BadRequestException);
       });
 
