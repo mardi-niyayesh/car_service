@@ -67,7 +67,7 @@ export class UsersService {
    * - Requires authentication and "user.self" permission.
    */
   async updateProfile(id: string, {age, display_name}: UserDto.UpdateProfileType): Promise<ApiResponse<UserResponse>> {
-    return this.prisma.$transaction(async tx => {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<UserResponse>> => {
       const user = await tx.user.findUnique({
         where: {id},
         omit: {password: true},
@@ -123,8 +123,8 @@ export class UsersService {
    * Update Current Password.
    * - **Requires authentication and "user.self" permission.**
    */
-  updatePassword(id: string, {oldPassword, newPassword}: UserDto.UpdatePasswordType): Promise<ApiResponse<UserResponse>> {
-    return this.prisma.$transaction(async tx => {
+  updatePassword(id: string, {oldPassword, newPassword}: UserDto.UpdatePasswordType): Promise<ApiResponse<void>> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<void>> => {
       const user = await tx.user.findUnique({
         where: {id},
         include: {
@@ -164,8 +164,7 @@ export class UsersService {
       });
 
       return {
-        message: 'User profile updated successfully.',
-        data: getSafeUser(user),
+        message: 'User password updated successfully.'
       };
     });
   }
@@ -210,7 +209,7 @@ export class UsersService {
    * - Accessible only by users with 'owner' or 'user_manager' role
    */
   async modifyRole(params: ModifyRoleServiceParams): Promise<ApiResponse<UserResponse>> {
-    return this.prisma.$transaction(async tx => {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<UserResponse>> => {
       const {rolesId, userId, action, actionPayload} = params;
 
       const targetUserRecord = await tx.user.findUnique({
