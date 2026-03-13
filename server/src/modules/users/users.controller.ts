@@ -132,6 +132,12 @@ export class UsersController {
   })
   @Patch("password")
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'update password',
+    description: 'update password with accessToken. **Access restricted to users with permission: (user.self) only.**',
+    operationId: 'update_password',
+    tags: ["User"],
+  })
   @ApiBody({type: UserDto.UpdatePasswordDto})
   @ApiBadRequestResponse({type: UserDto.UpdatePasswordBadReqRes})
   @ApiUnauthorizedResponse({type: UserDto.UnauthorizedUpdatePasswordRes})
