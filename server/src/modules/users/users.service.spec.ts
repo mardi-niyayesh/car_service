@@ -5,7 +5,7 @@ import {Role, User} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {it, expect, describe, afterEach, beforeEach} from "vitest";
 import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
-import {BadRequestException, ConflictException, ForbiddenException, NotFoundException} from "@nestjs/common";
+import {BadRequestException, ConflictException, ForbiddenException, NotFoundException, UnauthorizedException} from "@nestjs/common";
 
 type PrismaMock = DeepMockProxy<PrismaService>;
 
@@ -29,7 +29,6 @@ describe("UsersService", (): void => {
   // ======================================================
   // Find One Method Tests
   // ======================================================
-
   describe("findOne()", (): void => {
     // success
     it('should find user and don`t send password: ', async (): Promise<void> => {
@@ -94,11 +93,9 @@ describe("UsersService", (): void => {
     });
   });
 
-
   // ======================================================
   // modifyRole Method Tests
   // ======================================================
-
   describe("modifyRole()", (): void => {
     const adminPayload = {
       userId: "admin-id",
@@ -266,5 +263,14 @@ describe("UsersService", (): void => {
         })).rejects.toThrow(ForbiddenException);
       });
     });
+  });
+
+  // ======================================================
+  // Update Password with old password
+  // ======================================================
+  describe("updatePassword()", (): void => {
+    const targetId = 'target-id';
+
+
   });
 });
