@@ -32,56 +32,64 @@ export type SuccessModalProps = {
 };
 //type AuthFormProps
 export type AuthFormProps = {
-  type: "register" | "login" | "forgot-password"|"reset-password";
+  type: "register" | "login" | "forgot-password" | "reset-password";
   onSubmit: (data: any) => void;
   isPending?: boolean;
   error?: string | null;
   resetForm?: boolean;
   successMessage?: string | null;
-   token?: string | null;
+  token?: string | null;
 };
 //type ResetPassword
-export type ResetPasswordtype={
-  password:string,
-  token:string
-}
+export type ResetPasswordtype = {
+  password: string;
+  token: string;
+};
 //type ReservAutorent
- export type ReservAutorentType = {
+export type ReservAutorentType = {
   logo: string;
   firstname: string;
   secondname: string;
   descripton: string;
-  id?:number
+  id?: number;
 };
 //type feacherWhyAutoRent
- export type feacherWhyAutoRent = {
+export type feacherWhyAutoRent = {
   name: string;
   logo: string;
   description: string;
   id: number;
 };
 //type descriptionWhyAutoRenttype
- export type descriptionWhyAutoRenttype={
-  logo:string;
-  name:string;
-  description:string;
+export type descriptionWhyAutoRenttype = {
+  logo: string;
+  name: string;
+  description: string;
   id?: number;
-}
+};
 
- export type User = {
+export type User = {
   display_name: string;
   email: string;
   age: number;
 };
-// type for  UserContext
- export type UserContextType = {
-  user: User | null;
-  isLoggedIn: boolean;
-  setUser: (user: User | null) => void;
-  logout: () => void;
-};
+
 //type for menu hambergery
- export type AuthButtonsProps= {
+export type AuthButtonsProps = {
   isMobile?: boolean;
   onClose?: () => void;
-}
+};
+//type fot context
+export type UserContextType = {
+  user: User | null;
+  token: string | null;
+  setUser: (userData: User | null) => void;
+  setToken: (newToken: string | null) => void;
+  logout: () => void;
+  isLoading?: boolean;
+};
+
+export type RefreshResponse = {
+  accessToken: string;
+  user: User;
+};
