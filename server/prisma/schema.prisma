@@ -23,6 +23,7 @@ model User {
   refreshTokens RefreshToken[]
   userRoles     UserRole[]
   passwordToken PasswordToken?
+  createdRoles  Role[]
 
   @@map("users")
 }
@@ -81,9 +82,11 @@ model Role {
   updated_at  DateTime @updatedAt
   name        String   @unique @db.VarChar(100)
   description String?  @db.Text
+  creator     String?
 
   rolePermissions RolePermission[]
   userRoles       UserRole[]
+  creatorId       User?            @relation(fields: [creator], references: [id], onUpdate: NoAction)
 
   @@map("roles")
 }
