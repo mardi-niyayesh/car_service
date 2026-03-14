@@ -14,6 +14,7 @@ import {
 
 import {ONE_MINUTE_MS} from "@/lib";
 import {Controller, Get, Query} from "@nestjs/common";
+import type {ApiResponse, RoleResponse} from "@/types";
 import {RolesService} from "@/modules/roles/roles.service";
 import {ApiBearerAuth, ApiForbiddenResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
@@ -58,7 +59,7 @@ export class RolesController {
   @ApiForbiddenResponse({type: getForbiddenResponse('roles')})
   findAll(
     @Query(new ZodPipe(PaginationValidator)) query: PaginationValidatorType
-  ) {
+  ): Promise<ApiResponse<{ roles: RoleResponse[] }>> {
     return this.rolesService.findAll(query);
   }
 }
