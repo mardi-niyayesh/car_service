@@ -98,11 +98,8 @@ interface GetSafeSqlPaginateReturn {
 }
 
 export function getSafeSqlPaginate(pagination: Partial<PaginationValidatorType>): GetSafeSqlPaginateReturn {
-  const rawPage: number = typeof pagination.page === 'number' ? pagination.page : 1;
-  const rawLimit: number = typeof pagination.limit === 'number' ? pagination.limit : 10;
-
-  const page: number = Math.max(rawPage, 1);
-  const limit: number = Math.min(Math.max(rawLimit, 1), 100);
+  const page: number = Math.max(Number(pagination.page) || 1, 1);
+  const limit: number = Math.min(Math.max(Number(pagination.limit) || 10, 1), 100);
 
   return {
     limit,
