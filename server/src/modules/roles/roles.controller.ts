@@ -41,6 +41,11 @@ import {ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiQuery, ApiTags, A
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
+  @Get('find')
+  findOne(): 'test' {
+    return 'test';
+  }
+
   /** get all roles info with pagination
    * - only roles with permission (owner.all or role.view) can accessibility to this route
    */
