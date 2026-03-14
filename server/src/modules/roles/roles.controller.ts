@@ -41,6 +41,9 @@ import {ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiQuery, ApiTags, A
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
+  @Permission({
+    permissions: [PERMISSIONS.ROLE_VIEW]
+  })
   @Get('find')
   findOne(): 'test' {
     return 'test';
