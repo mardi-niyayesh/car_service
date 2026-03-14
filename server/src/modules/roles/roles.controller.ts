@@ -1,7 +1,7 @@
 import {Controller, Get, Query} from "@nestjs/common";
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {RolesService} from "@/modules/roles/roles.service";
-import {PaginationValidator, type PaginationValidatorType, Permission, PERMISSIONS, ZodPipe} from "@/common";
+import {ApiBearerAuth, ApiQuery, ApiTags} from "@nestjs/swagger";
+import {limitPaginationDto, orderByPaginationDto, pagePaginationDto, PaginationValidator, type PaginationValidatorType, Permission, PERMISSIONS, ZodPipe} from "@/common";
 
 /**
  * Role management endpoints for creating and managing custom roles.
@@ -29,10 +29,12 @@ export class RolesController {
     permissions: [PERMISSIONS.ROLE_VIEW]
   })
   @Get()
+  @ApiQuery(pagePaginationDto)
+  @ApiQuery(limitPaginationDto)
+  @ApiQuery(orderByPaginationDto)
   findAll(
     @Query(new ZodPipe(PaginationValidator)) query: PaginationValidatorType
   ) {
-    console.log(query);
     return this.rolesService.findAll(query);
   }
 }
