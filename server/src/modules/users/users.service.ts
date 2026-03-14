@@ -12,7 +12,7 @@ import * as UserDto from "./dto";
 import {PrismaService} from "../prisma/prisma.service";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {getSafeRoles, getSafeUser, compareSecret, hashSecret} from "@/lib";
-import {PaginationValidatorType, PERMISSIONS, USER_PERMISSIONS, ROLE_PERMISSIONS, BASE_PERMISSIONS} from "@/common";
+import {PaginationValidatorType, PERMISSIONS, USER_PERMISSIONS, ROLE_PERMISSIONS, BASE_PERMISSIONS, getSafeSqlPaginate} from "@/common";
 import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams, SafeUser, UserRolePermission} from "@/types";
 
 @Injectable()
@@ -153,28 +153,26 @@ export class UsersService {
    * - only users with permission (owner.all or user.view) can accessibility to this route
    */
   async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<{ users: UserRolePermission[] }>> {
-    const {orderBy, limit, offset} = pagination;
-
-    const orderDirection = orderBy === 'desc' ? 'DESC' : 'ASC';
+    const {orderBy, offset, limit} = getSafeSqlPaginate(pagination);
 
     const result = await this.prisma.$queryRaw<UserRolePermission[]>(
       Prisma.sql`
-          SELECT u.id,
-                 u.email,
-                 u.display_name,
-                 u.age,
-                 u.created_at,
-                 u.updated_at,
-                 ARRAY_AGG(DISTINCT r.name) AS roles,
-                 ARRAY_AGG(DISTINCT p.name) AS permissions
-          FROM users u
-                   INNER JOIN user_roles ur ON u.id = ur.user_id
-                   INNER JOIN roles r ON ur.role_id = r.id
-                   INNER JOIN role_permission rp ON r.id = rp.role_id
-                   INNER JOIN permissions p ON rp.permission_id = p.id
-          GROUP BY u.id
-          ORDER BY u.created_at ${Prisma.sql([orderDirection])}
-          LIMIT ${limit} OFFSET ${offset}`
+        SELECT u.id,
+               u.email,
+               u.display_name,
+               u.age,
+               u.created_at,
+               u.updated_at,
+               ARRAY_AGG(DISTINCT r.name) AS roles,
+               ARRAY_AGG(DISTINCT p.name) AS permissions
+        FROM users u
+                 INNER JOIN user_roles ur ON u.id = ur.user_id
+                 INNER JOIN roles r ON ur.role_id = r.id
+                 INNER JOIN role_permission rp ON r.id = rp.role_id
+                 INNER JOIN permissions p ON rp.permission_id = p.id
+        GROUP BY u.id
+        ORDER BY u.created_at ${Prisma.sql([orderBy])}
+        LIMIT ${limit} OFFSET ${offset}`
     );
 
     return {

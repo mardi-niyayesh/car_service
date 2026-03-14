@@ -15,17 +15,10 @@ export const PaginationValidator = z.object({
     .transform(Number)
     .pipe(z.number().min(1).max(100))
     .default(10),
-  orderBy: z
+  order: z
     .enum(["asc", "desc"])
     .optional()
     .default("desc"),
-}).transform(data => {
-  return {
-    page: data.page,
-    limit: data.limit,
-    orderBy: data.orderBy,
-    offset: data.limit * (data.page - 1)
-  };
 });
 
 /** @typeof Validate Pagination in Query Params */
@@ -97,3 +90,25 @@ export const orderByPaginationDto: ApiQueryOptions = {
     description: "order by created_at",
   }
 };
+
+interface GetSafeSqlPaginateParams {
+  orderBy: "ASC" | "DESC";
+  offset: number;
+  limit: number;
+}
+
+export function getSafeSqlPaginate(pagination: PaginationValidatorType): GetSafeSqlPaginateParams {
+  const limit: number = pagination.limit < 0
+    ? 10
+    : pagination.limit > 100
+      ? 10 :
+      pagination.limit;
+
+  const page: number = pagination.page < 0 ? 1 : pagination.page;
+
+  return {
+    orderBy: pagination.order === 'desc' ? 'DESC' : 'ASC',
+    limit,
+    offset: limit * (page - 1),
+  };
+}
