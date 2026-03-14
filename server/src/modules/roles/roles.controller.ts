@@ -12,11 +12,12 @@ import {
   type PaginationValidatorType,
 } from "@/common";
 
+import * as RolesDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
 import {Controller, Get, Query} from "@nestjs/common";
 import type {ApiResponse, RoleResponse} from "@/types";
 import {RolesService} from "@/modules/roles/roles.service";
-import {ApiBearerAuth, ApiForbiddenResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 /**
  * Role management endpoints for creating and managing custom roles.
@@ -55,6 +56,7 @@ export class RolesController {
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
+  @ApiOkResponse({type: RolesDto.FindAllRolesOkRes})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles')})
   @ApiForbiddenResponse({type: getForbiddenResponse('roles')})
   findAll(
