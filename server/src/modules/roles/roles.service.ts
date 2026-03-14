@@ -8,6 +8,9 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 export class RolesService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /** get all roles info with pagination
+   * - only roles with permission (owner.all or role.view) can accessibility to this route
+   */
   async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<{roles: RoleResponse[]}>> {
     const {orderBy, limit, offset} = pagination;
 

@@ -25,6 +25,9 @@ import {limitPaginationDto, orderByPaginationDto, pagePaginationDto, PaginationV
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
+  /** get all roles info with pagination
+   * - only roles with permission (owner.all or role.view) can accessibility to this route
+   */
   @Permission({
     permissions: [PERMISSIONS.ROLE_VIEW]
   })
