@@ -91,24 +91,22 @@ export const orderByPaginationDto: ApiQueryOptions = {
   }
 };
 
-interface GetSafeSqlPaginateParams {
+interface GetSafeSqlPaginateReturn {
   orderBy: "ASC" | "DESC";
   offset: number;
   limit: number;
 }
 
-export function getSafeSqlPaginate(pagination: PaginationValidatorType): GetSafeSqlPaginateParams {
-  const limit: number = pagination.limit < 0
-    ? 10
-    : pagination.limit > 100
-      ? 10 :
-      pagination.limit;
+export function getSafeSqlPaginate(pagination: Partial<PaginationValidatorType>): GetSafeSqlPaginateReturn {
+  const rawPage: number = typeof pagination.page === 'number' ? pagination.page : 1;
+  const rawLimit: number = typeof pagination.limit === 'number' ? pagination.limit : 10;
 
-  const page: number = pagination.page < 0 ? 1 : pagination.page;
+  const page: number = Math.max(rawPage, 1);
+  const limit: number = Math.min(Math.max(rawLimit, 1), 100);
 
   return {
-    orderBy: pagination.order === 'desc' ? 'DESC' : 'ASC',
     limit,
     offset: limit * (page - 1),
+    orderBy: pagination.order === 'desc' ? 'DESC' : 'ASC',
   };
 }
