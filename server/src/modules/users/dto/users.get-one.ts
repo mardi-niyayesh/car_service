@@ -2,7 +2,7 @@ import z from "zod";
 import {UserResponse} from "@/types";
 import {ApiQueryOptions} from "@nestjs/swagger";
 import {createUserResponse} from "@/modules/auth/dto";
-import {getBaseErrorBodyResponseSchema, getBaseOkResponseSchema} from "@/common";
+import {getBaseErrorBodyResponseSchema, getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** get one user validator */
 export const GetOneUserValidator = z.object({
@@ -58,3 +58,11 @@ export const GetOneUserBadReqRes = getBaseErrorBodyResponseSchema({
     }
   ]
 });
+
+/** not found example swagger for get one user */
+export class NotFoundGetUserResponse extends getNormalErrorResponse({
+  path: "/users/:id",
+  message: "User not found in database",
+  error: "User Not Found",
+  statusCode: 404
+}) {}

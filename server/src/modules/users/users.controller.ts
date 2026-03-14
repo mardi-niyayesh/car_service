@@ -217,6 +217,7 @@ export class UsersController {
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
+  @ApiOkResponse({type: UserDto.FindAllUsersOKRes})
   @ApiUnauthorizedResponse({
     type: getUnauthorizedResponse("users"),
     description: 'Invalid or missing authentication token.'

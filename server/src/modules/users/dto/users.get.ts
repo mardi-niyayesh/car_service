@@ -1,10 +1,10 @@
-import {UserResponse} from "@/types";
+import {getBaseOkResponseSchema} from "@/common";
+import {UserResponse, UserRolePermission} from "@/types";
 import {createUserResponse} from "@/modules/auth/dto/auth.register";
-import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** ok example for get one user by id */
 export class GetMeOkResponse extends getBaseOkResponseSchema<UserResponse>({
-  path: "users",
+  path: "users/profile",
   create: false,
   response: {
     message: "User found successfully",
@@ -12,9 +12,13 @@ export class GetMeOkResponse extends getBaseOkResponseSchema<UserResponse>({
   }
 }) {}
 
-export class NotFoundGetUserResponse extends getNormalErrorResponse({
-  path: "/users/:id",
-  message: "User not found in database",
-  error: "User Not Found",
-  statusCode: 404
+/** ok response example swagger for findAll users */
+export class FindAllUsersOKRes extends getBaseOkResponseSchema<{ users: UserRolePermission[] }>({
+  path: "users?orderBy=desc&limit=5&page=1",
+  response: {
+    message: "Users Successfully find.",
+    data: {
+      users: Array.from({length: 5}, () => createUserResponse.data.user)
+    }
+  }
 }) {}
