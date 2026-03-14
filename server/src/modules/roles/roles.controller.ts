@@ -1,5 +1,7 @@
-import {Controller} from "@nestjs/common";
+import {Permission, PERMISSIONS} from "@/common";
+import {Controller, Get} from "@nestjs/common";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {RolesService} from "@/modules/roles/roles.service";
 
 /**
  * Role management endpoints for creating and managing custom roles.
@@ -20,4 +22,14 @@ import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 @ApiTags("Roles")
 @Controller("roles")
 @ApiBearerAuth("accessToken")
-export class RolesController {}
+export class RolesController {
+  constructor(private readonly rolesService: RolesService) {}
+
+  @Permission({
+    permissions: [PERMISSIONS.ROLE_VIEW]
+  })
+  @Get()
+  test() {
+    return this.rolesService.test();
+  }
+}
