@@ -7,6 +7,7 @@ import {
   limitPaginationDto,
   PaginationValidator,
   orderByPaginationDto,
+  getForbiddenResponse,
   getUnauthorizedResponse,
   type PaginationValidatorType,
 } from "@/common";
@@ -14,7 +15,7 @@ import {
 import {ONE_MINUTE_MS} from "@/lib";
 import {Controller, Get, Query} from "@nestjs/common";
 import {RolesService} from "@/modules/roles/roles.service";
-import {ApiBearerAuth, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiForbiddenResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 /**
  * Role management endpoints for creating and managing custom roles.
@@ -54,6 +55,7 @@ export class RolesController {
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles')})
+  @ApiForbiddenResponse({type: getForbiddenResponse('roles')})
   findAll(
     @Query(new ZodPipe(PaginationValidator)) query: PaginationValidatorType
   ) {
