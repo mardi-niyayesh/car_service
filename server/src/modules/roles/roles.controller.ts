@@ -10,6 +10,7 @@ import {
   type PaginationValidatorType,
 } from "@/common";
 
+import {ONE_MINUTE_MS} from "@/lib";
 import {Controller, Get, Query} from "@nestjs/common";
 import {RolesService} from "@/modules/roles/roles.service";
 import {ApiBearerAuth, ApiQuery, ApiTags} from "@nestjs/swagger";
@@ -45,6 +46,7 @@ export class RolesController {
   @Cacheable({
     pagination: true,
     resource: "roles",
+    ttl: ONE_MINUTE_MS * 120,
   })
   @Get()
   @ApiQuery(pagePaginationDto)
