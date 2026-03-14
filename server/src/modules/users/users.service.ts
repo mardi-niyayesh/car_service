@@ -12,8 +12,8 @@ import * as UserDto from "./dto";
 import {PrismaService} from "../prisma/prisma.service";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {getSafeRoles, getSafeUser, compareSecret, hashSecret} from "@/lib";
-import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams, SafeUser} from "@/types";
 import {PaginationValidatorType, PERMISSIONS, USER_PERMISSIONS, ROLE_PERMISSIONS, BASE_PERMISSIONS} from "@/common";
+import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams, SafeUser, UserRolePermission} from "@/types";
 
 @Injectable()
 export class UsersService {
@@ -152,12 +152,12 @@ export class UsersService {
   /** get all users info
    * - only users with permission (owner.all or user.view) can accessibility to this route
    */
-  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<{ users: UserResponse[] }>> {
+  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<{ users: UserRolePermission[] }>> {
     const {orderBy, limit, offset} = pagination;
 
     const orderDirection = orderBy === 'desc' ? 'DESC' : 'ASC';
 
-    const result = await this.prisma.$queryRaw<UserResponse[]>(
+    const result = await this.prisma.$queryRaw<UserRolePermission[]>(
       Prisma.sql`
           SELECT u.id,
                  u.email,

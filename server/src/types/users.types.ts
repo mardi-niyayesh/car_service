@@ -4,9 +4,12 @@ import {Prisma, User} from "@/modules/prisma/generated/client";
 /** User type without password */
 export type SafeUser = Omit<User, "password">;
 
+/** user with role[] and permission[] */
+export type UserRolePermission = SafeUser & RolesAndPermissions;
+
 /** user safe type responses in db */
 export type UserResponse = {
-  user: SafeUser & RolesAndPermissions;
+  user: UserRolePermission;
 }
 
 /** login response type */
