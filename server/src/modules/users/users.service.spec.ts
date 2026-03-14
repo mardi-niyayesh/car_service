@@ -5,7 +5,7 @@ import {hashSecret, compareSecret} from "@/lib/utils/crypto";
 import {Role, User} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
-import {it, expect, describe, afterEach, beforeEach, vi, Mock} from "vitest";
+import {it, expect, describe, afterEach, beforeEach, vi, type Mock} from "vitest";
 import {BadRequestException, ConflictException, ForbiddenException, NotFoundException, UnauthorizedException} from "@nestjs/common";
 
 type PrismaMock = DeepMockProxy<PrismaService>;
