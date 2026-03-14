@@ -1,18 +1,19 @@
 import {Injectable} from "@nestjs/common";
 import {type PaginationValidatorType} from "@/common";
+import type {ApiResponse, RoleResponse} from "@/types";
+import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {Prisma, Role} from "@/modules/prisma/generated/client";
 
 @Injectable()
 export class RolesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll(pagination: PaginationValidatorType) {
+  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<{roles: RoleResponse[]}>> {
     const {orderBy, limit, offset} = pagination;
 
     const orderDirection = orderBy === 'desc' ? 'DESC' : 'ASC';
 
-    return this.prisma.$queryRaw<Role[]>(
+    const roles = await this.prisma.$queryRaw<RoleResponse[]>(
       Prisma.sql`
           SELECT r.id,
              r.name,
@@ -27,5 +28,12 @@ export class RolesService {
           ORDER BY r.created_at ${Prisma.sql([orderDirection])}
           LIMIT ${limit} OFFSET ${offset}`
     );
+
+    return {
+      message: 'roles successfully found.',
+      data: {
+        roles: roles || []
+      }
+    };
   }
 }
