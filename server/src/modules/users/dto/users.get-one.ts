@@ -26,7 +26,7 @@ export const GetOneUserEmailQuery: ApiQueryOptions = {
 };
 
 /** id query example for swagger */
-export const GetOneUserIdQuery: ApiQueryOptions = {
+export const ExampleIdQuery: ApiQueryOptions = {
   type: "string",
   required: false,
   name: 'id',

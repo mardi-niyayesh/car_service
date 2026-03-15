@@ -45,7 +45,7 @@ export class RolesController {
     permissions: [PERMISSIONS.ROLE_VIEW]
   })
   @Get('find')
-  findOne(): 'test' {
+  findOne(): string {
     return 'test';
   }
 
