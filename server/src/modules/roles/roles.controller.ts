@@ -14,6 +14,7 @@ import {
 
 import * as RolesDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
+import * as UserDto from "../users/dto";
 import {Controller, Get, Query} from "@nestjs/common";
 import type {ApiResponse, RoleResponse} from "@/types";
 import {RolesService} from "@/modules/roles/roles.service";
@@ -45,7 +46,12 @@ export class RolesController {
     permissions: [PERMISSIONS.ROLE_VIEW]
   })
   @Get('find')
-  findOne(): string {
+  @ApiQuery(UserDto.ExampleIdQuery)
+  @ApiQuery(RolesDto.FindOneRoleNameQuery)
+  findOne(
+    @Query(new ZodPipe(RolesDto.FindOneRoleValidator)) query: RolesDto.FindOneRoleValidatorType
+  ): string {
+    console.log(query);
     return 'test';
   }
 

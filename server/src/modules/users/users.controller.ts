@@ -170,7 +170,7 @@ export class UsersController {
     operationId: 'get_user',
     tags: ["User"],
   })
-  @ApiQuery(UserDto.GetOneUserIdQuery)
+  @ApiQuery(UserDto.ExampleIdQuery)
   @ApiQuery(UserDto.GetOneUserEmailQuery)
   @ApiOkResponse({type: UserDto.GetUserOkResponse})
   @ApiBadRequestResponse({
