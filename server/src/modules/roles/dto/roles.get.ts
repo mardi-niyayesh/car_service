@@ -1,5 +1,6 @@
 import {z} from 'zod';
 import {ApiQueryOptions} from "@nestjs/swagger";
+import {getBaseErrorBodyResponseSchema} from "@/common";
 
 /** validator for one role query */
 export const FindOneRoleValidator = z.object({
@@ -19,3 +20,18 @@ export const FindOneRoleNameQuery: ApiQueryOptions = {
   required: false,
   name: 'name',
 };
+
+/** bad request example */
+export class FindOneRoleBadReq extends getBaseErrorBodyResponseSchema({
+  path: 'roles/find',
+  errors: [
+    {
+      field: "id",
+      error: "Invalid input: expected string, received undefined"
+    },
+    {
+      field: "name",
+      error: "Invalid input: expected string, received undefined"
+    }
+  ]
+}) {}

@@ -18,7 +18,7 @@ import * as UserDto from "../users/dto";
 import {Controller, Get, Query} from "@nestjs/common";
 import type {ApiResponse, RoleResponse} from "@/types";
 import {RolesService} from "@/modules/roles/roles.service";
-import {ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 /**
  * Role management endpoints for creating and managing custom roles.
@@ -48,6 +48,7 @@ export class RolesController {
   @Get('find')
   @ApiQuery(UserDto.ExampleIdQuery)
   @ApiQuery(RolesDto.FindOneRoleNameQuery)
+  @ApiBadRequestResponse({type: RolesDto.FindOneRoleBadReq})
   findOne(
     @Query(new ZodPipe(RolesDto.FindOneRoleValidator)) query: RolesDto.FindOneRoleValidatorType
   ): string {
