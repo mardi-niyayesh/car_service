@@ -11,12 +11,14 @@ import logout from "../../../assets/logout.png";
 
 //
 import { Link } from "react-router-dom";
+import { useUser } from "../../hooks/useUser";
 
 const DashboardSidebar = () => {
+  const { user } = useUser();
   return (
     <div className="flex flex-col items-start w-full">
       {/* profile User*/}
-      <div className="flex justify-around items-center w-full max-w-[400px] p-3 rounded-2xl bg-[#EDEDED]">
+      <div className="flex justify-between  gap-4 items-center w-full max-w-[400px] p-3 rounded-2xl bg-[#EDEDED]">
         <img
           src={profilUser}
           alt="profilUser"
@@ -24,10 +26,10 @@ const DashboardSidebar = () => {
         />
         <div>
           <p className="font-bold text-[14px] md:text-[16px] text-[#353535]">
-            name
+            {user?.display_name}
           </p>
           <p className="text-[#727272] font-medium text-[11px] md:text-[13px]">
-            email
+            {user?.email}
           </p>
         </div>
         <img
