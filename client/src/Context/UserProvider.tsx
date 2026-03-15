@@ -7,31 +7,40 @@ import UserContext from "./UserContext";
 //refreshToken
 import { refreshAuth } from "../services/authService";
 //axioseClient
-import axiosClient, {
-  setAxiosToken,
-  initializeTokenRefresh,
-} from "../services/axiosClient";
+import { setAxiosToken, initializeTokenRefresh } from "../services/axiosClient";
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUserState] = useState<User | null>(null);
   const [token, setTokenState] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  console.log("user:", user);
+  console.log("token:", token);
+
   // fuction for bazyabi infomation user
   const fetchUserAndToken = useCallback(async () => {
     //start loding
     setIsLoading(true);
     try {
-      //get information user and token
-      const response = await refreshAuth();
+      const ResponseData = await refreshAuth();
 
-      if (response && response.accessToken && response.user) {
-        setTokenState(response.accessToken);
-        setUserState(response.user);
-        // Set  token in  axios client for  requests
-        setAxiosToken(response.accessToken);
+      console.log("Full response from refreshAuth:", ResponseData);
+
+      const accessToken = ResponseData?.response?.data?.accessToken;
+      const user = ResponseData?.response?.data?.user;
+
+      
+      if (accessToken && user) {
+        console.log("Found User:", user);
+        console.log("Found Access Token:", accessToken);
+
+        setTokenState(accessToken);
+        setUserState(user); 
+        // Set token in axios client for requests
+        setAxiosToken(accessToken);
       } else {
-        //if not token =>deleate infomation user and token
+        
+        console.log("Token or user not found in the response.");
         setUserState(null);
         setTokenState(null);
         setAxiosToken(null);
@@ -45,7 +54,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       // finish loading
       setIsLoading(false);
     }
-  }, []);
+  }, [setIsLoading, setTokenState, setUserState, setAxiosToken]); 
+
   const handleAuthUpdate = useCallback(
     (newToken: string | null, newUser: User | null) => {
       setTokenState(newToken);
@@ -55,23 +65,14 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     [],
   );
 
-
   useEffect(() => {
-   
-    const tokenRefreshHandler = initializeTokenRefresh(handleAuthUpdate);
+    initializeTokenRefresh(handleAuthUpdate);
+  }, [handleAuthUpdate]);
 
-    // Then, fetch user and token information
-    fetchUserAndToken()
-      .then(() => {})
-      .catch((error) => {
-        console.error("Error during initial fetchUserAndToken:", error);
-
-        handleAuthUpdate(null, null);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [fetchUserAndToken, handleAuthUpdate, initializeTokenRefresh]);
+  // start loading or refrash page
+  useEffect(() => {
+    fetchUserAndToken();
+  }, [fetchUserAndToken]);
 
   //update function setuser
   const setUser = useCallback((userData: User | null) => {
@@ -81,7 +82,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   //update function token
   const setToken = useCallback((newToken: string | null) => {
     setTokenState(newToken);
-    setAxiosToken(newToken); // Also update the axios client token
+    setAxiosToken(newToken);
   }, []);
   //if logout => deleat information context
   const logout = useCallback(() => {
