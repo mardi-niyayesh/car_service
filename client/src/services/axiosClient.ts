@@ -31,13 +31,24 @@ axiosClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const token = getCurrentToken();
     if (token) {
+      // Ensure Authorization header is always a string
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
+  (error: AxiosError) => {
+    // Handle request errors if any
+    console.error("Request Interceptor Error:", error);
+    return Promise.reject(error);
+  },
 );
 
 let isRefreshing = false;
+// Use a queue to hold requests that are waiting for a new token
+let failedQueue: Array<{
+  resolve: (value?: any) => void;
+  reject: (reason?: any) => void;
+}> = [];
 
 let tokenUpdateCallback:
   | ((token: string | null, user: User | null) => void)
@@ -47,80 +58,133 @@ export const initializeTokenRefresh = (
   callback: (token: string | null, user: User | null) => void,
 ) => {
   tokenUpdateCallback = callback;
+  // If a callback is set, we can now process the queued requests
+  if (failedQueue.length) {
+    const queue = failedQueue.slice();
+    failedQueue = [];
+    queue.forEach(({ resolve, reject }) => {
+      resolve();
+    });
+  }
+};
+
+// Function to process the queue of failed requests
+const processQueue = (
+  error: AxiosError,
+  resolve: (value?: any) => void,
+  reject: (reason?: any) => void,
+) => {
+  failedQueue.push({ resolve, reject });
 };
 
 axiosClient.interceptors.response.use(
-  // if response=success ==> response
-  (response) => response,
+  // Success handler
+  (response) => {
+    return response;
+  },
+  // Error handler
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig;
 
-    if (
-      error.response?.status === 403 &&
-      //first requset for refreshToken
-      !originalRequest._retry &&
-      tokenUpdateCallback
-    ) {
-      originalRequest._retry = true;
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      if (originalRequest && !originalRequest._retry && tokenUpdateCallback) {
+        originalRequest._retry = true; 
 
-      if (!isRefreshing) {
-        // if not requset for refreshToken
-        isRefreshing = true;
-        try {
-          // get user and token
-          const responseData: RefreshResponse | null = await apiRefreshAuth();
+        if (!isRefreshing) {
+          isRefreshing = true;
+          try {
+            console.log("Attempting to refresh token...");
+            const responseData: RefreshResponse | null = await apiRefreshAuth();
 
-          if (responseData && responseData.accessToken && responseData.user) {
-            const newToken = responseData.accessToken;
-            const newUser = responseData.user;
+            if (responseData?.accessToken && responseData.user) {
+              console.log("Token refreshed successfully.");
+              const newToken = responseData.accessToken;
+              const newUser = responseData.user;
 
-            // update token and user
-            if (tokenUpdateCallback) {
-              tokenUpdateCallback(newToken, newUser);
+              // Update  token state and callback
+              setAxiosToken(newToken);
+              if (tokenUpdateCallback) {
+                tokenUpdateCallback(newToken, newUser);
+              }
+
+              // Update the Authorization header for the original request
+              if (originalRequest.headers) {
+                originalRequest.headers.Authorization = `Bearer ${newToken}`;
+              }
+
+              // Process the queue of requests that failed while refreshing
+              const queue = failedQueue.slice();
+              failedQueue = []; // Clear the queue
+
+              queue.forEach(({ resolve }) => resolve()); // Resolve all waiting requests
+
+              // Retry the original failed request with the new token
+              return axiosClient(originalRequest);
+            } else {
+              console.error(
+                "Token refresh failed: No valid token or user received.",
+              );
+              // If refresh failed, log out the user
+              if (tokenUpdateCallback) {
+                tokenUpdateCallback(null, null);
+              }
+              // Reject the original request
+              return Promise.reject(error);
             }
-
-            //setting token for axioseClient
-            setAxiosToken(newToken);
-
-            //updata header request for new token
-            if (originalRequest.headers) {
-              originalRequest.headers.Authorization = `Bearer ${newToken}`;
-            }
-
-            // again request for new token
-            return axiosClient(originalRequest);
-          } else {
-            console.error(
-              "رفرش توکن ناموفق بوده است. کاربر باید دوباره وارد شود.",
-            );
-
-            // if error refreshtoken => deleat information UserProvider
+          } catch (refreshError) {
+            console.error("Error during token refresh process:", refreshError);
+            // If any error occurs during refresh, log out the user
             if (tokenUpdateCallback) {
               tokenUpdateCallback(null, null);
             }
+            // Reject the original request
+            return Promise.reject(refreshError || error); 
+          } finally {
+            isRefreshing = false;
           }
-        } catch (refreshError) {
-          console.error("خطا در طول رفرش توکن:", refreshError);
-
-          // if error UserProvider => deleat information user
-          if (tokenUpdateCallback) {
-            tokenUpdateCallback(null, null);
-          }
-        } finally {
-          isRefreshing = false;
+        } else {
+    
+          console.log("Refresh in progress, adding request to queue.");
+          return new Promise((resolve, reject) => {
+            processQueue(error, resolve, reject);
+          })
+            .then(() => {
+       
+              if (originalRequest.headers) {
+                originalRequest.headers.Authorization = `Bearer ${getCurrentToken()}`;
+              }
+              return axiosClient(originalRequest);
+            })
+            .catch((err) => {
+              // If retry fails after queue processing
+              console.error("Retry failed after queue processing:", err);
+              return Promise.reject(err);
+            });
         }
-      } else {
-        // if chand requset for refreshToken => await
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
-        // agein send request to refreshToken
-        return axiosClient(originalRequest);
+      } else if (originalRequest && originalRequest._retry && isRefreshing) {
+      
+        console.log("Request already marked for retry, adding to queue.");
+        return new Promise((resolve, reject) => {
+          processQueue(error, resolve, reject);
+        })
+          .then(() => {
+            // Retry with the latest token
+            if (originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${getCurrentToken()}`;
+            }
+            return axiosClient(originalRequest);
+          })
+          .catch((err) => {
+            console.error(
+              "Retry failed after queue processing (already retried):",
+              err,
+            );
+            return Promise.reject(err);
+          });
       }
     }
-    // reject the promise
     return Promise.reject(error);
   },
 );
 
 export default axiosClient;
-
