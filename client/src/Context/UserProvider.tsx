@@ -31,8 +31,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
 
       
       if (accessToken && user) {
-        console.log("Found User:", user);
-        console.log("Found Access Token:", accessToken);
+        // console.log("Found User:", user);
+        // console.log("Found Access Token:", accessToken);
 
         setTokenState(accessToken);
         setUserState(user); 
@@ -40,7 +40,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         setAxiosToken(accessToken);
       } else {
         
-        console.log("Token or user not found in the response.");
+        // console.log("Token or user not found in the response.");
         setUserState(null);
         setTokenState(null);
         setAxiosToken(null);
