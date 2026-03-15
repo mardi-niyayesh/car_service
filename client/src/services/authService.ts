@@ -9,7 +9,7 @@ import type { RefreshResponse } from "../types/auth.types";
       `api/auth/refresh`,
       {},
     );    
-    console.log(" refresh ",response.data)
+    // console.log(" refresh ",response.data)
    return response.data;
   } catch (error) {
     console.error("خطا در رفرش توکن و دریافت اطلاعات کاربر:", error);
