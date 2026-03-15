@@ -46,7 +46,6 @@ function LoginPage() {
         setIsErrorModalOpen(true);
       }
       //success
-      
       else if (token && userData) {
         console.log(userData)
         console.log(token)
@@ -56,7 +55,7 @@ function LoginPage() {
         setModalMessage(
           "ورود شما با موفقیت انجام شد! به خانواده کارسرویس خوش آمدید.",
         );
-        setIsModalOpen(true); // نمایش مودال موفقیت
+        setIsModalOpen(true); 
        
       }
 
