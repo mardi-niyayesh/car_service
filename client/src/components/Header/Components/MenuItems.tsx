@@ -7,9 +7,9 @@ interface MenuItemsProps {
 
 const menuItems = [
   { label: "خانه", path: "/", isButton: false },
-  { label: "رزرو خودرو", path: null, isButton: true },
+  { label: "رزرو خودرو", path:null , isButton: true },
   { label: "خدمات ما", path: null, isButton: true },
-  { label: "بلاگ", path: null, isButton: true },
+  { label: "بلاگ", path: "/panel", isButton: false },
   { label: "درباره ما", path: "/about", isButton: false },
   { label: "تماس با ما", path: "/contact", isButton: false },
 ];
