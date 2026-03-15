@@ -49,6 +49,7 @@ export class RolesController {
   @ApiQuery(UserDto.ExampleIdQuery)
   @ApiQuery(RolesDto.FindOneRoleNameQuery)
   @ApiBadRequestResponse({type: RolesDto.FindOneRoleBadReq})
+  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles/find')})
   findOne(
     @Query(new ZodPipe(RolesDto.FindOneRoleValidator)) query: RolesDto.FindOneRoleValidatorType
   ): string {
