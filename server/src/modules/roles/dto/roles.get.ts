@@ -4,8 +4,8 @@ import {getBaseErrorBodyResponseSchema} from "@/common";
 
 /** validator for one role query */
 export const FindOneRoleValidator = z.object({
-  id: z.uuidv4(),
-  name: z.string()
+  id: z.uuidv4().optional(),
+  name: z.string().optional(),
 }).refine(data => data.name || data.id, {
   error: 'Either name or id must be provided',
   path: ['name', 'id'],
