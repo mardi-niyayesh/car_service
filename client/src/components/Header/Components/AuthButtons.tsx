@@ -6,6 +6,7 @@ import { useUser } from "../../../hooks/useUser";
 import { type AuthButtonsProps } from "../../../types/auth.types";
 //img
 import imglogin from "../../../../assets/login.png";
+import arrow from "../../../../assets/Arrowleft.png";
 
 const AuthButtons = ({ isMobile = false, onClose }: AuthButtonsProps) => {
   const [showLoginMenue, setShowLoginMenue] = useState(false);
@@ -20,16 +21,21 @@ const AuthButtons = ({ isMobile = false, onClose }: AuthButtonsProps) => {
     <div className="relative hidden lg:block">
       <button
         onClick={handleButtonClick}
-        className="bg-[#194BF0] rounded-xl px-6 py-2 text-white font-medium hover:bg-[#1539c0] transition-colors"
+        className="bg-[#194BF0] rounded-xl px-2 py-2 text-white font-medium hover:bg-[#1539c0] "
       >
         {user ? (
-          <div className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer">
+          <div className="flex justify-between items-center p-1.5 md:p-3  rounded-lg cursor-pointer ">
             <span className="flex items-center">
               {user.display_name ? <>{user.display_name}</> : "profile User"}
             </span>
+            <img
+              src={arrow}
+              alt="wallet"
+              className="w-5 h-5 md:w-6 md:h-6 group-hover:brightness-0 group-hover:invert transition-all duration-300"
+            />
           </div>
         ) : (
-          "ورود / ثبت‌نام"
+          "ورود | ثبت‌نام"
         )}
       </button>
       {showLoginMenue && (
@@ -37,7 +43,7 @@ const AuthButtons = ({ isMobile = false, onClose }: AuthButtonsProps) => {
           {user ? (
             <>
               <Link to="/dashboard">
-                <div className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer flex items-center gap-3">
+                <div className="p-3 bg-gray-300 text-black  cursor-pointer hover:bg-gray-500 flex items-center gap-3 group:">
                   <img src={imglogin} alt="" className="w-5 h-5 opacity-70" />
                   <p> داشبورد</p>
                 </div>
@@ -46,7 +52,7 @@ const AuthButtons = ({ isMobile = false, onClose }: AuthButtonsProps) => {
               <hr className="border-gray-200 dark:border-gray-700" />
 
               <div
-                className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer flex items-center gap-3"
+                className="p-3 bg-gray-300 text-black  cursor-pointer flex items-center gap-3"
                 onClick={() => {
                   logout();
                 }}
@@ -74,9 +80,16 @@ const AuthButtons = ({ isMobile = false, onClose }: AuthButtonsProps) => {
         }`}
       >
         {user ? (
-          <span className="flex items-center">
-            {user.display_name ? <>{user.display_name}</> : "profile User"}
-          </span>
+          <div className="flex justify-between items-center p-1.5 md:p-3  rounded-lg cursor-pointer ">
+            <span className="flex items-center">
+              {user.display_name ? <>{user.display_name}</> : "profile User"}
+            </span>
+            <img
+              src={arrow}
+              alt="wallet"
+              className="w-5 h-5 md:w-6 md:h-6 group-hover:brightness-0 group-hover:invert transition-all duration-300"
+            />
+          </div>
         ) : (
           <>
             <span>ورود / ثبت‌نام</span>
