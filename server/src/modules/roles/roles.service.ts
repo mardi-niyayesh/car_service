@@ -1,3 +1,4 @@
+import * as RolesDto from "./dto";
 import {Injectable} from "@nestjs/common";
 import type {ApiResponse, RoleResponse} from "@/types";
 import {Prisma} from "@/modules/prisma/generated/client";
@@ -7,6 +8,12 @@ import {getSafeSqlPaginate, type PaginationValidatorType} from "@/common";
 @Injectable()
 export class RolesService {
   constructor(private readonly prisma: PrismaService) {}
+
+  async findOne({id, name}: RolesDto.FindOneRoleValidatorType) {
+    const role = await this.prisma.role.findUnique({
+      where: {id, name},
+    });
+  }
 
   /** get all roles info with pagination
    * - only roles with permission (owner.all or role.view) can accessibility to this route
