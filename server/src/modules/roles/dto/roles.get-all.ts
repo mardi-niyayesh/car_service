@@ -1,4 +1,5 @@
 import {RoleResponse} from "@/types";
+import {findOneRoleResponse} from "./roles.get";
 import {getBaseOkResponseSchema} from "@/common";
 
 export class FindAllRolesOkRes extends getBaseOkResponseSchema<{ roles: RoleResponse[] }>({
@@ -6,7 +7,7 @@ export class FindAllRolesOkRes extends getBaseOkResponseSchema<{ roles: RoleResp
   response: {
     message: "roles successfully found.",
     data: {
-      roles: []
+      roles: Array.from({length: 5}, () => findOneRoleResponse.role)
     }
   }
 }) {}
