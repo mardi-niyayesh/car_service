@@ -8,9 +8,11 @@ import { LogoutUser } from "../Api/DashboardApi";
 import SuccessModal from "../../components/common/SuccessModal";
 import ErrorModal from "../../components/common/ErrorModal";
 import WarningModal from "../../components/common/WarningModal ";
+import { useUser } from "../../hooks/useUser";
 
 const LogoutPage = () => {
   const navigate = useNavigate();
+  const { logout } = useUser();
   //SuccessModal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -45,6 +47,7 @@ const LogoutPage = () => {
       // success logout
       if (result.success === true) {
         setModalMessage("شما با موفقیت از حساب کاربری خود خارج شدید");
+        logout();
         setIsModalOpen(true);
         setTimeout(() => {
           navigate("/login");
