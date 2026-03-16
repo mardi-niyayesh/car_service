@@ -1,6 +1,6 @@
 import {UserRoleIncludeType, UserResponse, RoleIncludeType} from "@/types";
 
-export function getSafeRoles(allRoles: RoleIncludeType[]) {
+export function getRolesNPermissions(allRoles: RoleIncludeType[]) {
   const roles: string[] = allRoles.map(r => r.name);
 
   const rolePermissions = allRoles.map(r => r.rolePermissions);
@@ -20,7 +20,7 @@ export function getSafeRoles(allRoles: RoleIncludeType[]) {
 /** get users info and receive */
 export function getSafeUser(user: UserRoleIncludeType): UserResponse {
   const allRoles = user.userRoles.map(r => r.role);
-  const roleAndPermissions = getSafeRoles(allRoles);
+  const roleAndPermissions = getRolesNPermissions(allRoles);
 
   return {
     user: {

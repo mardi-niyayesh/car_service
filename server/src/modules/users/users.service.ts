@@ -11,7 +11,7 @@ import {
 import * as UserDto from "./dto";
 import {PrismaService} from "../prisma/prisma.service";
 import {Prisma} from "@/modules/prisma/generated/client";
-import {getSafeRoles, getSafeUser, compareSecret, hashSecret} from "@/lib";
+import {getRolesNPermissions, getSafeUser, compareSecret, hashSecret} from "@/lib";
 import {PaginationValidatorType, PERMISSIONS, USER_PERMISSIONS, ROLE_PERMISSIONS, BASE_PERMISSIONS, getSafeSqlPaginate} from "@/common";
 import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams, SafeUser, UserRolePermission} from "@/types";
 
@@ -235,7 +235,7 @@ export class UsersService {
       } as BaseException);
 
       const basePermissions: string[] = Object.values(BASE_PERMISSIONS);
-      const {roles: newRoles, permissions: newPermissions} = getSafeRoles(newRolesRecord);
+      const {roles: newRoles, permissions: newPermissions} = getRolesNPermissions(newRolesRecord);
 
       // Block restricted roles
       const restricted: string[] = newPermissions.filter(r => basePermissions.includes(r));
