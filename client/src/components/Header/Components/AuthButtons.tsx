@@ -8,6 +8,7 @@ import { type AuthButtonsProps } from "../../../types/auth.types";
 import imglogin from "../../../../assets/login.png";
 import arrow from "../../../../assets/Arrowleft.png";
 
+
 const AuthButtons = ({ isMobile = false, onClose }: AuthButtonsProps) => {
   const [showLoginMenue, setShowLoginMenue] = useState(false);
 
@@ -52,12 +53,12 @@ const AuthButtons = ({ isMobile = false, onClose }: AuthButtonsProps) => {
               <hr className="border-gray-200 dark:border-gray-700" />
 
               <div
-                className="p-3 bg-gray-300 text-black  cursor-pointer flex items-center gap-3"
+                className="p-3 bg-gray-300 text-black  cursor-pointer flex items-center gap-3  hover:bg-gray-500"
                 onClick={() => {
                   logout();
                 }}
               >
-                <img src={imglogin} alt="" className="w-5 h-5 opacity-70" />
+                <img src={imglogin} alt="" className="w-5 h-5 opacity-70 " />
                 <p> خروج</p>
               </div>
             </>
@@ -92,7 +93,7 @@ const AuthButtons = ({ isMobile = false, onClose }: AuthButtonsProps) => {
           </div>
         ) : (
           <>
-            <span>ورود / ثبت‌نام</span>
+            <span>ورود| ثبت‌نام</span>
             <svg
               className={`w-5 h-5 transition-transform duration-300 ${showLoginMenue ? "rotate-180" : ""}`}
               fill="none"
@@ -110,11 +111,11 @@ const AuthButtons = ({ isMobile = false, onClose }: AuthButtonsProps) => {
         )}
       </button>
       {showLoginMenue && (
-        <div className="mt-2 w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg border-2 border-[#194BF0] overflow-hidden">
+        <div className="mt-2 w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
           {user ? (
             <>
               <Link to="/dashboard">
-                <div className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer flex items-center gap-3">
+                <div className="p-3 bg-gray-300 text-black  cursor-pointer hover:bg-gray-500 flex items-center gap-3 group:">
                   <img src={imglogin} alt="" className="w-5 h-5 opacity-70" />
                   <p> داشبورد</p>
                 </div>
@@ -123,12 +124,12 @@ const AuthButtons = ({ isMobile = false, onClose }: AuthButtonsProps) => {
               <hr className="border-gray-200 dark:border-gray-700" />
 
               <div
-                className="p-3 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer flex items-center gap-3"
+                className="p-3 bg-gray-300 text-black  cursor-pointer flex items-center gap-3  hover:bg-gray-500"
                 onClick={() => {
                   logout();
                 }}
               >
-                <img src={imglogin} alt="" className="w-5 h-5 opacity-70" />
+                <img src={imglogin} alt="" className="w-5 h-5 opacity-70 " />
                 <p> خروج</p>
               </div>
             </>
