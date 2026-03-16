@@ -50,10 +50,10 @@ export class RolesController {
   @ApiQuery(RolesDto.FindOneRoleNameQuery)
   @ApiBadRequestResponse({type: RolesDto.FindOneRoleBadReq})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles/find')})
+  @ApiForbiddenResponse({type: getForbiddenResponse('roles/find')})
   findOne(
     @Query(new ZodPipe(RolesDto.FindOneRoleValidator)) query: RolesDto.FindOneRoleValidatorType
   ): string {
-    console.log(query);
     return 'test';
   }
 
@@ -73,7 +73,7 @@ export class RolesController {
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
   @ApiOkResponse({type: RolesDto.FindAllRolesOkRes})
-  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles')})
+  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles/getAll')})
   @ApiForbiddenResponse({type: getForbiddenResponse('roles')})
   findAll(
     @Query(new ZodPipe(PaginationValidator)) query: PaginationValidatorType
