@@ -1,6 +1,8 @@
 import {z} from 'zod';
+import {exampleDate} from "@/lib";
+import {FindOneRoleRes} from "@/types";
 import {ApiQueryOptions} from "@nestjs/swagger";
-import {getBaseErrorBodyResponseSchema} from "@/common";
+import {getBaseErrorBodyResponseSchema, getBaseOkResponseSchema} from "@/common";
 
 /** validator for one role query */
 export const FindOneRoleValidator = z.object({
@@ -20,6 +22,33 @@ export const FindOneRoleNameQuery: ApiQueryOptions = {
   required: false,
   name: 'name',
 };
+
+/** example response data for find one role */
+export const findOneRoleResponse: FindOneRoleRes = {
+  role: {
+    id: "133e0257-bd87-4d30-9a8f-4026296f5498",
+    name: "role_manager",
+    updated_at: exampleDate,
+    created_at: exampleDate,
+    creator: null,
+    description: "Full administrative access to manage all roles in the system",
+    permissions: [
+      "role.view",
+      "role.delete",
+      "role.update",
+      "role.create"
+    ]
+  }
+};
+
+/** ok response example */
+export class FindOneOkResponse extends getBaseOkResponseSchema<FindOneRoleRes>({
+  path: 'roles/find?name=role_manager',
+  response: {
+    message: 'role successfully found.',
+    data: findOneRoleResponse
+  }
+}) {}
 
 /** bad request example */
 export class FindOneRoleBadReq extends getBaseErrorBodyResponseSchema({

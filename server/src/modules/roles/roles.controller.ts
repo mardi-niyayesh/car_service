@@ -42,19 +42,23 @@ import {ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkRespons
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
+  /** find one role info with id or name
+   * - only roles with permission (owner.all or role.view) can accessibility to this route
+   */
   @Permission({
     permissions: [PERMISSIONS.ROLE_VIEW]
   })
   @Get('find')
   @ApiQuery(UserDto.ExampleIdQuery)
   @ApiQuery(RolesDto.FindOneRoleNameQuery)
+  @ApiOkResponse({type: RolesDto.FindOneOkResponse})
   @ApiBadRequestResponse({type: RolesDto.FindOneRoleBadReq})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles/find')})
   @ApiForbiddenResponse({type: getForbiddenResponse('roles/find')})
   findOne(
     @Query(new ZodPipe(RolesDto.FindOneRoleValidator)) query: RolesDto.FindOneRoleValidatorType
-  ): string {
-    return 'test';
+  ) {
+    return this.rolesService.findOne(query);
   }
 
   /** get all roles info with pagination
