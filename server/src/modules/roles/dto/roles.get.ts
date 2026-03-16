@@ -24,14 +24,8 @@ export const FindOneRoleNameQuery: ApiQueryOptions = {
 /** bad request example */
 export class FindOneRoleBadReq extends getBaseErrorBodyResponseSchema({
   path: 'roles/find',
-  errors: [
-    {
-      field: "id",
-      error: "Invalid input: expected string, received undefined"
-    },
-    {
-      field: "name",
-      error: "Invalid input: expected string, received undefined"
-    }
-  ]
+  errors: [{
+    field: "name, id",
+    error: "Either name or id must be provided"
+  }]
 }) {}
