@@ -82,7 +82,7 @@ export class RolesController {
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
   @ApiOkResponse({type: RolesDto.FindAllRolesOkRes})
-  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles/getAll')})
+  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles')})
   @ApiForbiddenResponse({type: getForbiddenResponse('roles')})
   findAll(
     @Query(new ZodPipe(PaginationValidator)) query: PaginationValidatorType
