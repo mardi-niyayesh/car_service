@@ -1,18 +1,46 @@
 import * as RolesDto from "./dto";
-import {Injectable} from "@nestjs/common";
-import type {ApiResponse, RoleResponse} from "@/types";
 import {Prisma} from "@/modules/prisma/generated/client";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import type {ApiResponse, BaseException, RoleResponse} from "@/types";
 import {getSafeSqlPaginate, type PaginationValidatorType} from "@/common";
 
 @Injectable()
 export class RolesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findOne({id, name}: RolesDto.FindOneRoleValidatorType) {
+  /** find one role info with id or name
+   * - only roles with permission (owner.all or role.view) can accessibility to this route
+   */
+  async findOne({id, name}: RolesDto.FindOneRoleValidatorType): Promise<ApiResponse<{ role: RoleResponse }>> {
     const role = await this.prisma.role.findUnique({
       where: {id, name},
+      include: {
+        rolePermissions: {
+          include: {permission: true}
+        }
+      }
     });
+
+    if (!role) throw new NotFoundException({
+      message: 'this Role does not exist in database',
+      error: 'Role not found',
+    } as BaseException);
+
+    return {
+      message: 'role successfully found.',
+      data: {
+        role: {
+          id: role.id,
+          name: role.name,
+          updated_at: role.updated_at,
+          created_at: role.created_at,
+          creator: role.creator,
+          description: role.description,
+          permissions: role.rolePermissions.map(rp => rp.permission.name)
+        },
+      }
+    };
   }
 
   /** get all roles info with pagination
