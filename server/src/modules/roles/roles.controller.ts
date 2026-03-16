@@ -48,6 +48,11 @@ export class RolesController {
   @Permission({
     permissions: [PERMISSIONS.ROLE_VIEW]
   })
+  @Cacheable({
+    ttl: ONE_MINUTE_MS * 120,
+    resource: 'roles',
+    query: ['id', 'name']
+  })
   @Get('find')
   @ApiQuery(UserDto.ExampleIdQuery)
   @ApiQuery(RolesDto.FindOneRoleNameQuery)
