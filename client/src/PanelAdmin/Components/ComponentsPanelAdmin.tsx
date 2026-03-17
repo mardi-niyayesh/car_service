@@ -1,100 +1,91 @@
 //
 import { Link } from "react-router-dom";
 //img or icon
-import profilUser from "../../../assets/Ellipse 114.png";
-import editoutlin from "../../../assets/edit-outline.png";
 import ArrowLeft from "../../../assets/Arrowleft.png";
+import { FaUser } from "react-icons/fa";
+import { HiOutlineHome } from "react-icons/hi";
+import {  FaListUl } from 'react-icons/fa';
+import { FaBoxOpen } from "react-icons/fa";
 
+const Menu = [
+  { to: "/", label: "خانه", icon: <HiOutlineHome size={20} style={{ opacity: 0.6 }} /> },
+  { to: "users", label: "کاربران ", icon: <FaUser style={{ opacity: 0.6 }} /> },
+  { to: "product", label: "محصولات ", icon: <FaBoxOpen style={{ opacity: 0.6 }} /> },
+  { to: "category", label: "دسته بندی", icon: <FaListUl style={{ opacity: 0.6 }} /> },
+];
 const ComponentsPanelAdmin = () => {
   return (
-    <div>
-      {/* profile User*/}
-      <div className="flex justify-around items-center w-full max-w-[400px] p-3 rounded-2xl bg-[#EDEDED]">
-        <img
-          src={profilUser}
-          alt="profilUser"
-          className="w-12 h-12 md:w-14 md:h-14"
-        />
-        <div>
-          <p className="font-bold text-[14px] md:text-[16px] text-[#353535]">
-            name
-          </p>
-          <p className="text-[#727272] font-medium text-[11px] md:text-[13px]">
-            email
-          </p>
+    <>
+      <div>
+        {/* Desktop and tablet* */}
+
+        <div
+          className="hidden md:flex fixed top-0 right-0 h-full w-72 bg-[#F6F6F6]
+        border-2 border-gray-300 flex-col items-start p-4 overflow-y-auto shadow-sm z-40"
+        >
+          <div className="flex m-auto">
+            <span className="text-[18px] md:text-[22px] lg:text-[35px] font-bold text-[#194BF0]">
+              اُتــو
+            </span>
+            <span className="text-[18px] md:text-[22px] lg:text-[35px] font-bold text-[#FDB713]">
+              رِنت
+            </span>
+          </div>
+
+          <MenuItems />
         </div>
-        <img
-          src={editoutlin}
-          alt="editoutlin"
-          className="w-5 h-5 md:w-6 md:h-6 cursor-pointer"
-        />
+
+        {/* Mobile */}
+        <div
+          className="md:hidden fixed bottom-0 right-0 left-0 bg-[#EDEDED] border-t border-gray-200
+        flex justify-around items-center p-2 z-50 shadow-inner"
+        >
+          {Menu.map((item) => (
+            <Link key={item.to} to={item.to}>
+              <div className="flex flex-col items-center text-gray-600 hover:text-gray-900">
+                {typeof item.icon === "string" ? (
+                  <img
+                    src={item.icon}
+                    alt={item.label}
+                    className="w-5 h-5 mb-1"
+                  />
+                ) : (
+                  item.icon
+                )}
+                <p className="text-[11px] font-medium">{item.label}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
-      {/*Menue*/}
-      <div className="mt-5 w-full max-w-[400px] bg-[#EDEDED] rounded-2xl p-2 md:p-3">
-       
-        {/* items users*/}
-        <Link to="users">
-          <div className="flex justify-between items-center p-2 md:p-3 border-b-2 border-[#F3F3F3] hover:bg-blue-500 transition-all duration-300 rounded-lg cursor-pointer group">
-            <div className="flex items-center gap-2 md:gap-3">
-              {/* <img
-                src={}
-                alt=""
-                className="w-5 h-5 md:w-6 md:h-6 group-hover:brightness-0 group-hover:invert transition-all duration-300"
-              /> */}
-              <p className="text-[12px] md:text-[13px] font-medium text-[#494949] group-hover:text-white transition-all duration-300">
-                کاربران
+    </>
+  );
+};
+//component
+const MenuItems = () => {
+  return (
+    <div className="flex flex-col gap-2 w-full">
+      {Menu.map((item) => (
+        <Link key={item.to} to={item.to}>
+          <div className="flex justify-between items-center p-3 bg-[#EDEDED] rounded-xl hover:bg-gray-500 hover:text-white transition-all duration-300 cursor-pointer group">
+            <div className="flex items-center gap-3">
+              {typeof item.icon === "string" ? (
+                <img src={item.icon} alt={item.label} className="w-5 h-5" />
+              ) : (
+                item.icon
+              )}
+              <p className="text-[12px] md:text-[13px] font-medium text-[#494949] group-hover:text-white">
+                {item.label}
               </p>
             </div>
             <img
               src={ArrowLeft}
               alt="ArrowLeft"
-              className="w-4 h-4 md:w-5 md:h-5 opacity-60 group-hover:brightness-0 group-hover:invert group-hover:opacity-100 transition-all duration-300"
+              className="w-4 h-4 md:w-5 :h-5 opacity-60 group-hover:invert transition-all duration-300"
             />
           </div>
         </Link>
-
-        {/* item products*/}
-        <Link to="product">
-          <div className="flex justify-between items-center p-2 md:p-3 border-b-2 border-[#F3F3F3] hover:bg-blue-500 transition-all duration-300 rounded-lg cursor-pointer group">
-            <div className="flex items-center gap-2 md:gap-3">
-              {/* <img
-                src={}
-                alt="comment"
-                className="w-5 h-5 md:w-6 md:h-6 group-hover:brightness-0 group-hover:invert transition-all duration-300"
-              /> */}
-              <p className="text-[12px] md:text-[13px] font-medium text-[#494949] group-hover:text-white transition-all duration-300">
-                محصولات
-              </p>
-            </div>
-            <img
-              src={ArrowLeft}
-              alt=""
-              className="w-4 h-4 md:w-5 md:h-5 opacity-60 group-hover:brightness-0 group-hover:invert group-hover:opacity-100 transition-all duration-300"
-            />
-          </div>
-        </Link>
-
-        {/* item categori*/}
-        <Link to="category">
-          <div className="flex justify-between items-center p-2 md:p-3  hover:bg-blue-500 transition-all duration-300 rounded-lg cursor-pointer group">
-            <div className="flex items-center gap-2 md:gap-3">
-              {/* <img
-                src={}
-                alt=""
-                className="w-5 h-5 md:w-6 md:h-6 group-hover:brightness-0 group-hover:invert transition-all duration-300"
-              /> */}
-              <p className="text-[12px] md:text-[13px] font-medium text-[#494949] group-hover:text-white transition-all duration-300">
-                دسته بندی
-              </p>
-            </div>
-            <img
-              src={ArrowLeft}
-              alt=""
-              className="w-4 h-4 md:w-5 md:h-5 opacity-60 group-hover:brightness-0 group-hover:invert group-hover:opacity-100 transition-all duration-300"
-            />
-          </div>
-        </Link>
-      </div>
+      ))}
     </div>
   );
 };
