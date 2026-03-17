@@ -1,5 +1,3 @@
-//hooks
-import { useLocation } from "react-router-dom";
 import { useState } from "react";
 //components
 import Logo from "./Components/Logo";
@@ -9,40 +7,12 @@ import SearchButton from "./Components/SearchButton";
 
 const HeaderBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
 
-  const getPageTitle = () => {
-    switch (location.pathname) {
-      case "/":
-        return "صفحه اصلی";
-      case "/about":
-        return "درباره ما";
-      case "/contact":
-        return "تماس با ما";
-      case "/roles":
-        return "قوانین و مقررات";
-      case "/questionPage":
-        return "سوالات متدوال";
-      case "/register":
-        return " ثبت نام";
-      case "/login":
-        return "  ورود";
-           case "/forgot-password":
-        return " فراموشی رمز عبور";
-      default:
-        return "اتورنت";
-    }
-  };
-
   return (
     <>
-      <div className="bg-[#194BF0] text-[#FFFFFF] text-[24px] md:text-[40px] lg:text-[56px] items-center text-center justify-center py-3">
-        {getPageTitle()}
-      </div>
-
       {isMenuOpen && (
         <div
           className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden"
