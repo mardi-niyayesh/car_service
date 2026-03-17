@@ -1,16 +1,24 @@
-import Search from "../../../../assets/search-outline.png";
+import { FaSearch } from "react-icons/fa";
 
-interface SearchButtonProps {
-  isMobile?: boolean;
-}
-
-const SearchButton = ({ isMobile = false }: SearchButtonProps) => {
+const SearchButton = () => {
   return (
-    <img
-      src={Search}
-      alt="جستجو"
-      className="w-6 h-6 cursor-pointer"
-    />
+    <div className="relative w-130">
+      <div className="relative flex items-center w-full gap-4">
+        <button className="absolute  inset-y-0 left-0 ml-2 flex  m-1.5 items-center bg-[#137cfd] text-white font-medium text-sm md:text-[14px] px-4 py-3 md:py-4 rounded-xl hover:bg-[#0d52a7]">
+          جست و جو
+        </button>
+
+        <input
+          type="email"
+          placeholder="  دنبال چی هستی؟...  "
+          className="bg-white text-black text-sm md:text-[14px] px-4 py-3 md:py-4 rounded-xl w-full  border-2 border-gray-400  pl-20 pr-10"
+        />
+
+        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <FaSearch className="text-gray-400" size={20} />
+        </div>
+      </div>
+    </div>
   );
 };
 
