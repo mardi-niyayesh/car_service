@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 const BanerHeader = () => {
   return (
-    <div className="bg-[url('/assets/backgronCar.png')] bg-cover bg-center bg-no-repeat w-full min-h-[400px] md:min-h-[550px] lg:h-[683px] relative">
+    <div className="bg-[url('/assets/backgronCar.png')] bg-cover  bg-center bg-no-repeat w-full min-h-[400px] md:min-h-[550px] lg:h-[683px] relative">
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
       <div className="container max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8 relative z-10 pt-8 md:pt-12 lg:pt-16">
         <div className="max-w-2xl">
