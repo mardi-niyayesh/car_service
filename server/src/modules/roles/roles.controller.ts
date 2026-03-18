@@ -17,8 +17,8 @@ import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../users/dto";
 import type {ApiResponse, RoleResponse} from "@/types";
 import {RolesService} from "@/modules/roles/roles.service";
-import {Controller, Get, Post, Query} from "@nestjs/common";
-import {ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {Body, Controller, Get, Post, Query} from "@nestjs/common";
+import {ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 /**
  * Role management endpoints for creating and managing custom roles.
@@ -97,7 +97,11 @@ export class RolesController {
     permissions: [PERMISSIONS.ROLE_CREATE]
   })
   @Post()
-  create() {
+  @ApiBody({type: RolesDto.CreateRoleDto})
+  create(
+    @Body(new ZodPipe(RolesDto.CreateRoleValidator)) data: RolesDto.CreateRoleType
+  ) {
+    console.log(data);
     return 'test';
   }
 }
