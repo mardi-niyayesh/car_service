@@ -51,7 +51,7 @@ export class RolesController {
   @Cacheable({
     ttl: ONE_MINUTE_MS * 120,
     resource: 'roles',
-    query: ['id', 'name']
+    query: ['id', 'name'],
   })
   @Get('find')
   @ApiQuery(UserDto.ExampleIdQuery)
