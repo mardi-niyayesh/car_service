@@ -1,5 +1,7 @@
 import z from "zod";
+import {createZodDto} from "nestjs-zod";
 
+/** validator */
 export const CreateRoleValidator = z.object({
   permissions: z.array(z.uuidv4({error: "Invalid permission ID format"}))
     .nonempty()
@@ -9,4 +11,8 @@ export const CreateRoleValidator = z.object({
     .min(2),
 });
 
+/** Type of validator */
 export type CreateRoleType = z.infer<typeof CreateRoleValidator>;
+
+/** example body for swagger */
+export class CreateRoleDto extends createZodDto(CreateRoleValidator) {}
