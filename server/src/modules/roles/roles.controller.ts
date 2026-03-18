@@ -18,7 +18,7 @@ import * as UserDto from "../users/dto";
 import type {ApiResponse, RoleResponse} from "@/types";
 import {RolesService} from "@/modules/roles/roles.service";
 import {Body, Controller, Get, Post, Query} from "@nestjs/common";
-import {ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 /**
  * Role management endpoints for creating and managing custom roles.
@@ -54,6 +54,9 @@ export class RolesController {
     query: ['id', 'name'],
   })
   @Get('find')
+  @ApiOperation({
+    summary: "all one role with id or name",
+  })
   @ApiQuery(UserDto.ExampleIdQuery)
   @ApiQuery(RolesDto.FindOneRoleNameQuery)
   @ApiOkResponse({type: RolesDto.FindOneOkResponse})
@@ -78,6 +81,9 @@ export class RolesController {
     ttl: ONE_MINUTE_MS * 120,
   })
   @Get()
+  @ApiOperation({
+    summary: "Get all roles from the list of pagination",
+  })
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
@@ -97,6 +103,10 @@ export class RolesController {
     permissions: [PERMISSIONS.ROLE_CREATE]
   })
   @Post()
+  @ApiOperation({
+    summary: "create new role with name and permissions id",
+    description: ``
+  })
   @ApiBody({type: RolesDto.CreateRoleDto})
   create(
     @Body(new ZodPipe(RolesDto.CreateRoleValidator)) data: RolesDto.CreateRoleType
