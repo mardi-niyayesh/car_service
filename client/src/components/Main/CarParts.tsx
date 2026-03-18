@@ -10,11 +10,11 @@ import lexus from "../../../assets/lexus-logo.png";
 
 const CarParts = () => {
   return (
-    <div>
-      <p className="text-gray-600 text-center py-6 text-2xl hover:text-gray-800">
+    <div className=" ">
+      <p className=  "text-gray-600 font-bold text-center py-6 text-2xl hover:text-gray-800">
         برند های همکار با ما
       </p>
-      <div className="grid grid-cols-4 gap-4 md:flex md:items-center md:justify-around  border border-[#EDEDED] rounded-xl mt-8 bg-white shadow-sm">
+      <div className="container max-auto  m-auto  grid grid-cols-4 gap-4 md:flex md:items-center md:justify-around  border border-[#EDEDED] rounded-xl mt-8 bg-white shadow-sm">
         <img
           src={BMW}
           alt="BMW"
