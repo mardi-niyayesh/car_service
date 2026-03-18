@@ -15,7 +15,7 @@ import {
 import * as RolesDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../users/dto";
-import {Controller, Get, Query} from "@nestjs/common";
+import {Controller, Get, Post, Query} from "@nestjs/common";
 import type {ApiResponse, RoleResponse} from "@/types";
 import {RolesService} from "@/modules/roles/roles.service";
 import {ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
@@ -88,5 +88,13 @@ export class RolesController {
     @Query(new ZodPipe(PaginationValidator)) query: PaginationValidatorType
   ): Promise<ApiResponse<{ roles: RoleResponse[] }>> {
     return this.rolesService.findAll(query);
+  }
+
+  /** create a new role with exist permissions
+   * - only roles with permission (owner.all or role.create) can accessibility to this route
+   */
+  @Post()
+  create() {
+    return 'test';
   }
 }
