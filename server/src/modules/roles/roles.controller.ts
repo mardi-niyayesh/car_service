@@ -93,6 +93,9 @@ export class RolesController {
   /** create a new role with exist permissions
    * - only roles with permission (owner.all or role.create) can accessibility to this route
    */
+  @Permission({
+    permissions: [PERMISSIONS.ROLE_CREATE]
+  })
   @Post()
   create() {
     return 'test';
