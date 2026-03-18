@@ -1,96 +1,154 @@
-import arrow from "../../../assets/arrow.png";
-import calendar from "../../../assets/calendar.png";
-import clock from "../../../assets/clock.png";
-
+import { MdLocationOn } from "react-icons/md";
+import { FaCalendarAlt } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
+import { IoArrowDown } from "react-icons/io5";
 const HeroBaner = () => {
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-4 relative z-10">
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
-          <button className="px-3 py-2 rounded-2xl border-2 hover:bg-[#194BF0] hover:text-[#FFFFFF] transition duration-200 text-sm sm:text-base">
-            اجاره خودرو با راننده
-          </button>
-          <button className="px-3 py-2 rounded-2xl border-2 hover:bg-[#194BF0] hover:text-[#FFFFFF] transition duration-200 text-sm sm:text-base">
-            اجاره خودرو بی راننده
-          </button>
-          <button className="px-3 py-2 rounded-2xl border-2 hover:bg-[#194BF0] hover:text-[#FFFFFF] transition duration-200 text-sm sm:text-base">
-            اجاره ماشین عروس
-          </button>
-        </div>
-
-        <a href="#" className="self-center lg:self-auto">
-          <p className="text-[#194BF0] text-sm sm:text-base whitespace-nowrap">
-            اطلاعات بیشتر در مورد رزرو خودرو
-          </p>
-        </a>
+    <>
+      <div className="text-center my-8 text-2xl font-bold text-gray-800">
+        اجاره خودرو در ایران با کار سرویس
       </div>
+      <form className="max-w-screen-lg mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-md">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 ">
+          <div className="col-span-1">
+            <label className="block text-lg font-semibold text-gray-700 mb-2">
+              ایستگاه تحویل
+            </label>
+            <div className="flex items-center space-x-3">
+              <div className="relative flex-grow">
+                <div className="absolute inset-y-0 right-0  flex items-center  pr-4 bg-blue-500">
+                  <MdLocationOn size={24} className="text-white " />
+                </div>
+                <select className="flex-grow px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10">
+                  <option value="" disabled selected hidden></option>
+                  <option value="tehran" selected>
+                    تهران
+                  </option>
+                  <option value="shiraz">شیراز</option>
+                  <option value="mashhad">مشهد</option>
+                  <option value="karaj">کرج</option>
+                  <option value="isfahan">اصفهان</option>
+                  <option value="sari">ساری</option>
+                  <option value="bushehr">بوشهر</option>
+                </select>
+                <div className="absolute inset-y-0 left-0 flex items-center pr-3 pointer-events-none">
+                  <IoArrowDown size={20} className="text-gray-400" />
+                </div>
+              </div>
+            </div>
+          </div>
 
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mt-6 gap-4">
-        <div className="flex items-center gap-2">
-          <img src={arrow} alt="arrow" className="w-4 h-4 sm:w-5 sm:h-5" />
-          <p className="text-sm sm:text-base">محل تحویل خودرو</p>
+          <div className="col-span-1">
+            <label className="block text-lg font-semibold text-gray-700 mb-2">
+              نوع تحویل
+            </label>
+            <div className="relative flex-grow">
+              <select className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none w-full">
+                <option value="" disabled selected hidden></option>
+                <option value="at-location" selected>
+                  تحویل در محل
+                </option>
+                <option value="imam-airport">فرودگاه امام</option>
+                <option value="mehrabad-airport">فرودگاه مهرآباد</option>
+                <option value="azadi-hotel">هتل آزادی</option>
+                <option value="esteglal-hotel">هتل استقلال</option>
+                <option value="simorgh-hotel">هتل سیمرغ</option>
+              </select>
+              <div className="absolute inset-y-0 left-0 flex items-center pr-3 pointer-events-none">
+                <IoArrowDown size={20} className="text-gray-400" />
+              </div>
+            </div>
+          </div>
+
+          <div className="col-span-1">
+            <label className="block text-lg font-semibold text-gray-700 mb-2">
+              تاریخ تحویل
+            </label>
+            <div className="flex items-center space-x-3">
+              <div className="relative flex-grow">
+                <div className="absolute inset-y-0 right-0  flex items-center  pr-4 bg-blue-500">
+                  <FaCalendarAlt size={24} className="text-white " />
+                </div>
+                <input
+                  type="text"
+                  className="flex-grow  px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="col-span-1">
+            <label className="block text-lg font-semibold text-gray-700 mb-2">
+              ساعت تحویل
+            </label>
+            <div className="relative flex-grow">
+              <select className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none w-full">
+                <option value="07:00" selected>
+                  07:00
+                </option>
+                <option value="08:00">08:00</option>
+                <option value="09:00">09:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+              </select>
+              <div className="absolute inset-y-0 left-0 flex items-center pr-3 pointer-events-none">
+                <IoArrowDown size={20} className="text-gray-400" />
+              </div>
+            </div>
+          </div>
+
+          <div className="col-span-1">
+            <label className="block text-lg font-semibold text-gray-700 mb-2">
+              تاریخ بازگشت
+            </label>
+            <div className="flex items-center space-x-3">
+              <div className="relative flex-grow">
+                <div className="absolute inset-y-0 right-0  flex items-center   pr-4 bg-blue-500">
+                  <FaCalendarAlt size={24} className="text-white " />
+                </div>
+                <input
+                  type="text"
+                  className="flex-grow  px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="col-span-1">
+            <label className="block text-lg font-semibold text-gray-700 mb-2">
+              ساعت بازگشت
+            </label>
+            <div className="relative flex-grow">
+              <select className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none w-full">
+                <option value="07:00" selected>
+                  07:00
+                </option>
+                <option value="08:00">08:00</option>
+                <option value="09:00">09:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+              </select>
+              <div className="absolute inset-y-0 left-0 flex items-center pr-3 pointer-events-none">
+                <IoArrowDown size={20} className="text-gray-400" />
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:flex lg:flex-row gap-3 sm:gap-5 w-full lg:w-auto mt-4 lg:mt-0">
-          <div className="flex items-center gap-2">
-            <img src={arrow} alt="arrow" className="w-4 h-4 sm:w-5 sm:h-5" />
-            <p className="text-xs sm:text-sm">تاریخ تحویل</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <img src={arrow} alt="arrow" className="w-4 h-4 sm:w-5 sm:h-5" />
-            <p className="text-xs sm:text-sm">ساعت تحویل</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <img src={arrow} alt="arrow" className="w-4 h-4 sm:w-5 sm:h-5" />
-            <p className="text-xs sm:text-sm">تاریخ بازگشت</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <img src={arrow} alt="arrow" className="w-4 h-4 sm:w-5 sm:h-5" />
-            <p className="text-xs sm:text-sm">ساعت بازگشت</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mt-4 gap-4">
-        <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-xl w-full lg:w-auto">
-          <p className="text-sm sm:text-base font-medium">
-            تهران-فرودگاه امام خمینی
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-5 lg:flex lg:flex-row items-center gap-3 sm:gap-4 w-full lg:w-auto">
-          <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-xl">
-            <img
-              src={calendar}
-              alt="calendar"
-              className="w-5 h-5 sm:w-6 sm:h-6 border-r-2 border-[#b8b4b4] pr-2"
-            />
-            <p className="text-sm sm:text-base">1403.02.10</p>
-          </div>
-
-          <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-xl">
-            <img src={clock} alt="clock" className="w-5 h-5 sm:w-6 sm:h-6" />
-            <p className="text-sm sm:text-base">07:00</p>
-          </div>
-
-          <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-xl">
-            <img
-              src={calendar}
-              alt="calendar"
-              className="w-5 h-5 sm:w-6 sm:h-6"
-            />
-            <p className="text-sm sm:text-base">1403.02.10</p>
-          </div>
-
-          <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-xl">
-            <img src={clock} alt="clock" className="w-5 h-5 sm:w-6 sm:h-6" />
-            <p className="text-sm sm:text-base">07:00</p>
-          </div>
-
-          <div className="col-span-2 sm:col-span-1 flex justify-center sm:justify-end"></div>
-        </div>
-      </div>
-    </div>
+        <button className="bg-blue-500 w-full hover:bg-blue-700 md:w-auto text-center text-white p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto">
+          <FaSearch />
+          خودروی مورد نظر را پیدا کنید
+        </button>
+      </form>
+    </>
   );
 };
 
