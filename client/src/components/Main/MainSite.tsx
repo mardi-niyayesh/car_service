@@ -6,10 +6,12 @@ import ReserveAutorent from "./ReserveAutorent";
 import FeacherBoxcommentUser from "../comment/FeacherBoxcommentUser";
 import ComponentQuestion from "./ComponentQuestion/ComponentQuestion";
 import ArticleCar from "./Article/ArticleCar";
+import DetailCarService from "./DetailCarService";
 
 const MainSite = () => {
   return (
     <>
+    <DetailCarService/>
       <CarParts />
       <WhyAutoRent />
       <Slider />
