@@ -1,6 +1,3 @@
-//components
-import ComponentWhyAutoRent from "./ComponentWhyAutoRent";
-
 const WhyAutoRent = () => {
   return (
     <div className="px-4 md:px-8 lg:px-12 xl:px-0">
@@ -17,9 +14,6 @@ const WhyAutoRent = () => {
             خود را کرایه کرده و با آسودگی به سفر بروید.
           </p>
         </div>
-      </div>
-      <div className="flex lg:flex-row items-center justify-center gap-6 mt-8 md:mt-12 lg:mt-[-60px] relative z-10 px-4">
-        <ComponentWhyAutoRent />
       </div>
     </div>
   );
