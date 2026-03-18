@@ -3,12 +3,14 @@ import {createZodDto} from "nestjs-zod";
 
 /** validator */
 export const CreateRoleValidator = z.object({
-  permissions: z.array(z.uuidv4({error: "Invalid permission ID format"}))
-    .nonempty()
-    .transform(ids => [...new Set(...ids)]),
+  permissions: z.array(z.uuidv4({message: "Invalid permission ID format. Please provide a valid UUID."}))
+    .nonempty({message: "Permissions field cannot be empty. Please add at least one permission ID."})
+    .transform(ids => [...new Set(ids)]),
+
   name: z.string()
-    .regex(/^[a-zA-Z0-9_]+$/, "Name can only contain English letters, numbers, and underscores.")
-    .min(2),
+    .regex(/^[a-zA-Z0-9_]+$/, {message: "Name can only contain English letters, numbers, and underscores."})
+    .min(2, {message: "Name must be at least 2 characters long."})
+    .max(100, {message: "Name cannot exceed 100 characters."})
 });
 
 /** Type of validator */
