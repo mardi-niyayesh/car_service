@@ -3,7 +3,7 @@ import {exampleDate} from "@/lib";
 import {createZodDto} from "nestjs-zod";
 import {LoginUserSchemaType} from "@/types";
 import {BaseUserSchema} from "@/modules/users/dto/users.validators";
-import {getBaseErrorBodyResponseSchema, getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
+import {getZodErrorBody, getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** login users schema */
 export const LoginUser = BaseUserSchema.pick({
@@ -44,7 +44,7 @@ export class LoginUserOkResponse extends getBaseOkResponseSchema<LoginUserSchema
 }) {}
 
 /** bad request example for login user */
-export class LoginUserBadRequestResponse extends getBaseErrorBodyResponseSchema({
+export class LoginUserBadRequestResponse extends getZodErrorBody({
   path,
   errors: [
     {

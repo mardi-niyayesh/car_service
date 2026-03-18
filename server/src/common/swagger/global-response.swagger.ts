@@ -127,7 +127,7 @@ type GetZodErrorTypes = Omit<GetNormalErrorTypes, "error" | "message" | "statusC
 }
 
 /** get schema for swagger when zod validate not success */
-export function getBaseErrorBodyResponseSchema(props: GetZodErrorTypes) {
+export function getZodErrorBody(props: GetZodErrorTypes) {
   class ZodErrorResponse {
     @ApiProperty({example: 400})
     statusCode: number;
@@ -158,7 +158,7 @@ export function getBadRequestUUIDParams(path: string) {
   const className: string = getDynamicClassName("BadRequest", path);
 
   return {
-    [className]: class extends getBaseErrorBodyResponseSchema({
+    [className]: class extends getZodErrorBody({
       path,
       errors: [{field: "id", error: "Invalid UUIDv4"}],
     }) {}

@@ -3,7 +3,7 @@ import {SafeUser} from "@/types";
 import {createZodDto} from "nestjs-zod";
 import {BaseUserSchema} from "./users.validators";
 import {createUserResponse} from "@/modules/auth/dto";
-import {getBaseErrorBodyResponseSchema, getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
+import {getZodErrorBody, getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** body in update profile */
 export const UpdateProfileValidator = BaseUserSchema.pick({
@@ -40,7 +40,7 @@ export class UpdateProfileOkResponse extends getBaseOkResponseSchema<{user: Safe
 }) {}
 
 /** bad Request response in update profile */
-export class UpdateProfileBadReqRes extends getBaseErrorBodyResponseSchema({
+export class UpdateProfileBadReqRes extends getZodErrorBody({
   path: 'users/profile',
   errors: [
     {

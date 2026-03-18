@@ -2,7 +2,7 @@ import z from "zod";
 import {UserResponse} from "@/types";
 import {ApiQueryOptions} from "@nestjs/swagger";
 import {createUserResponse} from "@/modules/auth/dto";
-import {getBaseErrorBodyResponseSchema, getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
+import {getZodErrorBody, getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** get one user validator */
 export const GetOneUserValidator = z.object({
@@ -45,7 +45,7 @@ export class GetUserOkResponse extends getBaseOkResponseSchema<UserResponse>({
 }) {}
 
 /** bad request example swagger for get one user */
-export const GetOneUserBadReqRes = getBaseErrorBodyResponseSchema({
+export const GetOneUserBadReqRes = getZodErrorBody({
   path: 'users/get?email=email&id=id',
   errors: [
     {

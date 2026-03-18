@@ -3,7 +3,7 @@ import {exampleDate} from "@/lib";
 import {createZodDto} from "nestjs-zod";
 import type {UserResponse} from "@/types";
 import {BaseUserSchema} from "@/modules/users/dto/users.validators";
-import {getBaseOkResponseSchema, getBaseErrorBodyResponseSchema, getNormalErrorResponse} from "@/common";
+import {getBaseOkResponseSchema, getZodErrorBody, getNormalErrorResponse} from "@/common";
 
 /** create user schema */
 export const CreateUser = BaseUserSchema.overwrite(data => ({
@@ -58,7 +58,7 @@ export class CreateUserConflictResponse extends getNormalErrorResponse({
 }) {}
 
 /** bad request example for create user */
-export class CreateUserBadRequestResponse extends getBaseErrorBodyResponseSchema({
+export class CreateUserBadRequestResponse extends getZodErrorBody({
   errors: [
     {
       field: "email",

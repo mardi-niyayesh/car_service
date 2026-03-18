@@ -1,7 +1,7 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
 import {BaseUserSchema} from "./users.validators";
-import {getBaseErrorBodyResponseSchema, getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
+import {getZodErrorBody, getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** update password body */
 export const UpdatePasswordValidator = z.object({
@@ -29,7 +29,7 @@ export class OkUpdatePasswordRes extends getBaseOkResponseSchema<void>({
 }) {}
 
 /** bad request response example */
-export class UpdatePasswordBadReqRes extends getBaseErrorBodyResponseSchema({
+export class UpdatePasswordBadReqRes extends getZodErrorBody({
   path,
   errors: [
     {

@@ -2,7 +2,7 @@ import {z} from 'zod';
 import {exampleDate} from "@/lib";
 import {FindOneRoleRes} from "@/types";
 import {ApiQueryOptions} from "@nestjs/swagger";
-import {getBaseErrorBodyResponseSchema, getBaseOkResponseSchema} from "@/common";
+import {getZodErrorBody, getBaseOkResponseSchema} from "@/common";
 
 /** validator for one role query */
 export const FindOneRoleValidator = z.object({
@@ -51,7 +51,7 @@ export class FindOneOkResponse extends getBaseOkResponseSchema<FindOneRoleRes>({
 }) {}
 
 /** bad request example */
-export class FindOneRoleBadReq extends getBaseErrorBodyResponseSchema({
+export class FindOneRoleBadReq extends getZodErrorBody({
   path: 'roles/find',
   errors: [{
     field: "name, id",
