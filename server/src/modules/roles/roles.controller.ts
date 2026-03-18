@@ -108,6 +108,7 @@ export class RolesController {
     description: ``
   })
   @ApiBody({type: RolesDto.CreateRoleDto})
+  @ApiBadRequestResponse({type: RolesDto.CreateRoleBadRequest})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles')})
   @ApiForbiddenResponse({type: getForbiddenResponse('roles')})
   create(
