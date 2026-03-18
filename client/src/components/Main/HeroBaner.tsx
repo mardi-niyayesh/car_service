@@ -6,7 +6,7 @@ import { IoArrowDown } from "react-icons/io5";
 const HeroBaner = () => {
   return (
     <div className=" ">
-      <div className=" text-center my-8 text-2xl font-bold text-gray-800">
+      <div className=" text-center my-8 text-2xl font-bold text-blue-800">
         اجاره خودرو در ایران با کار سرویس
       </div>
       <form className="max-w-screen-lg container mx-auto mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-md">
@@ -17,8 +17,8 @@ const HeroBaner = () => {
             </label>
             <div className="flex items-center space-x-3">
               <div className="relative flex-grow">
-                <div className="absolute inset-y-0 right-0  flex items-center  pr-4 bg-blue-500">
-                  <MdLocationOn size={24} className="text-white " />
+                <div className="absolute inset-y-0 right-0  flex items-center  pr-4 ">
+                  <MdLocationOn size={24} className="text-blue-800" />
                 </div>
                 <select className="flex-grow px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10">
                   <option value="" disabled selected hidden></option>
@@ -67,8 +67,8 @@ const HeroBaner = () => {
             </label>
             <div className="flex items-center space-x-3">
               <div className="relative flex-grow">
-                <div className="absolute inset-y-0 right-0  flex items-center  pr-4 bg-blue-500">
-                  <FaCalendarAlt size={24} className="text-white " />
+                <div className="absolute inset-y-0 right-0  flex items-center  pr-4">
+                  <FaCalendarAlt size={24} className="text-blue-800 " />
                 </div>
                 <input
                   type="text"
@@ -108,8 +108,8 @@ const HeroBaner = () => {
             </label>
             <div className="flex items-center space-x-3">
               <div className="relative flex-grow">
-                <div className="absolute inset-y-0 right-0  flex items-center   pr-4 bg-blue-500">
-                  <FaCalendarAlt size={24} className="text-white " />
+                <div className="absolute inset-y-0 right-0  flex items-center   pr-4">
+                  <FaCalendarAlt size={24} className="text-blue-800 " />
                 </div>
                 <input
                   type="text"
@@ -144,7 +144,7 @@ const HeroBaner = () => {
           </div>
         </div>
 
-        <button className="bg-blue-500 w-full hover:bg-blue-700 md:w-auto text-center text-white p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto">
+        <button className="bg-blue-800 w-full hover:bg-blue-700 md:w-auto text-center text-white p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto">
           <FaSearch />
           خودروی مورد نظر را پیدا کنید
         </button>
