@@ -113,8 +113,8 @@ export class RolesController {
   @ApiForbiddenResponse({type: getForbiddenResponse('roles')})
   create(
     @Body(new ZodPipe(RolesDto.CreateRoleValidator)) data: RolesDto.CreateRoleType
-  ) {
-    console.log(data);
+  ): string {
+    this.rolesService.create(data);
     return 'test';
   }
 }

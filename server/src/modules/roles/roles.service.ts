@@ -72,4 +72,11 @@ export class RolesService {
       }
     };
   }
+
+  /** create a new role with exist permissions
+   * - only roles with permission (owner.all or role.create) can accessibility to this route
+   */
+  create({name, permissions}: RolesDto.CreateRoleType) {
+    console.log(name, permissions);
+  }
 }
