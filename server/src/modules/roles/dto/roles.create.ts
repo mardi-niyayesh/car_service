@@ -1,6 +1,6 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
-import {getZodErrorBody} from "@/common";
+import {getNormalErrorResponse, getZodErrorBody} from "@/common";
 
 /** validator */
 export const CreateRoleValidator = z.object({
@@ -37,4 +37,12 @@ export class CreateRoleBadRequest extends getZodErrorBody({
       error: "Name must be at least 2 characters long."
     }
   ]
+}) {}
+
+/** forbidden exception example for swagger */
+export class CreateRoleForbidden extends getNormalErrorResponse({
+  path: 'roles',
+  statusCode: 403,
+  message: "you cannot create a new role with base Permissions(owner.all, user.self)",
+  error: "Permission Denied, base permissions"
 }) {}

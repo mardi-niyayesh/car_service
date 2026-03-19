@@ -110,7 +110,7 @@ export class RolesController {
   @ApiBody({type: RolesDto.CreateRoleDto})
   @ApiBadRequestResponse({type: RolesDto.CreateRoleBadRequest})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles')})
-  @ApiForbiddenResponse({type: getForbiddenResponse('roles')})
+  @ApiForbiddenResponse({type: RolesDto.CreateRoleForbidden})
   create(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(RolesDto.CreateRoleValidator)) data: RolesDto.CreateRoleType
