@@ -78,7 +78,11 @@ export class RolesService {
    */
   create(
     actionPayload: UserAccess,
-    {name, permissions, description}: RolesDto.CreateRoleType
+    {
+      name,
+      permissions,
+      description
+    }: RolesDto.CreateRoleType
   ): Promise<ApiResponse<{ role: RoleResponse }>> {
     return this.prisma.$transaction(async (tx): Promise<ApiResponse<{ role: RoleResponse }>> => {
       const existRole = await tx.role.findUnique({
