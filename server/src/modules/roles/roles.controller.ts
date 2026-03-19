@@ -15,9 +15,9 @@ import {
 import * as RolesDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../users/dto";
-import type {ApiResponse, RoleResponse} from "@/types";
+import type {AccessRequest, ApiResponse, RoleResponse} from "@/types";
 import {RolesService} from "@/modules/roles/roles.service";
-import {Body, Controller, Get, Post, Query} from "@nestjs/common";
+import {Body, Controller, Get, Post, Query, Req} from "@nestjs/common";
 import {ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 /**
@@ -112,8 +112,9 @@ export class RolesController {
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles')})
   @ApiForbiddenResponse({type: getForbiddenResponse('roles')})
   create(
+    @Req() req: AccessRequest,
     @Body(new ZodPipe(RolesDto.CreateRoleValidator)) data: RolesDto.CreateRoleType
   ) {
-    return this.rolesService.create(data);
+    return this.rolesService.create(req.user, data);
   }
 }

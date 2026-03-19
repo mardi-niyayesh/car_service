@@ -1,9 +1,9 @@
 import * as RolesDto from "./dto";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import type {ApiResponse, BaseException, RoleResponse} from "@/types";
-import {getSafeSqlPaginate, type PaginationValidatorType} from "@/common";
-import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
+import type {ApiResponse, BaseException, RoleResponse, UserAccess} from "@/types";
+import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
+import {basePermissions, getSafeSqlPaginate, type PaginationValidatorType, permissionsManagerStrict} from "@/common";
 
 @Injectable()
 export class RolesService {
@@ -76,19 +76,24 @@ export class RolesService {
   /** create a new role with exist permissions
    * - only roles with permission (owner.all or role.create) can accessibility to this route
    */
-  create({name, permissions}: RolesDto.CreateRoleType) {
-    return this.prisma.$transaction(async tx => {
+  create(
+    actionPayload: UserAccess,
+    {name, permissions}: RolesDto.CreateRoleType
+  ): Promise<ApiResponse<{ role: RoleResponse }>> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<{ role: RoleResponse }>> => {
       const existRole = await tx.role.findUnique({
         where: {
           name
         }
       });
 
+      // if role name exist in database
       if (existRole) throw new ConflictException({
         message: 'role name already exists in database',
         error: 'role name conflict'
       } as BaseException);
 
+      // find all permissions with id
       const permissionsRecord = await tx.permission.findMany({
         where: {
           id: {
@@ -97,9 +102,19 @@ export class RolesService {
         }
       });
 
+      // if permissions record count !== permissions id
       if (permissionsRecord.length !== permissions.length) throw new NotFoundException({
         message: 'One or many Permissions does not exist in database',
         error: 'Permission Not Found',
+      } as BaseException);
+
+      const permissionNames = permissionsRecord.map(p => p.name);
+
+      const isPermissionsBase = basePermissions.filter(p => permissionNames.includes(p));
+
+      if (isPermissionsBase.length) throw new ForbiddenException({
+        message: `you cannot create a nwe role with base Permissions(${permissionNames.join(', ')})`,
+        error: 'Permission Denied, base permissions',
       } as BaseException);
     });
   }
