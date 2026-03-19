@@ -12,13 +12,24 @@ import {
   type PaginationValidatorType,
 } from "@/common";
 
+import {
+  ApiTags,
+  ApiBody,
+  ApiQuery,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiForbiddenResponse,
+  ApiBadRequestResponse,
+  ApiUnauthorizedResponse,
+} from "@nestjs/swagger";
+
 import * as RolesDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../users/dto";
-import type {AccessRequest, ApiResponse, RoleResponse} from "@/types";
 import {RolesService} from "@/modules/roles/roles.service";
-import {Body, Controller, Get, Post, Query, Req} from "@nestjs/common";
-import {ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import type {AccessRequest, ApiResponse, RoleResponse} from "@/types";
+import {Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Req} from "@nestjs/common";
 
 /**
  * Role management endpoints for creating and managing custom roles.
@@ -54,6 +65,7 @@ export class RolesController {
     query: ['id', 'name'],
   })
   @Get('find')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: "all one role with id or name",
   })
@@ -81,6 +93,7 @@ export class RolesController {
     ttl: ONE_MINUTE_MS * 120,
   })
   @Get()
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: "Get all roles from the list of pagination",
   })
@@ -103,6 +116,7 @@ export class RolesController {
     permissions: [PERMISSIONS.ROLE_CREATE]
   })
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
     summary: "create new role with name and permissions id",
     description: ``
