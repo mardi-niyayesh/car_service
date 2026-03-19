@@ -1,21 +1,18 @@
 import ComponentArticleCar from "./ComponentArticleCar";
+import { FaArrowLeft } from "react-icons/fa";
 
 const ArticleCar = () => {
   return (
     <>
-      <div className="mt-8 mb-8">
-        <div className="text-[1.5rem] font-bold text-center ">مقالات ما</div>
-        <div className="text-center">
-          <span className="text-[1.5rem] font-bold ">مجله </span>
-          <span className="text-[1.5rem] font-bold text-[#D79C10]">خودرو </span>
-          <p className="text-blue-700 cursor-pointer">مشاهده همه</p>
+      <div className="mt-8 mb-8 container mx-auto flex items-center justify-between">
+        <div className="font-bold text-blue-800 text-2xl  my-5">
+          مقالات کار سرویس
         </div>
+        <p className="text-gray-600 hover:text-blue-600 cursor-pointer flex items-center justify-between gap-2">
+          مشاهده همه <FaArrowLeft size={20} opacity={0.8} />
+        </p>
       </div>
-      <div className="flex items-center justify-around">
-        <ComponentArticleCar />
-        <ComponentArticleCar />
-        <ComponentArticleCar />
-      </div>
+      <ComponentArticleCar />
     </>
   );
 };
