@@ -1,9 +1,9 @@
 import * as RolesDto from "./dto";
 import {Prisma} from "@/modules/prisma/generated/client";
-import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {ApiResponse, BaseException, RoleResponse} from "@/types";
 import {getSafeSqlPaginate, type PaginationValidatorType} from "@/common";
+import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 
 @Injectable()
 export class RolesService {
@@ -77,6 +77,30 @@ export class RolesService {
    * - only roles with permission (owner.all or role.create) can accessibility to this route
    */
   create({name, permissions}: RolesDto.CreateRoleType) {
-    console.log(name, permissions);
+    return this.prisma.$transaction(async tx => {
+      const existRole = await tx.role.findUnique({
+        where: {
+          name
+        }
+      });
+
+      if (existRole) throw new ConflictException({
+        message: 'role name already exists in database',
+        error: 'role name conflict'
+      } as BaseException);
+
+      const permissionsRecord = await tx.permission.findMany({
+        where: {
+          id: {
+            in: permissions
+          }
+        }
+      });
+
+      if (permissionsRecord.length !== permissions.length) throw new NotFoundException({
+        message: 'One or many Permissions does not exist in database',
+        error: 'Permission Not Found',
+      } as BaseException);
+    });
   }
 }
