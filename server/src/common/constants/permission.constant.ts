@@ -37,4 +37,10 @@ export const PERMISSIONS = {
   ...PRODUCT_PERMISSIONS,
 } as const;
 
+export const permissionsManagerStrict: string[] = [
+  PERMISSIONS.OWNER_ALL,
+  ...Object.values(USER_PERMISSIONS),
+  ...Object.values(ROLE_PERMISSIONS),
+] as const;
+
 export type PermissionsType = typeof PERMISSIONS[keyof typeof PERMISSIONS];

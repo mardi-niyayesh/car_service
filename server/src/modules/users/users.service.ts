@@ -12,8 +12,8 @@ import * as UserDto from "./dto";
 import {PrismaService} from "../prisma/prisma.service";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {getRolesNPermissions, getSafeUser, compareSecret, hashSecret} from "@/lib";
-import {PaginationValidatorType, PERMISSIONS, USER_PERMISSIONS, ROLE_PERMISSIONS, BASE_PERMISSIONS, getSafeSqlPaginate} from "@/common";
 import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams, SafeUser, UserRolePermission} from "@/types";
+import {PaginationValidatorType, PERMISSIONS, permissionsManagerStrict, BASE_PERMISSIONS, getSafeSqlPaginate} from "@/common";
 
 @Injectable()
 export class UsersService {
@@ -271,12 +271,6 @@ export class UsersService {
           error: 'Roles Not Found in Target Roles',
         } as BaseException);
       }
-
-      const permissionsManagerStrict: string[] = [
-        PERMISSIONS.OWNER_ALL,
-        ...Object.values(USER_PERMISSIONS),
-        ...Object.values(ROLE_PERMISSIONS),
-      ];
 
       const isActorOwner: boolean = actionPayload.permissions.includes(PERMISSIONS.OWNER_ALL);
       const isTargetManager: boolean = targetUser.permissions.some(r => permissionsManagerStrict.includes(r));
