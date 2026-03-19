@@ -1,5 +1,4 @@
 import * as RolesDto from "./dto";
-import {findOneRoleResponse} from "./dto";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {ApiResponse, BaseException, RoleResponse, UserAccess} from "@/types";
@@ -79,7 +78,7 @@ export class RolesService {
    */
   create(
     actionPayload: UserAccess,
-    {name, permissions}: RolesDto.CreateRoleType
+    {name, permissions, description}: RolesDto.CreateRoleType
   ): Promise<ApiResponse<{ role: RoleResponse }>> {
     return this.prisma.$transaction(async (tx): Promise<ApiResponse<{ role: RoleResponse }>> => {
       const existRole = await tx.role.findUnique({
@@ -128,10 +127,28 @@ export class RolesService {
         } as BaseException);
       }
 
-      return {
-        message: '',
+      const newRole = await tx.role.create({
         data: {
-          role: findOneRoleResponse.role
+          creator: actionPayload.userId,
+          name,
+          description
+        }
+      });
+
+      await tx.rolePermission.createMany({
+        data: permissions.map(p => ({
+          role_id: newRole.id,
+          permission_id: p
+        }))
+      });
+
+      return {
+        message: 'role successfully created.',
+        data: {
+          role: {
+            ...newRole,
+            permissions: permissionNames
+          }
         }
       };
     });

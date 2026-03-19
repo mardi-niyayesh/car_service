@@ -11,7 +11,9 @@ export const CreateRoleValidator = z.object({
   name: z.string()
     .regex(/^[a-zA-Z0-9_]+$/, {message: "Name can only contain English letters, numbers, and underscores."})
     .min(2, {message: "Name must be at least 2 characters long."})
-    .max(100, {message: "Name cannot exceed 100 characters."})
+    .max(100, {message: "Name cannot exceed 100 characters."}),
+
+  description: z.string().min(10).max(1000).optional(),
 });
 
 /** Type of validator */
