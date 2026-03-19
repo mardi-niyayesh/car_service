@@ -1,9 +1,10 @@
 import * as RolesDto from "./dto";
+import {findOneRoleResponse} from "./dto";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {ApiResponse, BaseException, RoleResponse, UserAccess} from "@/types";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
-import {basePermissions, getSafeSqlPaginate, type PaginationValidatorType, permissionsManagerStrict} from "@/common";
+import {basePermissions, getSafeSqlPaginate, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
 
 @Injectable()
 export class RolesService {
@@ -113,9 +114,26 @@ export class RolesService {
       const isPermissionsBase = basePermissions.filter(p => permissionNames.includes(p));
 
       if (isPermissionsBase.length) throw new ForbiddenException({
-        message: `you cannot create a nwe role with base Permissions(${permissionNames.join(', ')})`,
+        message: `you cannot create a new role with base Permissions(${isPermissionsBase.join(', ')})`,
         error: 'Permission Denied, base permissions',
       } as BaseException);
+
+      const isActorOwner: boolean = actionPayload.permissions.includes(PERMISSIONS.OWNER_ALL);
+      const isPermissionsManager: boolean = permissionNames.some(p => permissionsManagerStrict.includes(p));
+
+      if (!isActorOwner && isPermissionsManager) {
+        throw new ForbiddenException({
+          message: `High‑level permission protection: You lack the required OWNER privileges to create a role that includes management‑level permissions. (${permissionsManagerStrict.join(", ")})`,
+          error: "Permission Denied",
+        } as BaseException);
+      }
+
+      return {
+        message: '',
+        data: {
+          role: findOneRoleResponse.role
+        }
+      };
     });
   }
 }
