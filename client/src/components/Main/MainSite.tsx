@@ -1,24 +1,26 @@
 //components
 import CarParts from "./CarParts";
-import WhyAutoRent from "./WhyAutoRent";
+import WhyAutoRent from "./WhyAutoRent/WhyAutoRent";
 import Slider from "./Slider";
 import ReserveAutorent from "./ReserveAutorent";
 import FeacherBoxcommentUser from "../comment/FeacherBoxcommentUser";
-import ComponentQuestion from "./ComponentQuestion/ComponentQuestion";
 import ArticleCar from "./Article/ArticleCar";
 import DetailCarService from "./DetailCarService";
+import Desctiption from "./Desctiption";
+import ComponentQuestion from "./Question/ComponentQuestion";
 
 const MainSite = () => {
   return (
     <>
-    <DetailCarService/>
+      <DetailCarService />
       <CarParts />
       <WhyAutoRent />
+      <Desctiption />
+      <ArticleCar />
+      <ComponentQuestion />
       <Slider />
       <ReserveAutorent />
-      <ComponentQuestion />
       <FeacherBoxcommentUser />
-      <ArticleCar />
     </>
   );
 };
