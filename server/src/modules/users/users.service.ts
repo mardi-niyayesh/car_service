@@ -13,7 +13,7 @@ import {PrismaService} from "../prisma/prisma.service";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {getRolesNPermissions, getSafeUser, compareSecret, hashSecret} from "@/lib";
 import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams, SafeUser, UserRolePermission} from "@/types";
-import {PaginationValidatorType, PERMISSIONS, permissionsManagerStrict, BASE_PERMISSIONS, getSafeSqlPaginate} from "@/common";
+import {PaginationValidatorType, PERMISSIONS, permissionsManagerStrict, basePermissions, getSafeSqlPaginate} from "@/common";
 
 @Injectable()
 export class UsersService {
@@ -234,7 +234,6 @@ export class UsersService {
         error: 'Role Not Found',
       } as BaseException);
 
-      const basePermissions: string[] = Object.values(BASE_PERMISSIONS);
       const {roles: newRoles, permissions: newPermissions} = getRolesNPermissions(newRolesRecord);
 
       // Block restricted roles
