@@ -1,4 +1,4 @@
-import ComponentWhyAutoRent from "../components/Main/ComponentWhyAutoRent";
+import ComponentWhyAutoRent from "../components/Main/WhyAutoRent/ComponentWhyAutoRent";
 
 const AboutPage = () => {
   return (
