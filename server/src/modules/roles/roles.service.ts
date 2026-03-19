@@ -126,7 +126,9 @@ export class RolesService {
 
       if (!isActorOwner && isPermissionsManager) {
         throw new ForbiddenException({
-          message: `High‑level permission protection: You lack the required OWNER privileges to create a role that includes management‑level permissions. (${permissionsManagerStrict.join(", ")})`,
+          message: `High‑level permission protection: 
+          You lack the required OWNER privileges to create a role that includes management‑level permissions. 
+          (${permissionsManagerStrict.join(", ")})`,
           error: "Permission Denied",
         } as BaseException);
       }
