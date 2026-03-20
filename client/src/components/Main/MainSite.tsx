@@ -1,8 +1,6 @@
 //components
 import CarParts from "./CarParts";
 import WhyAutoRent from "./WhyAutoRent";
-import Slider from "./Slider";
-import ReserveAutorent from "./ReserveAutorent";
 import FeacherBoxcommentUser from "../comment/FeacherBoxcommentUser";
 import ArticleCar from "./Article/ArticleCar";
 import DetailCarService from "./DetailCarService";
@@ -18,8 +16,6 @@ const MainSite = () => {
       <Desctiption />
       <ArticleCar />
       <ComponentQuestion />
-      <Slider />
-      <ReserveAutorent />
       <FeacherBoxcommentUser />
     </>
   );
