@@ -3,6 +3,13 @@ import caratoo from "../../../assets/ceratoo.webp";
 import hunda from "../../../assets/hunda.webp";
 import sorena from "../../../assets/sorentoo.webp";
 import tigoo from "../../../assets/tigoo.webp";
+
+//img city
+import carshiraz from "../../../assets/carshiraz.webp";
+import caresfahan from "../../../assets/caresfahan.webp";
+import cartehran from "../../../assets/cartehran.webp";
+import carmashhad from "../../../assets/carmashhad.webp";
+
 const Listcar = [
   {
     title: "اجاره اکسنت",
@@ -71,6 +78,12 @@ const Description2 = [
                                 `,
   },
 ];
+const Description3 = [
+  { id: 1, img: carshiraz, title: "اجاره خودرو در شیراز" },
+  { id: 2, img: caresfahan, title: "اجاره خودرو در اصفهان " },
+  { id: 3, img: cartehran, title: "اجاره خودرو در تهران" },
+  { id: 4, img: carmashhad, title: "اجاره خودرو در مشهد " },
+];
 const Desctiption = () => {
   return (
     <div className=" container mx-auto">
@@ -84,7 +97,7 @@ const Desctiption = () => {
       ))}
 
       <div className="py-10">
-        <h2 className="font-bold text-blue-800 text-2xl  my-8">
+        <h2 className="font-bold text-blue-800 text-2xl text-center my-8">
           ماشین های لوکس و اقتصادی
         </h2>
         <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-4">
@@ -105,13 +118,14 @@ const Desctiption = () => {
                 <img
                   src={item.imgcar}
                   alt="ماشین "
-                  className="relative block w-4/5 h-auto mx-auto z-10"
+                  className="relative block w-4/5 h-auto mx-auto z-10 "
                 />
               </div>
             </div>
           ))}
         </div>
       </div>
+
       {Description2.map((item) => (
         <div className="p-4 m-auto">
           <h2 className="font-bold text-blue-800 text-3xl my-5">
@@ -120,6 +134,50 @@ const Desctiption = () => {
           <p className="text-gray-600">{item.text}</p>
         </div>
       ))}
+
+      <div className="py-10">
+        <h2 className="font-bold text-blue-800 text-2xl my-8 text-center">
+          اجاره ی ماشین در شهر های ایران
+        </h2>
+        <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-4">
+          {Description3.map((item) => (
+            <div
+              key={item.id}
+              className="relative group overflow-hidden rounded-lg shadow-lg"
+            >
+              <img
+                src={item.img}
+                alt={`Luxury car: ${item.title}`}
+                className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+              />
+
+              <div className="absolute bottom-0 left-1/2 cursor-pointer -translate-x-1/2 -translate-y-1/2 transform w-4/5 p-2 rounded-xl shadow-lg backdrop-blur-sm ring-1 ring-white/60 bg-white/20">
+                <p className="font-bold text-white text-center text-lg sm:text-xl lg:text-xl">
+                  {item.title}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="p-4 m-auto">
+        <h2 className="font-bold text-blue-800 text-3xl my-5">
+          پوشش طلایی کارسرویس برای کاهش تعهد خسارات مشتری
+        </h2>
+        <p className="text-gray-600">
+          یکی از مهمترین دغدغه‌های متقاضیان خدمات اجاره ماشین بدون راننده،
+          خسارات و تصادفات احتمالی در طول سفر است. گرچه همه‌ی رانندگان سعی
+          می‌کنند با احتیاط و با رعایت قوانین برای حفظ ایمنی و سلامت جان خود و
+          سایرین رانندگی کنند، اما برخی اوقات به دلایلی اتفاقات نامطلوبی ممکن
+          است برای آنها به وقوع بیاید
+          <br /> پوشش طلایی خودرو، خدمتیست شبیه به بیمه خودرو که از طرف شرکت
+          اجاره خودرو ناواران در اختیار مشتری قرار می گیرد، خرید پوشش طلایی باعث
+          کاهش تعهد مشتری در خسارات جزئی و تصادفات داده و همچنین باعث کاهش تعهد
+          مشتری در زمینه خواب خودرو و حذف تعهد مشتری از افت خودرو در زمان تصادف
+          می گردد
+        </p>
+      </div>
     </div>
   );
 };
