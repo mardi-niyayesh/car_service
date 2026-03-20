@@ -1,102 +1,125 @@
-import ComponentWhyAutoRent from "../components/Main/WhyAutoRent/ComponentWhyAutoRent";
+import aboutbaner from "../../assets/about-banner.jpg";
+import aboutimg2 from "../../assets/about-img-2.jpg";
+import aboutimg3 from "../../assets/about-img-3.jpg";
+import aboutimg4 from "../../assets/about-img-4.jpg";
+import aboutimg5 from "../../assets/about-img-6.jpg";
+import aboutimg8 from "../../assets/about-img-8.jpg";
+const desAbout = [
+  {
+    id: 1,
+    title: "معرفی کارسرویس",
+    type: "nullimg",
+    text: `نــــاواران با شــــــعار "اولین اجـــاره خـودروی ایرانی به سبک جهانی" با رویکرد اعتماد به مشتری، در ابتدا با ایجاد بزرگترین ناوگان خودرویی متشکل از انواع خودروهای صفر کیلومتر اقتصادی تا تجاری در سراسر کشور ایران و در تمامی شهرهای اصلی کشور و تمامی فرودگاه های اصلی و با هدف ارتقاء واقعی خدمات خوب و خدماتی همانندکشورهای پیــــشرفته در مــیهن عزیزمان ایران سرمایه‌گذاری نموده و این مهم با جلب همکاری سایر شرکای تجاری و جذب سرمایه تا رسیدن به هدف ایجاد شبکه ای بالغ بر صد هزار خودرو و گسترش شبکه به کلیه شهرستانهای کوچک ایران ادامه خواهد یافت.
+مدل تـجاری نــــاواران ، بــا محوریت اعــتماد به مشتری، امـکان اجاره خودرو با استانداردهای روز دنیا و بدون دریافت تضامین سنتی همانند چک و سفته و اسناد ملکی را فراهم می سازد.`,
+  },
+  {
+    id: 2,
+    type: "nullimg",
+    title: `تمایز و برتری کارسرویس در چیست؟`,
+    text: `نـــوعی از مـــدل تـــجاری جـــدید شـــامل خــدمات ویژه و اعــتماد به مـــشتری باعث شده تا ناواران بعنوان مجموعه‌ای متفاوت و متمایز شناخته شود که در ادامه به آن‌ها اشاره می‌شود.`,
+  },
+  {
+    id: 3,
+    type: "img",
+    position: "right",
+    title: `حذف تضامین متعارف در ایران`,
+    text: `حتماً شما هم قبلا با چنین درخواستهایی مواجه شده‌اید ، چک به مبلغ خودرو ، ضامن معتبر ، سند منزل یا مغازه، معرفی از محل کار ، جواز کسب و... ولی این موارد دیگر در ناواران حذف شده‌اند و بجای آن مبلغی جزئی بعنوان ودیعه خسارت و جرائم رانندگی فقط از مشتریان جدید گرفته می‌شود که آن هم در رزروهای بعدی و شناسایی مشتری بعنوان راننده خوب، حذف می گردد.
+
+در عوض این مجموعه با همکاری مراجع قضایی و انتظامی و تعقیب افراد خاطی، زمینه را برای استفاده و رضایت مشتریان خوب و با فرهنگ ایرانی فراهم آورده است..`,
+    img: aboutimg2,
+  },
+  {
+    id: 4,
+    type: "img",
+    position: "left",
+    title: `سامانه مکانیزه هوشمند مدیریت ناوگان`,
+    text: `این سامانه با توجه به الگوریتم خاص خود باعث می‌گردد رایانه بجای انسان در تأیید رزرواسیون اجاره خودرو عمل نموده و بصورت آنی و آنلاین به درخواستها پاسخ دهد ، این موضوع خود باعث کاهش وقت مشتریان و آژانسهای مسافرتی داخلی و خصوصاً خارجی گردیده و امکان و تمایز ویژه ای برای مشتریان ایجاد می نماید.
+همچنین این سامانه با مدیریت کامل تعمیرات، رزروهای تأخیردار و خودروهایی که در بین شهرها جابجا می‌گردند، قادر است بهترین تصمیم را در زمان ارائه رزروهای بین شهری و یک‌طرفه گرفته و همواره نیاز مشتریان به این خدمات را بصورت فوری پاسخ دهد.
+
+مدیریت هوشمند ناوگان باعث در دسترس قرار گرفتن سریعتر خودرو و ایجاد خدمات حداکثری به مشتریان می گردد. این سیستم با پوشش دادن رزروها با رزوهای معکوس باعث ایجاد حداقل جابجایی خودرو در شبکه گردیده و در نهایت باعث کمترین میزان ممکن آلودگی هوا توسط کل مجموعه می گردد.`,
+    img: aboutimg3,
+  },
+  {
+    id: 5,
+    type: "img",
+    position: "right",
+    title: `سامانه کنترل خودرو`,
+    text: `خــودروهای تـــحت پـــوشش همگی دارای ســـامانه مــوقعیت یـــاب جـــغرافیایی می‌باشند، که اولاً در زمان نیاز به امداد در سریع‌ترین زمان امدادگر به خودرو رسیده و ثانیاٌ نوع رانندگی راننده از نظر شتاب، ترمز، فشار زیاد به خودرو، سرعت و ... دائماً در سامانه مرکزی ثبت و ضبط می گردد`,
+    img: aboutimg4,
+  },
+  {
+    id: 6,
+    type: "img",
+    position: "left",
+    title: "شبکه امدادی و تعمیرات خودرو",
+    text: `شبکه تحت پوشش ناواران که با سرمایه‌گذاری و همکاری شرکای تجاری در خدمت مشتریان قرار گرفته است شامل 2000 نقطه در سراسر کشور ایــران و مناطق آزاد تجاری مـی‌باشد که باعث شده سرعت امداد رسانی در هر نقطه ایران به کمتر از 30 دقیقه کاهش یابد، امدادگران و خودروهای امدادی همگی مجهز به تجهیزات جهت رفع معایب و تعمیرات ساده بوده و بسیاری از مشکلات در همین مرحله به سادگی رفع می گردند`,
+    img: aboutimg5,
+  },
+  {
+    id: 7,
+    type: "nullimg",
+    title: `عملیات مالی شفاف`,
+    text: `پــرداخت مـالیات، ارائه فاکتور رسمی و عملکرد صـحیح طبق قوانین جاری کشور وظیفه‌ای دو‌طرفه می‌باشد و مشتریان همواره می بایست از افراد بی‌اعتباری که فعالیت غیر شفاف و زیرزمینی دارند پرهیز کنند زیرا با هزینه‌های ظاهری کمتر، جریمه ها ، هزینه‌ها و مشکلات بسیاری را برای خود ایجاد خواهند کرد`,
+  },
+  {
+    id: 8,
+    type: "nullimg",
+    title: `امتیاز و اجاره رایگان خودرو`,
+    text: `مــشترکین نـــاواران می‌توانند با انجام رزرو برای دوستان و همکاران خود، امتیاز رزروهای ایشان را در کاربر خود ذخیره نموده و با رسیدن به حداقل مبلغ جهت رزرو، هزینه یک اجـــاره را به صورت کامل از طریق این امتیازها پرداخت نمایند. پس چنانچه شما برای آشنایان زحمت رزرو خودرو را انجام می‌دهید ، زحمت شما با اجاره های رایگان برای خودتان جبران خواهد شد`,
+  },
+  {
+    id: 9,
+    type: "img",
+    position: "right",
+    title: `حضور در فرودگاه های کشور`,
+    text: `ناواران در ترمینال خروجی فرودگاه مهرآباد برای هماهنگی مسافرین گرامی و راحتی در دریافت خودرو در فرودگاه های مقصد حضور دارد. همچنین مسافرین از شهرهای دیگر و یا مشتریان هر شهر میتوانند خودروی مورد نظر خود را بصورت 24 ساعته از فرودگاه شهر خود تحویل بگیرند. `,
+    img: aboutimg8,
+  },
+];
 
 const AboutPage = () => {
   return (
-    <>
-      <div className="bg-[url('../../assets/screen.png')] bg-cover bg-center bg-no-repeat w-full min-h-[200px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[500px] xl:h-[600px] 2xl:h-[683px] relative"></div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10 lg:py-12">
-        <div className="bg-[#EDEDED] rounded-lg p-4 md:p-6 lg:p-8 mb-6 md:mb-8 lg:mb-10">
-          <p className="text-[#353535] font-bold text-lg sm:text-xl md:text-2xl lg:text-[24px] border-b-2 border-gray-300 pb-2 mb-4">
-            معرفی اتورنت
+    <div className="container mx-auto px-4">
+      <div className="relative mb-16 md:mb-24">
+        <img src={aboutbaner} alt="baner" className="w-full h-64 " />
+        <div className="absolute inset-0 flex items-center justify-center text-center ">
+          <p className="text-white text-2xl sm:text-2xl md:text-3xl font-bold leading-tight px-4">
+            کارسرویس: اولین اجاره خودرو ایرانی به سبک جهانی
           </p>
-          <p className="text-[#353535] text-sm sm:text-base md:text-[14px] lg:text-base leading-relaxed text-justify">
-            اتورنت با رویکرد اعتماد به مشتری، در ابتدا با ایجاد بزرگترین ناوگان
-            خودرویی متشکل از انواع خودروهای صفر کیلومتر، اقتصادی تا تجاری در
-            سراسر کشور ایران و در تمامی شهرهای اصلی کشور و تمامی فرودگاه های
-            اصلی و با هدف ارتقاء واقعی خدمات خوب و خدماتی همانندکشورهای
-            پیــــشرفته در مــیهن عزیزمان ایران سرمایه‌گذاری نموده و این مهم با
-            جلب همکاری سایر شرکای تجاری و جذب سرمایه تا رسیدن به هدف ایجاد‌ شبکه
-            ای بالغ بر صد هزار خودرو و گسترش شبکه به کلیه شهرستانهای کوچک ایران
-            ادامه خواهد یافت.مدل تـجاری اتورنت ، با محوریت اعـتماد به مشتری،
-            امـکان اجاره خودرو با استانداردهای روز دنیا و بدون دریافت تضامین
-            سنتی همانند چک و سفته و اسناد ملکی را فراهم می سازد.
-          </p>
-        </div>
-
-        <div className="mb-6 md:mb-8 lg:mb-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            <ComponentWhyAutoRent />
-          </div>
-        </div>
-
-        <div className="bg-[#EDEDED] rounded-lg p-4 md:p-6 lg:p-8">
-          <p className="text-[#353535] font-bold text-lg sm:text-xl md:text-2xl lg:text-[24px] border-b-2 border-gray-300 pb-2 mb-4">
-            شبکه نمایندگان و شرکتهای اجاره خودروی همکار
-          </p>
-          <p className="text-[#353535] text-sm sm:text-base md:text-[14px] lg:text-base leading-relaxed text-justify">
-            اتورنت دارای شبکه ای شامل ایستگاه های داخل شهری و فرودگاهی می باشد
-            که این ایستگاه ها توسط نمایندگان و شرکای تجاری نگهداری و مدیریت
-            می‌گردند، افرادی که علاقمند به سرمایه‌گذاری و همکاری با ناواران
-            می‌باشند می‌توانند بصورت نمایندگی یا همکار تجاری فعالیت نمایند ، در
-            هر صورت این اشخاص می بایست دوره های آموزش را طبق استاندارد
-            بین‌المللی گذرانده و تحت استاندارد و کیفیت مورد نیاز ناواران شروع به
-            فعالیت نمایند. بودن سرمایه مورد نیاز جهت خرید حداقل تعداد خودروهای
-            صفر کیلومتر در محدوده تحت پوشش و قبل از هرچیز اهمیت به اصل خدمت به
-            هموطنان و رضایت مشتریان از شرایط اصلی اعطای نمایندگی می دارای
-            اپلیکیشن موبایل و سیستم آنلاین مرتبط با سامانه مدیریت مرکزی می
-            باشند، و تمامی امور رزرو و محاسبات مرتبط بصورت خودکار انجام پذیرفته
-            و نمایندگان از پشتیبانی کامل شرکت مرکزی در تمامی مراحل برخوردار
-            خواهند بود.
-          </p>
-        </div>
-        <div className="bg-[url('../../assets/imageee.png')] mt-10 w-full bg-cover bg-center bg-no-repeat min-h-[200px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[500px] xl:h-[600px] 2xl:h-[683px] relative group">
-          <div className="absolute inset-0 bg-black/50 group-hover:bg-black/70 transition-all duration-300"></div>
-
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
-            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-              <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 md:mb-4 text-white">
-                شبکه امدادی و تعمیرات خودرو
-              </h3>
-
-              <p className="text-sm sm:text-base md:text-lg text-white/90 leading-relaxed line-clamp-3 sm:line-clamp-4 md:line-clamp-5 lg:line-clamp-none">
-                شبکه تحت پوشش اتورنت که با سرمایه‌گذاری و همکاری شرکای تجاری در
-                خدمت مشتریان قرار گرفته است شامل 2000 نقطه در سراسر کشور ایــران
-                و مناطق آزاد تجاری مـی‌باشد که باعث شده سرعت امداد رسانی در هر
-                نقطه ایران به کمتر از 30 دقیقه کاهش یابد، امدادگران و خودروهای
-                امدادی همگی مجهز به تجهیزات جهت رفع معایب و تعمیرات ساده بوده و
-                بسیاری از مشکلات در همین مرحله به سادگی رفع می گردند.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-8 lg:gap-12 xl:gap-16 p-3 sm:p-4 md:p-6 lg:p-8 max-w-7xl mx-auto">
-          <div className="bg-[#FFFFFF] rounded-2xl border border-[#D7D7D7] p-4 sm:p-5 md:p-6 lg:p-8 hover:border-[#FDB713] hover:shadow-xl transition-all duration-300 group">
-            <p className="text-[#0C0C0C] font-bold border-b-2 border-[#FDB713] pb-2 mb-3 text-base sm:text-lg md:text-xl lg:text-2xl group-hover:border-b-4 transition-all">
-              خدمات شبانه روزی
-            </p>
-            <p className="text-[#4A4A4A] text-sm sm:text-base md:text-[15px] lg:text-base leading-relaxed lg:leading-loose">
-              اتورنت در تــمامی بخش‌های اصـلی از جـمله مرکز تماس مشتریان و خدمات
-              امدادی بصورت دائمی تمامی روزهای هفته و 24 ساعته فعال است، بیشتر
-              ایستگاه های کاری تحویل خودرو نیز بصورت 24 ساعته می‌باشند ، فقط
-              واحد اداری و فروش اجاره های بلند مدت در ساعات اداری و روزهای اداری
-              فعال می باشند.
-            </p>
-          </div>
-
-          <div className="bg-gradient-to-br from-[#F8F8F8] to-[#FFFFFF] rounded-2xl border border-[#E0E0E0] p-4 sm:p-5 md:p-6 lg:p-8 hover:border-[#FDB713] hover:shadow-xl transition-all duration-300 group">
-            <p className="text-[#0C0C0C] font-bold border-b-2 border-[#FDB713] pb-2 mb-3 text-base sm:text-lg md:text-xl lg:text-2xl group-hover:border-b-4 transition-all">
-              ارائه خودرو جایگزین
-            </p>
-            <p className="text-[#4A4A4A] text-sm sm:text-base md:text-[15px] lg:text-base leading-relaxed lg:leading-loose">
-              با توجه به تعداد خودرو های موجود در اتورنت امکان ارائه خودروی
-              جایگزین در خرابی ها و تعمیرات طولانی مدت که بصورت امدادی برطرف
-              نگردند ، در هر نقطه از ایران میسر می باشد.
-            </p>
-          </div>
         </div>
       </div>
-    </>
+
+      {desAbout.map((item) => (
+        <div key={item.id} className="mb-12 md:mb-16 lg:mb-20">
+          <p className="text-blue-800 font-bold text-xl sm:text-2xl md:text-3xl lg:text-[32px] pb-3 mb-6  inline-block">
+            {item.title}
+          </p>
+          <div className="text-gray-500 text-base md:text-lg lg:text-xl leading-relaxed text-justify">
+            {item.type === "nullimg" ? (
+              <p>{item.text}</p>
+            ) : (
+              <div
+                className={`flex flex-col md:flex-row ${
+                  item.position === "left"
+                    ? "md:flex-row-reverse"
+                    : "md:flex-row"
+                } items-center justify-between gap-8 md:gap-12 lg:gap-24`}
+              >
+                <p className="md:w-1/2 lg:w-2/3 order-2 md:order-1">
+                  {item.text}
+                </p>
+
+                <img
+                  src={item.img}
+                  alt={item.title || "About Image"}
+                  className="w-full md:w-1/2 lg:w-1/3 h-48 md:h-64 lg:h-90 object-cover  order-1 md:order-2"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 };
 
