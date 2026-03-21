@@ -14,6 +14,12 @@ import HomePage from "./pages/HomePage";
 import RolsPage from "./pages/RolsPage";
 import QuestionPage from "./pages/QuestionPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import ComponentQeshm from "./components/ReserveCar.tsx/Pages/QeshmPage";
+import ComponentSary from "./components/ReserveCar.tsx/Pages/SaryPage";
+import ShirazPage from "./components/ReserveCar.tsx/Pages/ShirazPage";
+import TabrizPage from "./components/ReserveCar.tsx/Pages/TabrizPage";
+import MashhadPage from "./components/ReserveCar.tsx/Pages/MashhadPage";
+import Nayshaboor from "./components/ReserveCar.tsx/Pages/Nayshaboor";
 //authorization pages
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
@@ -43,6 +49,12 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/roles" element={<RolsPage />} />
             <Route path="/questionPage" element={<QuestionPage />} />
+            <Route path="/reserve/qeshm" element={<ComponentQeshm />} />
+            <Route path="/reserve/sary" element={<ComponentSary />} />
+            <Route path="/reserve/shiraz" element={<ShirazPage />} />
+            <Route path="/reserve/tabriz" element={<TabrizPage />} />
+            <Route path="/reserve/mashhad" element={<MashhadPage />} />
+              <Route path="/reserve/nayshaboor" element={<Nayshaboor />} />
           </Route>
 
           {/* ------- Auth Layout ------- */}
