@@ -128,7 +128,7 @@ export class RolesController {
   create(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(RolesDto.CreateRoleValidator)) data: RolesDto.CreateRoleType
-  ) {
+  ): Promise<ApiResponse<{ role: RoleResponse }>> {
     return this.rolesService.create(req.user, data);
   }
 }
