@@ -1,3 +1,4 @@
+import DesctiptionComponent from "../components/Main/DesctiptionComponent";
 const ItemRoles = [
   {
     id: 1,
@@ -65,30 +66,7 @@ const ItemRoles = [
     ],
   },
 ];
-type cardtyp = {
-  title: string;
-  descriptions?: string[];
-  description?: string;
-  type: string;
-};
-const InfoCard = ({ title, descriptions, description, type }: cardtyp) => {
-  return (
-    <div className="bg-[#EDEDED] rounded-lg p-4 md:p-6 lg:p-8 mb-6 md:mb-8 lg:mb-10 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
-      <p className="text-blue-800 font-bold text-lg sm:text-xl md:text-2xl lg:text-[24px] border-b-3 border-gray-300 pb-2 mb-4">
-        {title}
-      </p>
-      <div className="text-[#353535] text-sm sm:text-base md:text-[14px] lg:text-base leading-relaxed text-justify">
-        {type === "multiple_paragraphs" ? (
-          (descriptions || []).map((text: string, index: number) => (
-            <p key={index}>{text}</p>
-          ))
-        ) : type === "single_paragraph" ? (
-          <p>{description}</p>
-        ) : null}
-      </div>
-    </div>
-  );
-};
+
 const RolsPage = () => {
   return (
     <>
@@ -96,7 +74,7 @@ const RolsPage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10 lg:py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {ItemRoles.map((item) => (
-            <InfoCard
+            <DesctiptionComponent
               key={item.id}
               title={item.title}
               descriptions={item.descriptions}
