@@ -5,20 +5,24 @@ import {
   FaInfoCircle,
   FaBlog,
   FaHandsHelping,
+  FaRegCalendarAlt,
   FaHome,
 } from "react-icons/fa";
 
 const menuItems = [
   { label: "خانه ", path: "/", icon: <FaHome size={20} /> },
   {
-    label: "رزرو خودرو",
+    label: "رزرو ",
+    icon: <FaRegCalendarAlt size={20} />,
     dropdownItems: [
       { label: "انتخاب شهر...", value: "", disabled: true },
-      { label: "رزرو خودرو در مشهد", path: "/car-booking/mashhad" },
-      { label: "رزرو خودرو در تهران", path: "/car-booking/tehran" },
-      { label: "رزرو خودرو در اصفهان", path: "/car-booking/isfahan" },
-      { label: "رزرو خودرو در ساری", path: "/car-booking/isfahan" },
-      { label: "رزرو خودرو در قشم", path: "/car-booking/isfahan" },
+      { label: "رزرو خودرو در مشهد", path: "/reserve/mashhad" },
+      { label: "رزرو خودرو در تبریز", path: "//reserve/tabriz" },
+      { label: "رزرو خودرو در شیراز", path: "/reserve/shiraz" },
+      { label: "رزرو خودرو در ساری", path: "/reserve/sary" },
+      { label: "رزرو خودرو در قشم", path: "/reserve/qeshm" },
+      { label: "رزرو خودرو در نیشابور", path: " /reserve/nayshaboor" },
+      { label: "رزرو خودرو در مشهد", path: "/reserve/mashhad" },
     ],
   },
   { label: "خدمات ما", path: "/services", icon: <FaHandsHelping size={20} /> },
@@ -34,10 +38,13 @@ const MenuHeader = () => {
     const selectedPath = event.target.value;
     if (selectedPath) {
       navigate(selectedPath);
+
+      event.target.value = "";
     }
   };
   return (
     <>
+      {/* Desktop Menu  */}
       <div className="bg-white py-4 ">
         <nav className=" hidden md:flex container mx-auto px-4 flexed items-center justify-between">
           <ul className="flex items-center space-x-6 ">
@@ -58,13 +65,15 @@ const MenuHeader = () => {
                       value=""
                     >
                       {item.dropdownItems.map((optionItem) => (
-                        <option
-                          key={optionItem.label}
-                          value={optionItem.path}
-                          disabled={optionItem.disabled || false}
-                        >
-                          {optionItem.label}
-                        </option>
+                        <Link to="optionItem.path">
+                          <option
+                            key={optionItem.label}
+                            value={optionItem.path}
+                            disabled={optionItem.disabled || false}
+                          >
+                            {optionItem.label}
+                          </option>
+                        </Link>
                       ))}
                     </select>
                   </li>
@@ -89,27 +98,55 @@ const MenuHeader = () => {
         </nav>
       </div>
 
-      {/* Mobile */}
+      {/* Mobile Menu */}
       <div
         className="md:hidden fixed bottom-0 right-0 left-0 bg-[#EDEDED] border-t border-gray-200
-              flex justify-around items-center p-2 z-50 shadow-inner"
+              flex justify-around items-center p-2 z-50 shadow-inner h-16"
       >
-        {menuItems.map((item) => (
-          <Link key={item.path} to={item.path}>
-            <div className="flex flex-col items-center text-gray-600 hover:text-gray-900">
-              {typeof item.icon === "string" ? (
-                <img
-                  src={item.icon}
-                  alt={item.label}
-                  className="w-5 h-5 mb-1"
-                />
-              ) : (
-                item.icon
-              )}
-              <p className="text-[11px] font-medium">{item.label}</p>
-            </div>
-          </Link>
-        ))}
+        {menuItems.map((item) => {
+          if (item.dropdownItems) {
+            return (
+              <div
+                key={item.label}
+                className="relative flex flex-col items-center justify-center group w-1/5 text-center"
+              >
+                <div className="flex flex-col items-center justify-center text-gray-700 group-hover:text-blue-600 transition duration-300 ease-in-out">
+                  {item.icon && (
+                    <span className="text-xl mb-1">{item.icon}</span>
+                  )}
+                  <span className="text-xs font-medium">{item.label}</span>
+                </div>
+
+                <select
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer appearance-none bg-transparent"
+                  onChange={handleSelectChange}
+                  value=""
+                >
+                  {item.dropdownItems.map((optionItem) => (
+                    <option
+                      key={optionItem.label}
+                      value={optionItem.path}
+                      disabled={optionItem.disabled || false}
+                    >
+                      {optionItem.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            );
+          } else {
+            return (
+              <div
+                key={item.label}
+                className="flex flex-col items-center justify-center text-gray-700 hover:text-blue-600 transition duration-300 ease-in-out w-1/5" // w-1/5 برای توزیع عرض
+                onClick={() => item.path && navigate(item.path)}
+              >
+                {item.icon && <span className="text-xl mb-1">{item.icon}</span>}
+                <span className="text-xs font-medium">{item.label}</span>
+              </div>
+            );
+          }
+        })}
       </div>
     </>
   );
