@@ -20,6 +20,9 @@ import ShirazPage from "./components/ReserveCar.tsx/Pages/ShirazPage";
 import TabrizPage from "./components/ReserveCar.tsx/Pages/TabrizPage";
 import MashhadPage from "./components/ReserveCar.tsx/Pages/MashhadPage";
 import Nayshaboor from "./components/ReserveCar.tsx/Pages/Nayshaboor";
+import YazdPage from "./components/ReserveCar.tsx/Pages/YazdPage";
+import ProductDetailsPage from "./components/ReserveCar.tsx/Pages/ProductDetailsPage";
+
 //authorization pages
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
@@ -54,7 +57,12 @@ function App() {
             <Route path="/reserve/shiraz" element={<ShirazPage />} />
             <Route path="/reserve/tabriz" element={<TabrizPage />} />
             <Route path="/reserve/mashhad" element={<MashhadPage />} />
-              <Route path="/reserve/nayshaboor" element={<Nayshaboor />} />
+             <Route path="/reserve/Yazd" element={<YazdPage />} />
+            <Route path="/reserve/neyshaboor" element={<Nayshaboor />} />
+            <Route
+              path="/car-details/:carId"
+              element={<ProductDetailsPage />}
+            />
           </Route>
 
           {/* ------- Auth Layout ------- */}
