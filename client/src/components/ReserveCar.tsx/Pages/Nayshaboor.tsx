@@ -2,6 +2,7 @@
 import ReserveComponent from "../ReserveComponent";
 import DesCar from "../DesCar";
 import CarComponent from "../CarComponent";
+import Comment from "../../../ComponentPublic/Comment";
 //img neyshaboor
 import Nayshabbor from "../../../../assets/neydhaboor.png";
 import car1 from "../../../../assets/206.png";
@@ -69,6 +70,7 @@ const Nayshaboor = () => {
         </div>
       </div>
       <DesCar />
+      <Comment/>
     </div>
   );
 };

@@ -2,6 +2,7 @@
 import DesCar from "../DesCar";
 import ReserveComponent from "../ReserveComponent";
 import CarComponent from "../CarComponent";
+import Comment from "../../../ComponentPublic/Comment";
 //img Yazd
 import yazd from "../../../../assets/yazd-2.png";
 
@@ -66,6 +67,7 @@ const YazdPage = () => {
         </div>
       </div>
       <DesCar />
+      <Comment/>
     </div>
   );
 };

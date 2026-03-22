@@ -1,6 +1,7 @@
 import ReserveComponent from "../ReserveComponent";
 import CarComponent from "../CarComponent";
 import DesCar from "../DesCar";
+import Comment from "../../../ComponentPublic/Comment";
 
 //img qeshm
 import qeshm from "../../../../assets/qeshm-3.png";
@@ -73,6 +74,7 @@ const QeshmPage = () => {
         </div>
       </div>
       <DesCar />
+      <Comment/>
     </div>
   );
 };

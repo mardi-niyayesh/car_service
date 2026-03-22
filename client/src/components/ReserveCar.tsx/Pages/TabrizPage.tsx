@@ -2,6 +2,7 @@
 import DesCar from "../DesCar";
 import ReserveComponent from "../ReserveComponent";
 import CarComponent from "../CarComponent";
+import Comment from "../../../ComponentPublic/Comment";
 //img tabriz
 import Tabrizimg from "../../../../assets/TABRIZ-2.png";
 
@@ -68,6 +69,7 @@ const TabrizPage = () => {
         </div>
       </div>
       <DesCar />
+      <Comment/>
     </div>
   );
 };

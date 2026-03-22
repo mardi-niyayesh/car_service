@@ -2,6 +2,7 @@
 import ReserveComponent from "../ReserveComponent";
 import CarComponent from "../CarComponent";
 import DesCar from "../DesCar";
+import Comment from "../../../ComponentPublic/Comment";
 //img mashhad
 import Maddhad from "../../../../assets/mashhad-2.png";
 import car1 from "../../../../assets/206.png";
@@ -65,6 +66,7 @@ const MashhadPage = () => {
         </div>
       </div>
       <DesCar />
+      <Comment/>
     </div>
   );
 };

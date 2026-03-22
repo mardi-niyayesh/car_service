@@ -2,6 +2,7 @@
 import DesCar from "../DesCar";
 import ReserveComponent from "../ReserveComponent";
 import CarComponent from "../CarComponent";
+import Comment from "../../../ComponentPublic/Comment";
 //img shiraz
 import shirazimg from "../../../../assets/shiraz-2.png";
 //img car
@@ -66,6 +67,7 @@ const ShirazPage = () => {
         </div>
       </div>
       <DesCar />
+      <Comment/>
     </div>
   );
 };
