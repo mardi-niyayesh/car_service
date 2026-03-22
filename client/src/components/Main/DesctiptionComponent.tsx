@@ -1,6 +1,5 @@
 import React from 'react';
 
-// تعریف TypeScript type
 type CardType = {
   title: string;
   descriptions?: string[];
