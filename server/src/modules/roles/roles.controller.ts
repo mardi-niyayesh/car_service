@@ -131,4 +131,8 @@ export class RolesController {
   ): Promise<ApiResponse<{ role: RoleResponse }>> {
     return this.rolesService.create(req.user, data);
   }
+
+  delete() {
+    return 'role deleted';
+  }
 }
