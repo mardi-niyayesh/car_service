@@ -21,7 +21,7 @@ const HeroBaner = () => {
                   <MdLocationOn size={24} className="text-blue-800" />
                 </div>
                 <select className="flex-grow px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10">
-                  <option value="" disabled selected hidden></option>
+                <option value="" disabled hidden>انتخاب کنید...</option>
                   <option value="tehran" selected>
                     تهران
                   </option>
