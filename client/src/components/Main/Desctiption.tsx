@@ -1,14 +1,14 @@
 //img car
-import caratoo from "../../../assets/ceratoo.webp";
-import hunda from "../../../assets/hunda.webp";
-import sorena from "../../../assets/sorentoo.webp";
-import tigoo from "../../../assets/tigoo.webp";
+import caratoo from "../../../assets/ceratoo.png";
+import hunda from "../../../assets/hunda.png";
+import sorena from "../../../assets/sorentoo.png";
+import tigoo from "../../../assets/tigoo.png";
 
 //img city
-import carshiraz from "../../../assets/carshiraz.webp";
-import caresfahan from "../../../assets/caresfahan.webp";
-import cartehran from "../../../assets/cartehran.webp";
-import carmashhad from "../../../assets/carmashhad.webp";
+import carshiraz from "../../../assets/carshiraz.png";
+import caresfahan from "../../../assets/caresfahan.png";
+import cartehran from "../../../assets/cartehran.png";
+import carmashhad from "../../../assets/carmashhad.png";
 
 const Listcar = [
   {
