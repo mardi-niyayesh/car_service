@@ -3,6 +3,8 @@ import {
   Cacheable,
   Permission,
   PERMISSIONS,
+  type UUID4Type,
+  UUIDv4Validator,
   pagePaginationDto,
   limitPaginationDto,
   PaginationValidator,
@@ -29,7 +31,7 @@ import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../users/dto";
 import {RolesService} from "@/modules/roles/roles.service";
 import type {AccessRequest, ApiResponse, RoleResponse} from "@/types";
-import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req} from "@nestjs/common";
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, Param} from "@nestjs/common";
 
 /**
  * Role management endpoints for creating and managing custom roles.
@@ -136,7 +138,10 @@ export class RolesController {
     permissions: [PERMISSIONS.ROLE_DELETE]
   })
   @Delete(':id')
-  delete(): string {
+  delete(
+    @Param(new ZodPipe(UUIDv4Validator)) {id}: UUID4Type
+  ): string {
+    console.log(id);
     return 'role deleted';
   }
 }
