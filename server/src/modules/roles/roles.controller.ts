@@ -29,7 +29,7 @@ import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../users/dto";
 import {RolesService} from "@/modules/roles/roles.service";
 import type {AccessRequest, ApiResponse, RoleResponse} from "@/types";
-import {Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Req} from "@nestjs/common";
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req} from "@nestjs/common";
 
 /**
  * Role management endpoints for creating and managing custom roles.
@@ -132,7 +132,11 @@ export class RolesController {
     return this.rolesService.create(req.user, data);
   }
 
-  delete() {
+  @Permission({
+    permissions: [PERMISSIONS.ROLE_DELETE]
+  })
+  @Delete(':id')
+  delete(): string {
     return 'role deleted';
   }
 }
