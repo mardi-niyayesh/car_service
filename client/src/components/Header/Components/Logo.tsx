@@ -1,5 +1,4 @@
 import logoCircle from "../../../../assets/default.png";
-
 const Logo = () => {
   return (
     <div className="  flex items-center gap-2  ">
@@ -8,7 +7,7 @@ const Logo = () => {
         alt="logo"
         className="w-11 h-9 flex-start"
       />
-      <div className=" hidden md:block flex ">
+      <div className="  flex ">
         <span className="text-[18px] md:text-[22px] lg:text-[24px] font-bold text-[#194BF0]">
           اُتــو
         </span>
@@ -19,5 +18,4 @@ const Logo = () => {
     </div>
   );
 };
-
 export default Logo;
