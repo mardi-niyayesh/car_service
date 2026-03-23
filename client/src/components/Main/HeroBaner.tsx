@@ -1,8 +1,8 @@
-//icons for React-icon
 import { MdLocationOn } from "react-icons/md";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import { IoArrowDown } from "react-icons/io5";
+
 const HeroBaner = () => {
   return (
     <div className=" ">
@@ -20,11 +20,15 @@ const HeroBaner = () => {
                 <div className="absolute inset-y-0 right-0  flex items-center  pr-4 ">
                   <MdLocationOn size={24} className="text-blue-800" />
                 </div>
-                <select className="flex-grow px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10">
-                <option value="" disabled hidden>انتخاب کنید...</option>
-                  <option value="tehran" selected>
-                    تهران
+
+                <select
+                  defaultValue="tehran"
+                  className="flex-grow px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10"
+                >
+                  <option value="" disabled hidden>
+                    انتخاب کنید...
                   </option>
+                  <option value="tehran">تهران</option>
                   <option value="shiraz">شیراز</option>
                   <option value="mashhad">مشهد</option>
                   <option value="karaj">کرج</option>
@@ -44,11 +48,14 @@ const HeroBaner = () => {
               نوع تحویل
             </label>
             <div className="relative flex-grow">
-              <select className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none w-full">
-                <option value="" disabled selected hidden></option>
-                <option value="at-location" selected>
-                  تحویل در محل
+              <select
+                defaultValue="at-location"
+                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none w-full"
+              >
+                <option value="" disabled>
+                  انتخاب کنید...
                 </option>
+                <option value="at-location">تحویل در محل</option>
                 <option value="imam-airport">فرودگاه امام</option>
                 <option value="mehrabad-airport">فرودگاه مهرآباد</option>
                 <option value="azadi-hotel">هتل آزادی</option>
@@ -73,6 +80,7 @@ const HeroBaner = () => {
                 <input
                   type="text"
                   className="flex-grow  px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10"
+                  placeholder="انتخاب تاریخ"
                 />
               </div>
             </div>
@@ -83,10 +91,11 @@ const HeroBaner = () => {
               ساعت تحویل
             </label>
             <div className="relative flex-grow">
-              <select className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none w-full">
-                <option value="07:00" selected>
-                  07:00
-                </option>
+              <select
+                defaultValue="07:00"
+                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none w-full"
+              >
+                <option value="07:00">07:00</option>
                 <option value="08:00">08:00</option>
                 <option value="09:00">09:00</option>
                 <option value="10:00">10:00</option>
@@ -114,6 +123,7 @@ const HeroBaner = () => {
                 <input
                   type="text"
                   className="flex-grow  px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10"
+                  placeholder="انتخاب تاریخ"
                 />
               </div>
             </div>
@@ -124,10 +134,11 @@ const HeroBaner = () => {
               ساعت بازگشت
             </label>
             <div className="relative flex-grow">
-              <select className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none w-full">
-                <option value="07:00" selected>
-                  07:00
-                </option>
+              <select
+                defaultValue="07:00"
+                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none w-full"
+              >
+                <option value="07:00">07:00</option>
                 <option value="08:00">08:00</option>
                 <option value="09:00">09:00</option>
                 <option value="10:00">10:00</option>
