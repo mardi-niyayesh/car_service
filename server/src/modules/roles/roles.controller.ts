@@ -1,5 +1,6 @@
 import {
   ZodPipe,
+  UUID4Dto,
   Cacheable,
   Permission,
   PERMISSIONS,
@@ -17,6 +18,7 @@ import {
 import {
   ApiTags,
   ApiBody,
+  ApiParam,
   ApiQuery,
   ApiOperation,
   ApiBearerAuth,
@@ -138,6 +140,7 @@ export class RolesController {
     permissions: [PERMISSIONS.ROLE_DELETE]
   })
   @Delete(':id')
+  @ApiParam(UUID4Dto('id'))
   delete(
     @Param(new ZodPipe(UUIDv4Validator)) {id}: UUID4Type
   ): string {
