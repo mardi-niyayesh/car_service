@@ -57,8 +57,9 @@ function App() {
             <Route path="/reserve/shiraz" element={<ShirazPage />} />
             <Route path="/reserve/tabriz" element={<TabrizPage />} />
             <Route path="/reserve/mashhad" element={<MashhadPage />} />
-             <Route path="/reserve/Yazd" element={<YazdPage />} />
+            <Route path="/reserve/Yazd" element={<YazdPage />} />
             <Route path="/reserve/neyshaboor" element={<Nayshaboor />} />
+
             <Route
               path="/car-details/:carId"
               element={<ProductDetailsPage />}
