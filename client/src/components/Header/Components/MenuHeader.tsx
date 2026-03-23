@@ -10,20 +10,21 @@ import {
 } from "react-icons/fa";
 
 const menuItems = [
-  { label: "خانه ", path: "/", icon: <FaHome size={20} /> },
+  {id:1, label: "خانه ", path: "/", icon: <FaHome size={20} /> },
   {
+    id:2,
     label: "رزرو ",
     icon: <FaRegCalendarAlt size={20} />,
     dropdownItems: [
-      { label: "انتخاب شهر...", value: "", disabled: true },
-      { label: "رزرو خودرو در مشهد", path: "/reserve/mashhad" },
-      { label: "رزرو خودرو در تبریز", path: "//reserve/tabriz" },
+      {id:3, label: "انتخاب شهر...", value: "", disabled: true },
+      {id:4, label: "رزرو خودرو در مشهد", path: "/reserve/mashhad" },
+      {id:5, label: "رزرو خودرو در تبریز", path: "//reserve/tabriz" },
       { label: "رزرو خودرو در شیراز", path: "/reserve/shiraz" },
       { label: "رزرو خودرو در ساری", path: "/reserve/sary" },
       { label: "رزرو خودرو در قشم", path: "/reserve/qeshm" },
       { label: "رزرو خودرو در نیشابور", path: "/reserve/neyshaboor" },
       { label: "رزرو خودرو در مشهد", path: "/reserve/mashhad" },
-        { label: "رزرو خودرو در یزد", path: "/reserve/yazd" },
+      { label: "رزرو خودرو در یزد", path: "/reserve/yazd" },
     ],
   },
   { label: "خدمات ما", path: "/services", icon: <FaHandsHelping size={20} /> },
@@ -53,7 +54,7 @@ const MenuHeader = () => {
               if (item.dropdownItems) {
                 return (
                   <li
-                    key={item.label}
+                    key={item.id}
                     className="relative  flex items-center group"
                   >
                     <div className="flex items-center px-3 py-2 text-gray-700 ">
