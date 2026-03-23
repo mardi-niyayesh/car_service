@@ -7,3 +7,4 @@ export * from "./date";
 export * from "./buildEmailHtml";
 export * from "./redis";
 export * from "./users";
+export * from "./roles";
