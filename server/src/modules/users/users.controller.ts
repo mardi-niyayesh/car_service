@@ -261,8 +261,7 @@ export class UsersController {
     **"role.assign"** or **"owner.all"** permission in their permissions list.
 
   This endpoint ensures role integrity, prevents privilege escalation, 
-  and enforces organizational security policies.
-  `,
+  and enforces organizational security policies.`,
     operationId: 'assign_role',
     tags: ["User"],
   })
@@ -330,8 +329,7 @@ export class UsersController {
     **"role.revoke"** or **"owner.all"** permission in their permissions list.
   
   This endpoint maintains the principle of least privilege and prevents 
-  unauthorized restructuring of the organizational hierarchy.
-  `,
+  unauthorized restructuring of the organizational hierarchy.`,
     operationId: 'revoke_role',
     tags: ["User"],
   })
