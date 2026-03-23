@@ -4,6 +4,7 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {ApiResponse, BaseException, RoleResponse, UserAccess} from "@/types";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
 import {basePermissions, getSafeSqlPaginate, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
+import {getRolesNPermissions} from "@/lib";
 
 @Injectable()
 export class RolesService {
@@ -158,5 +159,28 @@ export class RolesService {
         }
       };
     });
+  }
+
+  /** delete exist role with id
+   * - only roles with permission (owner.all or role.create) can accessibility to this route
+   */
+  async delete(id: string) {
+    const roleRecord = await this.prisma.role.findUnique({
+      where: {id},
+      include: {
+        rolePermissions: {
+          include: {permission: true}
+        }
+      }
+    });
+
+    if (!roleRecord) throw new NotFoundException({
+      message: 'role not exist in database',
+      error: 'role not found'
+    } as BaseException);
+
+    const role = getRolesNPermissions(roleRecord);
+
+    console.log(role);
   }
 }

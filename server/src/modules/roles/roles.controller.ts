@@ -163,6 +163,9 @@ export class RolesController {
     return this.rolesService.create(req.user, data);
   }
 
+  /** delete exist role with id
+   * - only roles with permission (owner.all or role.create) can accessibility to this route
+   */
   @Permission({
     permissions: [PERMISSIONS.ROLE_DELETE]
   })

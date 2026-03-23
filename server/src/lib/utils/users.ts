@@ -1,6 +1,6 @@
-import {UserRoleIncludeType, UserResponse, RoleIncludeType} from "@/types";
+import {UserRoleIncludeType, UserResponse, RoleIncludeType, RolesAndPermissions} from "@/types";
 
-export function getRolesNPermissions(allRoles: RoleIncludeType[]) {
+export function getRolesNPermissions(allRoles: RoleIncludeType[]): RolesAndPermissions {
   const roles: string[] = allRoles.map(r => r.name);
 
   const rolePermissions = allRoles.map(r => r.rolePermissions);
