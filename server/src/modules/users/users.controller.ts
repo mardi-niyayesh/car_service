@@ -18,9 +18,9 @@ import {
   Cacheable,
   CacheEvict,
   Permission,
-  UUID4Schema,
   PERMISSIONS,
   type UUID4Type,
+  UUIDv4Validator,
   pagePaginationDto,
   limitPaginationDto,
   PaginationValidator,
@@ -292,7 +292,7 @@ export class UsersController {
   assignRole(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UsersRoleAssigned)) body: UserDto.UserRoleAssignedType,
-    @Param(new ZodPipe(UUID4Schema)) params: UUID4Type,
+    @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
   ): Promise<ApiResponse<UserResponse>> {
     return this.usersService.modifyRole({
       rolesId: body.rolesId,
@@ -357,7 +357,7 @@ export class UsersController {
   revokeRole(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UsersRoleAssigned)) body: UserDto.UserRoleAssignedType,
-    @Param(new ZodPipe(UUID4Schema)) params: UUID4Type,
+    @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
   ) {
     return this.usersService.modifyRole({
       rolesId: body.rolesId,
