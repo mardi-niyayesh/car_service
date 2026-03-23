@@ -112,9 +112,9 @@ export class RolesService {
         error: 'Permission Not Found',
       } as BaseException);
 
-      const permissionNames = permissionsRecord.map(p => p.name);
+      const permissionNames: string[] = permissionsRecord.map(p => p.name);
 
-      const isPermissionsBase = basePermissions.filter(p => permissionNames.includes(p));
+      const isPermissionsBase: string[] = basePermissions.filter(p => permissionNames.includes(p));
 
       if (isPermissionsBase.length) throw new ForbiddenException({
         message: `you cannot create a new role with base Permissions(${isPermissionsBase.join(', ')})`,
