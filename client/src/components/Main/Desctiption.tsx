@@ -12,17 +12,20 @@ import carmashhad from "../../../assets/carmashhad.png";
 
 const Listcar = [
   {
+    id:1,
     title: "اجاره اکسنت",
     namecar: "خودرو سدان نیمه لوکس",
     imgcar: caratoo,
   },
-  { title: "اجاره سراتو", namecar: "خودرو سدان نیمه لوکس", imgcar: hunda },
+  {id:2, title: "اجاره سراتو", namecar: "خودرو سدان نیمه لوکس", imgcar: hunda },
   {
+    id:3,
     title: "اجاره سورنتو",
     namecar: "خودرو شاسی بلند لوکس",
     imgcar: sorena,
   },
   {
+    id:4,
     title: "اجاره تیگو  پرو ",
     namecar: "خودرو شاسی بلند لوکس",
     imgcar: tigoo,
@@ -31,6 +34,7 @@ const Listcar = [
 
 const Description1 = [
   {
+    id:1,
     title: " اجاره خودرو بدون راننده",
     text: `        اجاره خودرو بدون راننده یکی از پر طرفدارترین خدمات کارسرویس است که با
           شرایط آسان و تخفیف های ویژه برای مشتریانش فراهم نموده است. با اجاره
@@ -38,6 +42,7 @@ const Description1 = [
           تعویض لاستیک و بیمه خودرو نخواهید داشت.`,
   },
   {
+    id:2,
     title: "  اجاره ی خودرو در تهران",
     text: `      اگر اهل تهران هستید یا قصد سفر به تهران را دارید، بنا به دلایل مختلف
           ممکن است نیاز به اجاره ماشین در تهران داشته باشید. شرکت کارسرویس برای
@@ -55,6 +60,7 @@ const Description1 = [
 ];
 const Description2 = [
   {
+    id:1,
     title: "  پشتیبانی 24 ساعته کار سرویس",
     text: `          درکنار خدمت ویژه ناواران، در زمان اجاره خودرو، تیم پشتیبانی کارسرویس
           با خدمات پشتیبانی شبانه روزی و رصد های ماهواره ای همراه شما خواهد بود
@@ -64,6 +70,7 @@ const Description2 = [
           همچنین در صورت لزوم خودرویی دیگر در اختیار شما قرار خواهیم داد.`,
   },
   {
+    id:2,
     title: "قیمت اجاره خودرو",
     text: `
      هنگام اجاره خودرو بدون راننده، قیمت اجاره ماشین مهم ترین نکته می باشد. تمام خودرو های
@@ -88,7 +95,7 @@ const Desctiption = () => {
   return (
     <div className=" container mx-auto">
       {Description1.map((item) => (
-        <div className="p-4 m-auto">
+        <div className="p-4 m-auto" key={item.id}>
           <h2 className="font-bold text-blue-800 text-3xl my-5">
             {item.title}
           </h2>
@@ -101,8 +108,8 @@ const Desctiption = () => {
           ماشین های لوکس و اقتصادی
         </h2>
         <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-4">
-          {Listcar.map((item, index) => (
-            <div key={index} className="bg-white   overflow-hidden ">
+          {Listcar.map((item) => (
+            <div key={item.id} className="bg-white   overflow-hidden ">
               <div className="p-5">
                 <h2 className="font-bold text-xl text-blue-800 text-center mb-2">
                   {item.title}
@@ -127,8 +134,8 @@ const Desctiption = () => {
       </div>
 
       {Description2.map((item) => (
-        <div className="p-4 m-auto">
-          <h2 className="font-bold text-blue-800 text-3xl my-5">
+        <div className="p-4 m-auto"key={item.id}>
+          <h2 className="font-bold text-blue-800 text-3xl my-5" >
             {item.title}
           </h2>
           <p className="text-gray-600">{item.text}</p>
