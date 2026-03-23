@@ -1,10 +1,10 @@
 import * as RolesDto from "./dto";
+import {getSafeRole} from "@/lib";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {ApiResponse, BaseException, RoleResponse, UserAccess} from "@/types";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
 import {basePermissions, getSafeSqlPaginate, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
-import {getRolesNPermissions} from "@/lib";
 
 @Injectable()
 export class RolesService {
@@ -31,15 +31,7 @@ export class RolesService {
     return {
       message: 'role successfully found.',
       data: {
-        role: {
-          id: role.id,
-          name: role.name,
-          updated_at: role.updated_at,
-          created_at: role.created_at,
-          creator: role.creator,
-          description: role.description,
-          permissions: role.rolePermissions.map(rp => rp.permission.name)
-        },
+        role: getSafeRole(role)
       }
     };
   }
@@ -179,7 +171,7 @@ export class RolesService {
       error: 'role not found'
     } as BaseException);
 
-    const role = getRolesNPermissions(roleRecord);
+    const role = getSafeRole(roleRecord);
 
     console.log(role);
   }
