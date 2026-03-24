@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosClient from "./axiosClient";
 import type { AxiosResponse } from "axios";
 
 //types
@@ -6,8 +6,8 @@ import type { RefreshResponse } from "../types/auth.types";
 
 export async function refreshAuth(): Promise<RefreshResponse | null> {
   try {
-    const response: AxiosResponse<RefreshResponse> = await axios.post(
-      `api/auth/refresh`,
+    const response: AxiosResponse<RefreshResponse> = await axiosClient.post(
+      `/auth/refresh`,
       {},
     );
     console.log(" refresh ", response.data);
