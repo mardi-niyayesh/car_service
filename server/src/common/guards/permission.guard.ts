@@ -70,7 +70,7 @@ export class PermissionGuard implements CanActivate {
     return true;
   }
 
-  checkOwnership(data: FindDynamicDelegate | undefined, userId: string, resource: string): boolean {
+  checkOwnership(data: FindDynamicDelegate | undefined, userId: string, resource: string): void {
     if (!data) throw new NotFoundException({
       message: `${resource} not exist in database`,
       error: `${resource} not found`,
@@ -85,7 +85,5 @@ export class PermissionGuard implements CanActivate {
       message: "Access denied. Only the creator of this resource is allowed to perform this action.",
       error: "Ownership Verification Failed"
     } as BaseException);
-
-    return true;
   }
 }
