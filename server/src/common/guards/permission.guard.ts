@@ -3,7 +3,7 @@ import {Reflector} from "@nestjs/core";
 import {AccessRequest, BaseException} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {CanActivate, ExecutionContext, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException} from "@nestjs/common";
-import {IS_PUBLIC_KEY, PERMISSION_METADATA, type DynamicDelegate, type PermissionDecoratorParams, type PermissionsType, FindDynamicDelegate} from "@/common";
+import {IS_PUBLIC_KEY, PERMISSION_METADATA, type DynamicDelegate, type PermissionDecoratorParams, type PermissionsType, FindDynamicDelegate, PERMISSIONS} from "@/common";
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -45,7 +45,7 @@ export class PermissionGuard implements CanActivate {
       error: "Permission Denied",
     } as BaseException);
 
-    if (owner && resource) {
+    if (owner && resource && !actionPermissions.includes(PERMISSIONS.OWNER_ALL)) {
       const prismaDelegate = this.prisma[resource] as unknown as DynamicDelegate;
 
       const data = await prismaDelegate.findUnique({
@@ -72,8 +72,8 @@ export class PermissionGuard implements CanActivate {
     } as BaseException);
 
     if (data.creator !== userId) throw new ForbiddenException({
-      message: "",
-      error: ""
+      message: "Access denied. Only the creator of this resource is allowed to perform this action.",
+      error: "Ownership Verification Failed"
     } as BaseException);
 
     return true;
