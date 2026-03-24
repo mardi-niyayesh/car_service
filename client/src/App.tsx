@@ -22,7 +22,6 @@ import MashhadPage from "./components/ReserveCar.tsx/Pages/MashhadPage";
 import Nayshaboor from "./components/ReserveCar.tsx/Pages/Nayshaboor";
 import YazdPage from "./components/ReserveCar.tsx/Pages/YazdPage";
 import ProductDetailsPage from "./components/ReserveCar.tsx/Pages/ProductDetailsPage";
-
 //authorization pages
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
@@ -40,6 +39,7 @@ import DetalisUserPage from "./PanelAdmin/Pages/DetalisUserPage";
 import ProductPage from "./PanelAdmin/Pages/ProductPage";
 import CategoryPage from "./PanelAdmin/Pages/CategoryPage";
 import UsersPage from "./PanelAdmin/Pages/UsersPage";
+import ComponentFormUpdateUser from "./PanelAdmin/Components/ComponentFormUpdateUser";
 function App() {
   return (
     <>
@@ -88,6 +88,7 @@ function App() {
             <Route path="users/detail" element={<DetalisUserPage />} />
             <Route path="product" element={<ProductPage />} />
             <Route path="category" element={<CategoryPage />} />
+             <Route path="detail" element={<ComponentFormUpdateUser />} />
           </Route>
           {/* ------- 404 ------- */}
           <Route path="*" element={<NotFoundPage />} />
