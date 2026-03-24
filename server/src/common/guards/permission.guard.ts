@@ -30,7 +30,12 @@ export class PermissionGuard implements CanActivate {
     } = this.reflector.getAllAndOverride<PermissionDecoratorParams>(PERMISSION_METADATA, [
       context.getHandler(),
       context.getClass(),
-    ]) || {requiredAll: false, permissions: [], resource: undefined, owner: false};
+    ]) || {
+      owner: false,
+      permissions: [],
+      requiredAll: false,
+      resource: undefined,
+    };
 
     if (!requiredPermissions) throw new InternalServerErrorException({
       message: 'Missing Role, Role is Required',
