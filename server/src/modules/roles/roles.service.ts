@@ -2,7 +2,7 @@ import * as RolesDto from "./dto";
 import {getSafeRole} from "@/lib";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import type {ApiResponse, BaseException, RoleResponse, UserAccess} from "@/types";
+import {ApiResponse, BaseException, FindOneRoleRes, RoleResponse, UserAccess} from "@/types";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
 import {basePermissions, basicRoles, getSafeSqlPaginate, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
 
@@ -13,7 +13,7 @@ export class RolesService {
   /** find one role info with id or name
    * - only roles with permission (owner.all or role.view) can accessibility to this route
    */
-  async findOne({id, name}: RolesDto.FindOneRoleValidatorType): Promise<ApiResponse<{ role: RoleResponse }>> {
+  async findOne({id, name}: RolesDto.FindOneRoleValidatorType): Promise<ApiResponse<FindOneRoleRes>> {
     const role = await this.prisma.role.findUnique({
       where: {id, name},
       include: {
@@ -76,8 +76,8 @@ export class RolesService {
       permissions,
       description
     }: RolesDto.CreateRoleType
-  ): Promise<ApiResponse<{ role: RoleResponse }>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<{ role: RoleResponse }>> => {
+  ): Promise<ApiResponse<FindOneRoleRes>> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<FindOneRoleRes>> => {
       const existRole = await tx.role.findUnique({
         where: {
           name
@@ -156,8 +156,8 @@ export class RolesService {
   /** delete exist role with id
    * - only roles with permission (owner.all or role.create) can accessibility to this route
    */
-  async delete(roleId: string, actionPayload: UserAccess): Promise<ApiResponse<{ role: RoleResponse }>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<{ role: RoleResponse }>> => {
+  async delete(roleId: string, actionPayload: UserAccess): Promise<ApiResponse<FindOneRoleRes>> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<FindOneRoleRes>> => {
       const roleRecord = await tx.role.findUnique({
         where: {id: roleId},
         include: {

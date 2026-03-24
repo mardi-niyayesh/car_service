@@ -32,7 +32,7 @@ import * as RolesDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../users/dto";
 import {RolesService} from "@/modules/roles/roles.service";
-import type {AccessRequest, ApiResponse, RoleResponse} from "@/types";
+import type {AccessRequest, ApiResponse, FindOneRoleRes, RoleResponse} from "@/types";
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, Param} from "@nestjs/common";
 
 /**
@@ -159,7 +159,7 @@ export class RolesController {
   create(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(RolesDto.CreateRoleValidator)) data: RolesDto.CreateRoleType
-  ): Promise<ApiResponse<{ role: RoleResponse }>> {
+  ): Promise<ApiResponse<FindOneRoleRes>> {
     return this.rolesService.create(req.user, data);
   }
 
@@ -173,11 +173,10 @@ export class RolesController {
   })
   @Delete(':id')
   @ApiParam(UUID4Dto('id'))
-  async delete(
+  delete(
     @Req() req: AccessRequest,
     @Param(new ZodPipe(UUIDv4Validator)) {id}: UUID4Type
-  ) {
-    await this.rolesService.delete(id, req.user.userId);
-    return 'role deleted';
+  ): Promise<ApiResponse<FindOneRoleRes>> {
+    return this.rolesService.delete(id, req.user);
   }
 }
