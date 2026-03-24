@@ -65,7 +65,7 @@ export class RolesController {
   })
   @Cacheable({
     ttl: ONE_MINUTE_MS * 120,
-    resource: 'roles',
+    resource: 'role',
     query: ['id', 'name'],
   })
   @Get('find')
@@ -95,7 +95,7 @@ export class RolesController {
   })
   @Cacheable({
     pagination: true,
-    resource: "roles",
+    resource: "role",
     ttl: ONE_MINUTE_MS * 120,
   })
   @Get()
@@ -171,10 +171,11 @@ export class RolesController {
   })
   @Delete(':id')
   @ApiParam(UUID4Dto('id'))
-  delete(
+  async delete(
+    @Req() req: AccessRequest,
     @Param(new ZodPipe(UUIDv4Validator)) {id}: UUID4Type
-  ): string {
-    console.log(id);
+  ) {
+    await this.rolesService.delete(id, req.user.userId);
     return 'role deleted';
   }
 }

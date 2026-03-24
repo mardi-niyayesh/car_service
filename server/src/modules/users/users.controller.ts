@@ -78,7 +78,7 @@ export class UsersController {
   @Get("profile")
   @HttpCode(HttpStatus.OK)
   @Cacheable({
-    resource: "users",
+    resource: "user",
     self: true,
     ttl: ONE_MINUTE_MS * 30
   })
@@ -160,7 +160,7 @@ export class UsersController {
   @Get('find')
   @HttpCode(HttpStatus.OK)
   @Cacheable({
-    resource: "users",
+    resource: "user",
     ttl: ONE_MINUTE_MS * 30,
     query: ['id', 'email'],
   })
@@ -204,7 +204,7 @@ export class UsersController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @Cacheable({
-    resource: "users",
+    resource: "user",
     pagination: true,
     ttl: ONE_MINUTE_MS * 30
   })
