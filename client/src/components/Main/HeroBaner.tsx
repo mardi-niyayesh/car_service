@@ -1,9 +1,36 @@
+//hooks
+import { useState } from "react";
+//packeges
+import DatePicker from "react-datepicker-jalali";
+import "react-datepicker/dist/react-datepicker.css";
+//icon for react-ico
 import { MdLocationOn } from "react-icons/md";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 import { IoArrowDown } from "react-icons/io5";
 
+//month Data
+const months = [
+  "فروردین",
+  "اردیبهشت",
+  "خرداد",
+  "تیر",
+  "مرداد",
+  "شهریور",
+  "مهر",
+  "آبان",
+  "آذر",
+  "دی",
+  "بهمن",
+  "اسفند",
+];
+// days week
+const weekDays = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
+
 const HeroBaner = () => {
+  const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
+  const [returnDate, setReturnDate] = useState<Date | null>(null);
+
   return (
     <div className=" ">
       <div className=" text-center my-8 text-2xl font-bold text-blue-800">
@@ -20,7 +47,6 @@ const HeroBaner = () => {
                 <div className="absolute inset-y-0 right-0  flex items-center  pr-4 ">
                   <MdLocationOn size={24} className="text-blue-800" />
                 </div>
-
                 <select
                   defaultValue="tehran"
                   className="flex-grow px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10"
@@ -77,11 +103,19 @@ const HeroBaner = () => {
                 <div className="absolute inset-y-0 right-0  flex items-center  pr-4">
                   <FaCalendarAlt size={24} className="text-blue-800 " />
                 </div>
-                <input
-                  type="text"
-                  className="flex-grow  px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10"
-                  placeholder="انتخاب تاریخ"
-                />
+
+                <div className="relative">
+                  <DatePicker
+                    selected={returnDate}
+                    onChange={(date: Date | null) => setDeliveryDate(date)}
+                    placeholderText="انتخاب تاریخ"
+                    className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10"
+                    calendarStartDay={0}
+                    months={months}
+                    weekDays={weekDays}
+                    dateFormat="yyyy/MM/dd"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -120,10 +154,16 @@ const HeroBaner = () => {
                 <div className="absolute inset-y-0 right-0  flex items-center   pr-4">
                   <FaCalendarAlt size={24} className="text-blue-800 " />
                 </div>
-                <input
-                  type="text"
-                  className="flex-grow  px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10"
-                  placeholder="انتخاب تاریخ"
+
+                <DatePicker
+                  selected={deliveryDate}
+                  onChange={(date: Date | null) => setReturnDate(date)}
+                  placeholderText="انتخاب تاریخ"
+                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10"
+                  calendarStartDay={0}
+                  months={months}
+                  weekDays={weekDays}
+                  dateFormat="yyyy/MM/dd"
                 />
               </div>
             </div>
