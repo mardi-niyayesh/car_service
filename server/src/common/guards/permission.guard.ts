@@ -22,7 +22,12 @@ export class PermissionGuard implements CanActivate {
 
     if (isPublic) return true;
 
-    const {requiredAll, permissions: requiredPermissions, owner, resource} = this.reflector.getAllAndOverride<PermissionDecoratorParams>(PERMISSION_METADATA, [
+    const {
+      owner,
+      resource,
+      requiredAll,
+      permissions: requiredPermissions,
+    } = this.reflector.getAllAndOverride<PermissionDecoratorParams>(PERMISSION_METADATA, [
       context.getHandler(),
       context.getClass(),
     ]) || {requiredAll: false, permissions: [], resource: undefined, owner: false};
