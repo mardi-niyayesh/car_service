@@ -173,6 +173,7 @@ export class RolesController {
   })
   @Delete(':id')
   @ApiParam(UUID4Dto('id'))
+  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles')})
   delete(
     @Req() req: AccessRequest,
     @Param(new ZodPipe(UUIDv4Validator)) {id}: UUID4Type
