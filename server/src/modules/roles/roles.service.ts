@@ -4,7 +4,7 @@ import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {ApiResponse, BaseException, RoleResponse, UserAccess} from "@/types";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
-import {basePermissions, basicRoles, getSafeSqlPaginate, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict, ROLES} from "@/common";
+import {basePermissions, basicRoles, getSafeSqlPaginate, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
 
 @Injectable()
 export class RolesService {
@@ -157,42 +157,48 @@ export class RolesService {
    * - only roles with permission (owner.all or role.create) can accessibility to this route
    */
   async delete(roleId: string, actionPayload: UserAccess): Promise<ApiResponse<{ role: RoleResponse }>> {
-    const roleRecord = await this.prisma.role.findUnique({
-      where: {id: roleId},
-      include: {
-        rolePermissions: {
-          include: {permission: true}
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<{ role: RoleResponse }>> => {
+      const roleRecord = await tx.role.findUnique({
+        where: {id: roleId},
+        include: {
+          rolePermissions: {
+            include: {permission: true}
+          }
         }
-      }
+      });
+
+      if (!roleRecord) throw new NotFoundException({
+        message: 'role not exists in database',
+        error: 'role not found'
+      } as BaseException);
+
+      const role = getSafeRole(roleRecord);
+
+      const isBasicRole: boolean = (basicRoles as string[]).includes(roleRecord.name);
+
+      if (isBasicRole) throw new ForbiddenException({
+        message: 'Basic roles are essential to the system and cannot be deleted.',
+        error: 'Deletion Denied'
+      });
+
+      const isActorOwner: boolean = actionPayload.permissions.includes(PERMISSIONS.OWNER_ALL);
+      const isRoleManager: boolean = role.permissions.some(p => permissionsManagerStrict.includes(p));
+
+      if (!isActorOwner && isRoleManager) throw new ForbiddenException({
+        message: 'You are not allowed to delete a role with management permissions. Only the owner can remove this role.',
+        error: 'Insufficient permissions'
+      } as BaseException);
+
+      await tx.role.delete({
+        where: {id: roleId},
+      });
+
+      return {
+        message: "role deleted successfully.",
+        data: {
+          role
+        }
+      };
     });
-
-    if (!roleRecord) throw new NotFoundException({
-      message: 'role not exists in database',
-      error: 'role not found'
-    } as BaseException);
-
-    const role = getSafeRole(roleRecord);
-
-    const isBasicRole: boolean = (basicRoles as string[]).includes(role.name);
-
-    if (isBasicRole) throw new ForbiddenException({
-      message: 'Basic roles are essential to the system and cannot be deleted.',
-      error: 'Deletion Denied'
-    });
-
-    const isActorOwner: boolean = actionPayload.permissions.includes(PERMISSIONS.OWNER_ALL);
-    const isRoleManager: boolean = role.permissions.some(p => permissionsManagerStrict.includes(p));
-
-    if (!isActorOwner && isRoleManager) throw new ForbiddenException({
-      message: 'You are not allowed to delete a role with management permissions. Only the owner can remove this role.',
-      error: 'Insufficient permissions'
-    } as BaseException);
-
-    return {
-      message: "role deleted successfully.",
-      data: {
-        role
-      }
-    };
   }
 }
