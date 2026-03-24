@@ -167,7 +167,9 @@ export class RolesController {
    * - only roles with permission (owner.all or role.create) can accessibility to this route
    */
   @Permission({
-    permissions: [PERMISSIONS.ROLE_DELETE]
+    permissions: [PERMISSIONS.ROLE_DELETE],
+    owner: true,
+    resource: "role",
   })
   @Delete(':id')
   @ApiParam(UUID4Dto('id'))

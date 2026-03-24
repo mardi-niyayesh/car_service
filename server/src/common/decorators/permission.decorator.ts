@@ -1,5 +1,5 @@
 import {SetMetadata} from "@nestjs/common";
-import {PermissionsType, Resource} from "@/common";
+import {PermissionsType, PrismaModels} from "@/common";
 
 export const PERMISSION_METADATA = "PERMISSIONS";
 
@@ -7,7 +7,7 @@ export interface PermissionDecoratorParams {
   requiredAll?: boolean;
   permissions: PermissionsType[];
   owner?: boolean;
-  resource?: Resource;
+  resource?: PrismaModels;
 }
 
 export function Permission({requiredAll, permissions, owner, resource}: PermissionDecoratorParams) {

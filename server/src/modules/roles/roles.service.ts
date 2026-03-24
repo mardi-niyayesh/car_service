@@ -156,9 +156,9 @@ export class RolesService {
   /** delete exist role with id
    * - only roles with permission (owner.all or role.create) can accessibility to this route
    */
-  async delete(id: string) {
+  async delete(roleId: string, userId: string) {
     const roleRecord = await this.prisma.role.findUnique({
-      where: {id},
+      where: {id: roleId},
       include: {
         rolePermissions: {
           include: {permission: true}
@@ -174,5 +174,7 @@ export class RolesService {
     const role = getSafeRole(roleRecord);
 
     console.log(role);
+    console.log(role.creator);
+    console.log(userId === role.creator);
   }
 }
