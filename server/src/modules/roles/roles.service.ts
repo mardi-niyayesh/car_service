@@ -156,7 +156,7 @@ export class RolesService {
   /** delete exist role with id
    * - only roles with permission (owner.all or role.create) can accessibility to this route
    */
-  async delete(roleId: string): Promise<ApiResponse<{role: RoleResponse}>> {
+  async delete(roleId: string, actionPayload: UserAccess): Promise<ApiResponse<{ role: RoleResponse }>> {
     const roleRecord = await this.prisma.role.findUnique({
       where: {id: roleId},
       include: {
@@ -180,7 +180,13 @@ export class RolesService {
       error: 'Deletion Denied'
     });
 
+    const isActorOwner: boolean = actionPayload.permissions.includes(PERMISSIONS.OWNER_ALL);
     const isRoleManager: boolean = role.permissions.some(p => permissionsManagerStrict.includes(p));
+
+    if (!isActorOwner && isRoleManager) throw new ForbiddenException({
+      message: 'You are not allowed to delete a role with management permissions. Only the owner can remove this role.',
+      error: 'Insufficient permissions'
+    } as BaseException);
 
     return {
       message: "role deleted successfully.",
