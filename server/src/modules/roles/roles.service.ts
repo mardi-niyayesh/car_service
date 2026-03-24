@@ -4,7 +4,7 @@ import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {ApiResponse, BaseException, RoleResponse, UserAccess} from "@/types";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
-import {basePermissions, getSafeSqlPaginate, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
+import {basePermissions, basicRoles, getSafeSqlPaginate, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict, ROLES} from "@/common";
 
 @Injectable()
 export class RolesService {
@@ -156,7 +156,7 @@ export class RolesService {
   /** delete exist role with id
    * - only roles with permission (owner.all or role.create) can accessibility to this route
    */
-  async delete(roleId: string, userId: string) {
+  async delete(roleId: string): Promise<ApiResponse<{role: RoleResponse}>> {
     const roleRecord = await this.prisma.role.findUnique({
       where: {id: roleId},
       include: {
@@ -167,14 +167,26 @@ export class RolesService {
     });
 
     if (!roleRecord) throw new NotFoundException({
-      message: 'role not exist in database',
+      message: 'role not exists in database',
       error: 'role not found'
     } as BaseException);
 
     const role = getSafeRole(roleRecord);
 
-    console.log(role);
-    console.log(role.creator);
-    console.log(userId === role.creator);
+    const isBasicRole: boolean = (basicRoles as string[]).includes(role.name);
+
+    if (isBasicRole) throw new ForbiddenException({
+      message: 'Basic roles are essential to the system and cannot be deleted.',
+      error: 'Deletion Denied'
+    });
+
+    const isRoleManager: boolean = role.permissions.some(p => permissionsManagerStrict.includes(p));
+
+    return {
+      message: "role deleted successfully.",
+      data: {
+        role
+      }
+    };
   }
 }

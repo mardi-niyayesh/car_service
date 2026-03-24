@@ -7,4 +7,6 @@ export const ROLES = {
   PRODUCT_MANAGER: "product_manager",
 } as const;
 
+export const basicRoles = Object.values(ROLES);
+
 export type RolesType = typeof ROLES[keyof typeof ROLES];
