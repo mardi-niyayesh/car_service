@@ -9,8 +9,9 @@ import {
   pagePaginationDto,
   limitPaginationDto,
   PaginationValidator,
-  orderByPaginationDto,
   getForbiddenResponse,
+  orderByPaginationDto,
+  getBadRequestUUIDParams,
   getUnauthorizedResponse,
   type PaginationValidatorType,
 } from "@/common";
@@ -175,6 +176,7 @@ export class RolesController {
   })
   @Delete(':id')
   @ApiParam(UUID4Dto('id'))
+  @ApiBadRequestResponse({type: getBadRequestUUIDParams('roles/id')})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles/id')})
   @ApiForbiddenResponse({type: RolesDto.ForbiddenDeleteRoleRes})
   @ApiNotFoundResponse({type: RolesDto.NotFoundRoleRes})
