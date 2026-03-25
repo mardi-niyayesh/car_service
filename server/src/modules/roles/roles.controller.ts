@@ -175,7 +175,9 @@ export class RolesController {
     resource: "role",
   })
   @Delete(':id')
+  @HttpCode(HttpStatus.OK)
   @ApiParam(UUID4Dto('id'))
+  @ApiOkResponse({type: RolesDto.OkDeleteRoleRes})
   @ApiBadRequestResponse({type: getBadRequestUUIDParams('roles/id')})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles/id')})
   @ApiForbiddenResponse({type: RolesDto.ForbiddenDeleteRoleRes})
