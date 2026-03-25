@@ -28,8 +28,8 @@ export class OkDeleteRoleRes extends getBaseOkResponseSchema<FindOneRoleRes>({
 
 /** forbidden example */
 export class ForbiddenDeleteRoleRes extends getNormalErrorResponse({
-  message: "Basic roles are essential to the system and cannot be deleted.",
-  error: "Deletion Denied",
+  message: "Access denied. Only the creator of this resource is allowed to perform this action.",
+  error: "Ownership Verification Failed",
   statusCode: 404,
   path: "roles/:id"
 }) {}
