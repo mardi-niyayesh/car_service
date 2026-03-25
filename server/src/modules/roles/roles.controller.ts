@@ -156,6 +156,7 @@ export class RolesController {
     tags: ["Role"],
   })
   @ApiBody({type: RolesDto.CreateRoleDto})
+  @ApiOkResponse({type: RolesDto.OkCreateRoleRes})
   @ApiBadRequestResponse({type: RolesDto.CreateRoleBadRequest})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles')})
   @ApiForbiddenResponse({type: RolesDto.CreateRoleForbidden})

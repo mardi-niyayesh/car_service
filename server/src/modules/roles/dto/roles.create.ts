@@ -1,6 +1,8 @@
 import z from "zod";
+import {FindOneRoleRes} from "@/types";
 import {createZodDto} from "nestjs-zod";
-import {getNormalErrorResponse, getZodErrorBody} from "@/common";
+import {testRoleExample} from "./roles.delete";
+import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
 
 /** validator */
 export const CreateRoleValidator = z.object({
@@ -21,6 +23,17 @@ export type CreateRoleType = z.infer<typeof CreateRoleValidator>;
 
 /** example body for swagger */
 export class CreateRoleDto extends createZodDto(CreateRoleValidator) {}
+
+export class OkCreateRoleRes extends getBaseOkResponseSchema<FindOneRoleRes>({
+  path: "roles",
+  create: true,
+  response: {
+    message: "role successfully created.",
+    data: {
+      role: testRoleExample
+    }
+  }
+}) {}
 
 /** bad request example */
 export class CreateRoleBadRequest extends getZodErrorBody({
