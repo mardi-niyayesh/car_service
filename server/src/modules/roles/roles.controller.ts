@@ -177,6 +177,43 @@ export class RolesController {
   })
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Delete an existing role from the system',
+    description: `
+  Deletes a role from the system while enforcing strict security policies to preserve the integrity 
+  of the Role‑Based Access Control (RBAC) model.
+  
+  - **Access control**: This endpoint is accessible only to users who possess the 
+    **"role.delete"** or **"owner.all"** permission.
+  
+  - **Strict existence validation**: The system first verifies that the specified role exists 
+    in the database. If the role does not exist, the operation immediately fails with a 
+    **Role Not Found** error.
+  
+  - **Core system role protection**: Fundamental system roles (base roles) are permanently 
+    protected and cannot be deleted under any circumstances. These roles are essential for 
+    maintaining the core authorization structure of the platform.
+  
+  - **Role ownership protection**: If a role was created by another user, only a user with the 
+    **"owner.all"** permission is allowed to delete it. Standard role managers cannot remove 
+    roles created by other administrators. This rule prevents unauthorized modification of 
+    roles owned by other privileged users.
+  
+  - **Management‑level permission protection (Anti‑Privilege Escalation)**: Roles that contain 
+    sensitive or high‑level administrative permissions are considered critical. Deleting such 
+    roles is strictly restricted to users who possess the **"owner.all"** privilege.
+  
+  - **Security safeguard**: These restrictions ensure that administrators cannot weaken the 
+    system’s authorization model by deleting protected or high‑privilege roles.
+  
+  - **Atomic execution**: The deletion process runs inside a database transaction to guarantee 
+    consistency and prevent partial operations that could compromise RBAC integrity.
+  
+  This endpoint ensures that role deletion is performed safely while protecting critical roles 
+  and preventing privilege abuse or structural manipulation of the authorization system.`,
+    operationId: 'delete_role',
+    tags: ["Role"],
+  })
   @ApiParam(UUID4Dto('id'))
   @ApiOkResponse({type: RolesDto.OkDeleteRoleRes})
   @ApiBadRequestResponse({type: getBadRequestUUIDParams('roles/id')})
