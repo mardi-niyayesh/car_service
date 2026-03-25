@@ -23,6 +23,7 @@ import {
   ApiOperation,
   ApiBearerAuth,
   ApiOkResponse,
+  ApiNotFoundResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
   ApiUnauthorizedResponse,
@@ -81,6 +82,7 @@ export class RolesController {
   @ApiBadRequestResponse({type: RolesDto.FindOneRoleBadReq})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles/find')})
   @ApiForbiddenResponse({type: getForbiddenResponse('roles/find')})
+  @ApiNotFoundResponse({type: RolesDto.NotFoundRoleRes})
   findOne(
     @Query(new ZodPipe(RolesDto.FindOneRoleValidator)) query: RolesDto.FindOneRoleValidatorType
   ) {
@@ -174,6 +176,7 @@ export class RolesController {
   @Delete(':id')
   @ApiParam(UUID4Dto('id'))
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles/id')})
+  @ApiNotFoundResponse({type: RolesDto.NotFoundRoleRes})
   delete(
     @Req() req: AccessRequest,
     @Param(new ZodPipe(UUIDv4Validator)) {id}: UUID4Type

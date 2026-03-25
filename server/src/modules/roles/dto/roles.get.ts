@@ -2,7 +2,7 @@ import {z} from 'zod';
 import {exampleDate} from "@/lib";
 import {FindOneRoleRes} from "@/types";
 import {ApiQueryOptions} from "@nestjs/swagger";
-import {getZodErrorBody, getBaseOkResponseSchema} from "@/common";
+import {getZodErrorBody, getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** validator for one role query */
 export const FindOneRoleValidator = z.object({
@@ -57,4 +57,12 @@ export class FindOneRoleBadReq extends getZodErrorBody({
     field: "name, id",
     error: "Either name or id must be provided"
   }]
+}) {}
+
+/** not found example */
+export class NotFoundRoleRes extends getNormalErrorResponse({
+  path: "roles",
+  statusCode: 404,
+  message: "this Role does not exist in database",
+  error: "Role not found"
 }) {}
