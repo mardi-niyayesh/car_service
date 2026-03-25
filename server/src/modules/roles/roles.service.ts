@@ -168,8 +168,8 @@ export class RolesService {
       });
 
       if (!roleRecord) throw new NotFoundException({
-        message: 'role not exists in database',
-        error: 'role not found'
+        message: 'this Role does not exist in database',
+        error: 'Role not found',
       } as BaseException);
 
       const role = getSafeRole(roleRecord);

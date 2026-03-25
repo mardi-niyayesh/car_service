@@ -72,7 +72,7 @@ export class PermissionGuard implements CanActivate {
 
   checkOwnership(data: FindDynamicDelegate | undefined, userId: string, resource: string): void {
     if (!data) throw new NotFoundException({
-      message: `${resource} not exist in database`,
+      message: `this ${resource} does not exist in database`,
       error: `${resource} not found`,
     } as BaseException);
 
