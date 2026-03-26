@@ -15,6 +15,7 @@ export const ROLE_PERMISSIONS = {
   ROLE_VIEW: 'role.view',
   ROLE_UPDATE: 'role.update',
   ROLE_DELETE: 'role.delete',
+  PERMISSION_VIEW: 'permission.view',
 } as const;
 
 const CATEGORY_PERMISSIONS = {
