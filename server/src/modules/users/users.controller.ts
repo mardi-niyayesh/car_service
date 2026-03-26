@@ -47,8 +47,8 @@ import {
 
 import * as UserDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
-import {UsersService} from "./users.service";
-import type {AccessRequest, ApiResponse, UserResponse, UserRolePermission} from "@/types";
+import {UsersListResponse, UsersService} from "./users.service";
+import type {AccessRequest, ApiResponse, UserResponse} from "@/types";
 
 /**
  * User management endpoints for retrieving user information.
@@ -228,7 +228,7 @@ export class UsersController {
   })
   async findAll(
     @Query(new ZodPipe(PaginationValidator)) query: PaginationValidatorType
-  ): Promise<ApiResponse<{ users: UserRolePermission[] }>> {
+  ): Promise<ApiResponse<UsersListResponse>> {
     return this.usersService.findAll(query);
   }
 

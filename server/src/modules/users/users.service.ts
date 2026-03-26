@@ -13,7 +13,9 @@ import {PrismaService} from "../prisma/prisma.service";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {getRolesNPermissions, getSafeUser, compareSecret, hashSecret} from "@/lib";
 import {PaginationValidatorType, PERMISSIONS, permissionsManagerStrict, basePermissions} from "@/common";
-import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams, SafeUser, UserRolePermission} from "@/types";
+import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams, SafeUser, UserRolePermission, ListWithCount} from "@/types";
+
+export type UsersListResponse = ListWithCount<{ users: UserRolePermission[] }>;
 
 @Injectable()
 export class UsersService {
@@ -152,9 +154,12 @@ export class UsersService {
   /** get all users info
    * - only users with permission (owner.all or user.view) can accessibility to this route
    */
-  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<{ users: UserRolePermission[] }>> {
-    const result = await this.prisma.$queryRaw<UserRolePermission[]>(
-      Prisma.sql`
+  findAll(pagination: PaginationValidatorType): Promise<ApiResponse<UsersListResponse>> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<UsersListResponse>> => {
+      const count: number = await tx.user.count();
+
+      const result = await tx.$queryRaw<UserRolePermission[]>(
+        Prisma.sql`
         SELECT u.id,
                u.email,
                u.display_name,
@@ -171,14 +176,16 @@ export class UsersService {
         GROUP BY u.id
         ORDER BY u.created_at ${Prisma.sql([pagination.orderByUpper])}
         LIMIT ${pagination.limit} OFFSET ${pagination.offset}`
-    );
+      );
 
-    return {
-      message: "Users Successfully find.",
-      data: {
-        users: result || []
-      }
-    };
+      return {
+        message: "Users Successfully find.",
+        data: {
+          users: result || [],
+          count
+        }
+      };
+    });
   }
 
   /** Assign roles to user
