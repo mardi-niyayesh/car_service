@@ -1,5 +1,6 @@
 import {
   ZodPipe,
+  UUID4Dto,
   Permission,
   PERMISSIONS,
   type UUID4Type,
@@ -9,14 +10,15 @@ import {
   PaginationValidator,
   getForbiddenResponse,
   orderByPaginationDto,
+  getBadRequestUUIDParams,
   getUnauthorizedResponse,
-  type PaginationValidatorType, UUID4Dto,
+  type PaginationValidatorType,
 } from "@/common";
 
 import {ApiResponse} from "@/types";
 import {Controller, Get, Param, Query} from "@nestjs/common";
 import {type PermissionsResponse, PermissionsService} from "./permissions.service";
-import {ApiBearerAuth, ApiForbiddenResponse, ApiParam, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiParam, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 @ApiTags("Permission")
 @Permission({
@@ -29,6 +31,7 @@ export class PermissionsController {
 
   @Get(":id")
   @ApiParam(UUID4Dto('id'))
+  @ApiBadRequestResponse({type: getBadRequestUUIDParams})
   find(
     @Param( new ZodPipe(UUIDv4Validator)) params: UUID4Type,
   ) {
