@@ -1,7 +1,7 @@
 import type {ApiResponse, BaseException} from "@/types";
+import {Permission} from "@/modules/prisma/generated/client";
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {Permission, Prisma} from "@/modules/prisma/generated/client";
 import {getSafeSqlPaginate, PaginationValidatorType} from "@/common";
 
 export type FindOnePermission = { permission: Permission };
@@ -32,23 +32,18 @@ export class PermissionsService {
   async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<PermissionsResponse>> {
     const {orderBy, offset, limit} = getSafeSqlPaginate(pagination);
 
-    const result = await this.prisma.$queryRaw<Permission[]>(
-      Prisma.sql`
-        SELECT p.id,
-               p.name,
-               p.description,
-               p.created_at,
-               p.updated_at
-        FROM permissions p
-        GROUP BY p.id
-        ORDER BY p.created_at ${Prisma.sql([orderBy])}
-        LIMIT ${limit} OFFSET ${offset}`
-    );
+    const permissions = await this.prisma.permission.findMany({
+      orderBy: {
+        created_at: orderBy === 'ASC' ? 'asc' : 'desc'
+      },
+      skip: offset,
+      take: limit
+    });
 
     return {
       message: 'permissions successfully found',
       data: {
-        permissions: result
+        permissions
       }
     };
   }

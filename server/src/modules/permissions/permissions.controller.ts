@@ -1,6 +1,7 @@
 import {
   ZodPipe,
   UUID4Dto,
+  Cacheable,
   Permission,
   PERMISSIONS,
   type UUID4Type,
@@ -12,7 +13,7 @@ import {
   orderByPaginationDto,
   getBadRequestUUIDParams,
   getUnauthorizedResponse,
-  type PaginationValidatorType, Cacheable,
+  type PaginationValidatorType,
 } from "@/common";
 
 import {ONE_MINUTE_MS} from "@/lib";
@@ -63,8 +64,8 @@ export class PermissionsController {
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('permissions')})
   @ApiForbiddenResponse({type: getForbiddenResponse('permissions')})
   findAll(
-    @Query(new ZodPipe(PaginationValidator)) query: PaginationValidatorType
+    @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
   ): Promise<ApiResponse<PermissionsResponse>> {
-    return this.permissionsService.findAll(query);
+    return this.permissionsService.findAll(pagination);
   }
 }
