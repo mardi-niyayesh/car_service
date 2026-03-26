@@ -4,16 +4,15 @@ import {ApiQueryOptions} from "@nestjs/swagger";
 /** Validate Pagination in Query Params */
 export const PaginationValidator = z.object({
   page: z
-    .string()
+    .coerce.number()
+    .min(1)
     .optional()
-    .transform(Number)
-    .pipe(z.number().min(1))
     .default(1),
   limit: z
-    .string()
+    .coerce.number()
+    .min(1)
+    .max(100)
     .optional()
-    .transform(Number)
-    .pipe(z.number().min(1).max(100))
     .default(10),
   order: z
     .enum(["asc", "desc"])
