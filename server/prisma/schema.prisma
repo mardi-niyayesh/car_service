@@ -68,7 +68,7 @@ model Permission {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
   name        String   @unique @db.VarChar(100)
-  description String?  @db.Text
+  description String?  @db.VarChar(500)
 
   rolePermissions RolePermission[]
 
@@ -81,7 +81,7 @@ model Role {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
   name        String   @unique @db.VarChar(100)
-  description String?  @db.Text
+  description String?  @db.VarChar(500)
   creator     String?
 
   rolePermissions RolePermission[]
@@ -123,11 +123,12 @@ model UserRole {
 
 // Category Model
 model Category {
-  id         String   @id @default(uuid(4))
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  name       String   @db.VarChar(100)
-  slug       String   @unique @db.VarChar(150)
+  id          String   @id @default(uuid(4))
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  name        String   @db.VarChar(100)
+  slug        String   @unique @db.VarChar(150)
+  description String?  @db.VarChar(500)
 
   @@map("categories")
 }
