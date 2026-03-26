@@ -6,10 +6,10 @@ import {ApiResponse, BaseException, FindOneRoleRes, ListWithCount, RoleResponse,
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
 import {basePermissions, basicRoles, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
 
-export interface FindAllRolesRes {
+export type FindAllRolesRes = ListWithCount<{
   roles: RoleResponse[];
   count: number;
-}
+}>;
 
 @Injectable()
 export class RolesService {
@@ -44,8 +44,8 @@ export class RolesService {
   /** get all roles info with pagination
    * - only roles with permission (owner.all or role.view) can accessibility to this route
    */
-  findAll(pagination: PaginationValidatorType): Promise<ApiResponse<ListWithCount<FindAllRolesRes>>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<ListWithCount<FindAllRolesRes>>> => {
+  findAll(pagination: PaginationValidatorType): Promise<ApiResponse<FindAllRolesRes>> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<FindAllRolesRes>> => {
       const count: number = await tx.role.count();
 
       const roles = await tx.$queryRaw<RoleResponse[]>(

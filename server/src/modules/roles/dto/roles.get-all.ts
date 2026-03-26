@@ -9,7 +9,7 @@ export class FindAllRolesOkRes extends getBaseOkResponseSchema<FindAllRolesRes>(
     message: "roles successfully found.",
     data: {
       roles: Array.from({length: 5}, () => findOneRoleResponse.role),
-      rolesCount: 20
+      count: 20
     }
   }
 }) {}
