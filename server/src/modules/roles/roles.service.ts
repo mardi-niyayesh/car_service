@@ -72,7 +72,8 @@ export class RolesService {
     {
       name,
       permissions,
-      description
+      description,
+      ownership
     }: RolesDto.CreateRoleType
   ): Promise<ApiResponse<FindOneRoleRes>> {
     return this.prisma.$transaction(async (tx): Promise<ApiResponse<FindOneRoleRes>> => {
@@ -124,9 +125,11 @@ export class RolesService {
         } as BaseException);
       }
 
+      const creator: string | null = ownership ? actionPayload.userId : null;
+
       const newRole = await tx.role.create({
         data: {
-          creator: actionPayload.userId,
+          creator,
           name,
           description
         }
