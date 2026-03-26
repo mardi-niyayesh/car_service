@@ -1,9 +1,26 @@
+import {
+  CanActivate,
+  Injectable,
+  ExecutionContext,
+  NotFoundException,
+  ForbiddenException,
+  InternalServerErrorException,
+} from "@nestjs/common";
+
+import {
+  PERMISSIONS,
+  IS_PUBLIC_KEY,
+  FindDynamicDelegate,
+  PERMISSION_METADATA,
+  type DynamicDelegate,
+  type PermissionsType,
+  type PermissionDecoratorParams,
+} from "@/common";
+
 import {isAllowedAction} from "@/lib";
 import {Reflector} from "@nestjs/core";
 import {AccessRequest, BaseException} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {CanActivate, ExecutionContext, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException} from "@nestjs/common";
-import {IS_PUBLIC_KEY, PERMISSION_METADATA, type DynamicDelegate, type PermissionDecoratorParams, type PermissionsType, FindDynamicDelegate, PERMISSIONS} from "@/common";
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
