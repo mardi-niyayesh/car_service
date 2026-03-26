@@ -46,6 +46,7 @@ export class PermissionsController {
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
+  @ApiOkResponse({type: PermissionDto.FindAllPermissionsOkRes})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('permissions')})
   @ApiForbiddenResponse({type: getForbiddenResponse('permissions')})
   findAll(
