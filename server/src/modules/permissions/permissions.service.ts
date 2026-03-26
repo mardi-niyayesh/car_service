@@ -30,11 +30,11 @@ export class PermissionsService {
   }
 
   async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<PermissionsResponse>> {
-    const {orderBy, offset, limit} = getSafeSqlPaginate(pagination);
+    const {offset, limit} = getSafeSqlPaginate(pagination);
 
     const permissions = await this.prisma.permission.findMany({
       orderBy: {
-        created_at: orderBy === 'ASC' ? 'asc' : 'desc'
+        created_at: pagination.order
       },
       skip: offset,
       take: limit
