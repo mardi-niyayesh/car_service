@@ -1,4 +1,4 @@
-import {ApiResponse, BaseException} from "@/types";
+import type {ApiResponse, BaseException} from "@/types";
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {Permission, Prisma} from "@/modules/prisma/generated/client";

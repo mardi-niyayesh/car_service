@@ -15,12 +15,12 @@ import {
   type PaginationValidatorType, Cacheable,
 } from "@/common";
 
-import {ApiResponse} from "@/types";
+import {ONE_MINUTE_MS} from "@/lib";
 import * as PermissionDto from "./dto";
+import type {ApiResponse} from "@/types";
 import {Controller, Get, HttpCode, HttpStatus, Param, Query} from "@nestjs/common";
 import {type FindOnePermission, type PermissionsResponse, PermissionsService} from "./permissions.service";
 import {ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiParam, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
-import {ONE_MINUTE_MS} from "@/lib";
 
 @ApiTags("Permission")
 @Permission({
@@ -33,7 +33,7 @@ export class PermissionsController {
 
   @Cacheable({
     resource: 'permission',
-    ttl: ONE_MINUTE_MS * 122,
+    ttl: ONE_MINUTE_MS * 240,
     paramsKey: ['id'],
   })
   @Get(":id")
@@ -52,7 +52,7 @@ export class PermissionsController {
   @Cacheable({
     resource: 'permission',
     pagination: true,
-    ttl: ONE_MINUTE_MS * 122,
+    ttl: ONE_MINUTE_MS * 240,
   })
   @Get()
   @HttpCode(HttpStatus.OK)
