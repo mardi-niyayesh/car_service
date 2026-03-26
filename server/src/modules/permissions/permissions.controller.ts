@@ -1,8 +1,8 @@
 import {ApiResponse} from "@/types";
 import {Controller, Get, Query} from "@nestjs/common";
-import {ApiBearerAuth, ApiForbiddenResponse, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiForbiddenResponse, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 import {type PermissionsResponse, PermissionsService} from "./permissions.service";
-import {getForbiddenResponse, PaginationValidator, type PaginationValidatorType, Permission, PERMISSIONS, ZodPipe} from "@/common";
+import {getForbiddenResponse, getUnauthorizedResponse, PaginationValidator, type PaginationValidatorType, Permission, PERMISSIONS, ZodPipe} from "@/common";
 
 @ApiTags("Permission")
 @Controller('permissions')
@@ -14,6 +14,7 @@ export class PermissionsController {
     permissions: [PERMISSIONS.PERMISSION_VIEW]
   })
   @Get()
+  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('permissions')})
   @ApiForbiddenResponse({type: getForbiddenResponse('permissions')})
   findAll(
     @Query(new ZodPipe(PaginationValidator)) query: PaginationValidatorType
