@@ -120,3 +120,14 @@ model UserRole {
   @@unique([role_id, user_id])
   @@map("user_roles")
 }
+
+// Category Model
+model Category {
+  id         String   @id @default(uuid(4))
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  name       String   @unique @db.VarChar(100)
+  slug       String   @unique @db.VarChar(150)
+
+  @@map("categories")
+}
