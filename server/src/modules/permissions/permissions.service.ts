@@ -1,11 +1,11 @@
 import {PaginationValidatorType} from "@/common";
-import type {ApiResponse, BaseException} from "@/types";
+import type {ApiResponse, BaseException, ListWithCount} from "@/types";
 import {Permission} from "@/modules/prisma/generated/client";
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 
 export type FindOnePermission = { permission: Permission };
-export type PermissionsResponse = { permissions: Permission[] };
+export type PermissionsResponse = ListWithCount<{ permissions: Permission[] }>;
 
 @Injectable()
 export class PermissionsService {
@@ -30,19 +30,24 @@ export class PermissionsService {
   }
 
   async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<PermissionsResponse>> {
-    const permissions = await this.prisma.permission.findMany({
-      orderBy: {
-        created_at: pagination.orderByLower
-      },
-      skip: pagination.offset,
-      take: pagination.limit
-    });
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<PermissionsResponse>> => {
+      const count: number = await tx.permission.count();
 
-    return {
-      message: 'permissions successfully found',
-      data: {
-        permissions
-      }
-    };
+      const permissions = await tx.permission.findMany({
+        orderBy: {
+          created_at: pagination.orderByLower
+        },
+        skip: pagination.offset,
+        take: pagination.limit
+      });
+
+      return {
+        message: 'permissions successfully found',
+        data: {
+          permissions,
+          count
+        }
+      };
+    });
   }
 }
