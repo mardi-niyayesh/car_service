@@ -15,7 +15,7 @@ export const CreateRoleValidator = z.object({
     .min(2, {message: "Name must be at least 2 characters long."})
     .max(100, {message: "Name cannot exceed 100 characters."}),
 
-  description: z.string().min(10).max(1000).optional(),
+  description: z.string().min(10).max(500).optional()
 });
 
 /** Type of validator */
