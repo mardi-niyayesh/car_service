@@ -12,8 +12,8 @@ import * as UserDto from "./dto";
 import {PrismaService} from "../prisma/prisma.service";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {getRolesNPermissions, getSafeUser, compareSecret, hashSecret} from "@/lib";
+import {PaginationValidatorType, PERMISSIONS, permissionsManagerStrict, basePermissions} from "@/common";
 import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams, SafeUser, UserRolePermission} from "@/types";
-import {PaginationValidatorType, PERMISSIONS, permissionsManagerStrict, basePermissions, getSafeSqlPaginate} from "@/common";
 
 @Injectable()
 export class UsersService {
@@ -153,8 +153,6 @@ export class UsersService {
    * - only users with permission (owner.all or user.view) can accessibility to this route
    */
   async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<{ users: UserRolePermission[] }>> {
-    const {orderBy, offset, limit} = getSafeSqlPaginate(pagination);
-
     const result = await this.prisma.$queryRaw<UserRolePermission[]>(
       Prisma.sql`
         SELECT u.id,
@@ -171,8 +169,8 @@ export class UsersService {
                  INNER JOIN role_permission rp ON r.id = rp.role_id
                  INNER JOIN permissions p ON rp.permission_id = p.id
         GROUP BY u.id
-        ORDER BY u.created_at ${Prisma.sql([orderBy])}
-        LIMIT ${limit} OFFSET ${offset}`
+        ORDER BY u.created_at ${Prisma.sql([pagination.orderByUpper])}
+        LIMIT ${pagination.limit} OFFSET ${pagination.offset}`
     );
 
     return {

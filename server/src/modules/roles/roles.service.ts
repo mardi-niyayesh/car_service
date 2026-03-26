@@ -4,7 +4,7 @@ import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ApiResponse, BaseException, FindOneRoleRes, RoleResponse, UserAccess} from "@/types";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
-import {basePermissions, basicRoles, getSafeSqlPaginate, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
+import {basePermissions, basicRoles, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
 
 @Injectable()
 export class RolesService {
@@ -40,8 +40,6 @@ export class RolesService {
    * - only roles with permission (owner.all or role.view) can accessibility to this route
    */
   async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<{ roles: RoleResponse[] }>> {
-    const {orderBy, limit, offset} = getSafeSqlPaginate(pagination);
-
     const roles = await this.prisma.$queryRaw<RoleResponse[]>(
       Prisma.sql`
           SELECT r.id,
@@ -54,8 +52,8 @@ export class RolesService {
                INNER JOIN role_permission rp ON r.id = rp.role_id
                INNER JOIN permissions p ON rp.permission_id = p.id
           GROUP BY r.id
-          ORDER BY r.created_at ${Prisma.sql([orderBy])}
-          LIMIT ${limit} OFFSET ${offset}`
+          ORDER BY r.created_at ${Prisma.sql([pagination.orderByUpper])}
+          LIMIT ${pagination.limit} OFFSET ${pagination.offset}`
     );
 
     return {
