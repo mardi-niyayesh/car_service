@@ -44,8 +44,8 @@ export class PermissionsService {
       return {
         message: 'permissions successfully found',
         data: {
+          count,
           permissions,
-          count
         }
       };
     });

@@ -181,8 +181,8 @@ export class UsersService {
       return {
         message: "Users Successfully find.",
         data: {
+          count,
           users: result || [],
-          count
         }
       };
     });

@@ -1,5 +1,6 @@
+import {UserResponse} from "@/types";
 import {getBaseOkResponseSchema} from "@/common";
-import {UserResponse, UserRolePermission} from "@/types";
+import {UsersListResponse} from "@/modules/users/users.service";
 import {createUserResponse} from "@/modules/auth/dto/auth.register";
 
 /** ok example for get one user by id */
@@ -13,12 +14,13 @@ export class GetMeOkResponse extends getBaseOkResponseSchema<UserResponse>({
 }) {}
 
 /** ok response example swagger for findAll users */
-export class FindAllUsersOKRes extends getBaseOkResponseSchema<{ users: UserRolePermission[] }>({
+export class FindAllUsersOKRes extends getBaseOkResponseSchema<UsersListResponse>({
   path: "users?orderBy=desc&limit=5&page=1",
   response: {
     message: "Users Successfully find.",
     data: {
-      users: Array.from({length: 5}, () => createUserResponse.data.user)
+      users: Array.from({length: 5}, () => createUserResponse.data.user),
+      count: 100
     }
   }
 }) {}
