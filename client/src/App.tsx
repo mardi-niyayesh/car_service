@@ -34,12 +34,13 @@ import ReservePages from "./dashboard/Pages/ReservePages";
 import WalletPages from "./dashboard/Pages/WalletPages";
 import CardPages from "./dashboard/Pages/CardPages";
 import LogoutPage from "./dashboard/Pages/LogoutPage";
+import ComponentFormUpdateUser from "./PanelAdmin/Components/ComponentFormUpdateUser";
 //pages for panelAdmin
 import DetalisUserPage from "./PanelAdmin/Pages/DetalisUserPage";
 import ProductPage from "./PanelAdmin/Pages/ProductPage";
 import CategoryPage from "./PanelAdmin/Pages/CategoryPage";
 import UsersPage from "./PanelAdmin/Pages/UsersPage";
-import ComponentFormUpdateUser from "./PanelAdmin/Components/ComponentFormUpdateUser";
+
 function App() {
   return (
     <>
@@ -81,6 +82,7 @@ function App() {
             <Route path="wallet" element={<WalletPages />} />
             <Route path="card" element={<CardPages />} />
             <Route path="logout" element={<LogoutPage />} />
+            <Route path="updateUser" element={<ComponentFormUpdateUser />} />
           </Route>
           {/* ------- Panel Admin Layout ------- */}
           <Route path="/panel" element={<PanelAdminLayout />}>
@@ -88,7 +90,6 @@ function App() {
             <Route path="users/detail" element={<DetalisUserPage />} />
             <Route path="product" element={<ProductPage />} />
             <Route path="category" element={<CategoryPage />} />
-             <Route path="detail" element={<ComponentFormUpdateUser />} />
           </Route>
           {/* ------- 404 ------- */}
           <Route path="*" element={<NotFoundPage />} />
