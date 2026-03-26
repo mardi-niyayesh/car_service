@@ -126,7 +126,7 @@ model Category {
   id         String   @id @default(uuid(4))
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  name       String   @unique @db.VarChar(100)
+  name       String   @db.VarChar(100)
   slug       String   @unique @db.VarChar(150)
 
   @@map("categories")
