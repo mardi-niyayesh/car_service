@@ -12,14 +12,15 @@ import {
   orderByPaginationDto,
   getBadRequestUUIDParams,
   getUnauthorizedResponse,
-  type PaginationValidatorType,
+  type PaginationValidatorType, Cacheable,
 } from "@/common";
 
 import {ApiResponse} from "@/types";
 import * as PermissionDto from "./dto";
-import {Controller, Get, Param, Query} from "@nestjs/common";
+import {Controller, Get, HttpCode, HttpStatus, Param, Query} from "@nestjs/common";
 import {type FindOnePermission, type PermissionsResponse, PermissionsService} from "./permissions.service";
 import {ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiParam, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {ONE_MINUTE_MS} from "@/lib";
 
 @ApiTags("Permission")
 @Permission({
@@ -30,7 +31,13 @@ import {ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkRespons
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
+  @Cacheable({
+    resource: 'permission',
+    ttl: ONE_MINUTE_MS * 122,
+    paramsKey: ['id'],
+  })
   @Get(":id")
+  @HttpCode(HttpStatus.OK)
   @ApiParam(UUID4Dto('id'))
   @ApiOkResponse({type: PermissionDto.FindOnePermissionOkRes})
   @ApiBadRequestResponse({type: getBadRequestUUIDParams('permissions/id')})
@@ -42,7 +49,13 @@ export class PermissionsController {
     return this.permissionsService.find(params.id);
   }
 
+  @Cacheable({
+    resource: 'permission',
+    pagination: true,
+    ttl: ONE_MINUTE_MS * 122,
+  })
   @Get()
+  @HttpCode(HttpStatus.OK)
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
