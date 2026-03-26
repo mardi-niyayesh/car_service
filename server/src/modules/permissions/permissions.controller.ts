@@ -33,6 +33,7 @@ export class PermissionsController {
   @ApiParam(UUID4Dto('id'))
   @ApiBadRequestResponse({type: getBadRequestUUIDParams})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('permissions/id')})
+  @ApiForbiddenResponse({type: getForbiddenResponse('permissions/id')})
   find(
     @Param( new ZodPipe(UUIDv4Validator)) params: UUID4Type,
   ) {
