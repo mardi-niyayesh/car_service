@@ -1,14 +1,33 @@
-import {Injectable} from "@nestjs/common";
-import {ApiResponse} from "@/types";
+import {ApiResponse, BaseException} from "@/types";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {Permission, Prisma} from "@/modules/prisma/generated/client";
 import {getSafeSqlPaginate, PaginationValidatorType} from "@/common";
 
+export type FindOnePermission = { permission: Permission };
 export type PermissionsResponse = { permissions: Permission[] };
 
 @Injectable()
 export class PermissionsService {
   constructor(private readonly prisma: PrismaService) {}
+
+  async find(id: string): Promise<ApiResponse<FindOnePermission>> {
+    const permission = await this.prisma.permission.findUnique({
+      where: {id}
+    });
+
+    if (!permission) throw new NotFoundException({
+      message: "this permission not found in database",
+      error: 'permission not found'
+    } as BaseException);
+
+    return {
+      message: 'permission successfully found',
+      data: {
+        permission
+      }
+    };
+  }
 
   async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<PermissionsResponse>> {
     const {orderBy, offset, limit} = getSafeSqlPaginate(pagination);

@@ -16,9 +16,10 @@ import {
 } from "@/common";
 
 import {ApiResponse} from "@/types";
+import * as PermissionDto from "./dto";
 import {Controller, Get, Param, Query} from "@nestjs/common";
-import {type PermissionsResponse, PermissionsService} from "./permissions.service";
-import {ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiParam, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {type FindOnePermission, type PermissionsResponse, PermissionsService} from "./permissions.service";
+import {ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiParam, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 @ApiTags("Permission")
 @Permission({
@@ -31,13 +32,14 @@ export class PermissionsController {
 
   @Get(":id")
   @ApiParam(UUID4Dto('id'))
-  @ApiBadRequestResponse({type: getBadRequestUUIDParams})
+  @ApiOkResponse({type: PermissionDto.FindOnePermissionOkRes})
+  @ApiBadRequestResponse({type: getBadRequestUUIDParams('permissions/id')})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('permissions/id')})
   @ApiForbiddenResponse({type: getForbiddenResponse('permissions/id')})
   find(
-    @Param( new ZodPipe(UUIDv4Validator)) params: UUID4Type,
-  ) {
-    return 'find one permission';
+    @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
+  ): Promise<ApiResponse<FindOnePermission>> {
+    return this.permissionsService.find(params.id);
   }
 
   @Get()
