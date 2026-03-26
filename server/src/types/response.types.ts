@@ -31,19 +31,23 @@ export interface ZodFieldError {
   error: string;
 }
 
+/** base error type */
 export interface BaseException {
   message: string;
   error: string;
 }
 
+/** type of zod error response */
 export interface ZodException {
   message: string;
   errors: ZodFieldError[];
 }
 
-export type BaseExceptionRes = & BaseResponse & BaseException;
+/** base exception response */
 export type ZodExceptionRes = & BaseResponse & ZodException;
+export type BaseExceptionRes = & BaseResponse & BaseException;
 
+/** return a list of data with count */
 export type ListWithCount<T> = T & {
   count: number;
 };
