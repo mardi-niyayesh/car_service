@@ -62,7 +62,7 @@ import type {AccessRequest, ApiResponse, UserResponse, UserRolePermission} from 
  *
  * All endpoints require authentication via Bearer token.
  */
-@ApiTags("User")
+@ApiTags("Users")
 @Controller('users')
 @ApiBearerAuth("accessToken")
 export class UsersController {
@@ -86,7 +86,7 @@ export class UsersController {
     summary: 'get user info by self',
     description: 'get user info accessToken. **Access restricted to users with permission: (user.self) only.**',
     operationId: 'get_profile',
-    tags: ["User"],
+    tags: ["Users"],
   })
   @ApiOkResponse({type: UserDto.GetMeOkResponse})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse("users/getProfile")})
@@ -109,7 +109,7 @@ export class UsersController {
     summary: 'update user info by self',
     description: 'update user info accessToken. **Access restricted to users with permission: (user.self) only.**',
     operationId: 'update_profile',
-    tags: ["User"],
+    tags: ["Users"],
   })
   @ApiBody({type: UserDto.UpdateProfileDto})
   @ApiOkResponse({type: UserDto.UpdateProfileOkResponse})
@@ -136,7 +136,7 @@ export class UsersController {
     summary: 'update password',
     description: 'update password with accessToken. **Access restricted to users with permission: (user.self) only.**',
     operationId: 'update_password',
-    tags: ["User"],
+    tags: ["Users"],
   })
   @ApiBody({type: UserDto.UpdatePasswordDto})
   @ApiOkResponse({type: UserDto.OkUpdatePasswordRes})
@@ -168,7 +168,7 @@ export class UsersController {
     summary: 'get user info',
     description: 'get user info with id or email. **Access restricted to users with permission: (owner.all or user.view) only.**',
     operationId: 'get_user',
-    tags: ["User"],
+    tags: ["Users"],
   })
   @ApiQuery(UserDto.ExampleIdQuery)
   @ApiQuery(UserDto.GetOneUserEmailQuery)
@@ -212,7 +212,7 @@ export class UsersController {
     summary: 'get all user info',
     description: 'get all users info. **Access restricted to users with permission: (owner.all or user.view) only.**',
     operationId: 'get_users',
-    tags: ["User"],
+    tags: ["Users"],
   })
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
@@ -263,7 +263,7 @@ export class UsersController {
   This endpoint ensures role integrity, prevents privilege escalation, 
   and enforces organizational security policies.`,
     operationId: 'assign_role',
-    tags: ["User"],
+    tags: ["Users"],
   })
   @ApiParam(UUID4Dto("user"))
   @ApiBody({type: UserDto.UserRoleAssignedDto})
@@ -331,7 +331,7 @@ export class UsersController {
   This endpoint maintains the principle of least privilege and prevents 
   unauthorized restructuring of the organizational hierarchy.`,
     operationId: 'revoke_role',
-    tags: ["User"],
+    tags: ["Users"],
   })
   @ApiParam(UUID4Dto("user"))
   @ApiBody({type: UserDto.UserRoleAssignedDto})

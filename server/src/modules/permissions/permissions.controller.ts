@@ -1,4 +1,16 @@
 import {
+  ApiTags,
+  ApiParam,
+  ApiQuery,
+  ApiOperation,
+  ApiOkResponse,
+  ApiBearerAuth,
+  ApiForbiddenResponse,
+  ApiBadRequestResponse,
+  ApiUnauthorizedResponse,
+} from "@nestjs/swagger";
+
+import {
   ZodPipe,
   UUID4Dto,
   Cacheable,
@@ -21,9 +33,8 @@ import * as PermissionDto from "./dto";
 import type {ApiResponse} from "@/types";
 import {Controller, Get, HttpCode, HttpStatus, Param, Query} from "@nestjs/common";
 import {type FindOnePermission, type PermissionsResponse, PermissionsService} from "./permissions.service";
-import {ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiParam, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
-@ApiTags("Permission")
+@ApiTags("Permissions")
 @Permission({
   permissions: [PERMISSIONS.PERMISSION_VIEW]
 })
@@ -39,6 +50,11 @@ export class PermissionsController {
   })
   @Get(":id")
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'find one permission with id **Access restricted to users with permission: (owner.all or permission.view) only.**',
+    tags: ['Permissions'],
+    operationId: 'find_permission',
+  })
   @ApiParam(UUID4Dto('id'))
   @ApiOkResponse({type: PermissionDto.FindOnePermissionOkRes})
   @ApiBadRequestResponse({type: getBadRequestUUIDParams('permissions/id')})
@@ -57,6 +73,11 @@ export class PermissionsController {
   })
   @Get()
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'get permission list with pagination **Access restricted to users with permission: (owner.all or permission.view) only.**',
+    tags: ['Permissions'],
+    operationId: 'find_all_permission',
+  })
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
