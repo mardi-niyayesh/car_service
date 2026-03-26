@@ -17,14 +17,19 @@ import {type PermissionsResponse, PermissionsService} from "./permissions.servic
 import {ApiBearerAuth, ApiForbiddenResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 @ApiTags("Permission")
+@Permission({
+  permissions: [PERMISSIONS.PERMISSION_VIEW]
+})
 @Controller('permissions')
 @ApiBearerAuth("accessToken")
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
-  @Permission({
-    permissions: [PERMISSIONS.PERMISSION_VIEW]
-  })
+  @Get(":id")
+  find() {
+    return 'find one permission';
+  }
+
   @Get()
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
