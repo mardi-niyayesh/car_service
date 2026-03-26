@@ -37,6 +37,7 @@ import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware, CacheableInterc
     Modules.AuthModule,
     Modules.UsersModule,
     Modules.RolesModule,
+    Modules.PermissionsModule,
   ],
   providers: [
     {
