@@ -1,8 +1,11 @@
 import {Controller, Get} from "@nestjs/common";
 import {Permission, PERMISSIONS} from "@/common";
+import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {PermissionsService} from "./permissions.service";
 
+@ApiTags("Permission")
 @Controller('permissions')
+@ApiBearerAuth("accessToken")
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
