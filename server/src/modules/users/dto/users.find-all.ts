@@ -19,8 +19,8 @@ export class FindAllUsersOKRes extends getBaseOkResponseSchema<UsersListResponse
   response: {
     message: "Users Successfully find.",
     data: {
+      count: 100,
       users: Array.from({length: 5}, () => createUserResponse.data.user),
-      count: 100
     }
   }
 }) {}

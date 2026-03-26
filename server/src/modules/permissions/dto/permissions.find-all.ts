@@ -7,8 +7,8 @@ export class FindAllPermissionsOkRes extends getBaseOkResponseSchema<Permissions
   response: {
     message: "permissions successfully found",
     data: {
+      count: 30,
       permissions: Array.from({length: 5}, () => findOnePermissionExample),
-      count: 30
     }
   }
 }) {}

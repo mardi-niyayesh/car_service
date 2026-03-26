@@ -1,4 +1,4 @@
-export * from './roles.get';
+export * from './roles.find';
 export * from './roles.create';
-export * from './roles.get-all';
+export * from './roles.find-all';
 export * from './roles.delete';

@@ -1,4 +1,4 @@
-import {findOneRoleResponse} from "./roles.get";
+import {findOneRoleResponse} from "./roles.find";
 import {getBaseOkResponseSchema} from "@/common";
 import {FindAllRolesRes} from "@/modules/roles/roles.service";
 
@@ -8,8 +8,8 @@ export class FindAllRolesOkRes extends getBaseOkResponseSchema<FindAllRolesRes>(
   response: {
     message: "roles successfully found.",
     data: {
+      count: 20,
       roles: Array.from({length: 5}, () => findOneRoleResponse.role),
-      count: 20
     }
   }
 }) {}
