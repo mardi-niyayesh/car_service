@@ -80,7 +80,7 @@ export const orderByPaginationDto: ApiQueryOptions = {
   type: "string",
   enum: ["asc", "desc"],
   required: false,
-  name: "orderBy",
+  name: "order",
   description: "order by created_at",
   default: "desc",
   schema: {
