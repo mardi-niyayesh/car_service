@@ -2,9 +2,14 @@ import * as RolesDto from "./dto";
 import {getSafeRole} from "@/lib";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {ApiResponse, BaseException, FindOneRoleRes, RoleResponse, UserAccess} from "@/types";
+import {ApiResponse, BaseException, FindOneRoleRes, ListWithCount, RoleResponse, UserAccess} from "@/types";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
 import {basePermissions, basicRoles, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
+
+export interface FindAllRolesRes {
+  roles: RoleResponse[];
+  count: number;
+}
 
 @Injectable()
 export class RolesService {
@@ -39,9 +44,12 @@ export class RolesService {
   /** get all roles info with pagination
    * - only roles with permission (owner.all or role.view) can accessibility to this route
    */
-  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<{ roles: RoleResponse[] }>> {
-    const roles = await this.prisma.$queryRaw<RoleResponse[]>(
-      Prisma.sql`
+  findAll(pagination: PaginationValidatorType): Promise<ApiResponse<ListWithCount<FindAllRolesRes>>> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<ListWithCount<FindAllRolesRes>>> => {
+      const count: number = await tx.role.count();
+
+      const roles = await tx.$queryRaw<RoleResponse[]>(
+        Prisma.sql`
           SELECT r.id,
              r.name,
              r.created_at,
@@ -54,14 +62,16 @@ export class RolesService {
           GROUP BY r.id
           ORDER BY r.created_at ${Prisma.sql([pagination.orderByUpper])}
           LIMIT ${pagination.limit} OFFSET ${pagination.offset}`
-    );
+      );
 
-    return {
-      message: 'roles successfully found.',
-      data: {
-        roles: roles || []
-      }
-    };
+      return {
+        message: 'roles successfully found.',
+        data: {
+          count,
+          roles: roles || [],
+        }
+      };
+    });
   }
 
   /** create a new role with exist permissions

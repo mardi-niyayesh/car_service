@@ -43,3 +43,7 @@ export interface ZodException {
 
 export type BaseExceptionRes = & BaseResponse & BaseException;
 export type ZodExceptionRes = & BaseResponse & ZodException;
+
+export type ListWithCount<T> = T & {
+  count: number;
+};

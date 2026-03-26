@@ -33,8 +33,8 @@ import {
 import * as RolesDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../users/dto";
-import {RolesService} from "@/modules/roles/roles.service";
-import type {AccessRequest, ApiResponse, FindOneRoleRes, RoleResponse} from "@/types";
+import {type FindAllRolesRes, RolesService} from "./roles.service";
+import type {AccessRequest, ApiResponse, FindOneRoleRes, ListWithCount} from "@/types";
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, Param} from "@nestjs/common";
 
 /**
@@ -116,7 +116,7 @@ export class RolesController {
   @ApiForbiddenResponse({type: getForbiddenResponse('roles')})
   findAll(
     @Query(new ZodPipe(PaginationValidator)) query: PaginationValidatorType
-  ): Promise<ApiResponse<{ roles: RoleResponse[] }>> {
+  ): Promise<ApiResponse<ListWithCount<FindAllRolesRes>>> {
     return this.rolesService.findAll(query);
   }
 
