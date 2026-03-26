@@ -4,11 +4,13 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 import {Permission, Prisma} from "@/modules/prisma/generated/client";
 import {getSafeSqlPaginate, PaginationValidatorType} from "@/common";
 
+export type PermissionsResponse = { permissions: Permission[] };
+
 @Injectable()
 export class PermissionsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<{ permissions: Permission[] }>> {
+  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<PermissionsResponse>> {
     const {orderBy, offset, limit} = getSafeSqlPaginate(pagination);
 
     const result = await this.prisma.$queryRaw<Permission[]>(
