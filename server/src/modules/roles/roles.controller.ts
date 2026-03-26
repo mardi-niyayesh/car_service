@@ -53,7 +53,7 @@ import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, P
  *
  * All endpoints require authentication via Bearer token with appropriate permissions.
  */
-@ApiTags("Role")
+@ApiTags("Roles")
 @Controller("roles")
 @ApiBearerAuth("accessToken")
 export class RolesController {
@@ -75,7 +75,7 @@ export class RolesController {
   @ApiOperation({
     summary: "find one role with id or name",
     operationId: 'find_role',
-    tags: ["Role"],
+    tags: ["Roles"],
   })
   @ApiQuery(UserDto.ExampleIdQuery)
   @ApiQuery(RolesDto.FindOneRoleNameQuery)
@@ -106,7 +106,7 @@ export class RolesController {
   @ApiOperation({
     summary: "Get all roles from the list of pagination",
     operationId: 'get_all_role',
-    tags: ["Role"],
+    tags: ["Roles"],
   })
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
@@ -153,7 +153,7 @@ export class RolesController {
   This endpoint is designed to safely expand the system's Role-Based Access Control (RBAC) 
   while strictly preventing privilege escalation and structural manipulation.`,
     operationId: 'create_role',
-    tags: ["Role"],
+    tags: ["Roles"],
   })
   @ApiBody({type: RolesDto.CreateRoleDto})
   @ApiOkResponse({type: RolesDto.OkCreateRoleRes})
@@ -212,7 +212,7 @@ export class RolesController {
   This endpoint ensures that role deletion is performed safely while protecting critical roles 
   and preventing privilege abuse or structural manipulation of the authorization system.`,
     operationId: 'delete_role',
-    tags: ["Role"],
+    tags: ["Roles"],
   })
   @ApiParam(UUID4Dto('id'))
   @ApiOkResponse({type: RolesDto.OkDeleteRoleRes})
