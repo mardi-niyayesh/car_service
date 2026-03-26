@@ -64,26 +64,30 @@ export class PermissionGuard implements CanActivate {
         }
       });
 
-      this.checkOwnership(data, req.user.userId, resource);
+      return this.checkOwnership(data, req.user.userId, resource);
     }
 
     return true;
   }
 
-  checkOwnership(data: FindDynamicDelegate | undefined, userId: string, resource: string): void {
+  checkOwnership(data: FindDynamicDelegate | undefined, userId: string, resource: string): boolean {
     if (!data) throw new NotFoundException({
       message: `this ${resource} does not exist in database`,
       error: `${resource} not found`,
     } as BaseException);
 
-    if (!data.creator) throw new InternalServerErrorException({
+    if (data.creator === undefined) throw new InternalServerErrorException({
       message: `creator column not found, please make sure this data has creator column`,
       error: `creator not found`,
     } as BaseException);
 
-    if (data.creator !== userId) throw new ForbiddenException({
+    if (data.creator === null) return true;
+
+    if (data.creator && data.creator !== userId) throw new ForbiddenException({
       message: "Access denied. Only the creator of this resource is allowed to perform this action.",
       error: "Ownership Verification Failed"
     } as BaseException);
+
+    return true;
   }
 }
