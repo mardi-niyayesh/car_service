@@ -51,7 +51,8 @@ export class PermissionsController {
   @Get(":id")
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'find one permission with id **Access restricted to users with permission: (owner.all or permission.view) only.**',
+    summary: 'get permission info with id',
+    description: 'find one permission with id **Access restricted to users with permission: (owner.all or permission.view) only.**',
     tags: ['Permissions'],
     operationId: 'find_permission',
   })
@@ -74,7 +75,8 @@ export class PermissionsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'get permission list with pagination **Access restricted to users with permission: (owner.all or permission.view) only.**',
+    summary: 'get permission list with pagination',
+    description: 'get permission list with pagination **Access restricted to users with permission: (owner.all or permission.view) only.**',
     tags: ['Permissions'],
     operationId: 'find_all_permission',
   })
