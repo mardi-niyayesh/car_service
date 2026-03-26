@@ -1,24 +1,39 @@
 import z from "zod";
 import {ApiQueryOptions} from "@nestjs/swagger";
 
+const maxLimit = 100;
+const minLimit = 1;
+const defaultLimit = 10;
+const minPage = 1;
+
 /** Validate Pagination in Query Params */
 export const PaginationValidator = z.object({
   page: z
     .coerce.number()
-    .min(1)
+    .int()
+    .min(minPage)
     .optional()
-    .default(1),
+    .default(minPage)
+    .catch(minPage),
   limit: z
     .coerce.number()
-    .min(1)
-    .max(100)
+    .int()
+    .min(minLimit)
+    .max(maxLimit)
     .optional()
-    .default(10),
+    .default(defaultLimit)
+    .catch(defaultLimit),
   order: z
     .enum(["asc", "desc"])
     .optional()
     .default("desc"),
-});
+}).transform(data => ({
+  page: data.page,
+  limit: data.limit,
+  orderByLower: data.order,
+  orderByUpper: data.order === 'asc' ? 'ASC' : 'DESC',
+  offset: data.limit * (data.page - 1)
+}));
 
 /** @typeof Validate Pagination in Query Params */
 export type PaginationValidatorType = z.infer<typeof PaginationValidator>;
@@ -56,22 +71,22 @@ export function paginationDto(params: PaginationDtoType): ApiQueryOptions {
 /** page query param example schema for swagger */
 export const pagePaginationDto: ApiQueryOptions = paginationDto({
   type: "number",
-  default: 1,
+  default: minPage,
   name: "page",
   description: "current page",
   required: false,
-  minimum: 1
+  minimum: minPage
 });
 
 /** limit query param example schema for swagger */
 export const limitPaginationDto: ApiQueryOptions = paginationDto({
   type: "number",
-  default: 10,
+  default: defaultLimit,
   name: "limit",
   description: "limit of pages",
   required: false,
-  minimum: 1,
-  maximum: 100
+  minimum: minLimit,
+  maximum: maxLimit
 });
 
 /** orderBy query param example schema for swagger */
@@ -89,20 +104,3 @@ export const orderByPaginationDto: ApiQueryOptions = {
     description: "order by created_at",
   }
 };
-
-interface GetSafeSqlPaginateReturn {
-  orderBy: "ASC" | "DESC";
-  offset: number;
-  limit: number;
-}
-
-export function getSafeSqlPaginate(pagination: Partial<PaginationValidatorType>): GetSafeSqlPaginateReturn {
-  const page: number = Math.max(Number(pagination.page) || 1, 1);
-  const limit: number = Math.min(Math.max(Number(pagination.limit) || 10, 1), 100);
-
-  return {
-    limit,
-    offset: limit * (page - 1),
-    orderBy: pagination.order === 'desc' ? 'DESC' : 'ASC',
-  };
-}
