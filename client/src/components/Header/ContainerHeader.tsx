@@ -46,15 +46,27 @@ const ContainerHeader = () => {
           </div>
           <div className="flex items-center gap-4">
             {user ? (
-              <Link to="/dashboard">
-                <span className="text-lg font-semibold text-blue-600 border-2 p-3 rounded-lg bg-blue-600 text-white">
-                  {user.display_name}
-                  <IoChevronDown
-                    size={18}
-                    className="text-white inline-block ml-1"
-                  />
-                </span>
-              </Link>
+              user.display_name === "owner" ? (
+                <Link to="/panel">
+                  <span className="text-lg font-semibold border-2 p-3 rounded-lg bg-blue-600 hover:bg-blue-800 text-white">
+                    {user.display_name}
+                    <IoChevronDown
+                      size={18}
+                      className="text-white inline-block ml-1"
+                    />
+                  </span>
+                </Link>
+              ) : (
+                <Link to="/dashboard">
+                  <span className="text-lg font-semibold text-blue-600 border-2 p-3 rounded-lg bg-blue-600 text-white">
+                    {user.display_name}
+                    <IoChevronDown
+                      size={18}
+                      className="text-white inline-block ml-1"
+                    />
+                  </span>
+                </Link>
+              )
             ) : (
               <AuthButton />
             )}
