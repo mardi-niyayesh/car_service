@@ -32,7 +32,7 @@ import {
 
 import * as RolesDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
-import * as UserDto from "../users/dto";
+import * as UserDto from "../user/dto";
 import {type FindAllRolesRes, RolesService} from "./roles.service";
 import type {AccessRequest, ApiResponse, FindOneRoleRes} from "@/types";
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, Param} from "@nestjs/common";
