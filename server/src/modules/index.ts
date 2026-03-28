@@ -7,3 +7,4 @@ export * from "./cli";
 export * from "./email";
 export * from "./redis";
 export * from "./permission";
+export * from "./category";
