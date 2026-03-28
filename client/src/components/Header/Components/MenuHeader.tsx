@@ -10,27 +10,37 @@ import {
 } from "react-icons/fa";
 
 const menuItems = [
-  {id:1, label: "خانه ", path: "/", icon: <FaHome size={20} /> },
+  { id: 1, label: "خانه ", path: "/", icon: <FaHome size={20} /> },
   {
-    id:2,
+    id: 2,
     label: "رزرو ",
     icon: <FaRegCalendarAlt size={20} />,
     dropdownItems: [
-      {id:3, label: "انتخاب شهر...", value: "", disabled: true },
-      {id:4, label: "رزرو خودرو در مشهد", path: "/reserve/mashhad" },
-      {id:5, label: "رزرو خودرو در تبریز", path: "//reserve/tabriz" },
-      { label: "رزرو خودرو در شیراز", path: "/reserve/shiraz" },
-      { label: "رزرو خودرو در ساری", path: "/reserve/sary" },
-      { label: "رزرو خودرو در قشم", path: "/reserve/qeshm" },
-      { label: "رزرو خودرو در نیشابور", path: "/reserve/neyshaboor" },
-      { label: "رزرو خودرو در مشهد", path: "/reserve/mashhad" },
-      { label: "رزرو خودرو در یزد", path: "/reserve/yazd" },
+      { id: 3, label: "انتخاب شهر...", value: "", disabled: true },
+      { id: 4, label: "رزرو خودرو در مشهد", path: "/reserve/mashhad" },
+      { id: 5, label: "رزرو خودرو در تبریز", path: "//reserve/tabriz" },
+      { id: 6, label: "رزرو خودرو در شیراز", path: "/reserve/shiraz" },
+      { id: 7, label: "رزرو خودرو در ساری", path: "/reserve/sary" },
+      { id: 8, label: "رزرو خودرو در قشم", path: "/reserve/qeshm" },
+      { id: 9, label: "رزرو خودرو در نیشابور", path: "/reserve/neyshaboor" },
+      { id: 10, label: "رزرو خودرو در مشهد", path: "/reserve/mashhad" },
+      { id: 11, label: "رزرو خودرو در یزد", path: "/reserve/yazd" },
     ],
   },
-  { label: "خدمات ما", path: "/services", icon: <FaHandsHelping size={20} /> },
-  { label: "بلاگ", path: "/blog", icon: <FaBlog size={20} /> },
-  { label: "درباره ما", path: "/about", icon: <FaInfoCircle size={20} /> },
-  { label: "تماس با ما", path: "/contact", icon: <FaPhone size={20} /> },
+  {
+    id: 3,
+    label: "خدمات ما",
+    path: "/services",
+    icon: <FaHandsHelping size={20} />,
+  },
+  { id: 4, label: "بلاگ", path: "/blog", icon: <FaBlog size={20} /> },
+  {
+    id: 5,
+    label: "درباره ما",
+    path: "/about",
+    icon: <FaInfoCircle size={20} />,
+  },
+  { id: 6, label: "تماس با ما", path: "/contact", icon: <FaPhone size={20} /> },
 ];
 
 const MenuHeader = () => {
@@ -69,7 +79,7 @@ const MenuHeader = () => {
                       {item.dropdownItems.map((optionItem) => (
                         <Link to="optionItem.path">
                           <option
-                            key={optionItem.label}
+                            key={optionItem.id||item.label}
                             value={optionItem.path}
                             disabled={optionItem.disabled || false}
                           >
@@ -83,7 +93,7 @@ const MenuHeader = () => {
               } else {
                 return (
                   <li
-                    key={item.path}
+                    key={item.path||item.id}
                     className="text-gray-500 flex items-center"
                   >
                     <Link
@@ -109,7 +119,7 @@ const MenuHeader = () => {
           if (item.dropdownItems) {
             return (
               <div
-                key={item.label}
+                key={item.id||item.label}
                 className="relative flex flex-col items-center justify-center group w-1/5 text-center"
               >
                 <div className="flex flex-col items-center justify-center text-gray-700 group-hover:text-blue-600 transition duration-300 ease-in-out">
@@ -126,7 +136,7 @@ const MenuHeader = () => {
                 >
                   {item.dropdownItems.map((optionItem) => (
                     <option
-                      key={optionItem.label}
+                      key={optionItem.id||optionItem.label}
                       value={optionItem.path}
                       disabled={optionItem.disabled || false}
                     >
