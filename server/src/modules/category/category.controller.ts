@@ -3,7 +3,7 @@ import {CategoryService} from "./category.service";
 import {Controller, Get, Post} from "@nestjs/common";
 import {Permission, PERMISSIONS, Public} from "@/common";
 
-// @Public()
+@Public()
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
