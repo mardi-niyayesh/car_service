@@ -1,11 +1,7 @@
 import {PaginationValidatorType} from "@/common";
-import type {ApiResponse, BaseException, ListWithCount} from "@/types";
-import {Permission} from "@/modules/prisma/generated/client";
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-
-export type FindOnePermission = { permission: Permission };
-export type PermissionsResponse = ListWithCount<{ permissions: Permission[] }>;
+import type {ApiResponse, BaseException, FindOnePermission, PermissionsResponse} from "@/types";
 
 @Injectable()
 export class PermissionService {

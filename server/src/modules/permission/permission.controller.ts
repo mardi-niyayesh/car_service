@@ -30,9 +30,9 @@ import {
 
 import {ONE_MINUTE_MS} from "@/lib";
 import * as PermissionDto from "./dto";
-import type {ApiResponse} from "@/types";
+import {PermissionService} from "./permission.service";
+import type {PermissionsResponse, FindOnePermission, ApiResponse} from "@/types";
 import {Controller, Get, HttpCode, HttpStatus, Param, Query} from "@nestjs/common";
-import {type FindOnePermission, type PermissionsResponse, PermissionService} from "./permission.service";
 
 @ApiTags("Permissions")
 @Permission({
