@@ -1,6 +1,6 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
-import {OwnerShipValidator} from "@/common";
+import {getZodErrorBody, OwnerShipValidator} from "@/common";
 
 /** base category validator */
 export const CreateCategoryValidator = OwnerShipValidator.extend({
@@ -20,3 +20,26 @@ export type CreateCategoryType = z.infer<typeof CreateCategoryValidator>;
 
 /** swagger body example */
 export class CreateCategoryDto extends createZodDto(CreateCategoryValidator) {}
+
+/** bad request example */
+export class CreateCategoryBadReq extends getZodErrorBody({
+  path: 'categories',
+  errors: [
+    {
+      field: "ownership",
+      error: "Invalid input: expected boolean, received number"
+    },
+    {
+      field: "name",
+      error: "Invalid input: expected string, received number"
+    },
+    {
+      field: "slug",
+      error: "Invalid input: expected string, received number"
+    },
+    {
+      field: "description",
+      error: "Invalid input: expected string, received number"
+    }
+  ]
+}) {}

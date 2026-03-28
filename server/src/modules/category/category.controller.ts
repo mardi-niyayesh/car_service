@@ -2,7 +2,7 @@ import * as CategoryDto from "./dto";
 import {CategoryService} from "./category.service";
 import {Body, Controller, Get, Post} from "@nestjs/common";
 import {Permission, PERMISSIONS, Public, ZodPipe} from "@/common";
-import {ApiBearerAuth, ApiBody, ApiOperation, ApiTags} from "@nestjs/swagger";
+import {ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiOperation, ApiTags} from "@nestjs/swagger";
 
 @Public()
 @Controller('categories')
@@ -30,10 +30,10 @@ export class CategoryController {
     tags: ['Categories']
   })
   @ApiBody({type: CategoryDto.CreateCategoryDto})
+  @ApiBadRequestResponse({type: CategoryDto.CreateCategoryBadReq})
   create(
     @Body(new ZodPipe(CategoryDto.CreateCategoryValidator)) body: CategoryDto.CreateCategoryType,
   ) {
-    console.log(body);
-    return this.categoryService.create();
+    return this.categoryService.create(body);
   }
 }
