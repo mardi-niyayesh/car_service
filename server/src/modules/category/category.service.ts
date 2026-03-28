@@ -1,8 +1,7 @@
 import * as CategoryDto from "./dto";
-import {ApiResponse, BaseException} from "@/types";
-import {Category} from "@/modules/prisma/generated/client";
 import {ConflictException, Injectable} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {ApiResponse, BaseException, CategoryResponse} from "@/types";
 
 @Injectable()
 export class CategoryService {
@@ -14,8 +13,8 @@ export class CategoryService {
   async create(
     userId: string,
     {name, slug, description, ownership}: CategoryDto.CreateCategoryType
-  ): Promise<ApiResponse<{ category: Category }>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<{ category: Category }>> => {
+  ): Promise<ApiResponse<CategoryResponse>> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<CategoryResponse>> => {
       const categoryExist = await tx.category.findUnique({
         where: {slug}
       });

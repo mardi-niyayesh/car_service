@@ -1,6 +1,5 @@
-import {UserResponse} from "@/types";
 import {getBaseOkResponseSchema} from "@/common";
-import {UsersListResponse} from "../user.service";
+import {UserResponse, UsersListResponse} from "@/types";
 import {createUserResponse} from "@/modules/auth/dto/register.dto";
 
 /** ok example for get one user by id */
