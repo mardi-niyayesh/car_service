@@ -1,4 +1,4 @@
-import {UserResponse} from "@/types/users.types";
+import {UserResponse} from "@/types/user.types";
 import {RefreshToken} from "@/modules/prisma/generated/client";
 
 /** base token types */

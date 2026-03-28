@@ -1,6 +1,6 @@
+import {FindAllRolesRes} from "@/types";
 import {findOneRoleResponse} from "./role.find";
 import {getBaseOkResponseSchema} from "@/common";
-import {FindAllRolesRes} from "@/modules/role/role.service";
 
 /** ok example for find all role */
 export class FindAllRolesOkRes extends getBaseOkResponseSchema<FindAllRolesRes>({

@@ -1,3 +1,4 @@
+import {ListWithCount} from "@/types/response.types";
 import type {Role} from "@/modules/prisma/generated/client";
 
 /** role with permission[] type */

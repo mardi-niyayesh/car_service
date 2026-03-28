@@ -1,7 +1,7 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
+import {BaseUserSchema} from "@/modules/user/dto/user.validators";
 import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
-import {BaseUserSchema} from "@/modules/users/dto/users.validators";
 
 export const ResetPassword = BaseUserSchema.pick({
   password: true

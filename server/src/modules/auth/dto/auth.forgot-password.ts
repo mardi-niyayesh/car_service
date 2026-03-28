@@ -1,6 +1,6 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
-import {BaseUserSchema} from "@/modules/users/dto/users.validators";
+import {BaseUserSchema} from "@/modules/user/dto/user.validators";
 import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 export type ForgotApiResponse = { email: string; time: string; timeNumber: number; };

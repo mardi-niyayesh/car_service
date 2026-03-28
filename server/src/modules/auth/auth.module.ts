@@ -1,4 +1,4 @@
-import {UsersModule} from "../users";
+import {UserModule} from "../user";
 import {EmailModule} from "../email";
 import {JwtModule} from "@nestjs/jwt";
 import {Module} from '@nestjs/common';
@@ -9,7 +9,7 @@ import {AccessStrategy} from "./strategy/access.strategy";
 
 @Module({
   imports: [
-    UsersModule,
+    UserModule,
     PassportModule,
     JwtModule.register({}),
     EmailModule
