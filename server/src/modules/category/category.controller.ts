@@ -1,7 +1,8 @@
-import {ApiBearerAuth} from "@nestjs/swagger";
+import * as CategoryDto from "./dto";
 import {CategoryService} from "./category.service";
-import {Controller, Get, Post} from "@nestjs/common";
-import {Permission, PERMISSIONS, Public} from "@/common";
+import {ApiBearerAuth, ApiBody} from "@nestjs/swagger";
+import {Body, Controller, Get, Post} from "@nestjs/common";
+import {Permission, PERMISSIONS, Public, ZodPipe} from "@/common";
 
 @Public()
 @Controller('categories')
@@ -18,7 +19,11 @@ export class CategoryController {
   })
   @ApiBearerAuth("accessToken")
   @Post()
-  create() {
+  @ApiBody({type: CategoryDto.CreateCategoryDto})
+  create(
+    @Body(new ZodPipe(CategoryDto.CreateCategoryValidator)) body: CategoryDto.CreateCategoryType,
+  ) {
+    console.log(body);
     return this.categoryService.create();
   }
 }
