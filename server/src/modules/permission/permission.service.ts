@@ -11,6 +11,9 @@ export type PermissionsResponse = ListWithCount<{ permissions: Permission[] }>;
 export class PermissionService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /** find a permission with id
+   * - only roles with permission (owner.all or permission.view) can accessibility to this route
+   */
   async find(id: string): Promise<ApiResponse<FindOnePermission>> {
     const permission = await this.prisma.permission.findUnique({
       where: {id}
@@ -29,6 +32,9 @@ export class PermissionService {
     };
   }
 
+  /** find permission list with pagination
+   * - only roles with permission (owner.all or permission.view) can accessibility to this route
+   */
   async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<PermissionsResponse>> {
     return this.prisma.$transaction(async (tx): Promise<ApiResponse<PermissionsResponse>> => {
       const count: number = await tx.permission.count();

@@ -43,6 +43,9 @@ import {type FindOnePermission, type PermissionsResponse, PermissionService} fro
 export class PermissionController {
   constructor(private readonly permissionService: PermissionService) {}
 
+  /** find a permission with id
+   * - only roles with permission (owner.all or permission.view) can accessibility to this route
+   */
   @Cacheable({
     resource: 'permission',
     ttl: ONE_MINUTE_MS * 240,
@@ -67,6 +70,9 @@ export class PermissionController {
     return this.permissionService.find(params.id);
   }
 
+  /** find permission list with pagination
+   * - only roles with permission (owner.all or permission.view) can accessibility to this route
+   */
   @Cacheable({
     resource: 'permission',
     pagination: true,
