@@ -2,10 +2,10 @@ import z from "zod";
 import {FindOneRoleRes} from "@/types";
 import {createZodDto} from "nestjs-zod";
 import {testRoleExample} from "./role.delete";
-import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
+import {OwnerShipValidator, getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
 
 /** validator */
-export const CreateRoleValidator = z.object({
+export const CreateRoleValidator = OwnerShipValidator.extend({
   permissions: z.array(z.uuidv4({message: "Invalid permission ID format. Please provide a valid UUID."}))
     .nonempty({message: "Permissions field cannot be empty. Please add at least one permission ID."})
     .transform(ids => [...new Set(ids)]),
@@ -16,8 +16,6 @@ export const CreateRoleValidator = z.object({
     .max(100, {message: "Name cannot exceed 100 characters."}),
 
   description: z.string().min(10).max(500).optional(),
-
-  ownership: z.boolean().optional().default(true),
 });
 
 /** Type of validator */
