@@ -1,8 +1,8 @@
 import * as CategoryDto from "./dto";
 import {ApiResponse, BaseException} from "@/types";
+import {Category} from "@/modules/prisma/generated/client";
 import {ConflictException, Injectable} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {Category} from "@/modules/prisma/generated/client";
 
 @Injectable()
 export class CategoryService {
