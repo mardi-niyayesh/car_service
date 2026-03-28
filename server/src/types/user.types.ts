@@ -1,5 +1,5 @@
-import {UserAccess, RolesAndPermissions} from "@/types";
 import {Prisma, User} from "@/modules/prisma/generated/client";
+import {UserAccess, RolesAndPermissions, ListWithCount} from "@/types";
 
 /** User type without password */
 export type SafeUser = Omit<User, "password">;
@@ -53,3 +53,6 @@ export interface ModifyRoleServiceParams {
   rolesId: string[];
   action: "revoke" | "assign";
 }
+
+/** users list reponse */
+export type UsersListResponse = ListWithCount<{ users: UserRolePermission[] }>;

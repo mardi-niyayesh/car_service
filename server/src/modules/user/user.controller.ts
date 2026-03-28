@@ -47,8 +47,8 @@ import {
 
 import * as UserDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
-import {UsersListResponse, UserService} from "./user.service";
-import type {AccessRequest, ApiResponse, UserResponse} from "@/types";
+import {UserService} from "./user.service";
+import type {UsersListResponse, AccessRequest, ApiResponse, UserResponse} from "@/types";
 
 /**
  * User management endpoints for retrieving user information.

@@ -13,9 +13,7 @@ import {PrismaService} from "../prisma/prisma.service";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {getRolesNPermissions, getSafeUser, compareSecret, hashSecret} from "@/lib";
 import {PaginationValidatorType, PERMISSIONS, permissionsManagerStrict, basePermissions} from "@/common";
-import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams, SafeUser, UserRolePermission, ListWithCount} from "@/types";
-
-export type UsersListResponse = ListWithCount<{ users: UserRolePermission[] }>;
+import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams, SafeUser, UserRolePermission, UsersListResponse} from "@/types";
 
 @Injectable()
 export class UserService {
