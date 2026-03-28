@@ -2,17 +2,12 @@ import * as RolesDto from "./dto";
 import {getSafeRole} from "@/lib";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {ApiResponse, BaseException, FindOneRoleRes, ListWithCount, RoleResponse, UserAccess} from "@/types";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
+import {ApiResponse, BaseException, FindOneRoleRes, FindAllRolesRes, RoleResponse, UserAccess} from "@/types";
 import {basePermissions, basicRoles, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
 
-export type FindAllRolesRes = ListWithCount<{
-  roles: RoleResponse[];
-  count: number;
-}>;
-
 @Injectable()
-export class RolesService {
+export class RoleService {
   constructor(private readonly prisma: PrismaService) {}
 
   /** find one role info with id or name

@@ -33,8 +33,8 @@ import {
 import * as RolesDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../user/dto";
-import {type FindAllRolesRes, RolesService} from "./roles.service";
-import type {AccessRequest, ApiResponse, FindOneRoleRes} from "@/types";
+import {RoleService} from "./role.service";
+import type {AccessRequest, ApiResponse, FindOneRoleRes, FindAllRolesRes} from "@/types";
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, Param} from "@nestjs/common";
 
 /**
@@ -56,8 +56,8 @@ import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, P
 @ApiTags("Roles")
 @Controller("roles")
 @ApiBearerAuth("accessToken")
-export class RolesController {
-  constructor(private readonly rolesService: RolesService) {}
+export class RoleController {
+  constructor(private readonly rolesService: RoleService) {}
 
   /** find one role info with id or name
    * - only roles with permission (owner.all or role.view) can accessibility to this route

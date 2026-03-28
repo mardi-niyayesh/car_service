@@ -17,7 +17,7 @@ export const testRoleExample: FindOneRoleRes['role'] = {
 
 /** ok response example */
 export class OkDeleteRoleRes extends getBaseOkResponseSchema<FindOneRoleRes>({
-  path: "roles/id",
+  path: "role/id",
   response: {
     message: "role deleted successfully.",
     data: {
@@ -31,5 +31,5 @@ export class ForbiddenDeleteRoleRes extends getNormalErrorResponse({
   message: "Access denied. Only the creator of this resource is allowed to perform this action.",
   error: "Ownership Verification Failed",
   statusCode: 404,
-  path: "roles/:id"
+  path: "role/:id"
 }) {}

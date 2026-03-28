@@ -9,3 +9,8 @@ export type RoleResponse = Role & {
 export interface FindOneRoleRes {
   role: RoleResponse;
 }
+
+export type FindAllRolesRes = ListWithCount<{
+  roles: RoleResponse[];
+  count: number;
+}>;

@@ -31,7 +31,7 @@ export const findOneRoleResponse: FindOneRoleRes = {
     updated_at: exampleDate,
     created_at: exampleDate,
     creator: null,
-    description: "Full administrative access to manage all roles in the system",
+    description: "Full administrative access to manage all role in the system",
     permissions: [
       "role.view",
       "role.delete",
@@ -43,7 +43,7 @@ export const findOneRoleResponse: FindOneRoleRes = {
 
 /** ok response example */
 export class FindOneOkResponse extends getBaseOkResponseSchema<FindOneRoleRes>({
-  path: 'roles/find?name=role_manager',
+  path: 'role/find?name=role_manager',
   response: {
     message: 'role successfully found.',
     data: findOneRoleResponse
@@ -52,7 +52,7 @@ export class FindOneOkResponse extends getBaseOkResponseSchema<FindOneRoleRes>({
 
 /** bad request example */
 export class FindOneRoleBadReq extends getZodErrorBody({
-  path: 'roles/find',
+  path: 'role/find',
   errors: [{
     field: "name, id",
     error: "Either name or id must be provided"

@@ -1,5 +1,5 @@
 export * from "./prisma";
-export * from "./roles";
+export * from "./role";
 export * from "./auth";
 export * from "./user";
 export * from "./scheduler";
