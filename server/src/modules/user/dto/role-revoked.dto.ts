@@ -1,5 +1,5 @@
 import {UserResponse} from "@/types";
-import {userResponse} from "./user.role-assigned";
+import {userResponse} from "./role-assigned.dto";
 import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** ok response */

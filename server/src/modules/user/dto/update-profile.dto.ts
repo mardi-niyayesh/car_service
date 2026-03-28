@@ -1,7 +1,7 @@
 import z from "zod";
 import {SafeUser} from "@/types";
 import {createZodDto} from "nestjs-zod";
-import {BaseUserSchema} from "./user.validators";
+import {BaseUserSchema} from "./validators.dto";
 import {createUserResponse} from "@/modules/auth/dto";
 import {getZodErrorBody, getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 

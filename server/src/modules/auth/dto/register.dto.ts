@@ -2,7 +2,7 @@ import z from "zod";
 import {exampleDate} from "@/lib";
 import {createZodDto} from "nestjs-zod";
 import type {UserResponse} from "@/types";
-import {BaseUserSchema} from "@/modules/user/dto/user.validators";
+import {BaseUserSchema} from "@/modules/user/dto/validators.dto";
 import {getBaseOkResponseSchema, getZodErrorBody, getNormalErrorResponse} from "@/common";
 
 /** create user schema */

@@ -1,5 +1,5 @@
 import {LoginUserSchemaType} from "@/types";
-import {loginResponseSchema} from "./auth.login";
+import {loginResponseSchema} from "./login.dto";
 import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 const path = "auth/refresh";

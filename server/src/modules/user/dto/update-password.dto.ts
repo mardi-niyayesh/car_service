@@ -1,6 +1,6 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
-import {BaseUserSchema} from "./user.validators";
+import {BaseUserSchema} from "./validators.dto";
 import {getZodErrorBody, getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** update password body */

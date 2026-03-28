@@ -1,5 +1,5 @@
 import {FindAllRolesRes} from "@/types";
-import {findOneRoleResponse} from "./role.find";
+import {findOneRoleResponse} from "./find.dto";
 import {getBaseOkResponseSchema} from "@/common";
 
 /** ok example for find all role */
