@@ -1,7 +1,7 @@
 import z from "zod";
 import {FindOneRoleRes} from "@/types";
 import {createZodDto} from "nestjs-zod";
-import {testRoleExample} from "./roles.delete";
+import {testRoleExample} from "./role.delete";
 import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
 
 /** validator */

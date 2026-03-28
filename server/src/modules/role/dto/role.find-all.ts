@@ -1,4 +1,4 @@
-import {findOneRoleResponse} from "./roles.find";
+import {findOneRoleResponse} from "./role.find";
 import {getBaseOkResponseSchema} from "@/common";
 import {FindAllRolesRes} from "@/modules/role/role.service";
 
