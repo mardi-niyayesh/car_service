@@ -8,7 +8,7 @@ export type FindOnePermission = { permission: Permission };
 export type PermissionsResponse = ListWithCount<{ permissions: Permission[] }>;
 
 @Injectable()
-export class PermissionsService {
+export class PermissionService {
   constructor(private readonly prisma: PrismaService) {}
 
   async find(id: string): Promise<ApiResponse<FindOnePermission>> {
@@ -42,7 +42,7 @@ export class PermissionsService {
       });
 
       return {
-        message: 'permissions successfully found',
+        message: 'permission successfully found',
         data: {
           count,
           permissions,

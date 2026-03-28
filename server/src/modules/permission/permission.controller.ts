@@ -32,7 +32,7 @@ import {ONE_MINUTE_MS} from "@/lib";
 import * as PermissionDto from "./dto";
 import type {ApiResponse} from "@/types";
 import {Controller, Get, HttpCode, HttpStatus, Param, Query} from "@nestjs/common";
-import {type FindOnePermission, type PermissionsResponse, PermissionsService} from "./permissions.service";
+import {type FindOnePermission, type PermissionsResponse, PermissionService} from "./permission.service";
 
 @ApiTags("Permissions")
 @Permission({
@@ -40,8 +40,8 @@ import {type FindOnePermission, type PermissionsResponse, PermissionsService} fr
 })
 @Controller('permissions')
 @ApiBearerAuth("accessToken")
-export class PermissionsController {
-  constructor(private readonly permissionsService: PermissionsService) {}
+export class PermissionController {
+  constructor(private readonly permissionService: PermissionService) {}
 
   @Cacheable({
     resource: 'permission',
@@ -58,13 +58,13 @@ export class PermissionsController {
   })
   @ApiParam(UUID4Dto('id'))
   @ApiOkResponse({type: PermissionDto.FindOnePermissionOkRes})
-  @ApiBadRequestResponse({type: getBadRequestUUIDParams('permissions/id')})
-  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('permissions/id')})
-  @ApiForbiddenResponse({type: getForbiddenResponse('permissions/id')})
+  @ApiBadRequestResponse({type: getBadRequestUUIDParams('permission/id')})
+  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('permission/id')})
+  @ApiForbiddenResponse({type: getForbiddenResponse('permission/id')})
   find(
     @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
   ): Promise<ApiResponse<FindOnePermission>> {
-    return this.permissionsService.find(params.id);
+    return this.permissionService.find(params.id);
   }
 
   @Cacheable({
@@ -89,6 +89,6 @@ export class PermissionsController {
   findAll(
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
   ): Promise<ApiResponse<PermissionsResponse>> {
-    return this.permissionsService.findAll(pagination);
+    return this.permissionService.findAll(pagination);
   }
 }
