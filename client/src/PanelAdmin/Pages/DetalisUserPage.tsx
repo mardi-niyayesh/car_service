@@ -1,6 +1,5 @@
 //components
 import ComponentCategoryDatailUser from "../Components/ComponentCategoryDatailUser";
-import ComponentFormUpdateUser from "../Components/ComponentFormUpdateUser";
 //icon or logo
 import ArrowLeft from "../../../assets/Arrowleft.png";
 //
@@ -26,10 +25,6 @@ const DetalisUserPage = () => {
         {/*Components CategoryDatailUser */}
         <div className="flex flex-col gap-4 ">
           <ComponentCategoryDatailUser />
-        </div>
-        {/*Components FormUpdateUser */}
-        <div className="flex flex-col gap-4 ">
-          <ComponentFormUpdateUser />
         </div>
       </div>
     </div>
