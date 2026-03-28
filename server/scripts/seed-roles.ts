@@ -211,7 +211,7 @@ async function bootstrap(): Promise<void> {
         description: "Full administrative access to manage all products in the system",
       });
 
-      console.log("✅ Seed completed: Default roles and permissions have been created successfully.");
+      console.log("✅ Seed completed: Default roles and permission have been created successfully.");
     });
   } catch (e) {
     console.error(e);

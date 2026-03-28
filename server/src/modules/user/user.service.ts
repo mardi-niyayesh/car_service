@@ -18,7 +18,7 @@ import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams, SafeU
 export type UsersListResponse = ListWithCount<{ users: UserRolePermission[] }>;
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   /** get user info
@@ -282,8 +282,8 @@ export class UsersService {
 
       /**
        * action permission != 'PERMISSIONS.OWNER_ALL':
-       * - if new permissions in 'permissionsManagerStrict' or
-       * - if target user permissions in 'permissionsManagerStrict'
+       * - if new permission in 'permissionsManagerStrict' or
+       * - if target user permission in 'permissionsManagerStrict'
        */
       if (!isActorOwner && (isTargetManager || isNewPermissionsManager)) throw new ForbiddenException({
         message: `High-level role protection: 

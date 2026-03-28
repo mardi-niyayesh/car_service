@@ -74,7 +74,7 @@ export class RolesService {
     });
   }
 
-  /** create a new role with exist permissions
+  /** create a new role with exist permission
    * - only roles with permission (owner.all or role.create) can accessibility to this route
    */
   create(
@@ -99,7 +99,7 @@ export class RolesService {
         error: 'role name conflict'
       } as BaseException);
 
-      // find all permissions with id
+      // find all permission with id
       const permissionsRecord = await tx.permission.findMany({
         where: {
           id: {
@@ -108,7 +108,7 @@ export class RolesService {
         }
       });
 
-      // if permissions record count !== permissions id
+      // if permission record count !== permission id
       if (permissionsRecord.length !== permissions.length) throw new NotFoundException({
         message: 'One or many Permissions does not exist in database',
         error: 'Permission Not Found',
@@ -120,7 +120,7 @@ export class RolesService {
 
       if (isPermissionsBase.length) throw new ForbiddenException({
         message: `you cannot create a new role with base Permissions(${isPermissionsBase.join(', ')})`,
-        error: 'Permission Denied, base permissions',
+        error: 'Permission Denied, base permission',
       } as BaseException);
 
       const isActorOwner: boolean = actionPayload.permissions.includes(PERMISSIONS.OWNER_ALL);
@@ -196,8 +196,8 @@ export class RolesService {
       const isRoleManager: boolean = role.permissions.some(p => permissionsManagerStrict.includes(p));
 
       if (!isActorOwner && isRoleManager) throw new ForbiddenException({
-        message: 'You are not allowed to delete a role with management permissions. Only the owner can remove this role.',
-        error: 'Insufficient permissions'
+        message: 'You are not allowed to delete a role with management permission. Only the owner can remove this role.',
+        error: 'Insufficient permission'
       } as BaseException);
 
       await tx.role.delete({

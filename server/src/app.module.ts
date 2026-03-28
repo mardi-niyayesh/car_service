@@ -35,7 +35,7 @@ import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware, CacheableInterc
     Modules.PrismaModule,
     Modules.RedisModule,
     Modules.AuthModule,
-    Modules.UsersModule,
+    Modules.UserModule,
     Modules.RolesModule,
     Modules.PermissionsModule,
   ],

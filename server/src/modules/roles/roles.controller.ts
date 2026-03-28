@@ -42,7 +42,7 @@ import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, P
  *
  * This controller handles:
  * - Creating new custom roles with specific permission sets
- * - Updating existing custom role details and permissions
+ * - Updating existing custom role details and permission
  * - Deleting custom roles (with appropriate safeguards)
  * - Listing all available roles (both default and custom)
  *
@@ -51,7 +51,7 @@ import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, P
  * - Only users with 'owner' or 'role_manager' role can create, update, or delete custom roles
  * - Permissions assigned to roles are system-defined and cannot be altered
  *
- * All endpoints require authentication via Bearer token with appropriate permissions.
+ * All endpoints require authentication via Bearer token with appropriate permission.
  */
 @ApiTags("Roles")
 @Controller("roles")
@@ -120,7 +120,7 @@ export class RolesController {
     return this.rolesService.findAll(query);
   }
 
-  /** create a new role with exist permissions
+  /** create a new role with exist permission
    * - only roles with permission (owner.all or role.create) can accessibility to this route
    */
   @Permission({
@@ -129,7 +129,7 @@ export class RolesController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
-    summary: 'Create a new custom role with specific permissions',
+    summary: 'Create a new custom role with specific permission',
     description: `
   Creates a new role and assigns a set of existing permissions to it with strict security and validation enforcement:
   

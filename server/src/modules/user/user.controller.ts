@@ -47,7 +47,7 @@ import {
 
 import * as UserDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
-import {UsersListResponse, UsersService} from "./users.service";
+import {UsersListResponse, UserService} from "./user.service";
 import type {AccessRequest, ApiResponse, UserResponse} from "@/types";
 
 /**
@@ -65,8 +65,8 @@ import type {AccessRequest, ApiResponse, UserResponse} from "@/types";
 @ApiTags("Users")
 @Controller('users')
 @ApiBearerAuth("accessToken")
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export class UserController {
+  constructor(private readonly usersService: UserService) {}
 
   /**
    * Get current user profile.

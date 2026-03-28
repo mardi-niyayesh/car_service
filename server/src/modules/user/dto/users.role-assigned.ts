@@ -59,7 +59,7 @@ export class UserRoleAssignBadReqRes extends getNormalErrorResponse({
 
 /** forbidden response */
 export class UserRoleAssignedForbiddenRes extends getNormalErrorResponse({
-  message: "High-level role protection: You don't have OWNER privileges required to assign permissions affecting management-level roles (owner.all, user.view, user.delete, role.assign, role.revoke, role.create, role.view, role.update, role.delete).",
+  message: "High-level role protection: You don't have OWNER privileges required to assign permission affecting management-level roles (owner.all, user.view, user.delete, role.assign, role.revoke, role.create, role.view, role.update, role.delete).",
   statusCode: 403,
   error: "Permission Denied",
   path: "users/:id/roles"

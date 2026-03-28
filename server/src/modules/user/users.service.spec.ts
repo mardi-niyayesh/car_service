@@ -1,6 +1,6 @@
 import {exampleDate} from "@/lib";
 import {PERMISSIONS, ROLES} from "@/common";
-import {UsersService} from "./users.service";
+import {UserService} from "./user.service";
 import {hashSecret, compareSecret} from "@/lib/utils/crypto";
 import {Role, User} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
@@ -15,14 +15,14 @@ vi.mock('@/lib/utils/crypto', () => ({
   compareSecret: vi.fn()
 }));
 
-describe("UsersService", (): void => {
-  let service: UsersService;
+describe("UserService", (): void => {
+  let service: UserService;
   let prisma: PrismaMock;
 
   // Start All
   beforeEach((): void => {
     prisma = mockDeep<PrismaService>();
-    service = new UsersService(prisma);
+    service = new UserService(prisma);
 
     prisma.$transaction.mockImplementation(async fn => fn(prisma));
   });
@@ -135,8 +135,8 @@ describe("UsersService", (): void => {
 
     // --- Logical Validation Tests ---
     describe("Logical Validation", (): void => {
-      // ** should throw ConflictException if assigning an existing permissions **
-      it('should throw ConflictException if assigning an existing permissions', async () => {
+      // ** should throw ConflictException if assigning an existing permission **
+      it('should throw ConflictException if assigning an existing permission', async () => {
         prisma.user.findUnique.mockResolvedValue({
           id: targetUserId,
           userRoles: [{

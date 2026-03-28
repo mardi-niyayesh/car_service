@@ -61,5 +61,5 @@ export class CreateRoleForbidden extends getNormalErrorResponse({
   path: 'roles',
   statusCode: 403,
   message: "you cannot create a new role with base Permissions(owner.all, user.self)",
-  error: "Permission Denied, base permissions"
+  error: "Permission Denied, base permission"
 }) {}
