@@ -24,6 +24,7 @@ model User {
   userRoles     UserRole[]
   passwordToken PasswordToken?
   createdRoles  Role[]
+  categories    Category[]
 
   @@map("users")
 }
@@ -129,6 +130,9 @@ model Category {
   name        String   @db.VarChar(100)
   slug        String   @unique @db.VarChar(150)
   description String?  @db.VarChar(500)
+  creator     String?
+
+  creatorId User? @relation(fields: [creator], references: [id], onUpdate: NoAction)
 
   @@map("categories")
 }
