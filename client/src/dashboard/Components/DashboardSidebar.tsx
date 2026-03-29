@@ -5,7 +5,6 @@ import reserv from "../../../assets/reserve.png";
 import comment from "../../../assets/comment.png";
 import logout from "../../../assets/logout.png";
 import { HiOutlineHome } from "react-icons/hi";
-import { FaUserEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Menu = [
@@ -14,11 +13,7 @@ const Menu = [
     label: "خانه",
     icon: <HiOutlineHome size={20} style={{ opacity: 0.5 }} />,
   },
-  {
-    to: "updateUser",
-    label: "ویرایش",
-    icon: <FaUserEdit opacity={0.5} size={20} />,
-  },
+
   { to: "/dashboard/wallet", label: "کیف پول", icon: wallet },
   { to: "reserve", label: "رزروها", icon: reserv },
   { to: "card", label: "پرداخت", icon: card },
