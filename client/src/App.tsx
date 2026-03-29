@@ -34,7 +34,8 @@ import ReservePages from "./dashboard/Pages/ReservePages";
 import WalletPages from "./dashboard/Pages/WalletPages";
 import CardPages from "./dashboard/Pages/CardPages";
 import LogoutPage from "./dashboard/Pages/LogoutPage";
-import ComponentFormUpdateUser from "./PanelAdmin/Components/ComponentFormUpdateUser";
+import ComponentFormUpdateUser from "./dashboard/Api/ComponentFormUpdateUser";
+import Profile from "./dashboard/Components/Profile";
 //pages for panelAdmin
 import DetalisUserPage from "./PanelAdmin/Pages/DetalisUserPage";
 import ProductPage from "./PanelAdmin/Pages/ProductPage";
@@ -82,7 +83,8 @@ function App() {
             <Route path="wallet" element={<WalletPages />} />
             <Route path="card" element={<CardPages />} />
             <Route path="logout" element={<LogoutPage />} />
-            <Route path="updateUser" element={<ComponentFormUpdateUser />} />
+            <Route path="Profile/updateUser" element={<ComponentFormUpdateUser />} />
+            <Route path="Profile" element={<Profile />} />
           </Route>
           {/* ------- Panel Admin Layout ------- */}
           <Route path="/panel" element={<PanelAdminLayout />}>
