@@ -12,19 +12,32 @@ const ContainerHeader = () => {
   return (
     <header className="bg-white shadow-sm sticky top-0 z-40">
       <nav className="container mx-auto pt-4 px-3">
+        {/* Mobile and Tablet*/}
         <div className="flex justify-between items-center md:hidden">
           <Logo />
           <div className="flex items-center gap-3">
             {user ? (
-              <>
-                <span className="text-[20px] text-blue-700 font-bold">
-                  {user.display_name}
-                  <IoChevronDown
-                    size={18}
-                    className="text-blue-700 inline-block ml-1"
-                  />
-                </span>
-              </>
+              user.display_name === "owner" ? (
+                <Link to="/panel">
+                  <span className="text-[20px] text-blue-700 font-bold">
+                    {user.display_name}
+                    <IoChevronDown
+                      size={18}
+                      className="text-blue-700 inline-block ml-1"
+                    />
+                  </span>
+                </Link>
+              ) : (
+                <Link to="/dashboard">
+                  <span className="text-[20px] text-blue-700 font-bold">
+                    {user.display_name}
+                    <IoChevronDown
+                      size={18}
+                      className="text-blue-700 inline-block ml-1"
+                    />
+                  </span>
+                </Link>
+              )
             ) : (
               <AuthButton />
             )}
@@ -39,6 +52,7 @@ const ContainerHeader = () => {
           </div>
         </div>
 
+        {/* Desktop  */}
         <div className="hidden md:flex items-center justify-between w-full">
           <div className="flex items-center gap-6">
             <Logo />
