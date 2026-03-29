@@ -72,6 +72,7 @@ export type User = {
   display_name: string;
   email: string;
   age: number;
+  roles:string;
 };
 
 //type for menu hambergery
