@@ -3,17 +3,13 @@ import profilUser from "../../../assets/Ellipse 114.png";
 import logout from "../../../assets/logout.png";
 //custom hook for use context
 import { useUser } from "../../hooks/useUser";
-//hook
-import { useState } from "react";
 //icon
-import { HiSun, HiMoon } from "react-icons/hi";
+import { FaUser } from "react-icons/fa";
+//hooks
+import { Link } from "react-router-dom";
 
 const HeaderDashbord = () => {
-  //   const { them, setThem } = useState<boolean>(true);
   const { user } = useUser();
-  const ClickHandler = () => {
-    setThem(!true);
-  };
   return (
     <div>
       <header
@@ -35,13 +31,18 @@ const HeaderDashbord = () => {
           </div>
         </div>
         <div className="flex items-center justify-between gap-5">
-          <img
-            src={logout}
-            alt="logout"
-            className="w-5 h-5 md:w-6 md:h-6 group-hover:brightness-0 group-hover:invert transition-all duration-300"
-          />
-          {/* <HiSun style={{ opacity: 0.5, cursor: "pointer" }} onClick={ClickHandler} size={24} /> */}
-          <HiMoon style={{ opacity: 0.5, cursor: "pointer" }} size={24} />
+          <Link to="logout">
+     
+            <img
+              src={logout}
+              alt="logout"
+              className="w-5 h-5 md:w-6 md:h-6 group-hover:brightness-0 group-hover:invert transition-all duration-300"
+            />
+          </Link>
+
+          <Link to="Profile">
+            <FaUser style={{ opacity: 0.5, cursor: "pointer" }} size={18} />
+          </Link>
         </div>
       </header>
     </div>
