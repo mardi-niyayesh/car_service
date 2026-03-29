@@ -1,7 +1,5 @@
-// AuthButton.tsx (بدون تغییر)
-
 import { Link } from "react-router-dom";
-import { FaUser } from "react-icons/fa";
+import { FaUser } from "react-icons/fa"; 
 
 const AuthButton = () => {
   return (
@@ -12,8 +10,8 @@ const AuthButton = () => {
                    sm:justify-center sm:px-2
                    md:hover:bg-[#105ab4]"
     >
-      <Link to="/login" className="flex items-center px-3"> {/* اضافه کردن padding افقی */}
-        <FaUser size={20} className="md:block text-blue-900 mr-2" /> {/* اضافه کردن mr-2 */}
+      <Link to="/login" className="flex items-center px-3">
+        <FaUser size={20} className="md:block text-blue-900 mr-2" />
         <button className="hidden md:block font-medium ">ورود | ثبت نام</button>
       </Link>
     </div>
