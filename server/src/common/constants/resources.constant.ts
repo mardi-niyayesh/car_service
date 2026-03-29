@@ -8,6 +8,12 @@ export type FindDynamicDelegate = {
   creator: string | null;
 };
 
+interface DynamicDelegateArgs {
+  where: {
+    id: string | undefined
+  }
+}
+
 export type DynamicDelegate = {
-  findUnique: (args: { where: { id: string | undefined } }) => Promise<undefined | FindDynamicDelegate>;
+  findUnique: (args: DynamicDelegateArgs) => Promise<undefined | FindDynamicDelegate>;
 };
