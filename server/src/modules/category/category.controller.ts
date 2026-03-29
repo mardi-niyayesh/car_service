@@ -2,8 +2,8 @@ import * as CategoryDto from "./dto";
 import {CategoryService} from "./category.service";
 import {Body, Controller, Get, Post, Req} from "@nestjs/common";
 import type {AccessRequest, ApiResponse, CategoryResponse} from "@/types";
-import {getUnauthorizedResponse, Permission, PERMISSIONS, Public, ZodPipe} from "@/common";
-import {ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConflictResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, Public, ZodPipe} from "@/common";
+import {ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConflictResponse, ApiForbiddenResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 @Controller('categories')
 @ApiTags('Categories')
@@ -32,6 +32,7 @@ export class CategoryController {
   @ApiBody({type: CategoryDto.CreateCategoryDto})
   @ApiBadRequestResponse({type: CategoryDto.CreateCategoryBadReq})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('categories')})
+  @ApiForbiddenResponse({type: getForbiddenResponse('categories')})
   @ApiConflictResponse({type: CategoryDto.CrateCategoryConflict})
   create(
     @Req() req: AccessRequest,
