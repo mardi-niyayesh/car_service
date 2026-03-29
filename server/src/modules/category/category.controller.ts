@@ -1,9 +1,9 @@
 import * as CategoryDto from "./dto";
 import {CategoryService} from "./category.service";
 import {Body, Controller, Get, Post, Req} from "@nestjs/common";
-import {Permission, PERMISSIONS, Public, ZodPipe} from "@/common";
 import type {AccessRequest, ApiResponse, CategoryResponse} from "@/types";
-import {ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiOperation, ApiTags} from "@nestjs/swagger";
+import {getUnauthorizedResponse, Permission, PERMISSIONS, Public, ZodPipe} from "@/common";
+import {ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiOperation, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 @Public()
 @Controller('categories')
@@ -32,6 +32,7 @@ export class CategoryController {
   })
   @ApiBody({type: CategoryDto.CreateCategoryDto})
   @ApiBadRequestResponse({type: CategoryDto.CreateCategoryBadReq})
+  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('categories')})
   create(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(CategoryDto.CreateCategoryValidator)) body: CategoryDto.CreateCategoryType,
