@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import ContainerHeader from "./ContainerHeader";
-// import MenuHeader from "./Components/MenuHeader"; // این خط را حذف کنید
 
 function HeaderSite() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,8 +30,6 @@ function HeaderSite() {
     <div className="relative  bg-gray-100">
       <header className={headerClasses}>
         <ContainerHeader />
-        {/* فراخوانی مستقیم MenuHeader از اینجا حذف شد */}
-        {/* <MenuHeader /> */}
       </header>
     </div>
   );
