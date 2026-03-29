@@ -37,7 +37,7 @@ export class CreateCategoryOkRes extends getBaseOkResponseSchema<CategoryRespons
   path: 'categories',
   create: true,
   response: {
-    message: '',
+    message: 'Category successfully created.',
     data: {
       category: categoryExampleRes,
     }
