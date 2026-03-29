@@ -7,3 +7,4 @@ vi.mock("@/common/swagger", () => {
     setupSwagger: () => {},
   };
 });
+
