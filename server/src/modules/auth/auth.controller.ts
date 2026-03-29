@@ -57,8 +57,7 @@ export class AuthController {
   @ApiOperation({
     summary: 'Register a new user',
     description: 'Creates a new user record in the database and returns the created user.',
-    operationId: 'auth_register',
-    tags: ["Auth"],
+    operationId: 'auth_register'
   })
   @ApiBody({type: AuthDto.CreateUserSchema})
   @ApiCreatedResponse({type: AuthDto.CreateUserOkResponse})
@@ -80,8 +79,7 @@ export class AuthController {
   @ApiOperation({
     summary: 'Authenticate user',
     description: 'Validates user credentials and returns an access token. Also sets a secure httpOnly refresh token cookie.',
-    operationId: 'auth_login',
-    tags: ["Auth"],
+    operationId: 'auth_login'
   })
   @ApiBody({type: AuthDto.LoginUserSchema})
   @ApiOkResponse({type: AuthDto.LoginUserOkResponse})
@@ -116,8 +114,7 @@ export class AuthController {
   @ApiOperation({
     summary: 'Refresh access token',
     description: 'Uses the refresh token (from httpOnly cookie) to generate a new access token.',
-    operationId: 'auth_refresh',
-    tags: ["Auth"],
+    operationId: 'auth_refresh'
   })
   @ApiCookieAuth("refreshToken")
   @ApiOkResponse({type: AuthDto.RefreshUsersOkResponse})
@@ -154,8 +151,7 @@ export class AuthController {
   @ApiOperation({
     summary: 'Logout user',
     description: 'Uses the refresh token (from httpOnly cookie) to logout user in system and revoked refresh token.',
-    operationId: 'auth_logout',
-    tags: ["Auth"],
+    operationId: 'auth_logout'
   })
   @ApiCookieAuth("refreshToken")
   @ApiOkResponse({type: AuthDto.LogoutOkResponse})
@@ -176,8 +172,7 @@ export class AuthController {
   @ApiOperation({
     summary: 'Forgot password',
     description: 'Starts the password reset process by sending a reset link to the user email.',
-    operationId: 'auth_forgot_password',
-    tags: ["Auth"],
+    operationId: 'auth_forgot_password'
   })
   @ApiOkResponse({type: AuthDto.OkForgotPasswordRes})
   @ApiNotFoundResponse({
@@ -206,8 +201,7 @@ export class AuthController {
   @ApiOperation({
     summary: 'Reset password with token',
     description: 'Complete the password reset process by providing the reset token (received via email) and the new password. The token must be valid and not expired.',
-    operationId: 'auth_reset_password',
-    tags: ["Auth"],
+    operationId: 'auth_reset_password'
   })
   @ApiOkResponse({type: AuthDto.OkResetPasswordRes})
   @ApiBadRequestResponse({type: AuthDto.BadRequestResetPasswordRes})

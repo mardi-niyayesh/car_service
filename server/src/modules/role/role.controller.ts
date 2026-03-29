@@ -74,8 +74,7 @@ export class RoleController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: "find one role with id or name",
-    operationId: 'find_role',
-    tags: ["Roles"],
+    operationId: 'find_role'
   })
   @ApiQuery(UserDto.ExampleIdQuery)
   @ApiQuery(RolesDto.FindOneRoleNameQuery)
@@ -105,8 +104,7 @@ export class RoleController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: "Get all roles from the list of pagination",
-    operationId: 'get_all_role',
-    tags: ["Roles"],
+    operationId: 'get_all_role'
   })
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
@@ -152,8 +150,7 @@ export class RoleController {
   
   This endpoint is designed to safely expand the system's Role-Based Access Control (RBAC) 
   while strictly preventing privilege escalation and structural manipulation.`,
-    operationId: 'create_role',
-    tags: ["Roles"],
+    operationId: 'create_role'
   })
   @ApiBody({type: RolesDto.CreateRoleDto})
   @ApiOkResponse({type: RolesDto.OkCreateRoleRes})
@@ -211,8 +208,7 @@ export class RoleController {
   
   This endpoint ensures that role deletion is performed safely while protecting critical roles 
   and preventing privilege abuse or structural manipulation of the authorization system.`,
-    operationId: 'delete_role',
-    tags: ["Roles"],
+    operationId: 'delete_role'
   })
   @ApiParam(UUID4Dto('id'))
   @ApiOkResponse({type: RolesDto.OkDeleteRoleRes})

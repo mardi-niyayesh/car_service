@@ -27,8 +27,7 @@ export class CategoryController {
   @ApiOperation({
     summary: "create a new category",
     description: `Create a category
-    only roles with permission (owner.all or category.create) can accessibility to this route`,
-    tags: ['Categories']
+    only roles with permission (owner.all or category.create) can accessibility to this route`
   })
   @ApiBody({type: CategoryDto.CreateCategoryDto})
   @ApiBadRequestResponse({type: CategoryDto.CreateCategoryBadReq})

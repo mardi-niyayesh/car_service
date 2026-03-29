@@ -56,7 +56,6 @@ export class PermissionController {
   @ApiOperation({
     summary: 'get permission info with id',
     description: 'find one permission with id **Access restricted to users with permission: (owner.all or permission.view) only.**',
-    tags: ['Permissions'],
     operationId: 'find_permission',
   })
   @ApiParam(UUID4Dto('id'))
@@ -83,7 +82,6 @@ export class PermissionController {
   @ApiOperation({
     summary: 'get permission list with pagination',
     description: 'get permission list with pagination **Access restricted to users with permission: (owner.all or permission.view) only.**',
-    tags: ['Permissions'],
     operationId: 'find_all_permission',
   })
   @ApiQuery(pagePaginationDto)
