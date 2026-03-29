@@ -3,7 +3,17 @@ import {CategoryService} from "./category.service";
 import {Body, Controller, Get, Post, Req} from "@nestjs/common";
 import type {AccessRequest, ApiResponse, CategoryResponse} from "@/types";
 import {getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, Public, ZodPipe} from "@/common";
-import {ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConflictResponse, ApiForbiddenResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiConflictResponse,
+  ApiForbiddenResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse
+} from "@nestjs/swagger";
 
 @Controller('categories')
 @ApiTags('Categories')
@@ -30,6 +40,7 @@ export class CategoryController {
     only roles with permission (owner.all or category.create) can accessibility to this route`
   })
   @ApiBody({type: CategoryDto.CreateCategoryDto})
+  @ApiOkResponse({type: CategoryDto.CreateCategoryOkRes})
   @ApiBadRequestResponse({type: CategoryDto.CreateCategoryBadReq})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('categories')})
   @ApiForbiddenResponse({type: getForbiddenResponse('categories')})
