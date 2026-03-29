@@ -23,6 +23,7 @@ export type CreateCategoryType = z.infer<typeof CreateCategoryValidator>;
 /** swagger body example */
 export class CreateCategoryDto extends createZodDto(CreateCategoryValidator) {}
 
+/** example ok create category data response */
 export const categoryExampleRes: CategoryResponse['category'] = {
   id: "6d17a3c5-fcd8-4667-bf31-66843a9623e6",
   created_at: exampleDate,
@@ -33,6 +34,7 @@ export const categoryExampleRes: CategoryResponse['category'] = {
   creator: "e537de94-2f4f-4685-8c2b-29809d52bcb2"
 };
 
+/** example ok create category response */
 export class CreateCategoryOkRes extends getBaseOkResponseSchema<CategoryResponse>({
   path: 'categories',
   create: true,
