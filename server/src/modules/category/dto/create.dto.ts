@@ -1,6 +1,6 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
-import {getZodErrorBody, OwnerShipValidator} from "@/common";
+import {getNormalErrorResponse, getZodErrorBody, OwnerShipValidator} from "@/common";
 
 /** base category validator */
 export const CreateCategoryValidator = OwnerShipValidator.extend({
@@ -42,4 +42,12 @@ export class CreateCategoryBadReq extends getZodErrorBody({
       error: "Invalid input: expected string, received number"
     }
   ]
+}) {}
+
+/** Conflict response example */
+export class CrateCategoryConflict extends getNormalErrorResponse({
+  path: 'categories',
+  message: "Category already exists in database",
+  error: "category exists",
+  statusCode: 409
 }) {}
