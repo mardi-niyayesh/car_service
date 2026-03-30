@@ -1,6 +1,6 @@
 import * as CategoryDto from "./dto";
 import {PaginationValidatorType} from "@/common";
-import {ConflictException, Injectable} from "@nestjs/common";
+import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ApiResponse, BaseException, CategoryResponse, CategoriesResponse} from "@/types";
 
@@ -66,8 +66,23 @@ export class CategoryService {
   /** delete a category
    * - only roles with permission (owner.all or category.delete) can accessibility to this route
    */
-  delete(id: string) {
-    console.log(id);
-    return 'Category deleted successfully.';
+  async delete(id: string): Promise<ApiResponse<CategoryResponse>> {
+    try {
+      const category = await this.prisma.category.delete({
+        where: {id}
+      });
+
+      return {
+        message: 'category deleted successfully.',
+        data: {
+          category
+        }
+      };
+    } catch (_) {
+      throw new NotFoundException({
+        message: 'Category not found in database',
+        error: 'category does not exist'
+      } as BaseException);
+    }
   }
 }
