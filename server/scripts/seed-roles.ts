@@ -182,7 +182,7 @@ async function bootstrap(): Promise<void> {
         role: ROLES.USER_MANAGER,
         permissions: PERMISSIONS.USER_VIEW,
         not: [PERMISSIONS.USER_SELF],
-        advanced: [PERMISSIONS.ROLE_ASSIGN, PERMISSIONS.ROLE_REVOKE],
+        advanced: [PERMISSIONS.ROLE_ASSIGN, PERMISSIONS.ROLE_REVOKE, PERMISSIONS.PERMISSION_VIEW],
         description: "Full administrative access to manage all users in the system",
       });
 
@@ -192,6 +192,7 @@ async function bootstrap(): Promise<void> {
         role: ROLES.ROLE_MANAGER,
         permissions: PERMISSIONS.ROLE_VIEW,
         not: [PERMISSIONS.ROLE_ASSIGN, PERMISSIONS.ROLE_REVOKE],
+        advanced: [PERMISSIONS.PERMISSION_VIEW],
         description: "Full administrative access to manage all roles in the system",
       });
 
