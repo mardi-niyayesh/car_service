@@ -1,11 +1,32 @@
 import * as CategoryDto from "./dto";
+import {PaginationValidatorType} from "@/common";
 import {ConflictException, Injectable} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {ApiResponse, BaseException, CategoryResponse} from "@/types";
+import {ApiResponse, BaseException, CategoryResponse, CategoriesResponse} from "@/types";
 
 @Injectable()
 export class CategoryService {
   constructor(private readonly prisma: PrismaService) {}
+
+  /** get all categories
+   * - all users can access to this route
+   */
+  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<CategoriesResponse>> {
+    const categories = await this.prisma.category.findMany({
+      orderBy: {
+        created_at: pagination.orderByLower
+      },
+      take: pagination.limit,
+      skip: pagination.offset
+    });
+
+    return {
+      message: 'categories successfully found.',
+      data: {
+        categories,
+      }
+    };
+  }
 
   /** create a new category
    * - only roles with permission (owner.all or category.create) can accessibility to this route

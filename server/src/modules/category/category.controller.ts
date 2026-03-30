@@ -13,8 +13,8 @@ import {
 import * as CategoryDto from "./dto";
 import {CategoryService} from "./category.service";
 import {Body, Controller, Get, Post, Query, Req} from "@nestjs/common";
-import type {AccessRequest, ApiResponse, CategoryResponse} from "@/types";
-import {getForbiddenResponse, getUnauthorizedResponse, PaginationValidator, PaginationValidatorType, Permission, PERMISSIONS, Public, ZodPipe} from "@/common";
+import type {AccessRequest, ApiResponse, CategoriesResponse, CategoryResponse} from "@/types";
+import {getForbiddenResponse, getUnauthorizedResponse, PaginationValidator, type PaginationValidatorType, Permission, PERMISSIONS, Public, ZodPipe} from "@/common";
 
 @Controller('categories')
 @ApiTags('Categories')
@@ -28,8 +28,8 @@ export class CategoryController {
   @Get()
   findAll(
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
-  ) {
-    return 'find all categories';
+  ): Promise<ApiResponse<CategoriesResponse>> {
+    return this.categoryService.findAll(pagination);
   }
 
   /** create a new category
