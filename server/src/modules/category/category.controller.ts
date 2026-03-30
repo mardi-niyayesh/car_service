@@ -12,18 +12,23 @@ import {
 
 import * as CategoryDto from "./dto";
 import {CategoryService} from "./category.service";
-import {Body, Controller, Get, Post, Req} from "@nestjs/common";
+import {Body, Controller, Get, Post, Query, Req} from "@nestjs/common";
 import type {AccessRequest, ApiResponse, CategoryResponse} from "@/types";
-import {getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, Public, ZodPipe} from "@/common";
+import {getForbiddenResponse, getUnauthorizedResponse, PaginationValidator, PaginationValidatorType, Permission, PERMISSIONS, Public, ZodPipe} from "@/common";
 
 @Controller('categories')
 @ApiTags('Categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
+  /** get all categories
+   * - all users can access to this route
+   */
   @Public()
   @Get()
-  findAll() {
+  findAll(
+    @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
+  ) {
     return 'find all categories';
   }
 
