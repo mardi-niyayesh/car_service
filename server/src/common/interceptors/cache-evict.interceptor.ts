@@ -25,7 +25,19 @@ export class CacheEvictInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map(async data => {
 
-        if ('resource' in cacheParams && cacheParams.resource) {
+        if ('resource' in cacheParams) {
+          if (cacheParams?.force) {
+            try {
+              await this.redisService.deletePrefix(`*${cacheParams.resource}*`);
+              return data;
+            } catch (e) {
+              throw new InternalServerErrorException({
+                message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a resource cache',
+                error: (e as Error).name ?? 'error in deleting cache',
+              } as BaseException);
+            }
+          }
+
           const key: string = RedisKey.keyPrefix({
             ctx,
             resource: cacheParams.resource,
@@ -41,17 +53,6 @@ export class CacheEvictInterceptor implements NestInterceptor {
           } catch (e) {
             throw new InternalServerErrorException({
               message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a cache key',
-              error: (e as Error).name ?? 'error in deleting cache',
-            } as BaseException);
-          }
-        }
-
-        if ('force' in cacheParams && cacheParams.force && cacheParams.resource) {
-          try {
-            await this.redisService.deletePrefix(cacheParams.resource);
-          } catch (e) {
-            throw new InternalServerErrorException({
-              message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a resource cache',
               error: (e as Error).name ?? 'error in deleting cache',
             } as BaseException);
           }
