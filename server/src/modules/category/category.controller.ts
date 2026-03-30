@@ -109,6 +109,8 @@ export class CategoryController {
   })
   @Delete(':id')
   @ApiParam(UUID4Dto('id'))
+  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('categories/id')})
+  @ApiForbiddenResponse({type: CategoryDto.DeleteForbiddenResponse})
   delete(
     @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type
   ): Promise<ApiResponse<CategoryResponse>> {
