@@ -7,14 +7,24 @@ import {
   ApiConflictResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
-  ApiUnauthorizedResponse,
+  ApiUnauthorizedResponse, ApiQuery,
 } from "@nestjs/swagger";
 
 import * as CategoryDto from "./dto";
 import {CategoryService} from "./category.service";
 import {Body, Controller, Get, Post, Query, Req} from "@nestjs/common";
 import type {AccessRequest, ApiResponse, CategoriesResponse, CategoryResponse} from "@/types";
-import {getForbiddenResponse, getUnauthorizedResponse, PaginationValidator, type PaginationValidatorType, Permission, PERMISSIONS, Public, ZodPipe} from "@/common";
+import {
+  getForbiddenResponse,
+  getUnauthorizedResponse, limitPaginationDto, orderByPaginationDto,
+  pagePaginationDto,
+  PaginationValidator,
+  type PaginationValidatorType,
+  Permission,
+  PERMISSIONS,
+  Public,
+  ZodPipe
+} from "@/common";
 
 @Controller('categories')
 @ApiTags('Categories')
@@ -26,6 +36,14 @@ export class CategoryController {
    */
   @Public()
   @Get()
+  @ApiOperation({
+    summary: 'get all categories',
+    description: 'get all categories. **Access restricted for everyone**',
+    operationId: 'get_categories',
+  })
+  @ApiQuery(pagePaginationDto)
+  @ApiQuery(limitPaginationDto)
+  @ApiQuery(orderByPaginationDto)
   findAll(
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
   ): Promise<ApiResponse<CategoriesResponse>> {
