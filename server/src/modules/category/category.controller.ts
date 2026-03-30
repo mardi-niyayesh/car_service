@@ -2,18 +2,20 @@ import {
   ApiBody,
   ApiTags,
   ApiQuery,
+  ApiParam,
   ApiOperation,
   ApiBearerAuth,
   ApiOkResponse,
   ApiConflictResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
-  ApiUnauthorizedResponse, ApiParam,
+  ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 
 import {
   Public,
   ZodPipe,
+  UUID4Dto,
   Cacheable,
   Permission,
   CacheEvict,
@@ -26,7 +28,7 @@ import {
   orderByPaginationDto,
   getForbiddenResponse,
   getUnauthorizedResponse,
-  type PaginationValidatorType, UUID4Dto,
+  type PaginationValidatorType,
 } from "@/common";
 
 import {ONE_MINUTE_MS} from "@/lib";
@@ -107,7 +109,7 @@ export class CategoryController {
   @ApiParam(UUID4Dto('id'))
   delete(
     @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type
-  ) {
+  ): Promise<ApiResponse<CategoryResponse>> {
     return this.categoryService.delete(params.id);
   }
 }
