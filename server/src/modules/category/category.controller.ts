@@ -23,13 +23,14 @@ import {
   orderByPaginationDto,
   getForbiddenResponse,
   getUnauthorizedResponse,
-  type PaginationValidatorType,
+  type PaginationValidatorType, CacheEvict,
 } from "@/common";
 
 import * as CategoryDto from "./dto";
 import {CategoryService} from "./category.service";
-import {Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Req} from "@nestjs/common";
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req} from "@nestjs/common";
 import type {AccessRequest, ApiResponse, CategoriesResponse, CategoryResponse} from "@/types";
+import {ONE_MINUTE_MS} from "@/lib";
 
 @Controller('categories')
 @ApiTags('Categories')
@@ -43,6 +44,7 @@ export class CategoryController {
   @Cacheable({
     resource: 'category',
     pagination: true,
+    ttl: ONE_MINUTE_MS * 40
   })
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -85,5 +87,17 @@ export class CategoryController {
     @Body(new ZodPipe(CategoryDto.CreateCategoryValidator)) body: CategoryDto.CreateCategoryType,
   ): Promise<ApiResponse<CategoryResponse>> {
     return this.categoryService.create(req.user.userId, body);
+  }
+
+  @Permission({
+    permissions: [PERMISSIONS.CATEGORY_DELETE],
+  })
+  @Delete(':id')
+  @CacheEvict({
+    resource: 'category',
+    force: true,
+  })
+  delete() {
+    return 'category delete successfully.';
   }
 }
