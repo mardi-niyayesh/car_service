@@ -92,6 +92,9 @@ export class CategoryController {
     return this.categoryService.create(req.user.userId, body);
   }
 
+  /** delete a category
+   * - only roles with permission (owner.all or category.delete) can accessibility to this route
+   */
   @Permission({
     permissions: [PERMISSIONS.CATEGORY_DELETE],
   })
@@ -105,7 +108,6 @@ export class CategoryController {
   delete(
     @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type
   ) {
-    console.log(params);
-    return 'category delete successfully.';
+    return this.categoryService.delete(params.id);
   }
 }

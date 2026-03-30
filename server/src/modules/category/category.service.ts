@@ -62,4 +62,12 @@ export class CategoryService {
       };
     });
   }
+
+  /** delete a category
+   * - only roles with permission (owner.all or category.delete) can accessibility to this route
+   */
+  delete(id: string) {
+    console.log(id);
+    return 'Category deleted successfully.';
+  }
 }
