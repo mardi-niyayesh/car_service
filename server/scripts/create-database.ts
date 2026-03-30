@@ -72,7 +72,7 @@ async function main(): Promise<void> {
     const clientDB: Client = new Client({
       user: userName,
       database,
-      password: password || undefined,
+      password: password.trim() || undefined,
       host: "localhost",
       port: 5432
     });
