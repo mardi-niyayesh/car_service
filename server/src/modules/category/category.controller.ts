@@ -99,6 +99,7 @@ export class CategoryController {
    */
   @Permission({
     permissions: [PERMISSIONS.CATEGORY_DELETE],
+    owner: true
   })
   @ApiBearerAuth("accessToken")
   @CacheEvict({
