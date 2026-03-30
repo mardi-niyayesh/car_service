@@ -8,7 +8,7 @@ import {
   ApiConflictResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
-  ApiUnauthorizedResponse,
+  ApiUnauthorizedResponse, ApiParam,
 } from "@nestjs/swagger";
 
 import {
@@ -16,21 +16,24 @@ import {
   ZodPipe,
   Cacheable,
   Permission,
+  CacheEvict,
   PERMISSIONS,
+  type UUID4Type,
+  UUIDv4Validator,
   pagePaginationDto,
   limitPaginationDto,
   PaginationValidator,
   orderByPaginationDto,
   getForbiddenResponse,
   getUnauthorizedResponse,
-  type PaginationValidatorType, CacheEvict,
+  type PaginationValidatorType, UUID4Dto,
 } from "@/common";
 
+import {ONE_MINUTE_MS} from "@/lib";
 import * as CategoryDto from "./dto";
 import {CategoryService} from "./category.service";
-import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req} from "@nestjs/common";
 import type {AccessRequest, ApiResponse, CategoriesResponse, CategoryResponse} from "@/types";
-import {ONE_MINUTE_MS} from "@/lib";
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query, Req} from "@nestjs/common";
 
 @Controller('categories')
 @ApiTags('Categories')
@@ -92,12 +95,17 @@ export class CategoryController {
   @Permission({
     permissions: [PERMISSIONS.CATEGORY_DELETE],
   })
-  @Delete(':id')
+  @ApiBearerAuth("accessToken")
   @CacheEvict({
     resource: 'category',
     force: true,
   })
-  delete() {
+  @Delete(':id')
+  @ApiParam(UUID4Dto('id'))
+  delete(
+    @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type
+  ) {
+    console.log(params);
     return 'category delete successfully.';
   }
 }
