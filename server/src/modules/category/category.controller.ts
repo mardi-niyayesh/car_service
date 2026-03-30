@@ -14,6 +14,7 @@ import {
 import {
   Public,
   ZodPipe,
+  Cacheable,
   Permission,
   PERMISSIONS,
   pagePaginationDto,
@@ -39,6 +40,10 @@ export class CategoryController {
    * - all users can access to this route
    */
   @Public()
+  @Cacheable({
+    resource: 'category',
+    pagination: true,
+  })
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
