@@ -9,7 +9,7 @@ import {
   ApiConflictResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
-  ApiUnauthorizedResponse,
+  ApiUnauthorizedResponse, ApiNotFoundResponse,
 } from "@nestjs/swagger";
 
 import {
@@ -111,6 +111,7 @@ export class CategoryController {
   @ApiParam(UUID4Dto('id'))
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('categories/id')})
   @ApiForbiddenResponse({type: CategoryDto.DeleteForbiddenResponse})
+  @ApiNotFoundResponse({type: CategoryDto.DeleteCategoryNotFound})
   delete(
     @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type
   ): Promise<ApiResponse<CategoryResponse>> {

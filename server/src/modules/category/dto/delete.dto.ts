@@ -7,3 +7,11 @@ export class DeleteForbiddenResponse extends getNormalErrorResponse({
   path: 'categories/:id',
   statusCode: 403
 }) {}
+
+/** not found example response */
+export class DeleteCategoryNotFound extends getNormalErrorResponse({
+  message: 'Category not found in database',
+  error: 'category does not exist',
+  path: 'categories/:id',
+  statusCode: 404
+}) {}
