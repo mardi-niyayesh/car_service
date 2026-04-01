@@ -19,7 +19,7 @@ import {
 
 import {isAllowedAction} from "@/lib";
 import {Reflector} from "@nestjs/core";
-import {AccessRequest, BaseException} from "@/types";
+import {BaseException, OwnershipRequest} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 
 @Injectable()
@@ -30,7 +30,7 @@ export class PermissionGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const req = context.switchToHttp().getRequest<AccessRequest>();
+    const req = context.switchToHttp().getRequest<OwnershipRequest<FindDynamicDelegate>>();
 
     const isPublic: boolean = this.reflector.getAllAndOverride(IS_PUBLIC_KEY, [
       context.getHandler(),
@@ -81,6 +81,8 @@ export class PermissionGuard implements CanActivate {
         }
       });
 
+      if (data) req.ownershipData = data;
+
       return this.checkOwnership(data, req.user.userId, resource);
     }
 
@@ -88,10 +90,12 @@ export class PermissionGuard implements CanActivate {
   }
 
   checkOwnership(data: FindDynamicDelegate | undefined, userId: string, resource: string): boolean {
+    console.log(data);
     if (!data) throw new NotFoundException({
       message: `this ${resource} does not exist in database`,
       error: `${resource} not found`,
     } as BaseException);
+    console.log('test');
 
     if (data.creator === undefined) throw new InternalServerErrorException({
       message: `creator column not found, please make sure this data has creator column`,
