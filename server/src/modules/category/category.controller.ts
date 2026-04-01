@@ -110,6 +110,7 @@ export class CategoryController {
   })
   @Delete(':id')
   @ApiParam(UUID4Dto('id'))
+  @ApiOkResponse({type: CategoryDto.DeleteCategoryOkRes})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('categories/id')})
   @ApiForbiddenResponse({type: CategoryDto.DeleteForbiddenResponse})
   @ApiNotFoundResponse({type: CategoryDto.DeleteCategoryNotFound})

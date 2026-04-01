@@ -1,4 +1,17 @@
-import {getNormalErrorResponse} from "@/common";
+import type {CategoryResponse} from "@/types";
+import {categoryExampleRes} from "./create.dto";
+import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
+
+/** ok example response */
+export class DeleteCategoryOkRes extends getBaseOkResponseSchema<CategoryResponse>({
+  path: 'categories/id',
+  response: {
+    message: "category deleted successfully",
+    data: {
+      category: categoryExampleRes
+    }
+  }
+}) {}
 
 /** forbidden example response */
 export class DeleteForbiddenResponse extends getNormalErrorResponse({
