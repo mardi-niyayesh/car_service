@@ -66,18 +66,14 @@ export class CategoryController {
    */
   @Public()
   @Get(':slug')
-  @ApiParam({
-    name: 'slug',
-    type: String,
-    example: "category-slug4",
-    required: true,
-    description: 'category slug',
-  })
+  @ApiParam(CategoryDto.findOneCategoryParam)
   @ApiBadRequestResponse({type: CategoryDto.FindOneBadRequest})
   findOne(
     @Param(new ZodPipe(CategoryDto.CreateCategoryValidator.pick({
       slug: true
-    }))) params: { slug: string },
+    }))) params: {
+      slug: string
+    },
   ) {
     console.log(params);
     return 'category find successfully.';

@@ -4,6 +4,9 @@ import {createZodDto} from "nestjs-zod";
 import {CategoryResponse} from "@/types";
 import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody, OwnerShipValidator} from "@/common";
 
+export const minCategorySlug = 2;
+export const maxCategorySlug = 150;
+
 /** base category validator */
 export const CreateCategoryValidator = OwnerShipValidator.extend({
   name: z.string().min(2).max(100),
@@ -12,8 +15,8 @@ export const CreateCategoryValidator = OwnerShipValidator.extend({
     .string()
     .trim()
     .toLowerCase()
-    .min(2)
-    .max(150)
+    .min(minCategorySlug)
+    .max(maxCategorySlug)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
       message: "Slug can only contain lowercase letters, numbers, and hyphens (-).",
     }),
