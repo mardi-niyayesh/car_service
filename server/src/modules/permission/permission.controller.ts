@@ -34,6 +34,18 @@ import {PermissionService} from "./permission.service";
 import type {PermissionsResponse, FindOnePermission, ApiResponse} from "@/types";
 import {Controller, Get, HttpCode, HttpStatus, Param, Query} from "@nestjs/common";
 
+/**
+ * Permission management endpoints for handling permission resources.
+ *
+ * This controller handles:
+ * - Finding permission information by ID
+ * - Retrieving a list of permissions with pagination and ordering
+ *
+ * Only users with the relevant permissions can access these endpoints:
+ * - `owner.all` or `permission.view` permission for both operations.
+ *
+ * All requests require authentication via Bearer token.
+ */
 @ApiTags("Permissions")
 @Permission({
   permissions: [PERMISSIONS.PERMISSION_VIEW]
