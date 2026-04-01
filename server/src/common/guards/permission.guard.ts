@@ -90,12 +90,10 @@ export class PermissionGuard implements CanActivate {
   }
 
   checkOwnership(data: FindDynamicDelegate | undefined, userId: string, resource: string): boolean {
-    console.log(data);
     if (!data) throw new NotFoundException({
       message: `this ${resource} does not exist in database`,
       error: `${resource} not found`,
     } as BaseException);
-    console.log('test');
 
     if (data.creator === undefined) throw new InternalServerErrorException({
       message: `creator column not found, please make sure this data has creator column`,
