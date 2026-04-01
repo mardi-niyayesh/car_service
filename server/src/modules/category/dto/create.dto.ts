@@ -10,9 +10,13 @@ export const CreateCategoryValidator = OwnerShipValidator.extend({
 
   slug: z
     .string()
+    .trim()
+    .toLowerCase()
     .min(2)
     .max(150)
-    .regex(/^[a-zA-Z0-9_]+$/, {message: "Name can only contain English letters, numbers, and underscores."}),
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+      message: "Slug can only contain lowercase letters, numbers, and hyphens (-).",
+    }),
 
   description: z.string().min(10).max(500).optional(),
 });
