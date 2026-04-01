@@ -1,7 +1,7 @@
 import * as CategoryDto from "./dto";
 import {PaginationValidatorType} from "@/common";
-import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {ApiResponse, BaseException, CategoryResponse, CategoriesResponse} from "@/types";
 
 @Injectable()
