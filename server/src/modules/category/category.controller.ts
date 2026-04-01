@@ -70,6 +70,7 @@ export class CategoryController {
     required: true,
     description: 'category slug',
   })
+  @ApiBadRequestResponse({type: CategoryDto.FindOneBadRequest})
   findOne(
     @Param(new ZodPipe(CategoryDto.CreateCategoryValidator.pick({
       slug: true
