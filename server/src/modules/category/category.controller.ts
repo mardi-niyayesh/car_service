@@ -61,6 +61,24 @@ import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query,
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
+  @Public()
+  @Get(':slug')
+  @ApiParam({
+    name: 'slug',
+    type: String,
+    example: "category-slug4",
+    required: true,
+    description: 'category slug',
+  })
+  findOne(
+    @Param(new ZodPipe(CategoryDto.CreateCategoryValidator.pick({
+      slug: true
+    }))) params: { slug: string },
+  ) {
+    console.log(params);
+    return 'category find successfully.';
+  }
+
   /** get all categories
    * - all users can access to this route
    */
