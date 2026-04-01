@@ -38,6 +38,24 @@ import {CategoryService} from "./category.service";
 import type {AccessRequest, ApiResponse, CategoriesResponse, CategoryResponse} from "@/types";
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query, Req} from "@nestjs/common";
 
+/**
+ * Category management endpoints for handling category resources.
+ *
+ * This controller handles:
+ * - Retrieving a paginated list of all categories
+ * - Fetching a specific category by its ID
+ * - Creating new categories (restricted by permission)
+ * - Updating existing categories
+ * - Deleting categories with owner-aware permission checks
+ * - UUID validation for all ID parameters
+ * - Response caching for read operations and cache eviction for write operations
+ *
+ * Public users can read categories, while modification operations
+ * require proper permissions such as `owner.all` or category-specific permissions
+ * (e.g. `category.create`, `category.update`, `category.delete`).
+ *
+ * Protected endpoints require authentication via Bearer token.
+ */
 @Controller('categories')
 @ApiTags('Categories')
 export class CategoryController {
