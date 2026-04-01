@@ -1,6 +1,15 @@
+import z from "zod";
 import {getZodErrorBody} from "@/common";
 import {ApiParamOptions} from "@nestjs/swagger";
-import {maxCategorySlug, minCategorySlug} from "./create.dto";
+import {CreateCategoryValidator, maxCategorySlug, minCategorySlug} from "./create.dto";
+
+/** find one category validator */
+export const FindOneCategoryValidator = CreateCategoryValidator.pick({
+  slug: true
+});
+
+/** find one category validator type */
+export type FindOneCategoryType = z.infer<typeof FindOneCategoryValidator>;
 
 /** find one category slug param swagger */
 export const findOneCategoryParam: ApiParamOptions = {

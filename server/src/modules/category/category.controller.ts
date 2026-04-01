@@ -69,11 +69,7 @@ export class CategoryController {
   @ApiParam(CategoryDto.findOneCategoryParam)
   @ApiBadRequestResponse({type: CategoryDto.FindOneBadRequest})
   findOne(
-    @Param(new ZodPipe(CategoryDto.CreateCategoryValidator.pick({
-      slug: true
-    }))) params: {
-      slug: string
-    },
+    @Param(new ZodPipe(CategoryDto.FindOneCategoryValidator)) params: CategoryDto.FindOneCategoryType
   ) {
     console.log(params);
     return 'category find successfully.';
