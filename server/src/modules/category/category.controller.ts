@@ -61,6 +61,9 @@ import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query,
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
+  /** get one category with slug(unique)
+   * - all users can access to this route
+   */
   @Public()
   @Get(':slug')
   @ApiParam({
