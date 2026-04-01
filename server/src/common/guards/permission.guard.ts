@@ -1,6 +1,6 @@
 import {
-  CanActivate,
   Injectable,
+  CanActivate,
   ExecutionContext,
   NotFoundException,
   ForbiddenException,
