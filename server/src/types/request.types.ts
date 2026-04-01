@@ -1,4 +1,5 @@
 import type {Request} from "express";
+import {FindDynamicDelegate} from "@/common";
 import {RefreshTokenPayload, AccessTokenPayload} from "@/types";
 
 export interface NormalizedClientInfo {
@@ -19,4 +20,9 @@ export type UserAccess = Omit<AccessTokenPayload, "sub"> & { userId: string };
 
 export interface AccessRequest extends Request {
   user: UserAccess;
+}
+
+/** find data type in ownership permissions requests */
+export interface OwnershipRequest<T extends FindDynamicDelegate> extends AccessRequest {
+  ownershipData: T;
 }
