@@ -195,15 +195,12 @@ export class CategoryController {
   @ApiBody({type: CategoryDto.UpdateCategoryDto})
   @ApiParam(UUID4Dto('id'))
   @ApiForbiddenResponse({type: CategoryDto.ForbiddenUpdateCategoryRes})
-  update(
+  async update(
     @Req() req: OwnershipRequest<Category>,
     @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
     @Body(new ZodPipe(CategoryDto.UpdateCategoryValidator)) body: CategoryDto.UpdateCategoryType,
-  ): string {
-    console.log(params);
-    console.log(req.ownershipData);
-    console.log(req.user);
-    console.log(body);
+  ) {
+    await this.categoryService.update(params.id, body, req.ownershipData);
     return 'category updated successfully.';
   }
 }

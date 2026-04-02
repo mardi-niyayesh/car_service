@@ -3,6 +3,7 @@ import {PaginationValidatorType} from "@/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {ApiResponse, BaseException, CategoryResponse, CategoriesResponse} from "@/types";
+import {Category} from "@/modules/prisma/generated/client";
 
 @Injectable()
 export class CategoryService {
@@ -105,5 +106,18 @@ export class CategoryService {
         error: 'category does not exist'
       } as BaseException);
     }
+  }
+
+  /** update a category with id and ownership
+   * - only roles with permission (owner.all or category.update) can accessibility to this route
+   */
+  async update(id: string, data: CategoryDto.UpdateCategoryType, category: Category) {
+    const ca = await this.prisma.category.findUnique({
+      where: {id}
+    });
+    console.log(id);
+    console.log(data);
+    console.log(ca);
+    console.log(category);
   }
 }
