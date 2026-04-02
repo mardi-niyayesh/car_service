@@ -66,20 +66,25 @@ export class CategoryController {
    * - all users can access to this route
    */
   @Public()
-  @Get(':slug')
+  @Cacheable({
+    resource: 'category',
+    paramsKey: ['id'],
+    ttl: ONE_MINUTE_MS * 60
+  })
+  @Get(':id')
   @ApiOperation({
     summary: 'find one category',
-    description: 'find one category with slug unique. **Access restricted for everyone**',
+    description: 'find one category with id unique. **Access restricted for everyone**',
     operationId: 'get_one_categories',
   })
-  @ApiParam(CategoryDto.findOneCategoryParam)
+  @ApiParam(UUID4Dto('id'))
   @ApiOkResponse({type: CategoryDto.FindOneCategoryOkRes})
   @ApiBadRequestResponse({type: CategoryDto.FindOneBadRequest})
   @ApiNotFoundResponse({type: CategoryDto.FindOneCategoryNotFound})
   findOne(
-    @Param(new ZodPipe(CategoryDto.FindOneCategoryValidator)) params: CategoryDto.FindOneCategoryType
+    @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
   ): Promise<ApiResponse<CategoryResponse>> {
-    return this.categoryService.findOne(params.slug);
+    return this.categoryService.findOne(params.id);
   }
 
   /** get all categories
@@ -89,7 +94,7 @@ export class CategoryController {
   @Cacheable({
     resource: 'category',
     pagination: true,
-    ttl: ONE_MINUTE_MS * 40
+    ttl: ONE_MINUTE_MS * 60
   })
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -145,7 +150,9 @@ export class CategoryController {
   @ApiBearerAuth("accessToken")
   @CacheEvict({
     resource: 'category',
-    force: true,
+    findPrefix: {
+      param: 'id'
+    },
   })
   @Delete(':id')
   @ApiOperation({
@@ -174,8 +181,10 @@ export class CategoryController {
   })
   @ApiBearerAuth("accessToken")
   @CacheEvict({
+    findPrefix: {
+      param: 'id'
+    },
     resource: 'category',
-    force: true,
   })
   @Put(':id')
   @ApiOperation({
