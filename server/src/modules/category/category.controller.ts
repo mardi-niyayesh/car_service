@@ -162,6 +162,7 @@ export class CategoryController {
   @ApiBearerAuth("accessToken")
   @Put(':id')
   @ApiParam(UUID4Dto('id'))
+  @ApiForbiddenResponse({type: CategoryDto.ForbiddenUpdateCategoryRes})
   update(
     @Req() req: OwnershipRequest<Category>,
     @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type
