@@ -4,6 +4,7 @@ import z from 'zod';
 export const BaseUserSchema = z.object({
   email: z.email(),
   password: z.string()
+    .trim()
     .min(6)
     .max(20)
     .regex(

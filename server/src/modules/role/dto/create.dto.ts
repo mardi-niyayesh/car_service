@@ -11,11 +11,12 @@ export const CreateRoleValidator = OwnerShipValidator.extend({
     .transform(ids => [...new Set(ids)]),
 
   name: z.string()
+    .trim()
     .regex(/^[a-zA-Z0-9_]+$/, {message: "Name can only contain English letters, numbers, and underscores."})
     .min(2, {message: "Name must be at least 2 characters long."})
     .max(100, {message: "Name cannot exceed 100 characters."}),
 
-  description: z.string().min(10).max(500).optional(),
+  description: z.string().trim().min(10).max(500).optional(),
 });
 
 /** Type of validator */
