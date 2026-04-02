@@ -11,7 +11,18 @@ export class CategoryService {
   /** get one category with slug(unique)
    * - all users can access to this route
    */
-  findOne(slug: string) {
+  async findOne(slug: string) {
+    const category = await this.prisma.category.findUnique({
+      where: {slug},
+    });
+
+    if (!category) throw new NotFoundException({
+      message: 'Category does not exist in database',
+      error: 'Category not found'
+    } as BaseException);
+
+    console.log(category);
+
     return `category find successfully. ${slug}`;
   }
 
