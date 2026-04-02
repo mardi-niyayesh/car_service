@@ -8,6 +8,13 @@ import {ApiResponse, BaseException, CategoryResponse, CategoriesResponse} from "
 export class CategoryService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /** get one category with slug(unique)
+   * - all users can access to this route
+   */
+  findOne(slug: string) {
+    return `category find successfully. ${slug}`;
+  }
+
   /** get all categories
    * - all users can access to this route
    */

@@ -71,8 +71,7 @@ export class CategoryController {
   findOne(
     @Param(new ZodPipe(CategoryDto.FindOneCategoryValidator)) params: CategoryDto.FindOneCategoryType
   ) {
-    console.log(params);
-    return 'category find successfully.';
+    return this.categoryService.findOne(params.slug);
   }
 
   /** get all categories
