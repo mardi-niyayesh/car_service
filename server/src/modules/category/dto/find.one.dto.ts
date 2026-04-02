@@ -1,33 +1,10 @@
-import z from "zod";
 import {CategoryResponse} from "@/types";
-import {ApiParamOptions} from "@nestjs/swagger";
+import {categoryExampleRes} from "./create.dto";
 import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
-import {categoryExampleRes, CreateCategoryValidator, maxCategorySlug, minCategorySlug} from "./create.dto";
-
-/** find one category validator */
-export const FindOneCategoryValidator = CreateCategoryValidator.pick({
-  slug: true
-});
-
-/** find one category validator type */
-export type FindOneCategoryType = z.infer<typeof FindOneCategoryValidator>;
-
-/** find one category slug param swagger */
-export const findOneCategoryParam: ApiParamOptions = {
-  name: 'slug',
-  type: String,
-  example: "category-slug4",
-  required: true,
-  description: 'category slug',
-  schema: {
-    minimum: minCategorySlug,
-    maximum: maxCategorySlug,
-  }
-};
 
 /** ok example response */
 export class FindOneCategoryOkRes extends getBaseOkResponseSchema<CategoryResponse>({
-  path: "categories/test",
+  path: "categories/id",
   response: {
     message: "category found successfully.",
     data: {
