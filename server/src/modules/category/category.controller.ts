@@ -36,7 +36,7 @@ import {ONE_MINUTE_MS} from "@/lib";
 import * as CategoryDto from "./dto";
 import {CategoryService} from "./category.service";
 import type {AccessRequest, ApiResponse, CategoriesResponse, CategoryResponse} from "@/types";
-import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query, Req} from "@nestjs/common";
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Req} from "@nestjs/common";
 
 /**
  * Category management endpoints for handling category resources.
@@ -151,5 +151,18 @@ export class CategoryController {
     @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type
   ): Promise<ApiResponse<CategoryResponse>> {
     return this.categoryService.delete(params.id);
+  }
+
+  @Permission({
+    permissions: [PERMISSIONS.CATEGORY_UPDATE],
+  })
+  @ApiBearerAuth("accessToken")
+  @Put(':id')
+  @ApiParam(UUID4Dto('id'))
+  update(
+    @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type
+  ): string {
+    console.log(params);
+    return 'category updated successfully.';
   }
 }
