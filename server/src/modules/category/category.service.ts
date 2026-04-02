@@ -11,9 +11,9 @@ export class CategoryService {
   /** get one category with slug(unique)
    * - all users can access to this route
    */
-  async findOne(slug: string): Promise<ApiResponse<CategoryResponse>> {
+  async findOne(id: string): Promise<ApiResponse<CategoryResponse>> {
     const category = await this.prisma.category.findUnique({
-      where: {slug},
+      where: {id},
     });
 
     if (!category) throw new NotFoundException({
