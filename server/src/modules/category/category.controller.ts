@@ -35,7 +35,8 @@ import {
 import {ONE_MINUTE_MS} from "@/lib";
 import * as CategoryDto from "./dto";
 import {CategoryService} from "./category.service";
-import type {AccessRequest, ApiResponse, CategoriesResponse, CategoryResponse} from "@/types";
+import {Category} from "@/modules/prisma/generated/client";
+import type {AccessRequest, ApiResponse, CategoriesResponse, CategoryResponse, OwnershipRequest} from "@/types";
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Req} from "@nestjs/common";
 
 /**
@@ -160,9 +161,12 @@ export class CategoryController {
   @Put(':id')
   @ApiParam(UUID4Dto('id'))
   update(
+    @Req() req: OwnershipRequest<Category>,
     @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type
   ): string {
     console.log(params);
+    console.log(req.ownershipData);
+    console.log(req.user);
     return 'category updated successfully.';
   }
 }
