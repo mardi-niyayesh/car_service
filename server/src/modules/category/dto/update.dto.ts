@@ -1,7 +1,7 @@
 import z from "zod";
+import {createZodDto} from "nestjs-zod";
 import {getNormalErrorResponse} from "@/common";
 import {CreateCategoryValidator} from "./create.dto";
-import {createZodDto} from "nestjs-zod";
 
 /** validator */
 export const UpdateCategoryValidator = CreateCategoryValidator.pick({
