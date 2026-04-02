@@ -4,6 +4,7 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {ApiResponse, BaseException, CategoryResponse, CategoriesResponse} from "@/types";
 import {Category} from "@/modules/prisma/generated/client";
+import {asyncWrapProviders} from "node:async_hooks";
 
 @Injectable()
 export class CategoryService {
@@ -111,13 +112,28 @@ export class CategoryService {
   /** update a category with id and ownership
    * - only roles with permission (owner.all or category.update) can accessibility to this route
    */
-  async update(id: string, data: CategoryDto.UpdateCategoryType, category: Category) {
-    const ca = await this.prisma.category.findUnique({
-      where: {id}
+  async update(id: string, data: CategoryDto.UpdateCategoryType, category: Category): Promise<ApiResponse<CategoryResponse>> {
+    const conflictData: string[] = [];
+
+    for (const d in data) {
+      if (category[d] === data[d]) conflictData.push(d);
+    }
+
+    if (conflictData.length) throw new ConflictException({
+      message: `At least one field must differ from the existing category data. These fields have unchanged values: ${conflictData.join(', ')}.`,
+      error: 'Category update conflict'
+    } as BaseException);
+
+    const newCategoryData = await this.prisma.category.update({
+      where: {id},
+      data
     });
-    console.log(id);
-    console.log(data);
-    console.log(ca);
-    console.log(category);
+
+    return {
+      message: "category updated successfully.",
+      data: {
+        category: newCategoryData
+      }
+    };
   }
 }
