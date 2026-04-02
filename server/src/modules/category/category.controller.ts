@@ -156,6 +156,8 @@ export class CategoryController {
 
   @Permission({
     permissions: [PERMISSIONS.CATEGORY_UPDATE],
+    owner: true,
+    resource: "category",
   })
   @ApiBearerAuth("accessToken")
   @Put(':id')
