@@ -25,7 +25,7 @@ export class CacheEvictInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map(async data => {
 
-        if ('resource' in cacheParams) {
+        if ('resource' in cacheParams && !('findPrefix' in cacheParams)) {
           if (cacheParams?.force) {
             try {
               await this.redisService.deletePrefix(`*${cacheParams.resource}*`);
@@ -75,6 +75,10 @@ export class CacheEvictInterceptor implements NestInterceptor {
           const reqPrefix: string = Array.isArray(rawReqPrefix) ? rawReqPrefix[0] : rawReqPrefix;
 
           await this.redisService.deletePrefix(`*${reqPrefix}*`);
+
+          if ('resource' in cacheParams) {
+            await this.redisService.deletePrefix(`*${cacheParams.resource}:list*`);
+          }
         }
 
         return data;

@@ -17,11 +17,12 @@ interface FindPrefix {
   param: string;
 }
 
-type CacheEvictDecoratorFindPrefix = Omit<CacheEvictDecoratorPrefix, "prefix"> & {
+type CacheEvictDecoratorFindPrefixAndList = Omit<CacheEvictDecoratorPrefix, "prefix"> & {
   findPrefix: FindPrefix;
+  resource?: ParamCacheKeyType['resource'];
 };
 
-export type CacheEvictDecorator = CacheEvictDecoratorPrefix | CacheEvictDecoratorForce | CacheEvictDecoratorFindPrefix;
+export type CacheEvictDecorator = CacheEvictDecoratorPrefix | CacheEvictDecoratorForce | CacheEvictDecoratorFindPrefixAndList;
 
 /** Build Key Cache for Delete
  * @example
