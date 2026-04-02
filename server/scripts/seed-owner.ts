@@ -6,12 +6,12 @@ import {ROLES} from "@/common";
 import "tsconfig-paths/register";
 import {hashSecret} from "@/lib";
 import {NestFactory} from "@nestjs/core";
-import {CreateUser} from "@/modules/auth/dto";
 import {CliModule} from "@/modules/cli/cli.module";
 import * as readline from "node:readline/promises";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {BaseUserSchema} from "@/modules/user/dto/validators.dto";
 
-async function ask<T extends keyof typeof CreateUser.shape>(
+async function ask<T extends keyof typeof BaseUserSchema.shape>(
   rl: readline.Interface,
   q: string,
   field: T,
@@ -19,7 +19,7 @@ async function ask<T extends keyof typeof CreateUser.shape>(
   while (true) {
     const answer: string = await rl.question(q);
 
-    const validate = CreateUser.shape[field].safeParse(answer);
+    const validate = BaseUserSchema.shape[field].safeParse(answer);
 
     if (!validate.success) {
       console.log(`the ${field} not valid.`, validate.error.issues[0].message);
