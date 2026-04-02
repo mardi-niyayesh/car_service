@@ -5,12 +5,6 @@ import type {UserResponse} from "@/types";
 import {BaseUserSchema} from "@/modules/user/dto/validators.dto";
 import {getBaseOkResponseSchema, getZodErrorBody, getNormalErrorResponse} from "@/common";
 
-/** create user schema */
-export const CreateUser = BaseUserSchema.overwrite(data => ({
-  ...data,
-  display_name: data.display_name?.trim()
-}));
-
 /** Create User Type */
 export type CreateUserInput = z.infer<typeof BaseUserSchema>;
 

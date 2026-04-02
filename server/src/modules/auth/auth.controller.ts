@@ -17,6 +17,7 @@ import * as AuthDto from "./dto";
 import {isProduction} from "@/lib";
 import {AuthService} from "./auth.service";
 import type {CookieOptions, Response} from "express";
+import {BaseUserSchema} from "../user/dto/validators.dto";
 import {Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UseGuards} from '@nestjs/common';
 import type {RefreshRequest, LoginResponse, ApiResponse, UserResponse, NormalizedClientInfo} from "@/types";
 import {RefreshTokenGuard, ZodPipe, TooManyRequestResponse, Public, NormalizeClientInfo, CacheEvict} from "@/common";
@@ -66,7 +67,7 @@ export class AuthController {
   @ApiTooManyRequestsResponse({type: TooManyRequestResponse})
   register(
     @NormalizeClientInfo() clientInfo: NormalizedClientInfo,
-    @Body(new ZodPipe(AuthDto.CreateUser)) data: AuthDto.CreateUserInput
+    @Body(new ZodPipe(BaseUserSchema)) data: AuthDto.CreateUserInput
   ): Promise<ApiResponse<UserResponse>> {
     return this.authService.register(data, clientInfo);
   }
