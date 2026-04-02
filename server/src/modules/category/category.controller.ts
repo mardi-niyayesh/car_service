@@ -67,6 +67,11 @@ export class CategoryController {
    */
   @Public()
   @Get(':slug')
+  @ApiOperation({
+    summary: 'find one category',
+    description: 'find one category with slug unique. **Access restricted for everyone**',
+    operationId: 'get_category',
+  })
   @ApiParam(CategoryDto.findOneCategoryParam)
   @ApiOkResponse({type: CategoryDto.FindOneCategoryOkRes})
   @ApiBadRequestResponse({type: CategoryDto.FindOneBadRequest})
@@ -143,6 +148,11 @@ export class CategoryController {
     force: true,
   })
   @Delete(':id')
+  @ApiOperation({
+    summary: 'delete a category',
+    description: 'delete a category with id nd ownership. **only roles with permission (owner.all or category.delete) can accessibility to this route**',
+    operationId: 'delete_category',
+  })
   @ApiParam(UUID4Dto('id'))
   @ApiOkResponse({type: CategoryDto.DeleteCategoryOkRes})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('categories/id')})
@@ -154,6 +164,9 @@ export class CategoryController {
     return this.categoryService.delete(params.id);
   }
 
+  /** update a category with id and ownership
+   * - only roles with permission (owner.all or category.update) can accessibility to this route
+   */
   @Permission({
     permissions: [PERMISSIONS.CATEGORY_UPDATE],
     owner: true,
@@ -161,6 +174,11 @@ export class CategoryController {
   })
   @ApiBearerAuth("accessToken")
   @Put(':id')
+  @ApiOperation({
+    summary: 'delete a category',
+    description: 'delete a category with id nd ownership. **only roles with permission (owner.all or category.delete) can accessibility to this route**',
+    operationId: 'get_categories',
+  })
   @ApiParam(UUID4Dto('id'))
   @ApiForbiddenResponse({type: CategoryDto.ForbiddenUpdateCategoryRes})
   update(
