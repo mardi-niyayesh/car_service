@@ -1,10 +1,9 @@
 import * as CategoryDto from "./dto";
 import {PaginationValidatorType} from "@/common";
+import {Category} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {ApiResponse, BaseException, CategoryResponse, CategoriesResponse} from "@/types";
-import {Category} from "@/modules/prisma/generated/client";
-import {asyncWrapProviders} from "node:async_hooks";
 
 @Injectable()
 export class CategoryService {
