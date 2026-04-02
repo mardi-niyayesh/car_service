@@ -173,6 +173,10 @@ export class CategoryController {
     resource: "category",
   })
   @ApiBearerAuth("accessToken")
+  @CacheEvict({
+    resource: 'category',
+    force: true,
+  })
   @Put(':id')
   @ApiOperation({
     summary: 'update a category',
