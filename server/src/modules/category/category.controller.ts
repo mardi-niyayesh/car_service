@@ -70,7 +70,7 @@ export class CategoryController {
   @ApiOperation({
     summary: 'find one category',
     description: 'find one category with slug unique. **Access restricted for everyone**',
-    operationId: 'get_category',
+    operationId: 'get_one_categories',
   })
   @ApiParam(CategoryDto.findOneCategoryParam)
   @ApiOkResponse({type: CategoryDto.FindOneCategoryOkRes})
@@ -96,7 +96,7 @@ export class CategoryController {
   @ApiOperation({
     summary: 'get all categories',
     description: 'get all categories. **Access restricted for everyone**',
-    operationId: 'get_categories',
+    operationId: 'get_all_categories',
   })
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
@@ -151,7 +151,7 @@ export class CategoryController {
   @ApiOperation({
     summary: 'delete a category',
     description: 'delete a category with id nd ownership. **only roles with permission (owner.all or category.delete) can accessibility to this route**',
-    operationId: 'delete_category',
+    operationId: 'delete_categories',
   })
   @ApiParam(UUID4Dto('id'))
   @ApiOkResponse({type: CategoryDto.DeleteCategoryOkRes})
@@ -177,17 +177,20 @@ export class CategoryController {
   @ApiOperation({
     summary: 'delete a category',
     description: 'delete a category with id nd ownership. **only roles with permission (owner.all or category.delete) can accessibility to this route**',
-    operationId: 'get_categories',
+    operationId: 'update_categories',
   })
+  @ApiBody({type: CategoryDto.UpdateCategoryDto})
   @ApiParam(UUID4Dto('id'))
   @ApiForbiddenResponse({type: CategoryDto.ForbiddenUpdateCategoryRes})
   update(
     @Req() req: OwnershipRequest<Category>,
-    @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type
+    @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
+    @Body(new ZodPipe(CategoryDto.UpdateCategoryValidator)) body: CategoryDto.UpdateCategoryType,
   ): string {
     console.log(params);
     console.log(req.ownershipData);
     console.log(req.user);
+    console.log(body);
     return 'category updated successfully.';
   }
 }

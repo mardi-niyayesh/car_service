@@ -1,4 +1,19 @@
+import z from "zod";
 import {getNormalErrorResponse} from "@/common";
+import {CreateCategoryValidator} from "./create.dto";
+import {createZodDto} from "nestjs-zod";
+
+/** validator */
+export const UpdateCategoryValidator = CreateCategoryValidator.pick({
+  name: true,
+  description: true,
+});
+
+/** type of validator */
+export type UpdateCategoryType = z.infer<typeof UpdateCategoryValidator>;
+
+/** example swagger body */
+export class UpdateCategoryDto extends createZodDto(UpdateCategoryValidator) {}
 
 /** forbidden example response */
 export class ForbiddenUpdateCategoryRes extends getNormalErrorResponse({
