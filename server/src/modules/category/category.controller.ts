@@ -72,6 +72,7 @@ export class CategoryController {
     ttl: ONE_MINUTE_MS * 60
   })
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'find one category',
     description: 'find one category with id unique. **Access restricted for everyone**',
@@ -155,6 +156,7 @@ export class CategoryController {
     },
   })
   @Delete(':id')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'delete a category',
     description: 'delete a category with id nd ownership. **only roles with permission (owner.all or category.delete) can accessibility to this route**',
@@ -187,6 +189,7 @@ export class CategoryController {
     resource: 'category',
   })
   @Put(':id')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'update a category',
     description: 'update a category with id and ownership. **only roles with permission (owner.all or category.update) can accessibility to this route**',
@@ -194,13 +197,13 @@ export class CategoryController {
   })
   @ApiBody({type: CategoryDto.UpdateCategoryDto})
   @ApiParam(UUID4Dto('id'))
+  @ApiOkResponse({type: CategoryDto.UpdateCategoryOkRes})
   @ApiForbiddenResponse({type: CategoryDto.ForbiddenUpdateCategoryRes})
   async update(
     @Req() req: OwnershipRequest<Category>,
     @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
     @Body(new ZodPipe(CategoryDto.UpdateCategoryValidator)) body: CategoryDto.UpdateCategoryType,
-  ) {
-    await this.categoryService.update(params.id, body, req.ownershipData);
-    return 'category updated successfully.';
+  ): Promise<ApiResponse<CategoryResponse>> {
+    return await this.categoryService.update(params.id, body, req.ownershipData);
   }
 }

@@ -1,7 +1,8 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
-import {getNormalErrorResponse} from "@/common";
-import {CreateCategoryValidator} from "./create.dto";
+import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
+import {categoryExampleRes, CreateCategoryValidator} from "./create.dto";
+import {CategoryResponse} from "@/types";
 
 /** validator */
 export const UpdateCategoryValidator = CreateCategoryValidator.pick({
@@ -14,6 +15,17 @@ export type UpdateCategoryType = z.infer<typeof UpdateCategoryValidator>;
 
 /** example swagger body */
 export class UpdateCategoryDto extends createZodDto(UpdateCategoryValidator) {}
+
+/** example ok response */
+export class UpdateCategoryOkRes extends getBaseOkResponseSchema<CategoryResponse>({
+  path: 'categories/id',
+  response: {
+    message: 'category updated successfully.',
+    data: {
+      category: categoryExampleRes,
+    }
+  }
+}) {}
 
 /** forbidden example response */
 export class ForbiddenUpdateCategoryRes extends getNormalErrorResponse({
