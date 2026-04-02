@@ -71,7 +71,7 @@ export class CategoryController {
   @ApiNotFoundResponse({type: CategoryDto.FindOneCategoryNotFound})
   findOne(
     @Param(new ZodPipe(CategoryDto.FindOneCategoryValidator)) params: CategoryDto.FindOneCategoryType
-  ) {
+  ): Promise<ApiResponse<CategoryResponse>> {
     return this.categoryService.findOne(params.slug);
   }
 
