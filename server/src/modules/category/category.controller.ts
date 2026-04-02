@@ -199,6 +199,7 @@ export class CategoryController {
   @ApiParam(UUID4Dto('id'))
   @ApiOkResponse({type: CategoryDto.UpdateCategoryOkRes})
   @ApiForbiddenResponse({type: CategoryDto.ForbiddenUpdateCategoryRes})
+  @ApiConflictResponse({type: CategoryDto.UpdateCategoryConflictRes})
   async update(
     @Req() req: OwnershipRequest<Category>,
     @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,

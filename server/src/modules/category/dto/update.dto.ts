@@ -34,3 +34,11 @@ export class ForbiddenUpdateCategoryRes extends getNormalErrorResponse({
   message: "Access denied. Only the creator of this resource is allowed to perform this action.",
   error: "Ownership Verification Failed"
 }) {}
+
+/** conflict example response */
+export class UpdateCategoryConflictRes extends getNormalErrorResponse({
+  statusCode: 409,
+  path: "/categories/id",
+  message: "At least one field must differ from the existing category data. These fields have unchanged values: name.",
+  error: "Category update conflict"
+}) {}
