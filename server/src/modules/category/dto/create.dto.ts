@@ -9,7 +9,7 @@ export const maxCategorySlug = 150;
 
 /** base category validator */
 export const CreateCategoryValidator = OwnerShipValidator.extend({
-  name: z.string().min(2).max(100),
+  name: z.string().trim().min(2).max(100),
 
   slug: z
     .string()
@@ -21,7 +21,7 @@ export const CreateCategoryValidator = OwnerShipValidator.extend({
       message: "Slug can only contain lowercase letters, numbers, and hyphens (-).",
     }),
 
-  description: z.string().min(10).max(500).optional(),
+  description: z.string().trim().min(10).max(500).optional(),
 });
 
 /** type of create category validator */
