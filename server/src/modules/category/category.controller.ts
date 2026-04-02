@@ -175,8 +175,8 @@ export class CategoryController {
   @ApiBearerAuth("accessToken")
   @Put(':id')
   @ApiOperation({
-    summary: 'delete a category',
-    description: 'delete a category with id nd ownership. **only roles with permission (owner.all or category.delete) can accessibility to this route**',
+    summary: 'update a category',
+    description: 'update a category with id and ownership. **only roles with permission (owner.all or category.update) can accessibility to this route**',
     operationId: 'update_categories',
   })
   @ApiBody({type: CategoryDto.UpdateCategoryDto})
