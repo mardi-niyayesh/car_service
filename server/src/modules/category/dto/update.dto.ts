@@ -8,6 +8,9 @@ import {CategoryResponse} from "@/types";
 export const UpdateCategoryValidator = CreateCategoryValidator.pick({
   name: true,
   description: true,
+}).partial().refine(data => data.name || data.description, {
+  error: 'Either name or id must be provided',
+  path: ['name', 'description'],
 });
 
 /** type of validator */
