@@ -1,7 +1,8 @@
 import z from "zod";
-import {getNormalErrorResponse, getZodErrorBody} from "@/common";
+import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
 import {ApiParamOptions} from "@nestjs/swagger";
-import {CreateCategoryValidator, maxCategorySlug, minCategorySlug} from "./create.dto";
+import {categoryExampleRes, CreateCategoryValidator, maxCategorySlug, minCategorySlug} from "./create.dto";
+import {CategoryResponse} from "@/types";
 
 /** find one category validator */
 export const FindOneCategoryValidator = CreateCategoryValidator.pick({
@@ -23,6 +24,17 @@ export const findOneCategoryParam: ApiParamOptions = {
     maximum: maxCategorySlug,
   }
 };
+
+/** ok example response */
+export class FindOneCategoryOkRes extends getBaseOkResponseSchema<CategoryResponse>({
+  path: "categories/test",
+  response: {
+    message: "category found successfully.",
+    data: {
+      category: categoryExampleRes
+    }
+  }
+}) {}
 
 /** bad request example */
 export class FindOneBadRequest extends getZodErrorBody({

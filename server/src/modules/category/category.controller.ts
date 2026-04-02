@@ -67,6 +67,7 @@ export class CategoryController {
   @Public()
   @Get(':slug')
   @ApiParam(CategoryDto.findOneCategoryParam)
+  @ApiOkResponse({type: CategoryDto.FindOneCategoryOkRes})
   @ApiBadRequestResponse({type: CategoryDto.FindOneBadRequest})
   @ApiNotFoundResponse({type: CategoryDto.FindOneCategoryNotFound})
   findOne(
