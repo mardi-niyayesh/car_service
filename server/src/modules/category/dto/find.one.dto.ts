@@ -1,5 +1,5 @@
 import z from "zod";
-import {getZodErrorBody} from "@/common";
+import {getNormalErrorResponse, getZodErrorBody} from "@/common";
 import {ApiParamOptions} from "@nestjs/swagger";
 import {CreateCategoryValidator, maxCategorySlug, minCategorySlug} from "./create.dto";
 
@@ -33,4 +33,12 @@ export class FindOneBadRequest extends getZodErrorBody({
       error: "Slug can only contain lowercase letters, numbers, and hyphens (-)."
     }
   ]
+}) {}
+
+/** not found example */
+export class FindOneCategoryNotFound extends getNormalErrorResponse({
+  statusCode: 404,
+  path: "/categories/test",
+  message: "Category does not exist in database",
+  error: "Category not found"
 }) {}

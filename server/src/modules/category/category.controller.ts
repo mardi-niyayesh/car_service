@@ -68,6 +68,7 @@ export class CategoryController {
   @Get(':slug')
   @ApiParam(CategoryDto.findOneCategoryParam)
   @ApiBadRequestResponse({type: CategoryDto.FindOneBadRequest})
+  @ApiNotFoundResponse({type: CategoryDto.FindOneCategoryNotFound})
   findOne(
     @Param(new ZodPipe(CategoryDto.FindOneCategoryValidator)) params: CategoryDto.FindOneCategoryType
   ) {
