@@ -205,6 +205,6 @@ export class CategoryController {
     @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
     @Body(new ZodPipe(CategoryDto.UpdateCategoryValidator)) body: CategoryDto.UpdateCategoryType,
   ): Promise<ApiResponse<CategoryResponse>> {
-    return await this.categoryService.update(params.id, body, req.ownershipData);
+    return await this.categoryService.update(params.id, req.ownershipData, body);
   }
 }

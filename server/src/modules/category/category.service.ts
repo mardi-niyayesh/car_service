@@ -112,7 +112,11 @@ export class CategoryService {
    * - only roles with permission (owner.all or category.update) can accessibility to this route
    * - get category from permission guard(ownership)
    */
-  async update(id: string, data: CategoryDto.UpdateCategoryType, category: Category): Promise<ApiResponse<CategoryResponse>> {
+  async update(
+    id: string,
+    category: Category,
+    data: CategoryDto.UpdateCategoryType,
+  ): Promise<ApiResponse<CategoryResponse>> {
     const conflictData: string[] = [];
 
     for (const d in data) {
