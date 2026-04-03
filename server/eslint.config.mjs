@@ -3,12 +3,15 @@ import globals from "globals";
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 
+/** @type {import("typescript-eslint").configs.base} */
+const recommendedTypeChecked = tseslint.configs.recommendedTypeChecked;
+
 export default tseslint.config(
   {
     ignores: ["eslint.config.mjs"],
   },
   eslint.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
+  ...recommendedTypeChecked,
   {
     languageOptions: {
       globals: {
