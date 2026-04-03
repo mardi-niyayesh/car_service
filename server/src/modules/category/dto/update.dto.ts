@@ -1,8 +1,8 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
+import {CategoryResponse} from "@/types";
 import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 import {categoryExampleRes, CreateCategoryValidator} from "./create.dto";
-import {CategoryResponse} from "@/types";
 
 /** validator */
 export const UpdateCategoryValidator = CreateCategoryValidator.pick({
