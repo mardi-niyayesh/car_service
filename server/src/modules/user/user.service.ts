@@ -23,11 +23,6 @@ export class UserService {
    * - only users with permission (owner.all or user.view) can accessibility to this route
    */
   async findOne(id?: string, email?: string): Promise<ApiResponse<UserResponse>> {
-    if (!id && !email) throw new BadRequestException({
-      message: 'email or id must be provided',
-      error: 'id and email does not exist'
-    } as BaseException);
-
     const user = await this.prisma.user.findUnique({
       where: {
         id,
