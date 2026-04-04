@@ -6,9 +6,9 @@ import {getZodErrorBody, getBaseOkResponseSchema, getNormalErrorResponse} from "
 
 /** get one user validator */
 export const GetOneUserValidator = z.object({
-  id: z.uuidv4().optional(),
-  email: z.email().optional(),
-}).refine(data => data.email || data.id, {
+  id: z.uuidv4(),
+  email: z.email(),
+}).partial().refine(data => data.email || data.id, {
   error: 'Either email or id must be provided',
   path: ['email', 'id'],
 });
