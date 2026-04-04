@@ -1,12 +1,19 @@
+import 'dotenv/config';
 import {ApiProperty} from "@nestjs/swagger";
 import {getDefaultMessage} from "@/lib/utils/response";
 import {ApiResponse, BaseApiResponseData, ZodFieldError} from "@/types";
 
+const BASE_URL: string = process.env.BASE_URL ?? "api/v1";
+
 function getFormatPath(path: string): string {
-  if (path.startsWith("/")) {
-    return `/api/v1${path}`;
+  if (
+    path.startsWith(BASE_URL)
+    || path.startsWith(`/${BASE_URL}`)
+    || path.startsWith(BASE_URL.slice(1))
+  ) {
+    return path;
   }
-  return `/api/v1/${path}`;
+  return `/api/v1${path}`;
 }
 
 interface GetNormalErrorTypes {
