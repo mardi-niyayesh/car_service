@@ -182,7 +182,7 @@ export class UserService {
   }
 
   /** Assign roles to user
-   * - Accessible only by users with 'owner' or 'user_manager' role
+   * - **Accessible only by users with 'owner.all' or 'role.assign' or 'role.revoke' role**
    */
   async modifyRole(params: ModifyRoleServiceParams): Promise<ApiResponse<UserResponse>> {
     return this.prisma.$transaction(async (tx): Promise<ApiResponse<UserResponse>> => {
