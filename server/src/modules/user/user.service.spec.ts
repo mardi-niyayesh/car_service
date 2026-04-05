@@ -338,8 +338,6 @@ describe("UserService", (): void => {
 
       const result = await service.updateProfile(targetId, {age: newAge, display_name: newName});
 
-      console.log(result);
-
       expect((result.data.user as User).password).toBeUndefined();
       expect(result.data.user.age).toEqual(newAge);
       expect(result.data.user.display_name).toEqual(newName);
