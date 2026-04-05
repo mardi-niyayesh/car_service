@@ -1,6 +1,6 @@
 import {exampleDate} from "@/lib";
-import {PERMISSIONS, ROLES} from "@/common";
 import {UserService} from "./user.service";
+import {PERMISSIONS, ROLES} from "@/common";
 import {hashSecret, compareSecret} from "@/lib/utils/crypto";
 import {Role, User} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
