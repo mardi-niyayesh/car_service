@@ -309,16 +309,40 @@ describe("UserService", (): void => {
   describe('updateProfile()', (): void => {
     const targetId = 'target-id';
 
+    const user = {
+      id: targetId,
+      display_name: 'test user',
+      age: 18
+    };
+
     /** should throw ConflictException when oldData === newData */
     it('should throw ConflictException when oldData === newData', async () => {
-      prisma.user.findUnique.mockResolvedValue({
-        id: targetId,
-        display_name: 'test user',
-        age: 18
-      } as User);
+      prisma.user.findUnique.mockResolvedValue(user as User);
 
       // noinspection ES6RedundantAwait
       await expect(service.updateProfile(targetId, {age: 19, display_name: 'test user'})).rejects.toThrow(ConflictException);
+    });
+
+    // ** should update data profile and don't send user information **
+    it("should update data profile and don`t send user information", async () => {
+      prisma.user.findUnique.mockResolvedValue(user as User);
+
+      const newName = 'new test user';
+      const newAge = 20;
+
+      prisma.user.update.mockResolvedValue({
+        ...user,
+        age: newAge,
+        display_name: newName,
+      } as User);
+
+      const result = await service.updateProfile(targetId, {age: newAge, display_name: newName});
+
+      console.log(result);
+
+      expect((result.data.user as User).password).toBeUndefined();
+      expect(result.data.user.age).toEqual(newAge);
+      expect(result.data.user.display_name).toEqual(newName);
     });
   });
 });
