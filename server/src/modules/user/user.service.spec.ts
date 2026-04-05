@@ -302,4 +302,16 @@ describe("UserService", (): void => {
       expect(result.message).toBe('User password updated successfully.');
     });
   });
+
+  // ======================================================
+  // Update Data Profile
+  // ======================================================
+  describe('updateProfile()', (): void => {
+    const targetId = 'target-id';
+
+    /** should throw ConflictException when oldData === newData */
+    it('should throw ConflictException when oldData === newData', () => {
+
+    });
+  });
 });
