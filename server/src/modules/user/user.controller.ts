@@ -48,7 +48,7 @@ import {
 import * as UserDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
 import {UserService} from "./user.service";
-import type {UsersListResponse, AccessRequest, ApiResponse, UserResponse} from "@/types";
+import type {UsersListResponse, AccessRequest, ApiResponse, UserResponse, SafeUser, BaseApiResponse} from "@/types";
 
 /**
  * User management endpoints for retrieving user information.
@@ -117,7 +117,7 @@ export class UserController {
   updateProfile(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UpdateProfileValidator)) data: UserDto.UpdateProfileType
-  ) {
+  ): Promise<ApiResponse<{ user: SafeUser }>> {
     return this.usersService.updateProfile(req.user.userId, data);
   }
 
@@ -142,7 +142,7 @@ export class UserController {
   updatePassword(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UpdatePasswordValidator)) data: UserDto.UpdatePasswordType
-  ) {
+  ): Promise<BaseApiResponse> {
     return this.usersService.updatePassword(req.user.userId, data);
   }
 
@@ -349,7 +349,7 @@ export class UserController {
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UserRoleAssigned)) body: UserDto.UserRoleAssignedType,
     @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
-  ) {
+  ): Promise<ApiResponse<UserResponse>> {
     return this.usersService.modifyRole({
       rolesId: body.rolesId,
       userId: params.id,
