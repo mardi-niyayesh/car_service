@@ -344,5 +344,14 @@ describe("UserService", (): void => {
       expect(result.data.user.age).toEqual(newAge);
       expect(result.data.user.display_name).toEqual(newName);
     });
+
+    it('should throw NotFoundException when user does not exist', async () => {
+      prisma.user.findUnique.mockResolvedValue(null);
+
+      // noinspection ES6RedundantAwait
+      await expect(
+        service.updateProfile(targetId, {age: 22, display_name: 'someone'})
+      ).rejects.toThrow(NotFoundException);
+    });
   });
 });
