@@ -20,7 +20,7 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   /** get user info
-   * - only users with permission (owner.all or user.view) can accessibility to this route
+   * - **only users with permission (owner.all or user.view) can accessibility to this route**
    */
   async findOne(id?: string, email?: string): Promise<ApiResponse<UserResponse>> {
     const user = await this.prisma.user.findUnique({
@@ -59,7 +59,7 @@ export class UserService {
 
   /**
    * Update user profile data.
-   * - Requires authentication and "user.self" permission.
+   * - **Requires authentication and "user.self" permission.**
    */
   async updateProfile(id: string, {age, display_name}: UserDto.UpdateProfileType): Promise<ApiResponse<{ user: SafeUser }>> {
     return this.prisma.$transaction(async (tx): Promise<ApiResponse<{ user: SafeUser }>> => {
@@ -145,7 +145,7 @@ export class UserService {
   }
 
   /** get all users info
-   * - only users with permission (owner.all or user.view) can accessibility to this route
+   * - **only users with permission (owner.all or user.view) can accessibility to this route**
    */
   findAll(pagination: PaginationValidatorType): Promise<ApiResponse<UsersListResponse>> {
     return this.prisma.$transaction(async (tx): Promise<ApiResponse<UsersListResponse>> => {
