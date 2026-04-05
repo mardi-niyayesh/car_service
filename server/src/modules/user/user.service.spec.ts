@@ -33,7 +33,7 @@ describe("UserService", (): void => {
   });
 
   // ======================================================
-  // Find One Method Tests
+  // Find One
   // ======================================================
   describe("findOne()", (): void => {
     // success
@@ -100,7 +100,7 @@ describe("UserService", (): void => {
   });
 
   // ======================================================
-  // modifyRole Method Tests
+  // Modify User Role
   // ======================================================
   describe("modifyRole()", (): void => {
     const adminPayload = {
@@ -272,7 +272,7 @@ describe("UserService", (): void => {
   });
 
   // ======================================================
-  // Update Password with old password
+  // Update Password with old Password
   // ======================================================
   describe("updatePassword()", (): void => {
     const targetId = 'target-id';
