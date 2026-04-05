@@ -11,6 +11,7 @@ export default defineConfig({
         target: "http://localhost:3000",
         changeOrigin: true,
         secure: false,
+          rewrite: (path) => path.replace(/^\/api/, "/api/v1"),
 
         configure: (proxy, _options) => {
           proxy.on("proxyReq", (proxyReq, req, _res) => {
