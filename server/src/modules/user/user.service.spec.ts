@@ -310,8 +310,15 @@ describe("UserService", (): void => {
     const targetId = 'target-id';
 
     /** should throw ConflictException when oldData === newData */
-    it('should throw ConflictException when oldData === newData', () => {
+    it('should throw ConflictException when oldData === newData', async () => {
+      prisma.user.findUnique.mockResolvedValue({
+        id: targetId,
+        display_name: 'test user',
+        age: 18
+      } as User);
 
+      // noinspection ES6RedundantAwait
+      await expect(service.updateProfile(targetId, {age: 19, display_name: 'test user'})).rejects.toThrow(ConflictException);
     });
   });
 });
