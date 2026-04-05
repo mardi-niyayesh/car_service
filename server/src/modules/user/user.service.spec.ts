@@ -343,6 +343,7 @@ describe("UserService", (): void => {
       expect(result.data.user.display_name).toEqual(newName);
     });
 
+    // should throw NotFoundException when user does not exist
     it('should throw NotFoundException when user does not exist', async () => {
       prisma.user.findUnique.mockResolvedValue(null);
 
