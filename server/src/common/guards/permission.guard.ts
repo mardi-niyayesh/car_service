@@ -55,8 +55,10 @@ export class PermissionGuard implements CanActivate {
     };
 
     if (!requiredPermissions) throw new InternalServerErrorException({
-      message: 'Missing Role, Role is Required',
-      error: "Role Not Send",
+      message: "You do not have permission to perform this action.",
+      error: "Permission Denied",
+      required_permissions: requiredPermissions,
+      required_mode: requiredAll ? "ALL" : "ANY"
     } as BaseException);
 
     const actionPermissions = req.user.permissions as PermissionsType[];
