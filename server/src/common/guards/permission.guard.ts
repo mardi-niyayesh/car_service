@@ -55,10 +55,8 @@ export class PermissionGuard implements CanActivate {
     };
 
     if (!requiredPermissions) throw new InternalServerErrorException({
-      message: "You do not have permission to perform this action.",
-      error: "Permission Denied",
-      required_permissions: requiredPermissions,
-      required_mode: requiredAll ? "ALL" : "ANY"
+      message: "Missing Permission, Permission is Required",
+      error: "Permission Not Send",
     } as BaseException);
 
     const actionPermissions = req.user.permissions as PermissionsType[];
@@ -70,8 +68,10 @@ export class PermissionGuard implements CanActivate {
     });
 
     if (!isAllowed) throw new ForbiddenException({
-      message: "Your role not access to this action.",
+      message: "You do not have permission to perform this action.",
       error: "Permission Denied",
+      required_permissions: requiredPermissions,
+      required_mode: requiredAll ? "ALL" : "ANY"
     } as BaseException);
 
     if (owner && resource && !actionPermissions.includes(PERMISSIONS.OWNER_ALL)) {
