@@ -21,6 +21,10 @@ interface GetNormalErrorTypes {
   statusCode: number;
   path: string;
   error: string;
+  resource?: string;
+  required_permissions?: string[];
+  missing_permissions?: string[];
+  required_mode?: string;
 }
 
 /** normal example error  */
@@ -46,6 +50,18 @@ export function getNormalErrorResponse(props: GetNormalErrorTypes) {
 
     @ApiProperty({example: props.error})
     error: string;
+
+    @ApiProperty({example: 'example_resource'})
+    resource?: string;
+
+    @ApiProperty({example: ['user.view', 'role.assign']})
+    required_permissions?: string[];
+
+    @ApiProperty({example: ['role.assign']})
+    missing_permissions?: string[];
+
+    @ApiProperty({example: 'ALL'})
+    required_mode?: string;
   }
 
   return NormalErrorResponse;
@@ -76,15 +92,30 @@ export class TooManyRequestResponse extends getNormalErrorResponse({
   statusCode: 429
 }) {}
 
+interface GetForbiddenResponse {
+  resource?: string;
+  required_permissions?: string[];
+  missing_permissions?: string[];
+  required_mode?: string;
+}
+
 /** get schema for swagger when not allowed */
-export function getForbiddenResponse(path: string) {
+export function getForbiddenResponse(path: string, data?: GetForbiddenResponse) {
   const className: string = getDynamicClassName("Forbidden", path);
   return {
     [className]: class extends getNormalErrorResponse({
-      message: "Your role not access to this action.",
+      message: "You do not have sufficient permissions to perform this action.",
       statusCode: 403,
       error: "Permission Denied",
-      path
+      path,
+      resource: data?.resource ?? 'test_resource',
+      required_permissions: data?.required_permissions ?? [
+        "user.view"
+      ],
+      missing_permissions: data?.missing_permissions ?? [
+        "user.view"
+      ],
+      required_mode: data?.required_mode ?? "ANY"
     }) {}
   }[className];
 }

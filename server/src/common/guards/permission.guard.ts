@@ -75,7 +75,7 @@ export class PermissionGuard implements CanActivate {
       throw new ForbiddenException({
         message: "You do not have sufficient permissions to perform this action.",
         error: "Permission Denied",
-        resource: resource ?? null,
+        resource: resource ?? undefined,
         required_permissions: requiredPermissions,
         missing_permissions: missingPermissions,
         required_mode: requiredAll ? "ALL" : "ANY"
