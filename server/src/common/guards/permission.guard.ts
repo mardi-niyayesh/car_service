@@ -67,12 +67,20 @@ export class PermissionGuard implements CanActivate {
       actionPermissions,
     });
 
-    if (!isAllowed) throw new ForbiddenException({
-      message: "You do not have permission to perform this action.",
-      error: "Permission Denied",
-      required_permissions: requiredPermissions,
-      required_mode: requiredAll ? "ALL" : "ANY"
-    } as BaseException);
+    if (!isAllowed) {
+      const missingPermissions = requiredPermissions.filter(
+        p => !actionPermissions.includes(p)
+      );
+
+      throw new ForbiddenException({
+        message: "You do not have sufficient permissions to perform this action.",
+        error: "Permission Denied",
+        resource: resource ?? null,
+        required_permissions: requiredPermissions,
+        missing_permissions: missingPermissions,
+        required_mode: requiredAll ? "ALL" : "ANY"
+      } as BaseException);
+    }
 
     if (owner && resource && !actionPermissions.includes(PERMISSIONS.OWNER_ALL)) {
       const prismaDelegate = this.prisma[resource] as unknown as DynamicDelegate;
