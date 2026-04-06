@@ -45,7 +45,9 @@ export interface ZodException {
 
 /** base exception response */
 export type ZodExceptionRes = & BaseResponse & ZodException;
-export type BaseExceptionRes = & BaseResponse & BaseException;
+export type BaseExceptionRes = & BaseResponse & BaseException & {
+  [key: string]: unknown;
+};
 
 /** return a list of data with count */
 export type ListWithCount<T> = T & {

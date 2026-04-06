@@ -57,6 +57,11 @@ export class ResponseException implements ExceptionFilter {
         message,
         error,
       };
+
+      if (typeof body === 'object' && (body as BaseExceptionRes).error === 'Permission Denied') finalResponse = {
+        ...finalResponse,
+        ...body
+      };
     }
 
     return res.status(status).json(finalResponse);
