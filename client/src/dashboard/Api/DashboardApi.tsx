@@ -1,7 +1,5 @@
-import { useUser } from "../../hooks/useUser";
-
+import axiosClient from "../../services/axiosClient";
 export const LogoutUser = async () => {
-  const { logout,setToken,setUser } = useUser();
   try {
     const token = localStorage.getItem("token");
     const response = await fetch("/api/auth/logout", {
@@ -14,9 +12,6 @@ export const LogoutUser = async () => {
     });
     if (!response.ok) {
       console.log("statuse", response.status);
-      logout();
-      setToken(null)
-      setUser(null)
     }
 
     const data = await response.json();
@@ -25,5 +20,35 @@ export const LogoutUser = async () => {
   } catch (error) {
     console.log(error);
     throw error;
+  }
+};
+
+//Updat Email and Naame User
+export const UpdateInformationUser = async (data) => {
+  try {
+    const response = await axiosClient.patch("/users/profile", {
+      display_name: data.display_name,
+      age: Number(data.age),
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+//Updat Password User
+export const UpdatePasswordUser = async (data) => {
+  try {
+    const response = await axiosClient.patch("/users/password", {
+      oldPassword: data.oldPassword,
+      newPassword: data.newPassword,
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    throw err;
   }
 };
