@@ -34,7 +34,8 @@ import ReservePages from "./dashboard/Pages/ReservePages";
 import WalletPages from "./dashboard/Pages/WalletPages";
 import CardPages from "./dashboard/Pages/CardPages";
 import LogoutPage from "./dashboard/Pages/LogoutPage";
-import ComponentFormUpdateUser from "./dashboard/Api/ComponentFormUpdateUser";
+import ComponentFormUpdateUser from "./dashboard/Components/ComponentFormUpdateUser";
+import ComponnetUpdetePassword from "./dashboard/Components/ComponnetUpdetePassword";
 import Profile from "./dashboard/Components/Profile";
 //pages for panelAdmin
 import DetalisUserPage from "./PanelAdmin/Pages/DetalisUserPage";
@@ -85,6 +86,8 @@ function App() {
             <Route path="logout" element={<LogoutPage />} />
             <Route path="Profile/updateUser" element={<ComponentFormUpdateUser />} />
             <Route path="Profile" element={<Profile />} />
+             <Route path="Profile/updatePassword" element={<ComponnetUpdetePassword />} />
+
           </Route>
           {/* ------- Panel Admin Layout ------- */}
           <Route path="/panel" element={<PanelAdminLayout />}>
