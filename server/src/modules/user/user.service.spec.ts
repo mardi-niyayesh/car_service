@@ -10,6 +10,39 @@ import {BadRequestException, ConflictException, ForbiddenException, NotFoundExce
 
 type PrismaMock = DeepMockProxy<PrismaService>;
 
+const fakeUser = {
+  id: "2a55bda6-e1fc-4047-9725-aeec8fcc9ec4",
+  createdAt: exampleDate,
+  updatedAt: exampleDate,
+  email: "user@example.com",
+  password: "example_password",
+  display_name: "first user",
+  age: 20,
+  userRoles: [
+    {
+      role: {
+        name: "self",
+        rolePermissions: [
+          {
+            permission: {name: "user.self"}
+          }
+        ]
+      }
+    },
+    {
+      role: {
+        name: "user_manager",
+        rolePermissions: [
+          {permission: {name: "role.revoke"}},
+          {permission: {name: "role.assign"}},
+          {permission: {name: "user.delete"}},
+          {permission: {name: "user.view"}}
+        ]
+      }
+    }
+  ]
+} as unknown as User;
+
 vi.mock('@/lib/utils/crypto', () => ({
   hashSecret: vi.fn(),
   compareSecret: vi.fn()
@@ -24,7 +57,7 @@ describe("UserService", (): void => {
     prisma = mockDeep<PrismaService>();
     service = new UserService(prisma);
 
-    prisma.$transaction.mockImplementation(async fn => fn(prisma));
+    prisma.$transaction.mockImplementation(async (fn) => fn(prisma));
   });
 
   // Reset All
@@ -38,39 +71,6 @@ describe("UserService", (): void => {
   describe("findOne()", (): void => {
     // success
     it('should find user and don`t send password: ', async (): Promise<void> => {
-      const fakeUser = {
-        id: "2a55bda6-e1fc-4047-9725-aeec8fcc9ec4",
-        createdAt: exampleDate,
-        updatedAt: exampleDate,
-        email: "user@example.com",
-        password: "example_password",
-        display_name: "first user",
-        age: 20,
-        userRoles: [
-          {
-            role: {
-              name: "self",
-              rolePermissions: [
-                {
-                  permission: {name: "user.self"}
-                }
-              ]
-            }
-          },
-          {
-            role: {
-              name: "user_manager",
-              rolePermissions: [
-                {permission: {name: "role.revoke"}},
-                {permission: {name: "role.assign"}},
-                {permission: {name: "user.delete"}},
-                {permission: {name: "user.view"}}
-              ]
-            }
-          }
-        ]
-      } as unknown as User;
-
       prisma.user.findUnique.mockResolvedValue(fakeUser);
 
       const result = await service.findOne(fakeUser.id);
@@ -104,8 +104,20 @@ describe("UserService", (): void => {
   // ======================================================
   describe('findAll()', (): void => {
     /** should Success and get user list with count */
-    it('should Success and get user list with count', () => {
+    it('should Success and get user list with count', async () => {
+      const count = 20;
+      const limit = 10;
+      const fakeUsers: User[] = Array.from({length: limit}, () => fakeUser);
 
+      // user fake count in databases
+      prisma.user.count.mockResolvedValue(count);
+      prisma.$queryRaw.mockResolvedValue(fakeUsers);
+
+      const result = await service.findAll({offset: 0, page: 1, limit, orderByLower: 'desc', orderByUpper: 'DESC'});
+
+      expect(result.data.count).equal(count);
+      expect(result.data.users.length).equal(limit);
+      expect(result.data.users).toBe(fakeUsers);
     });
   });
 
