@@ -100,6 +100,16 @@ describe("UserService", (): void => {
   });
 
   // ======================================================
+  // Find All
+  // ======================================================
+  describe('findAll()', (): void => {
+    /** should Success and get user list with count */
+    it('should Success and get user list with count', () => {
+
+    });
+  });
+
+  // ======================================================
   // Modify User Role
   // ======================================================
   describe("modifyRole()", (): void => {
