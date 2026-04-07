@@ -27,7 +27,7 @@ model User {
   passwordToken PasswordToken?
   createdRoles  Role[]
   categories    Category[]
-  car           Car[]
+  cars          Car[]
 
   @@map("users")
 }
@@ -91,8 +91,8 @@ model Role {
   name        String  @unique @db.VarChar(100)
   description String? @db.VarChar(500)
 
-  creator   String? @db.Uuid
-  creatorId User?   @relation(fields: [creator], references: [id], onUpdate: NoAction)
+  creator_id String? @db.Uuid
+  creator    User?   @relation(fields: [creator_id], references: [id], onUpdate: NoAction)
 
   userRoles       UserRole[]
   rolePermissions RolePermission[]
@@ -142,8 +142,8 @@ model Category {
   slug        String  @unique @db.VarChar(150)
   description String? @db.VarChar(500)
 
-  creator   String? @db.Uuid
-  creatorId User?   @relation(fields: [creator], references: [id], onUpdate: NoAction)
+  creator_id String? @db.Uuid
+  creator    User?   @relation(fields: [creator_id], references: [id], onUpdate: NoAction)
 
   car Car[]
 
@@ -166,11 +166,11 @@ model Car {
   in_rent  Boolean @default(false) @db.Boolean
   can_rent Boolean @default(false) @db.Boolean
 
-  category   String   @db.Uuid
-  categoryId Category @relation(fields: [category], references: [id])
+  category_id String   @db.Uuid
+  category    Category @relation(fields: [category_id], references: [id])
 
-  creator   String? @db.Uuid
-  creatorId User?   @relation(fields: [creator], references: [id], onUpdate: NoAction)
+  creator_id String? @db.Uuid
+  creator    User?   @relation(fields: [creator_id], references: [id], onUpdate: NoAction)
 
   @@map("cars")
 }
