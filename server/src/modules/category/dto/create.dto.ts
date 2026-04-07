@@ -38,7 +38,7 @@ export const categoryExampleRes: CategoryResponse['category'] = {
   name: "test category",
   slug: "test_category",
   description: "test test test",
-  creator: "e537de94-2f4f-4685-8c2b-29809d52bcb2"
+  creator_id: "e537de94-2f4f-4685-8c2b-29809d52bcb2"
 };
 
 /** example ok create category response */

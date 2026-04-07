@@ -5,7 +5,7 @@ export type Resource = Uncapitalize<Prisma.ModelName>;
 export type PrismaModels = Prisma.TypeMap["meta"]['modelProps'];
 
 export type FindDynamicDelegate = {
-  creator: string | null;
+  creator_id: string | null;
 };
 
 interface DynamicDelegateArgs {

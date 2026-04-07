@@ -130,11 +130,11 @@ export class RoleService {
         } as BaseException);
       }
 
-      const creator: string | null = ownership ? actionPayload.userId : null;
+      const creator_id: string | null = ownership ? actionPayload.userId : null;
 
       const newRole = await tx.role.create({
         data: {
-          creator,
+          creator_id,
           name,
           description
         }

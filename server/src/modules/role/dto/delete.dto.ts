@@ -7,7 +7,7 @@ export const testRoleExample: FindOneRoleRes['role'] = {
   name: "test_role",
   updated_at: exampleDate,
   created_at: exampleDate,
-  creator: "e537de94-2f4f-4685-8c2b-29809d52bcb2",
+  creator_id: "e537de94-2f4f-4685-8c2b-29809d52bcb2",
   description: "This a Test Role",
   permissions: [
     "product.create",

@@ -72,7 +72,7 @@ export class CategoryService {
           slug,
           name,
           description,
-          creator: ownership ? userId : null
+          creator_id: ownership ? userId : null
         }
       });
 

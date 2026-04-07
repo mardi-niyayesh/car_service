@@ -105,14 +105,14 @@ export class PermissionGuard implements CanActivate {
       error: `${resource} not found`,
     } as BaseException);
 
-    if (data.creator === undefined) throw new InternalServerErrorException({
+    if (data.creator_id === undefined) throw new InternalServerErrorException({
       message: `creator column not found, please make sure this data has creator column`,
       error: `creator not found`,
     } as BaseException);
 
-    if (data.creator === null) return true;
+    if (data.creator_id === null) return true;
 
-    if (data.creator && data.creator !== userId) throw new ForbiddenException({
+    if (data.creator_id && data.creator_id !== userId) throw new ForbiddenException({
       message: "Access denied. Only the creator of this resource is allowed to perform this action.",
       error: "Ownership Verification Failed"
     } as BaseException);

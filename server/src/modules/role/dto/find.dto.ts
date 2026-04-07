@@ -30,7 +30,7 @@ export const findOneRoleResponse: FindOneRoleRes = {
     name: "role_manager",
     updated_at: exampleDate,
     created_at: exampleDate,
-    creator: null,
+    creator_id: null,
     description: "Full administrative access to manage all role in the system",
     permissions: [
       "role.view",
