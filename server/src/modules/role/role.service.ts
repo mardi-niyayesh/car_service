@@ -49,7 +49,7 @@ export class RoleService {
              r.name,
              r.created_at,
              r.updated_at,
-             r.creator,
+             r.creator_id,
              ARRAY_AGG(DISTINCT p.name) AS permissions
           FROM roles r
                INNER JOIN role_permission rp ON r.id = rp.role_id
