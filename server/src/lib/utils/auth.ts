@@ -1,4 +1,6 @@
+import {BaseException} from "@/types";
 import {PERMISSIONS, PermissionsType} from "@/common";
+import {InternalServerErrorException} from "@nestjs/common";
 
 interface IsAllowedActionParams {
   requiredAll?: boolean;
@@ -13,6 +15,11 @@ export function isAllowedAction(
     requiredAll = false,
   }: IsAllowedActionParams
 ): boolean {
+  if (!requiredPermissions.length) throw new InternalServerErrorException({
+    message: "Required permissions cannot be empty",
+    error: "requiredPermissions is empty",
+  } as BaseException);
+
   const permissionSet = new Set(actionPermissions);
 
   // if owner

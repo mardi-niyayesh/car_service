@@ -54,7 +54,7 @@ export class PermissionGuard implements CanActivate {
       resource: undefined,
     };
 
-    if (!requiredPermissions) throw new InternalServerErrorException({
+    if (!requiredPermissions.length) throw new InternalServerErrorException({
       message: "Missing Permission, Permission is Required",
       error: "Permission Not Send",
     } as BaseException);
