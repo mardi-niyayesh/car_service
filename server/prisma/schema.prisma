@@ -12,7 +12,7 @@ datasource db {
 
 // User Model
 model User {
-  id         String   @id @default(uuid(4))
+  id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -34,14 +34,14 @@ model User {
 
 // token for passwords
 model PasswordToken {
-  id         String   @id @default(uuid(4))
+  id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   token      String   @db.VarChar(64)
   expires_at DateTime
 
-  user_id String @unique
+  user_id String @unique @db.Uuid
   user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([token])
@@ -51,7 +51,7 @@ model PasswordToken {
 
 // RefreshToken Model
 model RefreshToken {
-  id         String   @id @default(uuid(4))
+  id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -60,7 +60,7 @@ model RefreshToken {
   token      String    @unique @db.VarChar(64)
   remember   Boolean   @default(false) @db.Boolean
 
-  user_id String
+  user_id String @db.Uuid
   user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("refresh_tokens")
@@ -70,7 +70,7 @@ model RefreshToken {
 
 // Permisisons Model
 model Permission {
-  id         String   @id @default(uuid(4))
+  id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -84,14 +84,14 @@ model Permission {
 
 // Role Model
 model Role {
-  id         String   @id @default(uuid(4))
+  id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   name        String  @unique @db.VarChar(100)
   description String? @db.VarChar(500)
 
-  creator   String?
+  creator   String? @db.Uuid
   creatorId User?   @relation(fields: [creator], references: [id], onUpdate: NoAction)
 
   userRoles       UserRole[]
@@ -102,14 +102,14 @@ model Role {
 
 // relation for Permissions and Roles
 model RolePermission {
-  id         String   @id @default(uuid(4))
+  id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  permission_id String
+  permission_id String     @db.Uuid
   permission    Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
 
-  role_id String
+  role_id String @db.Uuid
   role    Role   @relation(fields: [role_id], references: [id], onDelete: Cascade)
 
   @@unique([role_id, permission_id])
@@ -118,14 +118,14 @@ model RolePermission {
 
 // relation for user to role (many to many)
 model UserRole {
-  id         String   @id @default(uuid(4))
+  id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  user_id String
+  user_id String @db.Uuid
   user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-  role_id String
+  role_id String @db.Uuid
   role    Role   @relation(fields: [role_id], references: [id], onDelete: Cascade)
 
   @@unique([role_id, user_id])
@@ -134,7 +134,7 @@ model UserRole {
 
 // Category Model
 model Category {
-  id         String   @id @default(uuid(4))
+  id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -142,7 +142,7 @@ model Category {
   slug        String  @unique @db.VarChar(150)
   description String? @db.VarChar(500)
 
-  creator   String?
+  creator   String? @db.Uuid
   creatorId User?   @relation(fields: [creator], references: [id], onUpdate: NoAction)
 
   car Car[]
@@ -152,7 +152,7 @@ model Category {
 
 // Car Model
 model Car {
-  id         String   @id @default(uuid(4))
+  id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -166,10 +166,10 @@ model Car {
   in_rent  Boolean @default(false) @db.Boolean
   can_rent Boolean @default(false) @db.Boolean
 
-  category   String
+  category   String   @db.Uuid
   categoryId Category @relation(fields: [category], references: [id])
 
-  creator   String?
+  creator   String? @db.Uuid
   creatorId User?   @relation(fields: [creator], references: [id], onUpdate: NoAction)
 
   @@map("cars")
