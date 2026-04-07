@@ -25,7 +25,7 @@ model User {
   refreshTokens RefreshToken[]
   userRoles     UserRole[]
   passwordToken PasswordToken?
-  createdRoles  Role[]
+  createdRoles  Role[] // User Created Roles
   categories    Category[]
   cars          Car[]
 
@@ -63,6 +63,7 @@ model RefreshToken {
   user_id String @db.Uuid
   user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
+  @@index([user_id])
   @@map("refresh_tokens")
 }
 
@@ -113,6 +114,8 @@ model RolePermission {
   role    Role   @relation(fields: [role_id], references: [id], onDelete: Cascade)
 
   @@unique([role_id, permission_id])
+  @@index([permission_id])
+  @@index([role_id])
   @@map("role_permission")
 }
 
@@ -129,6 +132,8 @@ model UserRole {
   role    Role   @relation(fields: [role_id], references: [id], onDelete: Cascade)
 
   @@unique([role_id, user_id])
+  @@index([role_id])
+  @@index([user_id])
   @@map("user_roles")
 }
 
@@ -145,7 +150,7 @@ model Category {
   creator_id String? @db.Uuid
   creator    User?   @relation(fields: [creator_id], references: [id], onUpdate: NoAction)
 
-  car Car[]
+  cars Car[]
 
   @@map("categories")
 }
@@ -172,5 +177,6 @@ model Car {
   creator_id String? @db.Uuid
   creator    User?   @relation(fields: [creator_id], references: [id], onUpdate: NoAction)
 
+  @@index([category_id])
   @@map("cars")
 }
