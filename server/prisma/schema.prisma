@@ -12,13 +12,15 @@ datasource db {
 
 // User Model
 model User {
-  id           String   @id @default(uuid(4))
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
-  email        String   @unique @db.VarChar(255)
-  password     String   @db.VarChar(255)
-  display_name String?  @db.VarChar(50)
+  id         String   @id @default(uuid(4))
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  display_name String? @db.VarChar(50)
   age          Int?
+
+  email    String @unique @db.VarChar(255)
+  password String @db.VarChar(255)
 
   refreshTokens RefreshToken[]
   userRoles     UserRole[]
@@ -35,11 +37,12 @@ model PasswordToken {
   id         String   @id @default(uuid(4))
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  user_id    String   @unique
+
   token      String   @db.VarChar(64)
   expires_at DateTime
 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id String @unique
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([token])
   @@index([expires_at])
@@ -48,16 +51,17 @@ model PasswordToken {
 
 // RefreshToken Model
 model RefreshToken {
-  id         String    @id @default(uuid(4))
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  remember   Boolean   @default(false)
-  revoked_at DateTime?
-  expires_at DateTime
-  token      String    @unique @db.VarChar(64)
-  user_id    String
+  id         String   @id @default(uuid(4))
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  expires_at DateTime
+  revoked_at DateTime?
+  token      String    @unique @db.VarChar(64)
+  remember   Boolean   @default(false) @db.Boolean
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("refresh_tokens")
 }
@@ -66,11 +70,12 @@ model RefreshToken {
 
 // Permisisons Model
 model Permission {
-  id          String   @id @default(uuid(4))
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-  name        String   @unique @db.VarChar(100)
-  description String?  @db.VarChar(500)
+  id         String   @id @default(uuid(4))
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  name        String  @unique @db.VarChar(100)
+  description String? @db.VarChar(500)
 
   rolePermissions RolePermission[]
 
@@ -79,30 +84,33 @@ model Permission {
 
 // Role Model
 model Role {
-  id          String   @id @default(uuid(4))
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-  name        String   @unique @db.VarChar(100)
-  description String?  @db.VarChar(500)
-  creator     String?
+  id         String   @id @default(uuid(4))
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-  rolePermissions RolePermission[]
+  name        String  @unique @db.VarChar(100)
+  description String? @db.VarChar(500)
+
+  creator   String?
+  creatorId User?   @relation(fields: [creator], references: [id], onUpdate: NoAction)
+
   userRoles       UserRole[]
-  creatorId       User?            @relation(fields: [creator], references: [id], onUpdate: NoAction)
+  rolePermissions RolePermission[]
 
   @@map("roles")
 }
 
 // relation for Permissions and Roles
 model RolePermission {
-  id            String   @id @default(uuid(4))
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
-  role_id       String
-  permission_id String
+  id         String   @id @default(uuid(4))
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-  permission Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
-  role       Role       @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  permission_id String
+  permission    Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
+
+  role_id String
+  role    Role   @relation(fields: [role_id], references: [id], onDelete: Cascade)
 
   @@unique([role_id, permission_id])
   @@map("role_permission")
@@ -113,11 +121,12 @@ model UserRole {
   id         String   @id @default(uuid(4))
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  role_id    String
-  user_id    String
 
-  role Role @relation(fields: [role_id], references: [id], onDelete: Cascade)
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  role_id String
+  role    Role   @relation(fields: [role_id], references: [id], onDelete: Cascade)
 
   @@unique([role_id, user_id])
   @@map("user_roles")
@@ -125,16 +134,18 @@ model UserRole {
 
 // Category Model
 model Category {
-  id          String   @id @default(uuid(4))
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-  name        String   @db.VarChar(100)
-  slug        String   @unique @db.VarChar(150)
-  description String?  @db.VarChar(500)
-  creator     String?
+  id         String   @id @default(uuid(4))
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-  creatorId User? @relation(fields: [creator], references: [id], onUpdate: NoAction)
-  car       Car[]
+  name        String  @db.VarChar(100)
+  slug        String  @unique @db.VarChar(150)
+  description String? @db.VarChar(500)
+
+  creator   String?
+  creatorId User?   @relation(fields: [creator], references: [id], onUpdate: NoAction)
+
+  car Car[]
 
   @@map("categories")
 }
