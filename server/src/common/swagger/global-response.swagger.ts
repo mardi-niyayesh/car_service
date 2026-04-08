@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import {ApiProperty} from "@nestjs/swagger";
+import {PermissionsType, Resource} from "@/common";
 import {getDefaultMessage} from "@/lib/utils/response";
 import {ApiResponse, BaseApiResponseData, ZodFieldError} from "@/types";
 
@@ -93,10 +94,10 @@ export class TooManyRequestResponse extends getNormalErrorResponse({
 }) {}
 
 interface GetForbiddenResponse {
-  resource?: string;
-  required_permissions?: string[];
-  missing_permissions?: string[];
-  required_mode?: string;
+  resource?: Resource;
+  required_permissions?: PermissionsType[];
+  missing_permissions?: PermissionsType[];
+  required_mode?: 'ALL' | 'ANY';
 }
 
 /** get schema for swagger when not allowed */
