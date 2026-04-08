@@ -213,6 +213,20 @@ export class RoleService {
    * - **only roles with permission (owner.all or role.update) can accessibility to this route**
    */
   update(id: string, newData: RolesDto.UpdateRoleType, role: Role) {
+
+    const conflictData: string[] = [];
+
+    for (const k in newData) {
+      if (role[k] === newData[k]) {
+        conflictData.push(k);
+      }
+    }
+
+    if (conflictData.length) throw new ConflictException({
+      message: `At least one field must differ from the existing role data. These fields have unchanged values: ${conflictData.join(', ')}.`,
+      error: 'Role update conflict'
+    } as BaseException);
+
     console.log(id);
     console.log(newData);
     console.log(role);
