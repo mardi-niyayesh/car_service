@@ -33,8 +33,9 @@ import * as RolesDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../user/dto";
 import {RoleService} from "./role.service";
-import type {AccessRequest, ApiResponse, FindOneRoleRes, FindAllRolesRes} from "@/types";
+import type {AccessRequest, ApiResponse, FindOneRoleRes, FindAllRolesRes, OwnershipRequest} from "@/types";
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, Param, Put} from "@nestjs/common";
+import {Role} from "@/modules/prisma/generated/client";
 
 /**
  * Role management endpoints for creating and managing custom roles.
@@ -233,6 +234,7 @@ export class RoleController {
   })
   @Put(':id')
   @ApiParam(UUID4Dto('id'))
+  @ApiBody({type: RolesDto.CreateRoleDto})
   @ApiForbiddenResponse({
     type: getForbiddenResponse('roles/id', {
       required_permissions: ['role.update'],
@@ -243,7 +245,11 @@ export class RoleController {
   })
   async update(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
+    @Req() req: OwnershipRequest<Role>,
+    @Body(new ZodPipe(RolesDto.CreateRoleValidator)) body: RolesDto.CreateRoleType
   ) {
+    console.log(body);
+    console.log(req.ownershipData);
     await this.rolesService.update(id);
     return 'role updated successfully.';
   }
