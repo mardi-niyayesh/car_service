@@ -19,7 +19,6 @@ import {
   CacheEvict,
   Permission,
   PERMISSIONS,
-  type UUID4Type,
   UUIDv4Validator,
   pagePaginationDto,
   limitPaginationDto,
@@ -285,11 +284,11 @@ export class UserController {
   assignRole(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UserRoleAssigned)) body: UserDto.UserRoleAssignedType,
-    @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
+    @Param('id',new ZodPipe(UUIDv4Validator)) id: string,
   ): Promise<ApiResponse<UserResponse>> {
     return this.usersService.modifyRole({
       rolesId: body.rolesId,
-      userId: params.id,
+      userId: id,
       action: "assign",
       actionPayload: req.user
     });
@@ -348,11 +347,11 @@ export class UserController {
   revokeRole(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UserRoleAssigned)) body: UserDto.UserRoleAssignedType,
-    @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
+    @Param('id',new ZodPipe(UUIDv4Validator)) id: string,
   ): Promise<ApiResponse<UserResponse>> {
     return this.usersService.modifyRole({
       rolesId: body.rolesId,
-      userId: params.id,
+      userId: id,
       action: "revoke",
       actionPayload: req.user
     });
