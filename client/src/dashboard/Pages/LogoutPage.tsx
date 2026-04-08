@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 //api
-import { LogoutUser } from "../Api/DashboardApi";
+import { LogoutUser } from "../Api/ApiLogoutUser";
 //Modal
 import SuccessModal from "../../components/common/SuccessModal";
 import ErrorModal from "../../components/common/ErrorModal";
