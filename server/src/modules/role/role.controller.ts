@@ -236,6 +236,7 @@ export class RoleController {
   @ApiParam(UUID4Dto('id'))
   @ApiBody({type: RolesDto.UpdateRoleDto})
   @ApiBadRequestResponse({type: RolesDto.UpdateRoleBadReq})
+  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles/id')})
   @ApiForbiddenResponse({
     type: getForbiddenResponse('roles/id', {
       required_permissions: ['role.update'],
