@@ -1,5 +1,6 @@
 import axiosClient from "../../services/axiosClient";
 import { useUser } from "../../hooks/useUser";
+import { setAxiosToken } from "../../services/axiosClient";
 type UpdateUserData = {
   display_name: string;
   age: number;
@@ -23,7 +24,9 @@ export const useUpdateUser = () => {
             ...user,
             ...response.data.response.data.user,
           });
+             setAxiosToken(response.data.accessToken);
         }
+      
         alert("اطلاعات کاربر با موفقیت به‌روزرسانی شد.");
         console.log("Update successful, status:", response.data);
         return response.data;
