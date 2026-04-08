@@ -82,7 +82,7 @@ export class PermissionGuard implements CanActivate {
       } as BaseException);
     }
 
-    if (owner && resource && !actionPermissions.includes(PERMISSIONS.OWNER_ALL)) {
+    if (owner && resource) {
       const prismaDelegate = this.prisma[resource] as unknown as DynamicDelegate;
 
       const data = await prismaDelegate.findUnique({
@@ -93,13 +93,18 @@ export class PermissionGuard implements CanActivate {
 
       if (data) req.ownershipData = data;
 
-      return this.checkOwnership(data, req.user.userId, resource);
+      return this.checkOwnership(data, req.user.userId, resource, actionPermissions);
     }
 
     return true;
   }
 
-  checkOwnership(data: FindDynamicDelegate | undefined, userId: string, resource: string): boolean {
+  checkOwnership(
+    data: FindDynamicDelegate | undefined,
+    userId: string,
+    resource: string,
+    actionPermissions: PermissionsType[]
+  ): boolean {
     if (!data) throw new NotFoundException({
       message: `this ${resource} does not exist in database`,
       error: `${resource} not found`,
@@ -111,6 +116,8 @@ export class PermissionGuard implements CanActivate {
     } as BaseException);
 
     if (data.creator_id === null) return true;
+
+    if (actionPermissions.includes(PERMISSIONS.OWNER_ALL)) return true;
 
     if (data.creator_id && data.creator_id !== userId) throw new ForbiddenException({
       message: "Access denied. Only the creator of this resource is allowed to perform this action.",
