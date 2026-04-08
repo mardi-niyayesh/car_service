@@ -21,7 +21,6 @@ import {
   Permission,
   CacheEvict,
   PERMISSIONS,
-  type UUID4Type,
   UUIDv4Validator,
   pagePaginationDto,
   limitPaginationDto,
@@ -83,9 +82,9 @@ export class CategoryController {
   @ApiBadRequestResponse({type: CategoryDto.FindOneBadRequest})
   @ApiNotFoundResponse({type: CategoryDto.FindOneCategoryNotFound})
   findOne(
-    @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
+    @Param('id',new ZodPipe(UUIDv4Validator)) id: string,
   ): Promise<ApiResponse<CategoryResponse>> {
-    return this.categoryService.findOne(params.id);
+    return this.categoryService.findOne(id);
   }
 
   /** get all categories
@@ -168,9 +167,9 @@ export class CategoryController {
   @ApiForbiddenResponse({type: CategoryDto.DeleteForbiddenResponse})
   @ApiNotFoundResponse({type: CategoryDto.DeleteCategoryNotFound})
   delete(
-    @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type
+    @Param('id',new ZodPipe(UUIDv4Validator)) id: string,
   ): Promise<ApiResponse<CategoryResponse>> {
-    return this.categoryService.delete(params.id);
+    return this.categoryService.delete(id);
   }
 
   /** update a category with id and ownership
@@ -202,9 +201,9 @@ export class CategoryController {
   @ApiConflictResponse({type: CategoryDto.UpdateCategoryConflictRes})
   async update(
     @Req() req: OwnershipRequest<Category>,
-    @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
+    @Param('id',new ZodPipe(UUIDv4Validator)) id: string,
     @Body(new ZodPipe(CategoryDto.UpdateCategoryValidator)) body: CategoryDto.UpdateCategoryType,
   ): Promise<ApiResponse<CategoryResponse>> {
-    return await this.categoryService.update(params.id, req.ownershipData, body);
+    return await this.categoryService.update(id, req.ownershipData, body);
   }
 }
