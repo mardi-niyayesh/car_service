@@ -4,7 +4,7 @@ import {
   Cacheable,
   Permission,
   PERMISSIONS,
-  UUIDv4Schema,
+  UUIDv4Validator,
   pagePaginationDto,
   limitPaginationDto,
   PaginationValidator,
@@ -217,7 +217,7 @@ export class RoleController {
   @ApiNotFoundResponse({type: RolesDto.NotFoundRoleRes})
   delete(
     @Req() req: AccessRequest,
-    @Param('id', new ZodPipe(UUIDv4Schema)) id: string
+    @Param('id', new ZodPipe(UUIDv4Validator)) id: string
   ): Promise<ApiResponse<FindOneRoleRes>> {
     return this.rolesService.delete(id, req.user);
   }
@@ -236,7 +236,7 @@ export class RoleController {
     })
   })
   update(
-    @Param('id', new ZodPipe(UUIDv4Schema)) id: string,
+    @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
   ) {
     return 'role updated successfully.';
   }

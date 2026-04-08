@@ -16,7 +16,6 @@ import {
   Cacheable,
   Permission,
   PERMISSIONS,
-  type UUID4Type,
   UUIDv4Validator,
   pagePaginationDto,
   limitPaginationDto,
@@ -76,9 +75,9 @@ export class PermissionController {
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('permission/id')})
   @ApiForbiddenResponse({type: getForbiddenResponse('permission/id')})
   find(
-    @Param(new ZodPipe(UUIDv4Validator)) params: UUID4Type,
+    @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
   ): Promise<ApiResponse<FindOnePermission>> {
-    return this.permissionService.find(params.id);
+    return this.permissionService.find(id);
   }
 
   /** find permission list with pagination
