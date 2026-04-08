@@ -22,10 +22,6 @@ interface GetNormalErrorTypes {
   statusCode: number;
   path: string;
   error: string;
-  resource?: string;
-  required_permissions?: string[];
-  missing_permissions?: string[];
-  required_mode?: string;
 }
 
 /** normal example error  */
@@ -51,18 +47,6 @@ export function getNormalErrorResponse(props: GetNormalErrorTypes) {
 
     @ApiProperty({example: props.error})
     error: string;
-
-    @ApiProperty({example: props.resource ?? 'example_resource'})
-    resource?: string;
-
-    @ApiProperty({example: props.required_permissions ?? ['user.view', 'role.assign']})
-    required_permissions?: string[];
-
-    @ApiProperty({example: props.missing_permissions ?? ['role.assign']})
-    missing_permissions?: string[];
-
-    @ApiProperty({example: props.required_mode ?? 'ALL'})
-    required_mode?: string;
   }
 
   return NormalErrorResponse;
@@ -100,16 +84,57 @@ interface GetForbiddenResponse {
   required_mode?: 'ALL' | 'ANY';
 }
 
+type GetForbiddenErrorTypes = GetForbiddenResponse & GetNormalErrorTypes;
+
+function getForbiddenClass(props: GetForbiddenErrorTypes) {
+  class ForbiddenResponse {
+    @ApiProperty({example: props.statusCode})
+    statusCode: number;
+
+    @ApiProperty({example: false})
+    success: boolean;
+
+    @ApiProperty({example: getDefaultMessage(props.statusCode)})
+    detail: string;
+
+    @ApiProperty({example: getFormatPath(props.path)})
+    path: string;
+
+    @ApiProperty({example: "2026-02-08T02:11:20.630Z"})
+    timestamp: string;
+
+    @ApiProperty({example: props.message})
+    message: string;
+
+    @ApiProperty({example: props.error})
+    error: string;
+
+    @ApiProperty({example: props.resource ?? 'example_resource'})
+    resource?: string;
+
+    @ApiProperty({example: props.required_permissions ?? ['user.view', 'role.assign']})
+    required_permissions?: string[];
+
+    @ApiProperty({example: props.missing_permissions ?? ['role.assign']})
+    missing_permissions?: string[];
+
+    @ApiProperty({example: props.required_mode ?? 'ALL'})
+    required_mode?: string;
+  }
+
+  return ForbiddenResponse;
+}
+
 /** get schema for swagger when not allowed */
 export function getForbiddenResponse(path: string, data?: GetForbiddenResponse) {
   const className: string = getDynamicClassName("Forbidden", path);
   return {
-    [className]: class extends getNormalErrorResponse({
+    [className]: class extends getForbiddenClass({
       message: "You do not have sufficient permissions to perform this action.",
       statusCode: 403,
       error: "Permission Denied",
       path,
-      resource: data?.resource ?? 'test_resource',
+      resource: data?.resource ?? 'user',
       required_permissions: data?.required_permissions ?? [
         "user.view"
       ],
