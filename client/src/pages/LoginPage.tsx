@@ -32,56 +32,51 @@ function LoginPage() {
   const mutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
+      // console.log("data:", data);
+
+      if (data.success === false) {
+        setWarningMessage("ایمیل یا رمز عبور اشتباه است");
+        setIsWarningModalOpen(true);
+        return;
+      }
+
       const token = data?.response?.data?.accessToken;
       const userData = data?.response?.data?.user;
 
-      //error 401
-      if (data.statusCode === 401) {
-        setModalMessage("اییمل یا رمز عبور اشتباه است لطفا مجدد تلاش کنید");
-        setIsWarningModalOpen(true);
-      }
-      //error 500
-      else if (data.statusCode === 500) {
-        setErrorMessage("خطای سرور. لطفاً بعداً دوباره تلاش کنید.");
-        setIsErrorModalOpen(true);
-      }
-      //success
-      else if (token && userData) {
-        console.log(userData)
-        console.log(token)
-        //save token to context
+      if (token && userData) {
         setToken(token);
         setUser(userData);
-        setModalMessage(
-          "ورود شما با موفقیت انجام شد! به خانواده کارسرویس خوش آمدید.",
-        );
-        setIsModalOpen(true); 
-       
-      }
-
-      //other error
-      else {
-        // console.error("پاسخ:", data);
-        setErrorMessage("خطایی در ورود رخ داد. لطفاً مجدداً تلاش کنید.");
-        setIsErrorModalOpen(true);
+        setModalMessage("به خانواده ی کارسرویس خوش امدید:)!");
+        setIsModalOpen(true);
       }
     },
 
-    onError: (error: Error) => {
-      console.error("خطا:", error);
-      setErrorMessage("خطایی در ورود رخ داد. لطفاً مجدداً تلاش کنید.");
-      setIsErrorModalOpen(true);
+    onError: (error: any) => {
+      const status = error.response?.status;
+      const message = error.response?.data?.message;
+
+      console.error("Errror:", error);
+
+      if (status === 500) {
+        setErrorMessage("خطای سرور. لطفاً بعداً دوباره تلاش کنید.");
+        setIsErrorModalOpen(true);
+      } else {
+        setErrorMessage(
+          message || "خطایی در ورود رخ داد. لطفاً مجدداً تلاش کنید.",
+        );
+        setIsErrorModalOpen(true);
+      }
     },
   });
 
   const handleLogin = (data: LoginFormData) => {
     mutation.mutate(data);
   };
-  
+
   //SuccessModal
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    navigate("/"); 
+    navigate("/");
   };
 
   //ErrorModal
