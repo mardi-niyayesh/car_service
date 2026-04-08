@@ -52,16 +52,16 @@ export function getNormalErrorResponse(props: GetNormalErrorTypes) {
     @ApiProperty({example: props.error})
     error: string;
 
-    @ApiProperty({example: 'example_resource'})
+    @ApiProperty({example: props.resource ?? 'example_resource'})
     resource?: string;
 
-    @ApiProperty({example: ['user.view', 'role.assign']})
+    @ApiProperty({example: props.required_permissions ?? ['user.view', 'role.assign']})
     required_permissions?: string[];
 
-    @ApiProperty({example: ['role.assign']})
+    @ApiProperty({example: props.missing_permissions ?? ['role.assign']})
     missing_permissions?: string[];
 
-    @ApiProperty({example: 'ALL'})
+    @ApiProperty({example: props.required_mode ?? 'ALL'})
     required_mode?: string;
   }
 
