@@ -219,7 +219,6 @@ export class RoleController {
     @Req() req: AccessRequest,
     @Param('id', new ZodPipe(UUIDv4Schema)) id: string
   ): Promise<ApiResponse<FindOneRoleRes>> {
-    console.log(id);
     return this.rolesService.delete(id, req.user);
   }
 
@@ -228,10 +227,17 @@ export class RoleController {
   })
   @Put(':id')
   @ApiParam(UUID4Dto('id'))
+  @ApiForbiddenResponse({
+    type: getForbiddenResponse('roles/id', {
+      required_permissions: ['role.update'],
+      missing_permissions: ['role.update'],
+      required_mode: 'ANY',
+      resource: 'role'
+    })
+  })
   update(
     @Param('id', new ZodPipe(UUIDv4Schema)) id: string,
   ) {
-    console.log(id);
     return 'role updated successfully.';
   }
 }
