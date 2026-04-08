@@ -1,6 +1,4 @@
 import { useUser } from "../../hooks/useUser";
-//icon
-import Editprofile from "../../../assets/edit-outline.png";
 //link
 import { Link } from "react-router-dom";
 const Profile = () => {
@@ -68,38 +66,14 @@ const Profile = () => {
             />
           </div>
 
-          {/* Address */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              آدرس کاربر
-            </label>
-            <input
-              type="text"
-              placeholder="ادرس خود را وارد کنید"
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-            />
-          </div>
-
-          {/*  code post */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              کد پستی کاربر
-            </label>
-            <input
-              type="number"
-              placeholder="کد پستی خود را وارد کنید"
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-            />
-          </div>
           <Link to="updateUser">
             <div className="flex items-center justify-end gap-5 cursor-pointer">
-              <img
-                src={Editprofile}
-                alt=""
-                className="w-5 h-5 md:w-6 md:h-6"
-              />
-
-              <p className="text-gray-600">ویرایش اطلاعات پروفایل </p>
+              <p className="text-blue-600">ویرایش اطلاعات پروفایل </p>
+            </div>
+          </Link>
+          <Link to="updatePassword">
+            <div className="flex items-center justify-end gap-5 cursor-pointer">
+              <p className="text-blue-600">ویرایش رمز عبور </p>
             </div>
           </Link>
         </div>
