@@ -4,6 +4,7 @@ import {
   Cacheable,
   Permission,
   PERMISSIONS,
+  UUIDv4Schema,
   type UUID4Type,
   UUIDv4Validator,
   pagePaginationDto,
@@ -227,8 +228,9 @@ export class RoleController {
     permissions: [PERMISSIONS.ROLE_UPDATE]
   })
   @Put(':id')
+  @ApiParam(UUID4Dto('id'))
   update(
-    @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
+    @Param('id', new ZodPipe(UUIDv4Schema)) id: string,
   ) {
     console.log(id);
     return 'role updated successfully.';

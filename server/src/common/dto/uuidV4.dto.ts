@@ -1,10 +1,13 @@
 import z from "zod";
 import {ApiParamOptions} from "@nestjs/swagger";
 
-/** validate for uuid4 in params */
+/** validate for uuid4 */
+export const UUIDv4Schema = z.uuidv4().overwrite(id => (id));
+
+/** validate for uuid4 in params object */
 export const UUIDv4Validator = z.object({
-  id: z.uuidv4()
-}).overwrite(data => ({id: data.id.trim()}));
+  id: UUIDv4Schema
+});
 
 /** type for validate uuidV4 in Params */
 export type UUID4Type = z.infer<typeof UUIDv4Validator>;
