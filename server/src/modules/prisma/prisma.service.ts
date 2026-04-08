@@ -20,7 +20,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
       errorFormat: 'minimal',
       log: ['info', 'error', 'warn'],
       transactionOptions: {
-        timeout: ONE_MINUTE_MS / 2,
+        timeout: ONE_MINUTE_MS,
       }
     });
   }
