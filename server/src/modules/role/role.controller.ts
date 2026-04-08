@@ -35,7 +35,7 @@ import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../user/dto";
 import {RoleService} from "./role.service";
 import type {AccessRequest, ApiResponse, FindOneRoleRes, FindAllRolesRes} from "@/types";
-import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, Param} from "@nestjs/common";
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, Param, Put} from "@nestjs/common";
 
 /**
  * Role management endpoints for creating and managing custom roles.
@@ -221,5 +221,16 @@ export class RoleController {
     @Param(new ZodPipe(UUIDv4Validator)) {id}: UUID4Type
   ): Promise<ApiResponse<FindOneRoleRes>> {
     return this.rolesService.delete(id, req.user);
+  }
+
+  @Permission({
+    permissions: [PERMISSIONS.ROLE_UPDATE]
+  })
+  @Put(':id')
+  update(
+    @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
+  ) {
+    console.log(id);
+    return 'role updated successfully.';
   }
 }
