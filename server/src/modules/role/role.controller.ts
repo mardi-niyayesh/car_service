@@ -5,8 +5,6 @@ import {
   Permission,
   PERMISSIONS,
   UUIDv4Schema,
-  type UUID4Type,
-  UUIDv4Validator,
   pagePaginationDto,
   limitPaginationDto,
   PaginationValidator,
@@ -219,8 +217,9 @@ export class RoleController {
   @ApiNotFoundResponse({type: RolesDto.NotFoundRoleRes})
   delete(
     @Req() req: AccessRequest,
-    @Param(new ZodPipe(UUIDv4Validator)) {id}: UUID4Type
+    @Param('id', new ZodPipe(UUIDv4Schema)) id: string
   ): Promise<ApiResponse<FindOneRoleRes>> {
+    console.log(id);
     return this.rolesService.delete(id, req.user);
   }
 
