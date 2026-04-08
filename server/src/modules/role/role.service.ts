@@ -207,4 +207,16 @@ export class RoleService {
       };
     });
   }
+
+  /** update exist role data with id
+   * - **update with ownership**
+   * - **only roles with permission (owner.all or role.update) can accessibility to this route**
+   */
+  async update(id: string) {
+    const role  = await this.prisma.role.findUnique({
+      where: {id},
+    });
+
+    console.log(role);
+  }
 }

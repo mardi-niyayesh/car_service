@@ -222,8 +222,14 @@ export class RoleController {
     return this.rolesService.delete(id, req.user);
   }
 
+  /** update exist role data with id
+   * - **update with ownership**
+   * - **only roles with permission (owner.all or role.update) can accessibility to this route**
+   */
   @Permission({
-    permissions: [PERMISSIONS.ROLE_UPDATE]
+    permissions: [PERMISSIONS.ROLE_UPDATE],
+    owner: true,
+    resource: 'role'
   })
   @Put(':id')
   @ApiParam(UUID4Dto('id'))
@@ -235,9 +241,10 @@ export class RoleController {
       resource: 'role'
     })
   })
-  update(
+  async update(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
   ) {
+    await this.rolesService.update(id);
     return 'role updated successfully.';
   }
 }
