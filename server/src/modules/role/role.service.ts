@@ -1,6 +1,6 @@
 import * as RolesDto from "./dto";
 import {getSafeRole} from "@/lib";
-import {Prisma} from "@/modules/prisma/generated/client";
+import {Prisma, Role} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
 import {ApiResponse, BaseException, FindOneRoleRes, FindAllRolesRes, RoleResponse, UserAccess} from "@/types";
@@ -212,11 +212,9 @@ export class RoleService {
    * - **update with ownership**
    * - **only roles with permission (owner.all or role.update) can accessibility to this route**
    */
-  async update(id: string) {
-    const role  = await this.prisma.role.findUnique({
-      where: {id},
-    });
-
+  update(id: string, newData: RolesDto.UpdateRoleType, role: Role) {
+    console.log(id);
+    console.log(newData);
     console.log(role);
   }
 }

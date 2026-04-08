@@ -234,7 +234,7 @@ export class RoleController {
   })
   @Put(':id')
   @ApiParam(UUID4Dto('id'))
-  @ApiBody({type: RolesDto.CreateRoleDto})
+  @ApiBody({type: RolesDto.UpdateRoleDto})
   @ApiForbiddenResponse({
     type: getForbiddenResponse('roles/id', {
       required_permissions: ['role.update'],
@@ -243,14 +243,11 @@ export class RoleController {
       resource: 'role'
     })
   })
-  async update(
+  update(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
     @Req() req: OwnershipRequest<Role>,
-    @Body(new ZodPipe(RolesDto.CreateRoleValidator)) body: RolesDto.CreateRoleType
+    @Body(new ZodPipe(RolesDto.UpdateRoleValidator)) body: RolesDto.UpdateRoleType
   ) {
-    console.log(body);
-    console.log(req.ownershipData);
-    await this.rolesService.update(id);
-    return 'role updated successfully.';
+    return this.rolesService.update(id, body, req.ownershipData);
   }
 }
