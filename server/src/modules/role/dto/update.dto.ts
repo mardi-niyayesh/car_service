@@ -41,8 +41,20 @@ export class UpdateRoleBadReq extends getZodErrorBody({
   path: "roles/id",
   errors: [
     {
-      "field": "name, ownership, description, deletePermissions, additionalPermissions",
-      "error": "Either name, ownership, description, deletePermissions or additionalPermissions must be provided"
+      field: "description",
+      error: "Invalid input: expected string, received boolean"
+    },
+    {
+      field: "name",
+      error: "Invalid input: expected string, received number"
+    },
+    {
+      field: "deletePermissions",
+      error: "Invalid input: expected array, received string"
+    },
+    {
+      field: "additionalPermissions",
+      error: "Invalid input: expected array, received number"
     }
   ]
 }) {}
