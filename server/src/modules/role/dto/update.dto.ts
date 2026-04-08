@@ -1,15 +1,16 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
 import {CreateRoleValidator} from "./create.dto";
+import {getZodErrorBody} from "@/common";
 
 /** Update role validator */
 export const UpdateRoleValidator = CreateRoleValidator
   .pick({
-    ownership: true,
     description: true,
     name: true,
   })
   .extend({
+    ownership: z.boolean(),
     deletePermissions: z.array(z.uuidv4({message: "Invalid permission ID format. Please provide a valid UUID."}))
       .transform(ids => [...new Set(ids)]),
 
@@ -34,3 +35,14 @@ export type UpdateRoleType = z.infer<typeof UpdateRoleValidator>;
 
 /** Update role dto for swagger */
 export class UpdateRoleDto extends createZodDto(UpdateRoleValidator) {}
+
+/** bad request example response */
+export class UpdateRoleBadReq extends getZodErrorBody({
+  path: "roles/id",
+  errors: [
+    {
+      "field": "name, ownership, description, deletePermissions, additionalPermissions",
+      "error": "Either name, ownership, description, deletePermissions or additionalPermissions must be provided"
+    }
+  ]
+}) {}

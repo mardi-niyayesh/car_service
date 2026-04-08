@@ -161,7 +161,7 @@ export function getBaseOkResponseSchema<T>(props: { create?: boolean, response: 
   return BaseOkResponse;
 }
 
-type GetZodErrorTypes = Omit<GetNormalErrorTypes, "error" | "message" | "statusCode"> & {
+type GetZodErrorTypes = Pick<GetNormalErrorTypes, "path"> & {
   errors: ZodFieldError[];
 }
 
