@@ -169,7 +169,7 @@ model Car {
   description String?  @db.VarChar(500)
 
   in_rent  Boolean @default(false) @db.Boolean
-  can_rent Boolean @default(false) @db.Boolean
+  can_rent Boolean @default(true) @db.Boolean
 
   category_id String   @db.Uuid
   category    Category @relation(fields: [category_id], references: [id])
