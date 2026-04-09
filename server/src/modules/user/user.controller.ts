@@ -83,7 +83,9 @@ export class UserController {
   })
   @ApiOperation({
     summary: 'get user info by self',
-    description: 'get user info accessToken. **Access restricted to users with permission: (user.self) only.**',
+    description: `
+  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_SELF}\`\n
+  get user info accessToken. **Access restricted to users with permission: (user.self) only.**`,
     operationId: 'get_profile'
   })
   @ApiOkResponse({type: UserDto.GetMeOkResponse})
@@ -105,7 +107,10 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'update user info by self',
-    description: 'update user info accessToken. **Access restricted to users with permission: (user.self) only.**',
+    description: `
+  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_SELF}\`\n
+  
+  update user info accessToken. **Access restricted to users with permission: (user.self) only.**`,
     operationId: 'update_profile'
   })
   @ApiBody({type: UserDto.UpdateProfileDto})
@@ -131,7 +136,10 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'update password',
-    description: 'update password with accessToken. **Access restricted to users with permission: (user.self) only.**',
+    description: `
+  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_SELF}\`\n
+  
+  update password with accessToken. **Access restricted to users with permission: (user.self) only.**`,
     operationId: 'update_password'
   })
   @ApiBody({type: UserDto.UpdatePasswordDto})
@@ -162,7 +170,10 @@ export class UserController {
   })
   @ApiOperation({
     summary: 'get user info',
-    description: 'get user info with id or email. **Access restricted to users with permission: (owner.all or user.view) only.**',
+    description: `
+  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_VIEW}\`\n
+  
+  get user info with id or email. **Access restricted to users with permission: (owner.all or user.view) only.**`,
     operationId: 'get_user'
   })
   @ApiQuery(UserDto.ExampleIdQuery)
@@ -205,7 +216,10 @@ export class UserController {
   })
   @ApiOperation({
     summary: 'get all user info',
-    description: 'get all users info. **Access restricted to users with permission: (owner.all or user.view) only.**',
+    description: `
+  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_VIEW}\`\n
+  
+  get all users info. **Access restricted to users with permission: (owner.all or user.view) only.**`,
     operationId: 'get_users'
   })
   @ApiQuery(pagePaginationDto)
@@ -241,6 +255,8 @@ export class UserController {
   @ApiOperation({
     summary: 'Assign roles to a user',
     description: `
+  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_ASSIGN}\`\n
+  
   Assigns one or more roles to a target user with strict validation rules:
 
   - **Self-assignment is forbidden** (a user cannot assign roles to themselves).
@@ -305,6 +321,8 @@ export class UserController {
   @ApiOperation({
     summary: 'Revoke roles from a user',
     description: `
+  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_REVOKE}\`\n
+  
   Removes one or more roles from a target user with strict security enforcement:
   
   - **Self-revocation is forbidden**: Users cannot remove their own roles to prevent 

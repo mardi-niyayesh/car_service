@@ -74,7 +74,7 @@ export class CategoryController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'find one category',
-    description: 'find one category with id unique. **Access restricted for everyone**',
+    description: "find one category with id unique. **Access restricted for everyone**",
     operationId: 'get_one_categories',
   })
   @ApiParam(UUID4Dto('id'))
@@ -123,8 +123,9 @@ export class CategoryController {
   @Post()
   @ApiOperation({
     summary: "create a new category",
-    description: `Create a category
-    only roles with permission (owner.all or category.create) can accessibility to this route`
+    description: `
+  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.CATEGORY_UPDATE}\`\n
+  Create a category only roles with permission (owner.all or category.create) can accessibility to this route`
   })
   @ApiBody({type: CategoryDto.CreateCategoryDto})
   @ApiOkResponse({type: CategoryDto.CreateCategoryOkRes})
@@ -158,7 +159,9 @@ export class CategoryController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'delete a category',
-    description: 'delete a category with id nd ownership. **only roles with permission (owner.all or category.delete) can accessibility to this route**',
+    description: `
+  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.CATEGORY_DELETE}\`\n    
+  delete a category with id nd ownership. **only roles with permission (owner.all or category.delete) can accessibility to this route**`,
     operationId: 'delete_categories',
   })
   @ApiParam(UUID4Dto('id'))
@@ -191,7 +194,10 @@ export class CategoryController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'update a category',
-    description: 'update a category with id and ownership. **only roles with permission (owner.all or category.update) can accessibility to this route**',
+    description: `
+  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.CATEGORY_UPDATE}\`\n
+  
+  update a category with id and ownership. **only roles with permission (owner.all or category.update) can accessibility to this route**`,
     operationId: 'update_categories',
   })
   @ApiBody({type: CategoryDto.UpdateCategoryDto})

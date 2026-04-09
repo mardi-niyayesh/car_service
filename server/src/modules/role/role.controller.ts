@@ -74,7 +74,8 @@ export class RoleController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: "find one role with id or name",
-    operationId: 'find_role'
+    operationId: 'find_role',
+    description: `- **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_VIEW}\``,
   })
   @ApiQuery(UserDto.ExampleIdQuery)
   @ApiQuery(RolesDto.FindOneRoleNameQuery)
@@ -104,7 +105,8 @@ export class RoleController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: "Get all roles from the list of pagination",
-    operationId: 'get_all_role'
+    operationId: 'get_all_role',
+    description: `- **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_VIEW}\``,
   })
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
@@ -129,6 +131,8 @@ export class RoleController {
   @ApiOperation({
     summary: 'Create a new custom role with specific permission',
     description: `
+  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_CREATE}\`\n
+  
   Creates a new role and assigns a set of existing permissions to it with strict security and validation enforcement:
   
   - **Access control**: This endpoint is strictly accessible only to users who possess the 
@@ -177,6 +181,8 @@ export class RoleController {
   @ApiOperation({
     summary: 'Delete an existing role from the system',
     description: `
+  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_DELETE}\`\n
+    
   Deletes a role from the system while enforcing strict security policies to preserve the integrity 
   of the Role‑Based Access Control (RBAC) model.
   
@@ -233,6 +239,12 @@ export class RoleController {
     resource: 'role'
   })
   @Put(':id')
+  @ApiOperation({
+    description: `
+  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_UPDATE}\`\n
+  Update Roles
+ `
+  })
   @ApiParam(UUID4Dto('id'))
   @ApiBody({type: RolesDto.UpdateRoleDto})
   @ApiBadRequestResponse({type: RolesDto.UpdateRoleBadReq})
