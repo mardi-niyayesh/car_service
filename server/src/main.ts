@@ -36,7 +36,7 @@ async function bootstrap(): Promise<void> {
   // Swagger Version 1
   const swaggerConfigV1 = new DocumentBuilder()
     .setTitle("Car Service Api Document | server-side")
-    .setDescription("Documentation of Car Service - server side(Back-end) | Zod + Nest.js + Swagger API + TypeScript")
+    .setDescription("Documentation of Car Service - server side(Back-end) | PostgreSQL + Zod + Nest.js + Swagger API + TypeScript")
     .setVersion("1.0.0")
     .addBearerAuth({
       type: "http",
