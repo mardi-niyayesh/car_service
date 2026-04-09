@@ -246,7 +246,7 @@ export class UserService {
       // Target Roles in Array
       const targetPermissions: string[] = targetUser.permissions.map(r => r);
 
-      if (targetPermissions.some(r => r === PERMISSIONS.OWNER_ALL)) throw new ForbiddenException({
+      if (targetPermissions.includes(PERMISSIONS.OWNER_ALL)) throw new ForbiddenException({
         message: `Users with the '${PERMISSIONS.OWNER_ALL}' permission have immutable privileges; modifications to their account are strictly prohibited.`,
         error: 'Permission Denied',
       } as BaseException);
