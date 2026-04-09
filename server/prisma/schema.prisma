@@ -28,6 +28,7 @@ model User {
   createdRoles  Role[] // User Created Roles
   categories    Category[]
   cars          Car[]
+  carRents      CarRent[]
 
   @@map("users")
 }
@@ -93,7 +94,7 @@ model Role {
   description String? @db.VarChar(500)
 
   creator_id String? @db.Uuid
-  creator    User?   @relation(fields: [creator_id], references: [id], onUpdate: NoAction)
+  creator    User?   @relation(fields: [creator_id], references: [id], onDelete: SetNull)
 
   userRoles       UserRole[]
   rolePermissions RolePermission[]
@@ -148,7 +149,7 @@ model Category {
   description String? @db.VarChar(500)
 
   creator_id String? @db.Uuid
-  creator    User?   @relation(fields: [creator_id], references: [id], onUpdate: NoAction)
+  creator    User?   @relation(fields: [creator_id], references: [id], onDelete: SetNull)
 
   cars Car[]
 
@@ -161,9 +162,10 @@ model Car {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  name    String @db.VarChar(100)
-  slug    String @unique @db.VarChar(150)
-  company String @db.VarChar(100)
+  name          String @db.VarChar(100)
+  slug          String @unique @db.VarChar(150)
+  company       String @db.VarChar(100)
+  price_at_hour Int    @db.Integer
 
   tags        String[] @db.VarChar(50)
   description String?  @db.VarChar(500)
@@ -175,8 +177,30 @@ model Car {
   category    Category @relation(fields: [category_id], references: [id])
 
   creator_id String? @db.Uuid
-  creator    User?   @relation(fields: [creator_id], references: [id], onUpdate: NoAction)
+  creator    User?   @relation(fields: [creator_id], references: [id], onDelete: SetNull)
+
+  activeRent CarRent?
 
   @@index([category_id])
   @@map("cars")
+}
+
+model CarRent {
+  id         String   @id @default(uuid(4)) @db.Uuid
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  description String? @db.VarChar(500)
+
+  price      Int      @db.Integer
+  started_at DateTime @default(now())
+  end_at     DateTime
+
+  user_id String @db.Uuid
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  car_id String @unique @db.Uuid
+  car    Car    @relation(fields: [car_id], references: [id], onDelete: Restrict)
+
+  @@map("car_rents")
 }

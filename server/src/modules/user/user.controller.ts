@@ -104,6 +104,10 @@ export class UserController {
     permissions: [PERMISSIONS.USER_SELF]
   })
   @Patch("profile")
+  @CacheEvict({
+    self: true,
+    resource: "user",
+  })
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'update user info by self',
