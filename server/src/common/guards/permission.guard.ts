@@ -17,10 +17,15 @@ import {
   type PermissionDecoratorParams,
 } from "@/common";
 
-import {isAllowedAction} from "@/lib";
 import {Reflector} from "@nestjs/core";
 import {BaseException, OwnershipRequest} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+
+interface IsAllowedActionParams {
+  requiredAll?: boolean;
+  actionPermissions: PermissionsType[];
+  requiredPermissions: PermissionsType[];
+}
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -61,7 +66,7 @@ export class PermissionGuard implements CanActivate {
 
     const actionPermissions = req.user.permissions as PermissionsType[];
 
-    const isAllowed: boolean = isAllowedAction({
+    const isAllowed: boolean = this.isAllowedAction({
       requiredAll,
       requiredPermissions,
       actionPermissions,
@@ -97,6 +102,28 @@ export class PermissionGuard implements CanActivate {
     }
 
     return true;
+  }
+
+  isAllowedAction(
+    {
+      actionPermissions,
+      requiredPermissions,
+      requiredAll = false,
+    }: IsAllowedActionParams
+  ): boolean {
+    if (!requiredPermissions.length) throw new InternalServerErrorException({
+      message: "Required permissions cannot be empty",
+      error: "requiredPermissions is empty",
+    } as BaseException);
+
+    const permissionSet = new Set(actionPermissions);
+
+    // if owner
+    if (permissionSet.has(PERMISSIONS.OWNER_ALL)) return true;
+
+    if (requiredAll) return requiredPermissions.every(p => permissionSet.has(p));
+
+    return requiredPermissions.some(p => permissionSet.has(p));
   }
 
   checkOwnership(
