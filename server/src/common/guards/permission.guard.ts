@@ -18,8 +18,9 @@ import {
 } from "@/common";
 
 import {Reflector} from "@nestjs/core";
-import {BaseException, OwnershipRequest} from "@/types";
+import {BaseException, OwnershipRequest, RoleIncludeType} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {getSafeRole} from "@/lib";
 
 interface IsAllowedActionParams {
   requiredAll?: boolean;
@@ -96,7 +97,7 @@ export class PermissionGuard implements CanActivate {
         where: {
           id: req.params['id'] as string | undefined
         },
-        include: include === undefined || include ? undefined : include,
+        include: include === undefined ? undefined : include,
       });
 
       if (data) req.ownershipData = data;
