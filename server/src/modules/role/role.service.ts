@@ -3,7 +3,7 @@ import {getSafeRole} from "@/lib";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {Prisma, Role} from "@/modules/prisma/generated/client";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
-import {ApiResponse, BaseException, FindOneRoleRes, FindAllRolesRes, RoleResponse, UserAccess} from "@/types";
+import {ApiResponse, BaseException, FindOneRoleRes, FindAllRolesRes, RoleResponse, UserAccess, RoleIncludeType} from "@/types";
 import {basePermissions, basicRoles, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
 
 @Injectable()
@@ -212,7 +212,7 @@ export class RoleService {
    * - **update with ownership**
    * - **only roles with permission (owner.all or role.update) can accessibility to this route**
    */
-  update(id: string, newData: RolesDto.UpdateRoleType, role: Role) {
+  update(id: string, newData: RolesDto.UpdateRoleType, role: RoleIncludeType) {
 
     const conflictData: string[] = [];
 

@@ -33,8 +33,8 @@ import * as RolesDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../user/dto";
 import {RoleService} from "./role.service";
-import {Role, Prisma} from "@/modules/prisma/generated/client";
-import type {AccessRequest, ApiResponse, FindOneRoleRes, FindAllRolesRes, OwnershipRequest} from "@/types";
+import {Prisma} from "@/modules/prisma/generated/client";
+import type {AccessRequest, ApiResponse, FindOneRoleRes, FindAllRolesRes, OwnershipRequest, RoleIncludeType} from "@/types";
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, Param, Put} from "@nestjs/common";
 
 /**
@@ -264,7 +264,7 @@ export class RoleController {
   })
   update(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
-    @Req() req: OwnershipRequest<Role>,
+    @Req() req: OwnershipRequest<RoleIncludeType>,
     @Body(new ZodPipe(RolesDto.UpdateRoleValidator)) body: RolesDto.UpdateRoleType
   ) {
     return this.rolesService.update(id, body, req.ownershipData);
