@@ -33,10 +33,10 @@ export const findOneRoleResponse: FindOneRoleRes = {
     creator_id: null,
     description: "Full administrative access to manage all role in the system",
     permissions: [
-      "role.view",
-      "role.delete",
-      "role.update",
-      "role.create"
+      {name: "role.view", id: "133e0257-bd87-4d30-9a8f-4026296f5498"},
+      {name: "role.delete", id: "133e0257-bd87-4d30-9a8f-4026296f5498"},
+      {name: "role.update", id: "133e0257-bd87-4d30-9a8f-4026296f5498"},
+      {name: "role.create", id: "133e0257-bd87-4d30-9a8f-4026296f5498"}
     ]
   }
 };

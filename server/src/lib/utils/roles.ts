@@ -8,6 +8,9 @@ export function getSafeRole(role: RoleIncludeType): FindOneRoleRes["role"] {
     created_at: role.created_at,
     creator_id: role.creator_id,
     description: role.description,
-    permissions: role.rolePermissions.map(rp => rp.permission.name)
+    permissions: role.rolePermissions.map(rp => ({
+      id: rp.permission_id,
+      name: rp.permission.name
+    }))
   };
 }

@@ -10,8 +10,8 @@ export const testRoleExample: FindOneRoleRes['role'] = {
   creator_id: "e537de94-2f4f-4685-8c2b-29809d52bcb2",
   description: "This a Test Role",
   permissions: [
-    "product.create",
-    "category.create"
+    {name: "product.create", id: 'e537de94-2f4f-4685-8c2b-29809d52bcb2'},
+    {name: "category.create", id: "e537de94-2f4f-4685-8c2b-29809d52bcb2"},
   ]
 };
 

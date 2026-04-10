@@ -50,7 +50,7 @@ export class RoleService {
              r.created_at,
              r.updated_at,
              r.creator_id,
-             ARRAY_AGG(DISTINCT p.name) AS permissions
+             ARRAY_AGG(JSON_BUILD_OBJECT('id', p.id, 'name', p.name)) AS permissions
           FROM roles r
                INNER JOIN role_permission rp ON r.id = rp.role_id
                INNER JOIN permissions p ON rp.permission_id = p.id
@@ -147,12 +147,17 @@ export class RoleService {
         }))
       });
 
+      const newRolePermissions = permissionsRecord.map(p => ({
+        id: p.id,
+        name: p.name,
+      }));
+
       return {
         message: 'role successfully created.',
         data: {
           role: {
             ...newRole,
-            permissions: permissionNames
+            permissions: newRolePermissions
           }
         }
       };
@@ -188,7 +193,7 @@ export class RoleService {
       });
 
       const isActorOwner: boolean = actionPayload.permissions.includes(PERMISSIONS.OWNER_ALL);
-      const isRoleManager: boolean = role.permissions.some(p => permissionsManagerStrict.includes(p));
+      const isRoleManager: boolean = role.permissions.some(p => permissionsManagerStrict.includes(p.name));
 
       if (!isActorOwner && isRoleManager) throw new ForbiddenException({
         message: 'You are not allowed to delete a role with management permission. Only the owner can remove this role.',
@@ -226,6 +231,10 @@ export class RoleService {
       message: `At least one field must differ from the existing role data. These fields have unchanged values: ${conflictData.join(', ')}.`,
       error: 'Role update conflict'
     } as BaseException);
+
+    const permissionsRole: string[] = role.rolePermissions.map(p => p.permission_id);
+
+    console.log(permissionsRole);
 
     console.log(id);
     console.log(newData);

@@ -3,7 +3,7 @@ import type {Role} from "@/modules/prisma/generated/client";
 
 /** role with permission[] type */
 export type RoleResponse = Role & {
-  permissions: string[];
+  permissions: { id: string; name: string }[];
 };
 
 /** type for find one role response */
