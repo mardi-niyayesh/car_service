@@ -4,7 +4,7 @@ import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
 import {basePermissions, basicRoles, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
-import {ApiResponse, BaseException, FindOneRoleRes, FindAllRolesRes, RoleResponse, UserAccess, RoleIncludeType} from "@/types";
+import {ApiResponse, BaseException, FindOneRoleRes, FindAllRolesRes, RoleResponse, UserAccess, RoleIncludeType, RolePolicyParams, RolePermissionPolicyParams} from "@/types";
 
 @Injectable()
 export class RoleService {
@@ -118,17 +118,7 @@ export class RoleService {
         error: 'Permission Denied, base permission',
       } as BaseException);
 
-      const isActorOwner: boolean = actionPayload.permissions.includes(PERMISSIONS.OWNER_ALL);
-      const isPermissionsManager: boolean = permissionNames.some(p => permissionsManagerStrict.includes(p));
-
-      if (!isActorOwner && isPermissionsManager) {
-        throw new ForbiddenException({
-          message: `High‑level permission protection: 
-          You lack the required OWNER privileges to create a role that includes management‑level permissions. 
-          (${permissionsManagerStrict.join(", ")})`,
-          error: "Permission Denied",
-        } as BaseException);
-      }
+      this.rolePermissionPolicy({mode: "create", actionPermissions: actionPayload.permissions, permissions: permissionNames});
 
       const creator_id: string | null = ownership ? actionPayload.userId : null;
 
@@ -185,20 +175,7 @@ export class RoleService {
 
       const role = getSafeRole(roleRecord);
 
-      const isBasicRole: boolean = (basicRoles as string[]).includes(roleRecord.name);
-
-      if (isBasicRole) throw new ForbiddenException({
-        message: 'Basic roles are essential to the system and cannot be deleted.',
-        error: 'Deletion Denied'
-      });
-
-      const isActorOwner: boolean = actionPayload.permissions.includes(PERMISSIONS.OWNER_ALL);
-      const isRoleManager: boolean = role.permissions.some(p => permissionsManagerStrict.includes(p.name));
-
-      if (!isActorOwner && isRoleManager) throw new ForbiddenException({
-        message: 'You are not allowed to delete a role with management permission. Only the owner can remove this role.',
-        error: 'Insufficient permission'
-      } as BaseException);
+      this.rolePolicy({mode: 'delete', role, actionPermissions: actionPayload.permissions});
 
       await tx.role.delete({
         where: {id: roleId},
@@ -218,7 +195,6 @@ export class RoleService {
    * - **only roles with permission (owner.all or role.update) can accessibility to this route**
    */
   update(id: string, newData: RolesDto.UpdateRoleType, role: RoleIncludeType) {
-
     const conflictData: string[] = [];
 
     for (const k in newData) {
@@ -232,12 +208,45 @@ export class RoleService {
       error: 'Role update conflict'
     } as BaseException);
 
-    const permissionsRole: string[] = role.rolePermissions.map(p => p.permission_id);
+    const safeRole = getSafeRole(role);
 
-    console.log(permissionsRole);
+    console.log(safeRole);
 
     console.log(id);
     console.log(newData);
     console.log(role);
+  }
+
+  /** basic role Policy for modified roles
+   * - **update**
+   * - **delete**
+   * */
+  rolePolicy({mode, role, actionPermissions}: RolePolicyParams) {
+    const isBasicRole: boolean = (basicRoles as string[]).includes(role.name);
+
+    if (isBasicRole) throw new ForbiddenException({
+      message: `Basic roles are essential to the system and cannot be ${mode}d.`,
+      error: `${mode} Denied`
+    });
+
+    this.rolePermissionPolicy({
+      mode: mode,
+      actionPermissions,
+      permissions: role.permissions.map(p => p.name)
+    });
+  }
+
+  rolePermissionPolicy({actionPermissions, permissions, mode}: RolePermissionPolicyParams) {
+    const isActorOwner: boolean = actionPermissions.includes(PERMISSIONS.OWNER_ALL);
+    const isPermissionsManager: boolean = permissions.some(p => permissionsManagerStrict.includes(p));
+
+    if (!isActorOwner && isPermissionsManager) {
+      throw new ForbiddenException({
+        message: `High‑level permission protection:
+          You lack the required OWNER privileges to ${mode} a role that includes management‑level permissions. 
+          (${permissionsManagerStrict.join(", ")})`,
+        error: "Permission Denied",
+      } as BaseException);
+    }
   }
 }

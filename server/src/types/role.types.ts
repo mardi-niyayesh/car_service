@@ -1,3 +1,4 @@
+import {UserAccess} from "@/types/request.types";
 import {ListWithCount} from "@/types/response.types";
 import type {Role} from "@/modules/prisma/generated/client";
 
@@ -15,3 +16,19 @@ export type FindAllRolesRes = ListWithCount<{
   roles: RoleResponse[];
   count: number;
 }>;
+
+type RolePolicyMode = 'update' | 'delete';
+
+/** role modified policy params type */
+export interface RolePolicyParams {
+  role: RoleResponse;
+  actionPermissions: UserAccess['permissions']
+  mode: RolePolicyMode;
+}
+
+/** role permissions modified policy params type */
+export interface RolePermissionPolicyParams {
+  mode: RolePolicyMode | 'create';
+  permissions: string[];
+  actionPermissions: UserAccess['permissions'];
+}
