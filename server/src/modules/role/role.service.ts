@@ -194,7 +194,20 @@ export class RoleService {
    * - **update with ownership**
    * - **only roles with permission (owner.all or role.update) can accessibility to this route**
    */
-  update(id: string, newData: RolesDto.UpdateRoleType, role: RoleIncludeType) {
+  async update(
+    actionPayload: UserAccess,
+    id: string,
+    newData: RolesDto.UpdateRoleType,
+    role: RoleIncludeType
+  ) {
+    const safeRole = getSafeRole(role);
+
+    this.rolePolicy({
+      mode: "update",
+      role: safeRole,
+      actionPermissions: actionPayload.permissions
+    });
+
     const conflictData: string[] = [];
 
     for (const k in newData) {
@@ -208,13 +221,26 @@ export class RoleService {
       error: 'Role update conflict'
     } as BaseException);
 
-    const safeRole = getSafeRole(role);
+    const {ownership, name, description, deletePermissions, additionalPermissions} = newData;
 
-    console.log(safeRole);
+    if (deletePermissions !== undefined && deletePermissions?.length) {
+      const existDeletedPermissions = safeRole.permissions.filter(p => !deletePermissions.includes(p.name));
 
-    console.log(id);
-    console.log(newData);
-    console.log(role);
+      // Validate all permissions exist
+      if (existDeletedPermissions.length) throw new NotFoundException({
+        message: `One or many Permissions does not exist in database, ${existDeletedPermissions.map(p => p.name).join(', ')}`,
+        error: 'Permission Not Found',
+      } as BaseException);
+    }
+
+    const newRoleData = await this.prisma.role.update({
+      where: {id},
+      data: {
+        name: name,
+        description: description,
+        creator_id: ownership === true ? actionPayload.userId : null
+      }
+    });
   }
 
   /** basic role Policy for modified roles
@@ -236,6 +262,11 @@ export class RoleService {
     });
   }
 
+  /** basic role permissions Policy for modified roles
+   * - **create**
+   * - **update**
+   * - **delete**
+   * */
   rolePermissionPolicy({actionPermissions, permissions, mode}: RolePermissionPolicyParams) {
     const isActorOwner: boolean = actionPermissions.includes(PERMISSIONS.OWNER_ALL);
     const isPermissionsManager: boolean = permissions.some(p => permissionsManagerStrict.includes(p));

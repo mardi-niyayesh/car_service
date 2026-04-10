@@ -247,8 +247,7 @@ export class RoleController {
   @ApiOperation({
     description: `
   - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_UPDATE}\`\n
-  Update Roles
- `
+  Update Roles`
   })
   @ApiParam(UUID4Dto('id'))
   @ApiBody({type: RolesDto.UpdateRoleDto})
@@ -267,6 +266,6 @@ export class RoleController {
     @Req() req: OwnershipRequest<RoleIncludeType>,
     @Body(new ZodPipe(RolesDto.UpdateRoleValidator)) body: RolesDto.UpdateRoleType
   ) {
-    return this.rolesService.update(id, body, req.ownershipData);
+    return this.rolesService.update(req.user, id, body, req.ownershipData);
   }
 }
