@@ -1,7 +1,9 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
-import {getNormalErrorResponse, getZodErrorBody} from "@/common";
+import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
 import {CreateRoleValidator} from "./create.dto";
+import {FindOneRoleRes} from "@/types";
+import {testRoleExample} from "@/modules/role/dto/delete.dto";
 
 /** Update role validator */
 export const UpdateRoleValidator = CreateRoleValidator
@@ -36,6 +38,17 @@ export type UpdateRoleType = z.infer<typeof UpdateRoleValidator>;
 /** Update role dto for swagger */
 export class UpdateRoleDto extends createZodDto(UpdateRoleValidator) {}
 
+/** ok request example response */
+export class OkUpdateRoleRes extends getBaseOkResponseSchema<FindOneRoleRes>({
+  path: 'roles/id',
+  response: {
+    message: 'Role successfully updated.',
+    data: {
+      role: testRoleExample
+    }
+  }
+}) {}
+
 /** bad request example response */
 export class UpdateRoleBadReq extends getZodErrorBody({
   path: "roles/id",
@@ -65,4 +78,4 @@ export class UpdateRoleConflict extends getNormalErrorResponse({
   path: "roles/id",
   message: "At least one field must differ from the existing role data. These fields have unchanged values: name.",
   error: "Role update conflict"
-}){}
+}) {}

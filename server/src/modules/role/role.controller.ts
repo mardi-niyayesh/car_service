@@ -290,6 +290,7 @@ export class RoleController {
   })
   @ApiParam(UUID4Dto('id'))
   @ApiBody({type: RolesDto.UpdateRoleDto})
+  @ApiOkResponse({type: RolesDto.OkUpdateRoleRes})
   @ApiBadRequestResponse({type: RolesDto.UpdateRoleBadReq})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles/id')})
   @ApiForbiddenResponse({
