@@ -33,9 +33,9 @@ import * as RolesDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../user/dto";
 import {RoleService} from "./role.service";
+import {Role} from "@/modules/prisma/generated/client";
 import type {AccessRequest, ApiResponse, FindOneRoleRes, FindAllRolesRes, OwnershipRequest} from "@/types";
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, Param, Put} from "@nestjs/common";
-import {Role} from "@/modules/prisma/generated/client";
 
 /**
  * Role management endpoints for creating and managing custom roles.
