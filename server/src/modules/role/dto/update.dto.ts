@@ -1,6 +1,6 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
-import {getZodErrorBody} from "@/common";
+import {getNormalErrorResponse, getZodErrorBody} from "@/common";
 import {CreateRoleValidator} from "./create.dto";
 
 /** Update role validator */
@@ -58,3 +58,11 @@ export class UpdateRoleBadReq extends getZodErrorBody({
     }
   ]
 }) {}
+
+/** conflict request example response */
+export class UpdateRoleConflict extends getNormalErrorResponse({
+  statusCode: 409,
+  path: "roles/id",
+  message: "At least one field must differ from the existing role data. These fields have unchanged values: name.",
+  error: "Role update conflict"
+}){}

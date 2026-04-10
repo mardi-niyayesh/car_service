@@ -27,7 +27,7 @@ import {
   ApiNotFoundResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
-  ApiUnauthorizedResponse,
+  ApiUnauthorizedResponse, ApiConflictResponse,
 } from "@nestjs/swagger";
 
 import * as RolesDto from "./dto";
@@ -294,12 +294,13 @@ export class RoleController {
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles/id')})
   @ApiForbiddenResponse({
     type: getForbiddenResponse('roles/id', {
-      required_permissions: ['role.update'],
-      missing_permissions: ['role.update'],
+      resource: 'role',
       required_mode: 'ANY',
-      resource: 'role'
+      missing_permissions: ['role.update'],
+      required_permissions: ['role.update'],
     })
   })
+  @ApiConflictResponse({type: RolesDto.UpdateRoleConflict})
   update(
     @Param('id', new ZodPipe(UUIDv4Validator)) _id: string,
     @Req() req: OwnershipRequest<RoleIncludeType>,
