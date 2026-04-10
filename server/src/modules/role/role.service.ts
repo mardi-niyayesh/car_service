@@ -240,7 +240,7 @@ export class RoleService {
       data: {
         name: name,
         description: description,
-        creator_id: ownership === true ? actionPayload.userId : null
+        creator_id: ownership === false ? null : undefined
       }
     });
   }

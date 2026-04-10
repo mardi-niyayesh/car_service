@@ -1,7 +1,7 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
-import {CreateRoleValidator} from "./create.dto";
 import {getZodErrorBody} from "@/common";
+import {CreateRoleValidator} from "./create.dto";
 
 /** Update role validator */
 export const UpdateRoleValidator = CreateRoleValidator
@@ -10,7 +10,7 @@ export const UpdateRoleValidator = CreateRoleValidator
     name: true,
   })
   .extend({
-    ownership: z.boolean(),
+    ownership: z.literal(false),
     deletePermissions: z.array(z.uuidv4({message: "Invalid permission ID format. Please provide a valid UUID."}))
       .transform(ids => [...new Set(ids)]),
 
@@ -20,10 +20,10 @@ export const UpdateRoleValidator = CreateRoleValidator
   .partial()
   .refine(data =>
       data.name ||
-      data.ownership ||
       data.description ||
-      data.deletePermissions ||
-      data.additionalPermissions,
+      data.ownership === false ||
+      data.deletePermissions?.length ||
+      data.additionalPermissions?.length,
     {
       path: ['name', 'ownership', 'description', 'deletePermissions', 'additionalPermissions'],
       error: 'Either name, ownership, description, deletePermissions or additionalPermissions must be provided',
