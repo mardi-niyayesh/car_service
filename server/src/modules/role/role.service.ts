@@ -199,111 +199,119 @@ export class RoleService {
     actionPayload: UserAccess,
     newData: RolesDto.UpdateRoleType,
   ): Promise<ApiResponse<FindOneRoleRes>> {
-    const safeRole = getSafeRole(role);
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<FindOneRoleRes>> => {
+      const safeRole = getSafeRole(role);
 
-    this.rolePolicy({
-      mode: "update",
-      role: safeRole,
-      actionPermissions: actionPayload.permissions
-    });
-
-    const conflictData: string[] = [];
-
-    for (const k in newData) {
-      if (role[k] === newData[k]) {
-        conflictData.push(k);
-      }
-    }
-
-    if (conflictData.length) throw new ConflictException({
-      message: `At least one field must differ from the existing role data. These fields have unchanged values: ${conflictData.join(', ')}.`,
-      error: 'Role update conflict'
-    } as BaseException);
-
-    const {ownership, name, description, deletePermissions, additionalPermissions} = newData;
-
-    if (deletePermissions?.length) {
-      const notExistPermissions: string[] = [];
-
-      deletePermissions.forEach(p => {
-        if (!safeRole.permissions.some(rp => rp.id === p)) {
-          notExistPermissions.push(p);
-        }
-      });
-
-      // Validate all permissions exist
-      if (notExistPermissions.length) throw new NotFoundException({
-        message: `One or many Permissions does not exist in this role, ${notExistPermissions.join(', ')}`,
-        error: 'Permission Not Found',
-      } as BaseException);
-
-      await this.prisma.rolePermission.deleteMany({
-        where: {
-          permission_id: {
-            in: deletePermissions,
-          },
-          role_id: role.id
-        }
-      });
-    }
-
-    if (additionalPermissions?.length) {
-      const existPermissions: string[] = [];
-
-      safeRole.permissions.forEach(p => {
-        if (additionalPermissions.includes(p.id)) {
-          existPermissions.push(p.name);
-        }
-      });
-
-      // Validate all permissions exist
-      if (existPermissions.length) throw new ConflictException({
-        message: `One or many Permissions already exist in this role, ${existPermissions.join(', ')}`,
-        error: 'Permission Conflict',
-      } as BaseException);
-
-      const findPermissions = await this.prisma.permission.findMany({
-        where: {
-          id: {in: additionalPermissions}
-        }
-      });
-
-      this.rolePermissionPolicy({
+      this.rolePolicy({
         mode: "update",
-        permissions: findPermissions.map(p => p.name),
+        role: safeRole,
         actionPermissions: actionPayload.permissions
       });
 
-      await this.prisma.rolePermission.createMany({
-        data: additionalPermissions.map(p => ({
-          role_id: role.id,
-          permission_id: p
-        })),
-      });
-    }
+      const conflictData: string[] = [];
 
-    const newRoleRecord = await this.prisma.role.update({
-      where: {id: role.id},
-      data: {
-        name: name,
-        description: description,
-        creator_id: ownership === false ? null : undefined
-      },
-      include: {
-        rolePermissions: {
-          include: {permission: true}
+      for (const k in newData) {
+        if (role[k] === newData[k]) {
+          conflictData.push(k);
         }
       }
-    });
 
-    const newRoleData = getSafeRole(newRoleRecord);
+      if (conflictData.length) throw new ConflictException({
+        message: `At least one field must differ from the existing role data. These fields have unchanged values: ${conflictData.join(', ')}.`,
+        error: 'Role update conflict'
+      } as BaseException);
 
-    return {
-      message: 'Role successfully updated.',
-      data: {
-        role: newRoleData,
+      const {ownership, name, description, deletePermissions, additionalPermissions} = newData;
+
+      if (deletePermissions?.length) {
+        const notExistPermissions: string[] = [];
+
+        deletePermissions.forEach(p => {
+          if (!safeRole.permissions.some(rp => rp.id === p)) {
+            notExistPermissions.push(p);
+          }
+        });
+
+        // Validate all permissions exist
+        if (notExistPermissions.length) throw new NotFoundException({
+          message: `One or many Permissions does not exist in this role, ${notExistPermissions.join(', ')}`,
+          error: 'Permission Not Found',
+        } as BaseException);
+
+        await tx.rolePermission.deleteMany({
+          where: {
+            permission_id: {
+              in: deletePermissions,
+            },
+            role_id: role.id
+          }
+        });
       }
-    };
+
+      if (additionalPermissions?.length) {
+        const existPermissions: string[] = [];
+
+        safeRole.permissions.forEach(p => {
+          if (additionalPermissions.includes(p.id)) {
+            existPermissions.push(p.name);
+          }
+        });
+
+        // Validate all permissions exist
+        if (existPermissions.length) throw new ConflictException({
+          message: `One or many Permissions already exist in this role, ${existPermissions.join(', ')}`,
+          error: 'Permission Conflict',
+        } as BaseException);
+
+        const findPermissions = await tx.permission.findMany({
+          where: {
+            id: {in: additionalPermissions}
+          }
+        });
+
+        // Validate all permissions exist
+        if (findPermissions.length !== additionalPermissions.length) throw new NotFoundException({
+          message: `One or many Permissions does not exist in database`,
+          error: 'Permission Not Found',
+        } as BaseException);
+
+        this.rolePermissionPolicy({
+          mode: "update",
+          permissions: findPermissions.map(p => p.name),
+          actionPermissions: actionPayload.permissions
+        });
+
+        await tx.rolePermission.createMany({
+          data: additionalPermissions.map(p => ({
+            role_id: role.id,
+            permission_id: p
+          })),
+        });
+      }
+
+      const newRoleRecord = await tx.role.update({
+        where: {id: role.id},
+        data: {
+          name: name,
+          description: description,
+          creator_id: ownership === false ? null : undefined
+        },
+        include: {
+          rolePermissions: {
+            include: {permission: true}
+          }
+        }
+      });
+
+      const newRoleData = getSafeRole(newRoleRecord);
+
+      return {
+        message: 'Role successfully updated.',
+        data: {
+          role: newRoleData,
+        }
+      };
+    });
   }
 
   /** basic role Policy for modified roles
