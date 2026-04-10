@@ -259,9 +259,34 @@ export class RoleController {
     resource: 'role'
   })
   @ApiOperation({
+    summary: 'Update an existing role',
     description: `
   - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_UPDATE}\`\n
-  Update Roles`
+  
+  Updates the metadata and permissions of an existing role while enforcing strict security rules to preserve the integrity of the Role‑Based Access Control (RBAC) model.
+  
+  - **Access control**: This endpoint is accessible only to users who possess the **"role.update"** permission or the **"owner.all"** privilege. Ownership rules are enforced automatically to ensure that role modifications respect administrative boundaries.
+  
+  - **Strict role existence validation**: The system verifies that the specified role exists and is accessible to the acting user. If the role cannot be resolved, the operation fails immediately.
+  
+  - **Core system role protection**: Fundamental system roles (base roles) are permanently protected and **cannot be modified under any circumstances**. These roles are essential for maintaining the platform’s authorization structure.
+  
+  - **High‑level permission protection (Anti‑Privilege Escalation)**: Roles that contain **management‑level or sensitive administrative permissions** are considered critical. Updating such roles is **restricted exclusively to users with the "owner.all" privilege**.
+  
+  - **Administrative permission assignment protection**: When adding new permissions to a role, the system validates the security level of each permission. If the requested permissions include **high‑level management permissions**, only users with the **"owner.all"** privilege are allowed to assign them.
+  
+  - **Permission integrity validation**:
+    - Permissions scheduled for **removal must already exist in the role**.
+    - Permissions scheduled for **addition must exist in the database**.
+    - Duplicate or inconsistent permission assignments are rejected.
+  
+  - **Change integrity validation**: At least **one field must differ from the existing role data**. If all provided values match the current role state, the request fails with a **Role Update Conflict** error.
+  
+  - **Atomic execution**: The entire update process runs inside a **database transaction** to guarantee consistency and prevent partial updates that could compromise RBAC integrity.
+  
+  These safeguards ensure that role updates remain secure while preventing privilege escalation and protecting critical authorization structures.
+`,
+    operationId: 'update_role'
   })
   @ApiParam(UUID4Dto('id'))
   @ApiBody({type: RolesDto.UpdateRoleDto})
