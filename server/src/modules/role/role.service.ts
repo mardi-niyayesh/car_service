@@ -211,9 +211,6 @@ export class RoleService {
     const conflictData: string[] = [];
 
     for (const k in newData) {
-      console.log(k);
-      console.log(newData[k]);
-      console.log(role[k]);
       if (role[k] === newData[k]) {
         conflictData.push(k);
       }
@@ -227,11 +224,13 @@ export class RoleService {
     const {ownership, name, description, deletePermissions, additionalPermissions} = newData;
 
     if (deletePermissions !== undefined && deletePermissions?.length) {
-      const notExistPermissions = safeRole.permissions.filter(p => !deletePermissions.includes(p.name));
+      const notExistPermissions = deletePermissions.filter(p =>
+        !safeRole.permissions.map(rp => rp.id).includes(p)
+      );
 
       // Validate all permissions exist
       if (notExistPermissions.length) throw new NotFoundException({
-        message: `One or many Permissions does not exist in database, ${notExistPermissions.map(p => p.name).join(', ')}`,
+        message: `One or many Permissions does not exist in database, ${notExistPermissions.join(', ')}`,
         error: 'Permission Not Found',
       } as BaseException);
     }
