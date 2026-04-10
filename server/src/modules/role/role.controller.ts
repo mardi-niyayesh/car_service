@@ -2,6 +2,7 @@ import {
   ZodPipe,
   UUID4Dto,
   Cacheable,
+  CacheEvict,
   Permission,
   PERMISSIONS,
   UUIDv4Validator,
@@ -34,8 +35,8 @@ import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../user/dto";
 import {RoleService} from "./role.service";
 import {Prisma} from "@/modules/prisma/generated/client";
-import type {AccessRequest, ApiResponse, FindOneRoleRes, FindAllRolesRes, OwnershipRequest, RoleIncludeType} from "@/types";
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, Param, Put} from "@nestjs/common";
+import type {AccessRequest, ApiResponse, FindOneRoleRes, FindAllRolesRes, OwnershipRequest, RoleIncludeType} from "@/types";
 
 /**
  * Role management endpoints for creating and managing custom roles.
@@ -128,6 +129,10 @@ export class RoleController {
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @CacheEvict({
+    force: true,
+    resource: 'role'
+  })
   @ApiOperation({
     summary: 'Create a new custom role with specific permission',
     description: `
@@ -178,6 +183,10 @@ export class RoleController {
   })
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
+  @CacheEvict({
+    force: true,
+    resource: 'role'
+  })
   @ApiOperation({
     summary: 'Delete an existing role from the system',
     description: `
@@ -244,6 +253,11 @@ export class RoleController {
     }
   })
   @Put(':id')
+  @HttpCode(HttpStatus.OK)
+  @CacheEvict({
+    force: true,
+    resource: 'role'
+  })
   @ApiOperation({
     description: `
   - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_UPDATE}\`\n
@@ -265,7 +279,7 @@ export class RoleController {
     @Param('id', new ZodPipe(UUIDv4Validator)) _id: string,
     @Req() req: OwnershipRequest<RoleIncludeType>,
     @Body(new ZodPipe(RolesDto.UpdateRoleValidator)) body: RolesDto.UpdateRoleType
-  ) {
+  ): Promise<ApiResponse<FindOneRoleRes>> {
     return this.rolesService.update(req.ownershipData, req.user, body);
   }
 }
