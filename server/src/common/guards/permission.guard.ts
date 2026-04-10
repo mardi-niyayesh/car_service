@@ -18,9 +18,8 @@ import {
 } from "@/common";
 
 import {Reflector} from "@nestjs/core";
-import {BaseException, OwnershipRequest, RoleIncludeType} from "@/types";
+import {BaseException, OwnershipRequest} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {getSafeRole} from "@/lib";
 
 interface IsAllowedActionParams {
   requiredAll?: boolean;
