@@ -49,6 +49,7 @@ export class PermissionGuard implements CanActivate {
       resource,
       requiredAll,
       permissions: requiredPermissions,
+      include
     } = this.reflector.getAllAndOverride<PermissionDecoratorParams>(PERMISSION_METADATA, [
       context.getHandler(),
       context.getClass(),
@@ -57,6 +58,7 @@ export class PermissionGuard implements CanActivate {
       permissions: [],
       requiredAll: false,
       resource: undefined,
+      include: undefined
     };
 
     if (!requiredPermissions.length) throw new InternalServerErrorException({
@@ -93,7 +95,8 @@ export class PermissionGuard implements CanActivate {
       const data = await prismaDelegate.findUnique({
         where: {
           id: req.params['id'] as string | undefined
-        }
+        },
+        include: include === undefined || include ? undefined : include,
       });
 
       if (data) req.ownershipData = data;

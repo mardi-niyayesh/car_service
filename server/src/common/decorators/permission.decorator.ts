@@ -3,7 +3,7 @@ import {PermissionsType, PrismaModels} from "@/common";
 
 export const PERMISSION_METADATA = "PERMISSIONS";
 
-export interface PermissionDecoratorParams<T extends object = never> {
+export interface PermissionDecoratorParams<T extends Record<string, unknown> = never> {
   owner?: boolean;
   requiredAll?: boolean;
   resource?: PrismaModels;
@@ -11,6 +11,6 @@ export interface PermissionDecoratorParams<T extends object = never> {
   include?: T extends never ? never : T;
 }
 
-export function Permission<T extends object = never>({requiredAll, permissions, owner, resource, include}: PermissionDecoratorParams<T>) {
+export function Permission<T extends Record<string, unknown> = never>({requiredAll, permissions, owner, resource, include}: PermissionDecoratorParams<T>) {
   return SetMetadata(PERMISSION_METADATA, {requiredAll, permissions, owner, resource, include});
 }

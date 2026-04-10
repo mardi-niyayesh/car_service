@@ -12,6 +12,7 @@ interface DynamicDelegateArgs {
   where: {
     id: string | undefined
   }
+  include?: Record<string, unknown>;
 }
 
 export type DynamicDelegate = {
