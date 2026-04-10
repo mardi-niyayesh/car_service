@@ -33,7 +33,7 @@ import * as RolesDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../user/dto";
 import {RoleService} from "./role.service";
-import {Role} from "@/modules/prisma/generated/client";
+import {Role, Prisma} from "@/modules/prisma/generated/client";
 import type {AccessRequest, ApiResponse, FindOneRoleRes, FindAllRolesRes, OwnershipRequest} from "@/types";
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Query, Req, Param, Put} from "@nestjs/common";
 
@@ -233,10 +233,15 @@ export class RoleController {
    * - **update with ownership**
    * - **only roles with permission (owner.all or role.update) can accessibility to this route**
    */
-  @Permission({
+  @Permission<Prisma.RoleInclude>({
     permissions: [PERMISSIONS.ROLE_UPDATE],
     owner: true,
-    resource: 'role'
+    resource: 'role',
+    include: {
+      rolePermissions: {
+        include: {permission: true}
+      }
+    }
   })
   @Put(':id')
   @ApiOperation({
