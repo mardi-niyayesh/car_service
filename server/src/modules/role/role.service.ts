@@ -1,10 +1,21 @@
+import {
+  UserAccess,
+  ApiResponse,
+  RoleResponse,
+  BaseException,
+  FindOneRoleRes,
+  RoleIncludeType,
+  FindAllRolesRes,
+  RolePolicyParams,
+  RolePermissionPolicyParams,
+} from "@/types";
+
 import * as RolesDto from "./dto";
 import {getSafeRole} from "@/lib";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
 import {basePermissions, basicRoles, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
-import {ApiResponse, BaseException, FindOneRoleRes, FindAllRolesRes, RoleResponse, UserAccess, RoleIncludeType, RolePolicyParams, RolePermissionPolicyParams} from "@/types";
 
 @Injectable()
 export class RoleService {
