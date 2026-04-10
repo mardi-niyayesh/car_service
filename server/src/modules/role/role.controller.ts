@@ -262,10 +262,10 @@ export class RoleController {
     })
   })
   update(
-    @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
+    @Param('id', new ZodPipe(UUIDv4Validator)) _id: string,
     @Req() req: OwnershipRequest<RoleIncludeType>,
     @Body(new ZodPipe(RolesDto.UpdateRoleValidator)) body: RolesDto.UpdateRoleType
   ) {
-    return this.rolesService.update(req.user, id, body, req.ownershipData);
+    return this.rolesService.update(req.ownershipData, req.user, body);
   }
 }
