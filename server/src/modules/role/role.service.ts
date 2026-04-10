@@ -211,6 +211,9 @@ export class RoleService {
     const conflictData: string[] = [];
 
     for (const k in newData) {
+      console.log(k);
+      console.log(newData[k]);
+      console.log(role[k]);
       if (role[k] === newData[k]) {
         conflictData.push(k);
       }
@@ -224,11 +227,11 @@ export class RoleService {
     const {ownership, name, description, deletePermissions, additionalPermissions} = newData;
 
     if (deletePermissions !== undefined && deletePermissions?.length) {
-      const existDeletedPermissions = safeRole.permissions.filter(p => !deletePermissions.includes(p.name));
+      const notExistPermissions = safeRole.permissions.filter(p => !deletePermissions.includes(p.name));
 
       // Validate all permissions exist
-      if (existDeletedPermissions.length) throw new NotFoundException({
-        message: `One or many Permissions does not exist in database, ${existDeletedPermissions.map(p => p.name).join(', ')}`,
+      if (notExistPermissions.length) throw new NotFoundException({
+        message: `One or many Permissions does not exist in database, ${notExistPermissions.map(p => p.name).join(', ')}`,
         error: 'Permission Not Found',
       } as BaseException);
     }
@@ -273,9 +276,11 @@ export class RoleService {
 
     if (!isActorOwner && isPermissionsManager) {
       throw new ForbiddenException({
-        message: `High‑level permission protection:
-          You lack the required OWNER privileges to ${mode} a role that includes management‑level permissions. 
-          (${permissionsManagerStrict.join(", ")})`,
+        message: [
+          "High‑level permission protection:",
+          `You lack the required OWNER privileges to ${mode} a role that includes management‑level permissions.`,
+          `(${permissionsManagerStrict.join(", ")})`,
+        ].join(' '),
         error: "Permission Denied",
       } as BaseException);
     }
