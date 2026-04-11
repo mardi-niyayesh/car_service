@@ -7,6 +7,7 @@ import {EventEmitterModule} from "@nestjs/event-emitter";
 import {ThrottlerModule, ThrottlerGuard} from "@nestjs/throttler";
 import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
 import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware, CacheableInterceptor, CacheEvictInterceptor} from "./common";
+import { CarModule } from './modules/car/car.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware, CacheableInterc
     Modules.RoleModule,
     Modules.PermissionModule,
     Modules.CategoryModule,
+    CarModule,
   ],
   providers: [
     {
