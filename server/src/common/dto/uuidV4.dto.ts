@@ -2,7 +2,7 @@ import z from "zod";
 import {ApiParamOptions} from "@nestjs/swagger";
 
 /** validate for uuid4 */
-export const UUIDv4Validator = z.uuidv4().overwrite(id => (id));
+export const UUIDv4Validator = z.uuidv4();
 
 /** Swagger Params UUIDv4 */
 export function UUID4Dto(name: string): ApiParamOptions {
