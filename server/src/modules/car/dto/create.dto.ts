@@ -75,8 +75,7 @@ export const CreateCarValidator = OwnerShipValidator.extend({
     .optional()
     .default(true),
 
-  category_id: z
-    .uuidv4(),
+  category_id: z.uuidv4(),
 });
 
 /** type of create car validator */
