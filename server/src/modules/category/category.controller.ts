@@ -113,6 +113,9 @@ export class CategoryController {
   })
   @ApiBearerAuth("accessToken")
   @Post()
+  @CacheEvict({
+    prefix: `*category:list*`,
+  })
   @ApiOperation(CategoryDto.categoryCreateOperation)
   @ApiBody({type: CategoryDto.CreateCategoryDto})
   @ApiOkResponse({type: CategoryDto.CreateCategoryOkRes})
@@ -137,10 +140,8 @@ export class CategoryController {
   })
   @ApiBearerAuth("accessToken")
   @CacheEvict({
-    resource: 'category',
-    findPrefix: {
-      param: 'id'
-    },
+    force: true,
+    resource: "category",
   })
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
@@ -166,10 +167,8 @@ export class CategoryController {
   })
   @ApiBearerAuth("accessToken")
   @CacheEvict({
-    findPrefix: {
-      param: 'id'
-    },
-    resource: 'category',
+    force: true,
+    resource: "category",
   })
   @Put(':id')
   @HttpCode(HttpStatus.OK)
