@@ -35,7 +35,7 @@ import {Controller, Post} from '@nestjs/common';
  * supporting both administrative workflows and public catalog surfing.
  */
 @ApiTags('Cars')
-@Controller('car')
+@Controller('cars')
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
