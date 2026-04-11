@@ -1,7 +1,7 @@
 import * as CarDto from "./dto";
 import {CarService} from "./car.service";
 import type {AccessRequest} from "@/types";
-import {ApiBearerAuth, ApiBody, ApiCookieAuth, ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiBody, ApiTags} from "@nestjs/swagger";
 import {CacheEvict, Permission, PERMISSIONS, ZodPipe} from "@/common";
 import {Body, Controller, HttpCode, HttpStatus, Post, Req} from '@nestjs/common';
 
