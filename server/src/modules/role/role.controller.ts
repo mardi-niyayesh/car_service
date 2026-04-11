@@ -240,7 +240,6 @@ export class RoleController {
     @Req() req: OwnershipRequest<RoleIncludeType>,
     @Param('id', new ZodPipe(UUIDv4Validator)) _id: string
   ): Promise<ApiResponse<FindOneRoleRes>> {
-    console.log(req.ownershipData);
     return this.rolesService.delete(req.ownershipData, req.user);
   }
 
