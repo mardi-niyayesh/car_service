@@ -10,11 +10,10 @@ function getFormatPath(path: string): string {
   if (
     path.startsWith(BASE_URL)
     || path.startsWith(`/${BASE_URL}`)
-    || path.startsWith(BASE_URL.slice(1))
   ) {
     return path;
   }
-  return `/api/v1${path}`;
+  return `/api/v1/${path}`;
 }
 
 interface GetNormalErrorTypes {
