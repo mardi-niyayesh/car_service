@@ -2,8 +2,8 @@ import * as CarDto from "./dto";
 import {CarService} from "./car.service";
 import type {AccessRequest, ApiResponse, CarResponse} from "@/types";
 import {Body, Controller, HttpCode, HttpStatus, Post, Req} from '@nestjs/common';
-import {ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, ZodPipe} from "@/common";
+import {ApiBearerAuth, ApiBody, ApiConflictResponse, ApiForbiddenResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -50,6 +50,7 @@ export class CarController {
     prefix: '*car:list*'
   })
   @HttpCode(HttpStatus.CREATED)
+  @ApiBody({type: CarDto.CreateCarDto})
   @ApiOkResponse({type: CarDto.CreateCarOkRes})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars')})
   @ApiForbiddenResponse({
@@ -60,7 +61,7 @@ export class CarController {
       required_permissions: [PERMISSIONS.PRODUCT_CREATE],
     })
   })
-  @ApiBody({type: CarDto.CreateCarDto})
+  @ApiConflictResponse({type: CarDto.CreateConflictCarResponse})
   create(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(CarDto.CreateCarValidator)) body: CarDto.CreateCarType

@@ -3,7 +3,7 @@ import {exampleDate} from "@/lib";
 import {createZodDto} from "nestjs-zod";
 import type {CarResponse} from "@/types";
 import {categoryExampleRes} from "@/modules/category/dto";
-import {getBaseOkResponseSchema, OwnerShipValidator} from "@/common";
+import {getBaseOkResponseSchema, getNormalErrorResponse, OwnerShipValidator} from "@/common";
 
 const NameRegex: RegExp = /^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FFa-zA-Z0-9۰-۹ _-]+$/;
 
@@ -108,4 +108,12 @@ export class CreateCarOkRes extends getBaseOkResponseSchema<CarResponse>({
       car: exampleCarRecord
     }
   }
+}) {}
+
+/** conflict car example response */
+export class CreateConflictCarResponse extends getNormalErrorResponse({
+  statusCode: 409,
+  path: "/api/v1/cars",
+  message: "car already exists in database, please change slug",
+  error: "Car already exists"
 }) {}
