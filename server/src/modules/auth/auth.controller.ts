@@ -55,11 +55,7 @@ export class AuthController {
   @Post("register")
   @HttpCode(HttpStatus.CREATED)
   @CacheEvict({prefix: '*users:list*'})
-  @ApiOperation({
-    summary: 'Register a new user',
-    description: 'Creates a new user record in the database and returns the created user.',
-    operationId: 'auth_register'
-  })
+  @ApiOperation(AuthDto.authRegisterOperation)
   @ApiBody({type: AuthDto.CreateUserSchema})
   @ApiCreatedResponse({type: AuthDto.CreateUserOkResponse})
   @ApiBadRequestResponse({type: AuthDto.CreateUserBadRequestResponse})
@@ -77,11 +73,7 @@ export class AuthController {
    */
   @Post("login")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Authenticate user',
-    description: 'Validates user credentials and returns an access token. Also sets a secure httpOnly refresh token cookie.',
-    operationId: 'auth_login'
-  })
+  @ApiOperation(AuthDto.authLoginOperation)
   @ApiBody({type: AuthDto.LoginUserSchema})
   @ApiOkResponse({type: AuthDto.LoginUserOkResponse})
   @ApiBadRequestResponse({type: AuthDto.LoginUserBadRequestResponse})
@@ -112,11 +104,7 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   @Post("refresh")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Refresh access token',
-    description: 'Uses the refresh token (from httpOnly cookie) to generate a new access token.',
-    operationId: 'auth_refresh'
-  })
+  @ApiOperation(AuthDto.authRefreshOperation)
   @ApiCookieAuth("refreshToken")
   @ApiOkResponse({type: AuthDto.RefreshUsersOkResponse})
   @ApiUnauthorizedResponse({type: AuthDto.RefreshUsersUnAuthResponse})
@@ -149,11 +137,7 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   @Post("logout")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Logout user',
-    description: 'Uses the refresh token (from httpOnly cookie) to logout user in system and revoked refresh token.',
-    operationId: 'auth_logout'
-  })
+  @ApiOperation(AuthDto.authLogoutOperation)
   @ApiCookieAuth("refreshToken")
   @ApiOkResponse({type: AuthDto.LogoutOkResponse})
   @ApiUnauthorizedResponse({type: AuthDto.RefreshUsersUnAuthResponse})
@@ -170,11 +154,7 @@ export class AuthController {
   @Post("forgot-password")
   @HttpCode(HttpStatus.OK)
   @ApiBody({type: AuthDto.ForgotPasswordSchema})
-  @ApiOperation({
-    summary: 'Forgot password',
-    description: 'Starts the password reset process by sending a reset link to the user email.',
-    operationId: 'auth_forgot_password'
-  })
+  @ApiOperation(AuthDto.authForgotPasswordOperation)
   @ApiOkResponse({type: AuthDto.OkForgotPasswordRes})
   @ApiNotFoundResponse({
     type: AuthDto.NotFoundUserForgotPassRes,
@@ -199,11 +179,7 @@ export class AuthController {
   @Post("reset-password")
   @HttpCode(HttpStatus.OK)
   @ApiBody({type: AuthDto.ResetPasswordSchema})
-  @ApiOperation({
-    summary: 'Reset password with token',
-    description: 'Complete the password reset process by providing the reset token (received via email) and the new password. The token must be valid and not expired.',
-    operationId: 'auth_reset_password'
-  })
+  @ApiOperation(AuthDto.authResetPasswordOperation)
   @ApiOkResponse({type: AuthDto.OkResetPasswordRes})
   @ApiBadRequestResponse({type: AuthDto.BadRequestResetPasswordRes})
   @ApiNotFoundResponse({type: AuthDto.NotFoundResetPasswordRes})
