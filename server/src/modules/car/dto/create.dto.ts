@@ -51,7 +51,8 @@ export const CreateCarValidator = OwnerShipValidator.extend({
           error:
             'Tag can contain Persian, Arabic, English letters, numbers, "-" and "_", but no spaces.',
         })
-    ),
+    )
+    .nonempty(),
 
   description: z
     .string()
