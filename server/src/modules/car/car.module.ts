@@ -1,4 +1,7 @@
 import {Module} from '@nestjs/common';
+import {CarController} from './car.controller';
 
-@Module({})
+@Module({
+  controllers: [CarController]
+})
 export class CarModule {}
