@@ -1,40 +1,29 @@
-const coulmn = [
-  {
-    to: "detail",
-    number: "1",
-    nameUser: "niya",
-    EmailUser: "niya@gmail.com",
-    role: "کاربر",
-    more: " بیش تر...",
-  },
-  {
-    to: "detail",
-    number: "2",
-    nameUser: "niya",
-    EmailUser: "niya@gmail.com",
-    role: "کاربر",
-    more: " بیش تر...",
-  },
-  {
-    to: "detail",
-    number: "3",
-    nameUser: "niya",
-    EmailUser: "niya@gmail.com",
-    role: "کاربر",
-    more: " بیش تر...",
-  },
-  {
-    to: "detail",
-    number: "4",
-    nameUser: "niya",
-    EmailUser: "niya@gmail.com",
-    role: "ادمین",
-    more: " بیش تر...",
-  },
-];
+import axiosClient from "../../services/axiosClient";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const ComponentTableUser = () => {
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        const response = await axiosClient.get(
+          "users?order=desc&limit=5&page=1",
+        );
+        console.log("Response:", response.data);
+
+        const usersData = response.data.response.data.users;
+
+        setUsers(usersData);
+        console.log("userdata :", usersData);
+      } catch (err) {
+        console.log("Error in get users :", err);
+      }
+    };
+    fetchAllUsers();
+  }, []);
+
   return (
     <div className="overflow-x-auto rounded-lg shadow-sm border border-gray-200 bg-white">
       <table className="min-w-full  text-right text-sm text-gray-700">
@@ -54,21 +43,21 @@ const ComponentTableUser = () => {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
-          {coulmn.map((item) => (
+          {users.map((user, index) => (
             <tr className="hover:bg-gray-300 transition-colors  active:bg-gray-400">
-              <td className="px-4 py-3 hidden sm:table-cell">{item.number}</td>
+              <td className="px-4 py-3 hidden sm:table-cell">{index + 1}</td>
               <td className="px-4 py-3 hidden sm:table-cell">
-                {item.nameUser}
+                {user.display_name}
               </td>
-              <td className="px-4 py-3 ">{item.EmailUser}</td>
+              <td className="px-4 py-3 ">{user.email}</td>
               <td className="px-4 py-3 text-green-600 font-medium">
-                {item.role}
+                {Array.isArray(user.roles) ? user.roles.join(", ") : user.roles}
               </td>
-              <Link to={item.to}>
-                <td className="px-3 py-1 bg-blue-400 rounded-2xl text-amber-50 m-auto">
-                  {item.more}
-                </td>
-              </Link>
+                 <td className="font-bold text-blue-600"> 
+                <Link to={`detail/${user.id}`}>
+                  جزئیات 
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>
