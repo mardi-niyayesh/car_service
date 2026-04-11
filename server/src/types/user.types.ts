@@ -1,5 +1,5 @@
 import {Prisma, User} from "@/modules/prisma/generated/client";
-import {UserAccess, RolesAndPermissions, ListWithCount} from "@/types";
+import {UserAccess, RolesAndPermissions, ListWithCount, RoleIncludePayload} from "@/types";
 
 /** User type without password */
 export type SafeUser = Omit<User, "password">;
@@ -19,18 +19,6 @@ export interface LoginResponse extends UserResponse {
 
 /** login user type */
 export type LoginUserSchemaType = { user: SafeUser & RolesAndPermissions; accessToken: string; };
-
-/** role include payload in prisma */
-type RoleIncludePayload = {
-  include: {
-    rolePermissions: {
-      include: { permission: true }
-    }
-  }
-}
-
-/** role full include type in prisma */
-export type RoleIncludeType = Prisma.RoleGetPayload<RoleIncludePayload>;
 
 /** user full role type in prisma */
 export type UserRoleIncludeType = Prisma.UserGetPayload<{
