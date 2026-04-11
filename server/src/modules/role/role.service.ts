@@ -168,37 +168,21 @@ export class RoleService {
   /** delete exist role with id
    * - only roles with permission (owner.all or role.create) can accessibility to this route
    */
-  async delete(roleId: string, actionPayload: UserAccess): Promise<ApiResponse<FindOneRoleRes>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<FindOneRoleRes>> => {
-      const roleRecord = await tx.role.findUnique({
-        where: {id: roleId},
-        include: {
-          rolePermissions: {
-            include: {permission: true}
-          }
-        }
-      });
+  async delete(roleRecord: RoleIncludeType, actionPayload: UserAccess): Promise<ApiResponse<FindOneRoleRes>> {
+    const role = getSafeRole(roleRecord);
 
-      if (!roleRecord) throw new NotFoundException({
-        message: 'this Role does not exist in database',
-        error: 'Role not found',
-      } as BaseException);
+    this.rolePolicy({mode: 'delete', role, actionPermissions: actionPayload.permissions});
 
-      const role = getSafeRole(roleRecord);
-
-      this.rolePolicy({mode: 'delete', role, actionPermissions: actionPayload.permissions});
-
-      await tx.role.delete({
-        where: {id: roleId},
-      });
-
-      return {
-        message: "role deleted successfully.",
-        data: {
-          role
-        }
-      };
+    await this.prisma.role.delete({
+      where: {id: role.id},
     });
+
+    return {
+      message: "role deleted successfully.",
+      data: {
+        role
+      }
+    };
   }
 
   /** update exist role data with id

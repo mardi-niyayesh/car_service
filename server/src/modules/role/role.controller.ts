@@ -176,10 +176,15 @@ export class RoleController {
   /** delete exist role with id
    * - only roles with permission (owner.all or role.create) can accessibility to this route
    */
-  @Permission({
+  @Permission<Prisma.RoleInclude>({
     permissions: [PERMISSIONS.ROLE_DELETE],
     owner: true,
     resource: "role",
+    include: {
+      rolePermissions: {
+        include: {permission: true}
+      }
+    }
   })
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
@@ -232,10 +237,11 @@ export class RoleController {
   @ApiForbiddenResponse({type: RolesDto.ForbiddenDeleteRoleRes})
   @ApiNotFoundResponse({type: RolesDto.NotFoundRoleRes})
   delete(
-    @Req() req: AccessRequest,
-    @Param('id', new ZodPipe(UUIDv4Validator)) id: string
+    @Req() req: OwnershipRequest<RoleIncludeType>,
+    @Param('id', new ZodPipe(UUIDv4Validator)) _id: string
   ): Promise<ApiResponse<FindOneRoleRes>> {
-    return this.rolesService.delete(id, req.user);
+    console.log(req.ownershipData);
+    return this.rolesService.delete(req.ownershipData, req.user);
   }
 
   /** update exist role data with id
