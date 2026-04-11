@@ -16,7 +16,7 @@ export const categoryFindAllOperation: ApiOperationOptions = {
 export const categoryCreateOperation: ApiOperationOptions = {
   summary: "create a new category",
   description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.CATEGORY_UPDATE}\`\n
+  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.CATEGORY_CREATE}\`\n
   Create a category only roles with permission (owner.all or category.create) can accessibility to this route`
 };
 
