@@ -1,7 +1,9 @@
+import * as CarDto from "./dto";
 import {ApiTags} from "@nestjs/swagger";
 import {CarService} from "./car.service";
-import {CacheEvict, Permission, PERMISSIONS} from "@/common";
-import {Controller, HttpCode, HttpStatus, Post} from '@nestjs/common';
+import type {AccessRequest} from "@/types";
+import {CacheEvict, Permission, PERMISSIONS, ZodPipe} from "@/common";
+import {Body, Controller, HttpCode, HttpStatus, Post, Req} from '@nestjs/common';
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -47,7 +49,10 @@ export class CarController {
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create() {
-    return this.carService.create();
+  create(
+    @Req() req: AccessRequest,
+    @Body(new ZodPipe(CarDto.CreateCarValidator)) body: CarDto.CreateCarType
+  ) {
+    return this.carService.create(req.user.userId, body);
   }
 }
