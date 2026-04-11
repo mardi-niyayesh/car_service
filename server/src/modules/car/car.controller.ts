@@ -10,7 +10,7 @@ import {Controller, HttpCode, HttpStatus, Post} from '@nestjs/common';
  *
  * - Retrieving a paginated list of all cars (public)
  * - Fetching detailed information of a single car by its ID (public)
- * - Creating new cars with permission checks (e.g. `car.create`, `owner.all`)
+ * - Creating new cars with permission checks (e.g. `product.create`, `owner.all`)
  * - Updating existing cars with owner‑aware access control
  * - Deleting cars with strict permission or ownership validation
  * - Optional image upload support, stored and linked to each car
@@ -20,7 +20,7 @@ import {Controller, HttpCode, HttpStatus, Post} from '@nestjs/common';
  *
  * Create, update, and delete endpoints require:
  * - Valid Bearer authentication
- * - Appropriate permissions (e.g. `car.create`, `car.update`, `car.delete`)
+ * - Appropriate permissions (e.g. `product.create`, `product.update`, `product.delete`)
  * - OR ownership when the authenticated user is the creator of the car
  *
  * All modifying operations trigger cache invalidation if caching is used,
