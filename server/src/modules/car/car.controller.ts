@@ -1,7 +1,7 @@
 import * as CarDto from "./dto";
-import {ApiTags} from "@nestjs/swagger";
 import {CarService} from "./car.service";
 import type {AccessRequest} from "@/types";
+import {ApiBearerAuth, ApiBody, ApiCookieAuth, ApiTags} from "@nestjs/swagger";
 import {CacheEvict, Permission, PERMISSIONS, ZodPipe} from "@/common";
 import {Body, Controller, HttpCode, HttpStatus, Post, Req} from '@nestjs/common';
 
@@ -44,11 +44,13 @@ export class CarController {
   @Permission({
     permissions: [PERMISSIONS.PRODUCT_CREATE]
   })
+  @ApiBearerAuth("accessToken")
+  @Post()
   @CacheEvict({
     prefix: '*car:list*'
   })
-  @Post()
   @HttpCode(HttpStatus.CREATED)
+  @ApiBody({type: CarDto.CreateCarDto})
   create(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(CarDto.CreateCarValidator)) body: CarDto.CreateCarType

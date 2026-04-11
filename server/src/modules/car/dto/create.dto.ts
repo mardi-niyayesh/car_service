@@ -2,17 +2,7 @@ import z from "zod";
 import {createZodDto} from "nestjs-zod";
 import {OwnerShipValidator} from "@/common";
 
-const UnicodeLetters =
-  '\u0600-\u06FF\u0750-\u077F\u08A0-\u08FFa-zA-Z';
-const UnicodeNumbers = '0-9۰-۹';
-
-/** Common name-like regex (with spaces) */
-const NameRegex = new RegExp(`^[${UnicodeLetters}${UnicodeNumbers} _-]+$`);
-
-/** Tag regex (no spaces) */
-const TagRegex = new RegExp(
-  `^[${UnicodeLetters}${UnicodeNumbers}_-]+$`
-);
+const NameRegex: RegExp = /^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FFa-zA-Z0-9۰-۹ _-]+$/;
 
 /** create car validator */
 export const CreateCarValidator = OwnerShipValidator.extend({
@@ -40,7 +30,7 @@ export const CreateCarValidator = OwnerShipValidator.extend({
     .trim()
     .min(2)
     .max(150)
-    .regex(/^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FFa-zA-Z0-9۰-۹ _-]+$/, {
+    .regex(NameRegex, {
       error:
         'Characters allowed: Persian, Arabic, English, numbers, spaces, "-" and "_".',
     }),
@@ -57,7 +47,7 @@ export const CreateCarValidator = OwnerShipValidator.extend({
         .trim()
         .min(2)
         .max(50)
-        .regex(TagRegex, {
+        .regex(/^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FFa-zA-Z0-9۰-۹_-]+$/, {
           error:
             'Tag can contain Persian, Arabic, English letters, numbers, "-" and "_", but no spaces.',
         })

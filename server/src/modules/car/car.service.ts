@@ -18,6 +18,7 @@ export class CarService {
     }: CarDto.CreateCarType
   ) {
     console.log(
+      userId,
       name,
       slug,
       tags,
