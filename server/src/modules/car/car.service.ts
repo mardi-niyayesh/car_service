@@ -51,8 +51,6 @@ export class CarService {
         }
       });
 
-      console.log(car);
-
       return {
         message: 'Car Successfully created.',
         data: {
