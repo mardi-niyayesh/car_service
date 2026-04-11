@@ -3,7 +3,7 @@ import {exampleDate} from "@/lib";
 import {createZodDto} from "nestjs-zod";
 import type {CarResponse} from "@/types";
 import {categoryExampleRes} from "@/modules/category/dto";
-import {getBaseOkResponseSchema, getNormalErrorResponse, OwnerShipValidator} from "@/common";
+import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody, OwnerShipValidator} from "@/common";
 
 const NameRegex: RegExp = /^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FFa-zA-Z0-9۰-۹ _-]+$/;
 
@@ -108,6 +108,41 @@ export class CreateCarOkRes extends getBaseOkResponseSchema<CarResponse>({
       car: exampleCarRecord
     }
   }
+}) {}
+
+/** bad request example response */
+export class CreateCarBadReq extends getZodErrorBody({
+  path: 'cars',
+  errors: [
+    {
+      field: "ownership",
+      error: "Invalid input: expected boolean, received number"
+    },
+    {
+      field: "name",
+      error: "Invalid input: expected string, received number"
+    },
+    {
+      field: "slug",
+      error: "Invalid input: expected string, received array"
+    },
+    {
+      field: "slug",
+      error: "Too small: expected array to have >=2 items"
+    },
+    {
+      field: "company",
+      error: "Invalid input: expected string, received number"
+    },
+    {
+      field: "price_at_hour",
+      error: "Invalid input: expected number, received string"
+    },
+    {
+      field: "tags",
+      error: "Invalid input: expected array, received boolean"
+    }
+  ]
 }) {}
 
 /** conflict car example response */
