@@ -1,7 +1,7 @@
-import {Public} from "@/common";
 import {ApiTags} from "@nestjs/swagger";
 import {CarService} from "./car.service";
-import {Controller, Post} from '@nestjs/common';
+import {CacheEvict, Permission, PERMISSIONS} from "@/common";
+import {Controller, HttpCode, HttpStatus, Post} from '@nestjs/common';
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -39,8 +39,14 @@ import {Controller, Post} from '@nestjs/common';
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
-  @Public()
+  @Permission({
+    permissions: [PERMISSIONS.PRODUCT_CREATE]
+  })
+  @CacheEvict({
+    prefix: '*car:list*'
+  })
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create() {
     return this.carService.create();
   }
