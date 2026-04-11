@@ -1,3 +1,4 @@
+export * from "./car";
 export * from "./cli";
 export * from "./role";
 export * from "./auth";
