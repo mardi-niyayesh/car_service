@@ -2,8 +2,8 @@ import * as CarDto from "./dto";
 import {CarService} from "./car.service";
 import type {AccessRequest, ApiResponse, CarResponse} from "@/types";
 import {Body, Controller, HttpCode, HttpStatus, Post, Req} from '@nestjs/common';
-import {ApiBearerAuth, ApiBody, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
-import {CacheEvict, getUnauthorizedResponse, Permission, PERMISSIONS, ZodPipe} from "@/common";
+import {ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, ZodPipe} from "@/common";
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -51,6 +51,14 @@ export class CarController {
   })
   @HttpCode(HttpStatus.CREATED)
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars')})
+  @ApiForbiddenResponse({
+    type: getForbiddenResponse('cars', {
+      resource: 'car',
+      required_mode: 'ANY',
+      missing_permissions: [PERMISSIONS.PRODUCT_CREATE],
+      required_permissions: [PERMISSIONS.PRODUCT_CREATE],
+    })
+  })
   @ApiBody({type: CarDto.CreateCarDto})
   create(
     @Req() req: AccessRequest,
