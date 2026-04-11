@@ -2,7 +2,7 @@ import * as CarDto from "./dto";
 import {CarService} from "./car.service";
 import type {AccessRequest, ApiResponse, CarResponse} from "@/types";
 import {Body, Controller, HttpCode, HttpStatus, Post, Req} from '@nestjs/common';
-import {ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiBody, ApiForbiddenResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, ZodPipe} from "@/common";
 
 /**
@@ -50,6 +50,7 @@ export class CarController {
     prefix: '*car:list*'
   })
   @HttpCode(HttpStatus.CREATED)
+  @ApiOkResponse({type: CarDto.CreateCarOkRes})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars')})
   @ApiForbiddenResponse({
     type: getForbiddenResponse('cars', {

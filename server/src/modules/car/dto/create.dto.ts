@@ -1,6 +1,9 @@
 import z from "zod";
+import {exampleDate} from "@/lib";
 import {createZodDto} from "nestjs-zod";
-import {OwnerShipValidator} from "@/common";
+import type {CarResponse} from "@/types";
+import {categoryExampleRes} from "@/modules/category/dto";
+import {getBaseOkResponseSchema, OwnerShipValidator} from "@/common";
 
 const NameRegex: RegExp = /^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FFa-zA-Z0-9۰-۹ _-]+$/;
 
@@ -74,3 +77,35 @@ export type CreateCarType = z.infer<typeof CreateCarValidator>;
 
 /** body example create car validator for swagger */
 export class CreateCarDto extends createZodDto(CreateCarValidator) {}
+
+export const exampleCarRecord: CarResponse['car'] = {
+  id: "c8217255-b4b2-4734-a10c-76a1b752693b",
+  created_at: exampleDate,
+  updated_at: exampleDate,
+  name: "car",
+  slug: "car",
+  company: "car",
+  price_at_hour: 200000,
+  tags: [
+    "car",
+    "test"
+  ],
+  in_rent: false,
+  can_rent: true,
+  category_id: "ef85d0db-e822-4ec9-8009-da7925c965bd",
+  creator_id: "c9e2d14b-c0ff-4d91-8cf5-999eded02757",
+  description: "a test car",
+  category: categoryExampleRes
+};
+
+/** create car ok example response */
+export class CreateCarOkRes extends getBaseOkResponseSchema<CarResponse>({
+  create: true,
+  path: 'cars',
+  response: {
+    message: '',
+    data: {
+      car: exampleCarRecord
+    }
+  }
+}) {}
