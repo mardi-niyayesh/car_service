@@ -72,11 +72,7 @@ export class CategoryController {
   })
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'find one category',
-    description: "find one category with id unique. **Access restricted for everyone**",
-    operationId: 'get_one_categories',
-  })
+  @ApiOperation(CategoryDto.categoryFindOneOperation)
   @ApiParam(UUID4Dto('id'))
   @ApiOkResponse({type: CategoryDto.FindOneCategoryOkRes})
   @ApiBadRequestResponse({type: CategoryDto.FindOneBadRequest})
@@ -98,11 +94,7 @@ export class CategoryController {
   })
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'get all categories',
-    description: 'get all categories. **Access restricted for everyone**',
-    operationId: 'get_all_categories',
-  })
+  @ApiOperation(CategoryDto.categoryFindAllOperation)
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
@@ -121,12 +113,7 @@ export class CategoryController {
   })
   @ApiBearerAuth("accessToken")
   @Post()
-  @ApiOperation({
-    summary: "create a new category",
-    description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.CATEGORY_UPDATE}\`\n
-  Create a category only roles with permission (owner.all or category.create) can accessibility to this route`
-  })
+  @ApiOperation(CategoryDto.categoryCreateOperation)
   @ApiBody({type: CategoryDto.CreateCategoryDto})
   @ApiOkResponse({type: CategoryDto.CreateCategoryOkRes})
   @ApiBadRequestResponse({type: CategoryDto.CreateCategoryBadReq})
@@ -157,13 +144,7 @@ export class CategoryController {
   })
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'delete a category',
-    description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.CATEGORY_DELETE}\`\n    
-  delete a category with id nd ownership. **only roles with permission (owner.all or category.delete) can accessibility to this route**`,
-    operationId: 'delete_categories',
-  })
+  @ApiOperation(CategoryDto.categoryDeleteOperation)
   @ApiParam(UUID4Dto('id'))
   @ApiOkResponse({type: CategoryDto.DeleteCategoryOkRes})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('categories/id')})
@@ -192,14 +173,7 @@ export class CategoryController {
   })
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'update a category',
-    description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.CATEGORY_UPDATE}\`\n
-  
-  update a category with id and ownership. **only roles with permission (owner.all or category.update) can accessibility to this route**`,
-    operationId: 'update_categories',
-  })
+  @ApiOperation(CategoryDto.categoryUpdateOperation)
   @ApiBody({type: CategoryDto.UpdateCategoryDto})
   @ApiParam(UUID4Dto('id'))
   @ApiOkResponse({type: CategoryDto.UpdateCategoryOkRes})
