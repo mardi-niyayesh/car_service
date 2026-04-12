@@ -105,6 +105,7 @@ export class CarController {
   @ApiParam(UUID4Dto('cars/id/image'))
   @ApiConsumes('multipart/form-data')
   @ApiBody(CarConfig.carUploadApiBody)
+  @ApiBadRequestResponse({type: CarDto.UploadImageBadReq})
   @UseInterceptors(FileInterceptor(
     CarConfig.CAR_FILE_FIELD_NAME,
     CarConfig.getMulterOptions(getPath(CAR_IMAGE_UPLOAD_PATH)))
