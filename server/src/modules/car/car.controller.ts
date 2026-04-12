@@ -106,6 +106,7 @@ export class CarController {
   @ApiConsumes('multipart/form-data')
   @ApiBody(CarConfig.carUploadApiBody)
   @ApiBadRequestResponse({type: CarDto.UploadImageBadReq})
+  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars')})
   @UseInterceptors(FileInterceptor(
     CarConfig.CAR_FILE_FIELD_NAME,
     CarConfig.getMulterOptions(getPath(CAR_IMAGE_UPLOAD_PATH)))
