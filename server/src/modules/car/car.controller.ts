@@ -18,7 +18,7 @@ import {CarService} from "./car.service";
 import {FileInterceptor} from "@nestjs/platform-express";
 import type {AccessRequest, ApiResponse, CarResponse} from "@/types";
 import {Body, Controller, HttpCode, HttpStatus, Param, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
-import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, Public, UUID4Dto, UUIDv4Validator, ZodPipe, UPLOAD_PATH} from "@/common";
+import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, UUID4Dto, UUIDv4Validator, ZodPipe, UPLOAD_PATH} from "@/common";
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -85,8 +85,13 @@ export class CarController {
     return this.carService.create(req.user.userId, body);
   }
 
-  @Public()
+  @Permission({
+    permissions: [PERMISSIONS.PRODUCT_CREATE],
+    owner: true,
+    resource: "car"
+  })
   @Post(':id/image')
+  @ApiBearerAuth("accessToken")
   @ApiParam(UUID4Dto('cars/id/image'))
   @ApiConsumes('multipart/form-data')
   @ApiBody(CarConfig.carUploadApiBody)
