@@ -57,7 +57,7 @@ export function getMulterOptions(destination: string): MulterOptions {
         callback(
           new BadRequestException({
             message: `Only ${allowedFiles} allowed`,
-            error: 'bad file format'
+            error: 'Invalid file format'
           } as BaseException),
           false
         );
