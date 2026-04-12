@@ -8,7 +8,7 @@ import {
   ApiConflictResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
-  ApiUnauthorizedResponse,
+  ApiUnauthorizedResponse, ApiNotFoundResponse,
 } from "@nestjs/swagger";
 
 import {getPath} from "@/lib";
@@ -115,6 +115,7 @@ export class CarController {
       required_permissions: [PERMISSIONS.PRODUCT_CREATE],
     })
   })
+  @ApiNotFoundResponse({type: CarDto.UploadImageNotFound})
   @UseInterceptors(FileInterceptor(
     CarConfig.CAR_FILE_FIELD_NAME,
     CarConfig.getMulterOptions(getPath(CAR_IMAGE_UPLOAD_PATH)))
