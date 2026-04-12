@@ -1,3 +1,15 @@
+import {
+  ApiTags,
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiBearerAuth,
+  ApiConflictResponse,
+  ApiForbiddenResponse,
+  ApiBadRequestResponse,
+  ApiUnauthorizedResponse,
+} from "@nestjs/swagger";
+
 import * as CarDto from "./dto";
 import {diskStorage} from "multer";
 import {CarService} from "./car.service";
@@ -5,7 +17,6 @@ import {FileInterceptor} from "@nestjs/platform-express";
 import type {AccessRequest, ApiResponse, CarResponse} from "@/types";
 import {Body, Controller, HttpCode, HttpStatus, Post, Req, UseInterceptors} from '@nestjs/common';
 import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, Public, ZodPipe} from "@/common";
-import {ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiConflictResponse, ApiConsumes, ApiForbiddenResponse, ApiOkResponse, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 /**
  * Car management endpoints for handling vehicle resources.
