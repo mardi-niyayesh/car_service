@@ -107,6 +107,14 @@ export class CarController {
   @ApiBody(CarConfig.carUploadApiBody)
   @ApiBadRequestResponse({type: CarDto.UploadImageBadReq})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars')})
+  @ApiForbiddenResponse({
+    type: getForbiddenResponse('cars', {
+      resource: 'car',
+      required_mode: 'ANY',
+      missing_permissions: [PERMISSIONS.PRODUCT_CREATE],
+      required_permissions: [PERMISSIONS.PRODUCT_CREATE],
+    })
+  })
   @UseInterceptors(FileInterceptor(
     CarConfig.CAR_FILE_FIELD_NAME,
     CarConfig.getMulterOptions(getPath(CAR_IMAGE_UPLOAD_PATH)))
