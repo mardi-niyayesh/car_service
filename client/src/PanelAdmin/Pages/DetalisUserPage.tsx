@@ -1,5 +1,5 @@
 //components
-import ComponentCategoryDatailUser from "../Components/ComponentCategoryDatailUser";
+import ComponentCategoryDatailUser from "../Components/ComponentUsersDatailUser";
 //icon or logo
 import ArrowLeft from "../../../assets/Arrowleft.png";
 //
