@@ -7,6 +7,9 @@ import type {ApiResponse, BaseException, CarResponse} from "@/types";
 export class CarService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /** create a new car
+   * - **only roles with permission (owner.all or product.create) can accessibility to this route**
+   */
   create(
     userId: string,
     {
@@ -69,5 +72,25 @@ export class CarService {
         }
       };
     });
+  }
+
+  /** add image url to car record
+   * - **only roles with permission (owner.all or product.create) can accessibility to this route**
+   */
+  async uploadImage(id: string, imageUrl: string): Promise<ApiResponse<CarResponse>> {
+    const car = await this.prisma.car.update({
+      where: {id},
+      data: {
+        image: imageUrl
+      },
+      include: {category: true}
+    });
+
+    return {
+      message: 'Image uploaded successfully.',
+      data: {
+        car
+      }
+    };
   }
 }
