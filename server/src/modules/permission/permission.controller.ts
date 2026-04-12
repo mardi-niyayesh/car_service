@@ -47,7 +47,8 @@ import {Controller, Get, HttpCode, HttpStatus, Param, Query} from "@nestjs/commo
  */
 @ApiTags("Permissions")
 @Permission({
-  permissions: [PERMISSIONS.PERMISSION_VIEW]
+  permissions: [PERMISSIONS.PERMISSION_VIEW],
+  validatorParam: UUIDv4Validator
 })
 @Controller('permissions')
 @ApiBearerAuth("accessToken")
