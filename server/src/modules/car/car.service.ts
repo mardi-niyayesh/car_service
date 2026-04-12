@@ -1,5 +1,5 @@
 import * as CarDto from "./dto";
-import {ConflictException, Injectable} from '@nestjs/common';
+import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {ApiResponse, BaseException, CarResponse} from "@/types";
 
@@ -21,7 +21,7 @@ export class CarService {
       price_at_hour,
     }: CarDto.CreateCarType
   ): Promise<ApiResponse<CarResponse>> {
-    return this.prisma.$transaction(async (tx) : Promise<ApiResponse<CarResponse>> => {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<CarResponse>> => {
       const carExist = await tx.car.findUnique({
         where: {
           slug
@@ -31,6 +31,17 @@ export class CarService {
       if (carExist) throw new ConflictException({
         message: 'car already exists in database, please change slug',
         error: 'Car already exists'
+      } as BaseException);
+
+      const category = await tx.category.findUnique({
+        where: {
+          id: category_id
+        }
+      });
+
+      if (!category) throw new NotFoundException({
+        message: 'category not found in database, please make sure category exists',
+        error: 'Category not found'
       } as BaseException);
 
       const car = await tx.car.create({
