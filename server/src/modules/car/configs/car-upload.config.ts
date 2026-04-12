@@ -1,13 +1,13 @@
 import path from "node:path";
 import {diskStorage} from "multer";
-import {UPLOAD_PATH} from "@/main";
+import type {Request} from "express";
 import type {BaseException} from "@/types";
+import {existsSync, mkdirSync} from "node:fs";
 import {BadRequestException} from "@nestjs/common";
 import {ApiBodyOptions} from "@nestjs/swagger/dist/decorators/api-body.decorator";
 import {MulterOptions} from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 
 export const CAR_FILE_FIELD_NAME = 'image';
-export const CAR_FILE_PATH = `${UPLOAD_PATH}/car`;
 
 export const carUploadApiBody: ApiBodyOptions = {
   schema: {
@@ -21,38 +21,47 @@ export const carUploadApiBody: ApiBodyOptions = {
   }
 };
 
-export const multerOptions: MulterOptions = {
-  storage: diskStorage({
-    filename(
-      _req: Express.Request,
-      file: Express.Multer.File,
-      callback: (error: (Error | null), filename: string) => void
-    ): void {
-      const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1000)}${path.extname(file.originalname)}`;
-      callback(null, uniqueName);
-    },
-    destination: CAR_FILE_PATH
-  }),
-  limits: {
-    fileSize: 1024 * 1024 * 10
-  },
-  fileFilter(
-    _req: Express.Request,
-    file: Express.Multer.File,
-    callback: (error: (Error | null), acceptFile: boolean) => void
-  ): void {
-    const allowedFiles = /jpg|jpeg|png|webp/;
-
-    if (allowedFiles.test(path.extname(file.originalname))) {
-      callback(null, true);
-    } else {
-      callback(
-        new BadRequestException({
-          message: `Only ${allowedFiles} allowed`,
-          error: 'bad file format'
-        } as BaseException),
-        false
-      );
-    }
+export function getMulterOptions(destination: string): MulterOptions {
+  if (!existsSync(destination)) {
+    mkdirSync(destination, {recursive: true});
   }
-};
+
+  return {
+    storage: diskStorage({
+      filename(
+        req: Request,
+        file: Express.Multer.File,
+        callback: (error: (Error | null), filename: string) => void
+      ): void {
+        const rawId = req.params.id;
+        const id = Array.isArray(rawId) ? rawId[0] : rawId;
+        const uniqueName = `${Date.now()}-${id}${path.extname(file.originalname)}`;
+
+        callback(null, uniqueName);
+      },
+      destination
+    }),
+    limits: {
+      fileSize: 1024 * 1024 * 10
+    },
+    fileFilter(
+      _req: Request,
+      file: Express.Multer.File,
+      callback: (error: (Error | null), acceptFile: boolean) => void
+    ): void {
+      const allowedFiles = /jpg|jpeg|png|webp/;
+
+      if (allowedFiles.test(path.extname(file.originalname))) {
+        callback(null, true);
+      } else {
+        callback(
+          new BadRequestException({
+            message: `Only ${allowedFiles} allowed`,
+            error: 'bad file format'
+          } as BaseException),
+          false
+        );
+      }
+    }
+  };
+}

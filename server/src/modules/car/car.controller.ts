@@ -1,6 +1,7 @@
 import {
   ApiTags,
   ApiBody,
+  ApiParam,
   ApiConsumes,
   ApiOkResponse,
   ApiBearerAuth,
@@ -10,15 +11,14 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 
+import {getPath} from "@/lib";
 import * as CarDto from "./dto";
 import * as CarConfig from "./configs";
 import {CarService} from "./car.service";
 import {FileInterceptor} from "@nestjs/platform-express";
 import type {AccessRequest, ApiResponse, CarResponse} from "@/types";
-import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, Public, ZodPipe} from "@/common";
-import {Body, Controller, HttpCode, HttpStatus, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
-import {existsSync} from "node:fs";
-import {mkdirSync} from "fs";
+import {Body, Controller, HttpCode, HttpStatus, Param, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
+import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, Public, UUID4Dto, UUIDv4Validator, ZodPipe, UPLOAD_PATH} from "@/common";
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -54,11 +54,7 @@ import {mkdirSync} from "fs";
 @ApiTags('Cars')
 @Controller('cars')
 export class CarController {
-  constructor(private readonly carService: CarService) {
-    if (!existsSync(CarConfig.CAR_FILE_PATH)) {
-      mkdirSync(CarConfig.CAR_FILE_PATH, {recursive: true});
-    }
-  }
+  constructor(private readonly carService: CarService) {}
 
   @Permission({
     permissions: [PERMISSIONS.PRODUCT_CREATE]
@@ -90,13 +86,19 @@ export class CarController {
   }
 
   @Public()
-  @Post('file')
+  @Post(':id/image')
+  @ApiParam(UUID4Dto('cars/id/image'))
   @ApiConsumes('multipart/form-data')
   @ApiBody(CarConfig.carUploadApiBody)
-  @UseInterceptors(FileInterceptor(CarConfig.CAR_FILE_FIELD_NAME, CarConfig.multerOptions))
+  @UseInterceptors(FileInterceptor(
+    CarConfig.CAR_FILE_FIELD_NAME,
+    CarConfig.getMulterOptions(getPath(UPLOAD_PATH, "car")))
+  )
   upload(
+    @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    console.log(id);
     console.log(file);
   }
 }
