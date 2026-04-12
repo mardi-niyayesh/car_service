@@ -20,6 +20,7 @@ import {
 import {Reflector} from "@nestjs/core";
 import {BaseException, OwnershipRequest} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {checkZod} from "@/lib";
 
 interface IsAllowedActionParams {
   requiredAll?: boolean;
@@ -49,7 +50,8 @@ export class PermissionGuard implements CanActivate {
       resource,
       requiredAll,
       permissions: requiredPermissions,
-      include
+      include,
+      validatorParam
     } = this.reflector.getAllAndOverride<PermissionDecoratorParams>(PERMISSION_METADATA, [
       context.getHandler(),
       context.getClass(),
@@ -58,7 +60,8 @@ export class PermissionGuard implements CanActivate {
       permissions: [],
       requiredAll: false,
       resource: undefined,
-      include: undefined
+      include: undefined,
+      validatorParam: undefined
     };
 
     if (!requiredPermissions.length) throw new InternalServerErrorException({
@@ -92,9 +95,19 @@ export class PermissionGuard implements CanActivate {
     if (owner && resource) {
       const prismaDelegate = this.prisma[resource] as unknown as DynamicDelegate;
 
+      const rawId = req.params['id'];
+      const id: string = Array.isArray(rawId) ? rawId[0] : rawId;
+
+      if (!validatorParam) throw new InternalServerErrorException({
+        error: "Missing validator param for ownership permission guard.",
+        message: `Please specify a validator param for ownership permission guard. for route: ${resource}/:id /${req.method}`,
+      } as BaseException);
+
+      checkZod(validatorParam, id);
+
       const data = await prismaDelegate.findUnique({
         where: {
-          id: req.params['id'] as string | undefined
+          id
         },
         include: include === undefined ? undefined : include,
       });
