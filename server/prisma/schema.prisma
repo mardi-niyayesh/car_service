@@ -162,10 +162,11 @@ model Car {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  name          String @db.VarChar(100)
-  slug          String @unique @db.VarChar(150)
-  company       String @db.VarChar(100)
-  price_at_hour Int    @db.Integer
+  name          String  @db.VarChar(100)
+  slug          String  @unique @db.VarChar(150)
+  company       String  @db.VarChar(100)
+  price_at_hour Int     @db.Integer
+  image         String? @db.VarChar(500)
 
   tags        String[] @db.VarChar(50)
   description String?  @db.VarChar(500)
