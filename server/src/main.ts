@@ -1,16 +1,16 @@
 import 'dotenv/config';
 import helmet from "helmet";
 import path from "node:path";
+import {getPath} from "@/lib";
 import {AppModule} from './app.module';
 import {NestFactory} from '@nestjs/core';
 import cookieParser from "cookie-parser";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {NestExpressApplication} from "@nestjs/platform-express";
-import {ResponseInterceptors, ResponseException} from "./common";
+import {ResponseInterceptors, ResponseException, UPLOAD_PATH} from "./common";
 
 const PORT: string = process.env.PORT ?? "3000";
 const BASE_URL: string = process.env.BASE_URL ?? "api/v1";
-export const UPLOAD_PATH: string = path.join(process.cwd(), "public/uploads");
 
 /** run application */
 async function bootstrap(): Promise<void> {
@@ -27,7 +27,7 @@ async function bootstrap(): Promise<void> {
   });
 
   // serve uploads files in public directory
-  app.useStaticAssets(UPLOAD_PATH, {
+  app.useStaticAssets(getPath(UPLOAD_PATH), {
     prefix: '/uploads/',
   });
 
