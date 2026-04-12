@@ -1,6 +1,6 @@
-import z from 'zod';
-import {ZodFieldError} from "@/types";
-import {HttpStatus} from "@nestjs/common";
+import z, {output} from 'zod';
+import {ZodException, ZodFieldError} from "@/types";
+import {BadRequestException, HttpStatus} from "@nestjs/common";
 
 /** get Default message with status code */
 export function getDefaultMessage(status: HttpStatus): string {
@@ -25,4 +25,18 @@ export function formatZodError(zodError: z.ZodError): ZodFieldError[] {
     field: i.path.join(", "),
     error: i.message,
   }));
+}
+
+/** safe zod body */
+export function checkZod<T extends z.ZodTypeAny>(schema: T, value: unknown): output<T> {
+  const result = schema.safeParse(value);
+
+  if (!result.success) {
+    throw new BadRequestException({
+      errors: formatZodError(result.error),
+      message: "Invalid request.",
+    } as ZodException);
+  }
+
+  return result.data;
 }
