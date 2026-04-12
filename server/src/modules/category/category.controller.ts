@@ -31,8 +31,8 @@ import {
   type PaginationValidatorType,
 } from "@/common";
 
-import {ONE_MINUTE_MS} from "@/lib";
 import * as CategoryDto from "./dto";
+import {checkZod, ONE_MINUTE_MS} from "@/lib";
 import {CategoryService} from "./category.service";
 import {Category} from "@/modules/prisma/generated/client";
 import type {AccessRequest, ApiResponse, CategoriesResponse, CategoryResponse, OwnershipRequest} from "@/types";
@@ -137,6 +137,7 @@ export class CategoryController {
     permissions: [PERMISSIONS.CATEGORY_DELETE],
     owner: true,
     resource: "category",
+    validatorParam: UUIDv4Validator
   })
   @ApiBearerAuth("accessToken")
   @CacheEvict({
@@ -152,7 +153,7 @@ export class CategoryController {
   @ApiForbiddenResponse({type: CategoryDto.DeleteForbiddenResponse})
   @ApiNotFoundResponse({type: CategoryDto.DeleteCategoryNotFound})
   delete(
-    @Param('id',new ZodPipe(UUIDv4Validator)) id: string,
+    @Param('id') id: string,
   ): Promise<ApiResponse<CategoryResponse>> {
     return this.categoryService.delete(id);
   }
@@ -164,6 +165,7 @@ export class CategoryController {
     permissions: [PERMISSIONS.CATEGORY_UPDATE],
     owner: true,
     resource: "category",
+    validatorParam: UUIDv4Validator
   })
   @ApiBearerAuth("accessToken")
   @CacheEvict({
@@ -180,7 +182,7 @@ export class CategoryController {
   @ApiConflictResponse({type: CategoryDto.UpdateCategoryConflictRes})
   async update(
     @Req() req: OwnershipRequest<Category>,
-    @Param('id',new ZodPipe(UUIDv4Validator)) id: string,
+    @Param('id') id: string,
     @Body(new ZodPipe(CategoryDto.UpdateCategoryValidator)) body: CategoryDto.UpdateCategoryType,
   ): Promise<ApiResponse<CategoryResponse>> {
     return await this.categoryService.update(id, req.ownershipData, body);
