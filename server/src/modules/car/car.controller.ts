@@ -97,6 +97,10 @@ export class CarController {
     resource: "car"
   })
   @Post(':id/image')
+  @CacheEvict({
+    force: true,
+    resource: "car"
+  })
   @ApiBearerAuth("accessToken")
   @ApiParam(UUID4Dto('cars/id/image'))
   @ApiConsumes('multipart/form-data')
