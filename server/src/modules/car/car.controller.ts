@@ -18,7 +18,7 @@ import {CarService} from "./car.service";
 import {FileInterceptor} from "@nestjs/platform-express";
 import type {AccessRequest, ApiResponse, CarResponse} from "@/types";
 import {Body, Controller, HttpCode, HttpStatus, Param, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
-import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, UUID4Dto, UUIDv4Validator, ZodPipe, UPLOAD_PATH} from "@/common";
+import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, UUID4Dto, UUIDv4Validator, ZodPipe, CAR_IMAGE_UPLOAD_PATH} from "@/common";
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -56,6 +56,9 @@ import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, P
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
+  /** create a new car
+   * - **only roles with permission (owner.all or product.create) can accessibility to this route**
+   */
   @Permission({
     permissions: [PERMISSIONS.PRODUCT_CREATE]
   })
@@ -85,6 +88,9 @@ export class CarController {
     return this.carService.create(req.user.userId, body);
   }
 
+  /** add image url to car record
+   * - **only roles with permission (owner.all or product.create) can accessibility to this route**
+   */
   @Permission({
     permissions: [PERMISSIONS.PRODUCT_CREATE],
     owner: true,
@@ -97,13 +103,12 @@ export class CarController {
   @ApiBody(CarConfig.carUploadApiBody)
   @UseInterceptors(FileInterceptor(
     CarConfig.CAR_FILE_FIELD_NAME,
-    CarConfig.getMulterOptions(getPath(UPLOAD_PATH, "car")))
+    CarConfig.getMulterOptions(getPath(CAR_IMAGE_UPLOAD_PATH)))
   )
-  upload(
+  uploadImage(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
     @UploadedFile() file: Express.Multer.File,
-  ) {
-    console.log(id);
-    console.log(file);
+  ): Promise<ApiResponse<CarResponse>> {
+    return this.carService.uploadImage(id, `${CAR_IMAGE_UPLOAD_PATH}/${file.filename}`);
   }
 }

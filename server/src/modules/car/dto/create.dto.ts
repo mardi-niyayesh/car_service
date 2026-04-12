@@ -90,6 +90,7 @@ export const exampleCarRecord: CarResponse['car'] = {
     "car",
     "test"
   ],
+  image: null,
   in_rent: false,
   can_rent: true,
   category_id: "ef85d0db-e822-4ec9-8009-da7925c965bd",

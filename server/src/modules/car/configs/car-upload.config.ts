@@ -35,7 +35,7 @@ export function getMulterOptions(destination: string): MulterOptions {
       ): void {
         const rawId = req.params.id;
         const id = Array.isArray(rawId) ? rawId[0] : rawId;
-        const uniqueName = `${Date.now()}-${id}${path.extname(file.originalname)}`;
+        const uniqueName = `${id}${path.extname(file.originalname)}`;
 
         callback(null, uniqueName);
       },
