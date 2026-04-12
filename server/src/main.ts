@@ -10,6 +10,7 @@ import {ResponseInterceptors, ResponseException} from "./common";
 
 const PORT: string = process.env.PORT ?? "3000";
 const BASE_URL: string = process.env.BASE_URL ?? "api/v1";
+export const UPLOAD_PATH: string = path.join(process.cwd(), "public/uploads");
 
 /** run application */
 async function bootstrap(): Promise<void> {
@@ -26,7 +27,7 @@ async function bootstrap(): Promise<void> {
   });
 
   // serve uploads files in public directory
-  app.useStaticAssets(path.join(process.cwd(), "public/uploads"), {
+  app.useStaticAssets(UPLOAD_PATH, {
     prefix: '/uploads/',
   });
 
