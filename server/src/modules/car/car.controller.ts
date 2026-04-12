@@ -94,7 +94,8 @@ export class CarController {
   @Permission({
     permissions: [PERMISSIONS.PRODUCT_CREATE],
     owner: true,
-    resource: "car"
+    resource: "car",
+    validatorParam: UUIDv4Validator
   })
   @Post(':id/image')
   @CacheEvict({
@@ -121,7 +122,7 @@ export class CarController {
     CarConfig.getMulterOptions(getPath(CAR_IMAGE_UPLOAD_PATH)))
   )
   uploadImage(
-    @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
+    @Param("id") id: string,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<ApiResponse<CarResponse>> {
     return this.carService.uploadImage(id, `${CAR_IMAGE_UPLOAD_PATH}/${file.filename}`);
