@@ -25,6 +25,11 @@ async function bootstrap(): Promise<void> {
     prefix: '/static/',
   });
 
+  // serve uploads files in public directory
+  app.useStaticAssets(path.join(process.cwd(), "public/uploads"), {
+    prefix: '/uploads/',
+  });
+
   // global configs
   app.use(helmet());
   app.use(cookieParser());
