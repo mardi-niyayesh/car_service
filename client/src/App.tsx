@@ -92,7 +92,7 @@ function App() {
           {/* ------- Panel Admin Layout ------- */}
           <Route path="/panel" element={<PanelAdminLayout />}>
             <Route path="users" element={<UsersPage />} />
-            <Route path="users/detail" element={<DetalisUserPage />} />
+            <Route path="users/detail/:userId" element={<DetalisUserPage />} />
             <Route path="product" element={<ProductPage />} />
             <Route path="category" element={<CategoryPage />} />
           </Route>
