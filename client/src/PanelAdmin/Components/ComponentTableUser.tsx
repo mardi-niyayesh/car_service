@@ -112,9 +112,7 @@ const ComponentTableUser = () => {
         <tbody className="divide-y divide-gray-100">
           {users.length === 0 ? (
             <tr>
-              <td colSpan={5} className="px-4 py-3 text-center">
-                هیچ کاربری یافت نشد.
-              </td>
+              <td className="px-4 py-3 text-center">هیچ کاربری یافت نشد.</td>
             </tr>
           ) : (
             users.map((user, index) => (
