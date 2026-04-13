@@ -8,7 +8,7 @@ import {
   ApiConflictResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
-  ApiUnauthorizedResponse, ApiNotFoundResponse,
+  ApiUnauthorizedResponse, ApiNotFoundResponse, ApiOperation,
 } from "@nestjs/swagger";
 
 import {getPath} from "@/lib";
@@ -68,6 +68,7 @@ export class CarController {
     prefix: '*car:list*'
   })
   @HttpCode(HttpStatus.CREATED)
+  @ApiOperation(CarDto.createCarOperation)
   @ApiBody({type: CarDto.CreateCarDto})
   @ApiOkResponse({type: CarDto.CreateCarOkRes})
   @ApiBadRequestResponse({type: CarDto.CreateCarBadReq})
@@ -92,7 +93,7 @@ export class CarController {
    * - **only roles with permission (owner.all or product.create) can accessibility to this route**
    */
   @Permission({
-    permissions: [PERMISSIONS.PRODUCT_CREATE],
+    permissions: [PERMISSIONS.PRODUCT_CREATE, PERMISSIONS.PRODUCT_UPDATE],
     owner: true,
     resource: "car",
     validatorParam: UUIDv4Validator
@@ -114,8 +115,14 @@ export class CarController {
     type: getForbiddenResponse('cars', {
       resource: 'car',
       required_mode: 'ANY',
-      missing_permissions: [PERMISSIONS.PRODUCT_CREATE],
-      required_permissions: [PERMISSIONS.PRODUCT_CREATE],
+      missing_permissions: [
+        PERMISSIONS.PRODUCT_CREATE,
+        PERMISSIONS.PRODUCT_UPDATE
+      ],
+      required_permissions: [
+        PERMISSIONS.PRODUCT_CREATE,
+        PERMISSIONS.PRODUCT_UPDATE
+      ],
     })
   })
   @ApiNotFoundResponse({type: CarDto.UploadImageNotFound})
