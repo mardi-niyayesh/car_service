@@ -45,12 +45,19 @@ export class ResponseException implements ExceptionFilter {
       };
 
     } else {
-      const message: string = typeof body === 'string'
-        ? body
-        : (body as BaseExceptionRes).message || "Internal Server Error";
-      const error: string = message.includes("Too many requests.")
-        ? "Too Many Requests From Your IP"
-        : (body as BaseExceptionRes).error || "Unknown Error";
+      const message: string = body === null
+        ? "Internal Server Error"
+        : typeof body === 'string'
+          ? body
+          : typeof body === 'object'
+            ? (body as BaseException).message
+            : "Internal Server Error";
+
+      const error: string = body === null
+        ? "Unknown Error"
+        : message.includes("Too many requests.")
+          ? "Too Many Requests From Your IP"
+          : (body as BaseExceptionRes).error || "Unknown Error";
 
       finalResponse = {
         ...baseErrorResponse,
@@ -58,7 +65,7 @@ export class ResponseException implements ExceptionFilter {
         error,
       };
 
-      if (typeof body === 'object' && (body as BaseExceptionRes).error === 'Permission Denied') finalResponse = {
+      if (body !== null && typeof body === 'object' && (body as BaseExceptionRes).error === 'Permission Denied') finalResponse = {
         ...finalResponse,
         ...body
       };
