@@ -31,6 +31,7 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 
+import z from "zod";
 import * as RolesDto from "./dto";
 import {ONE_MINUTE_MS} from "@/lib";
 import * as UserDto from "../user/dto";
@@ -142,10 +143,11 @@ export class RoleController {
   /** delete exist role with id
    * - only roles with permission (owner.all or role.create) can accessibility to this route
    */
-  @Permission<Prisma.RoleInclude>({
+  @Permission<Prisma.RoleInclude, z.ZodUUID>({
     permissions: [PERMISSIONS.ROLE_DELETE],
     owner: true,
     resource: "role",
+    validatorParam: UUIDv4Validator,
     include: {
       rolePermissions: {
         include: {permission: true}
@@ -176,10 +178,11 @@ export class RoleController {
    * - **update with ownership**
    * - **only roles with permission (owner.all or role.update) can accessibility to this route**
    */
-  @Permission<Prisma.RoleInclude>({
+  @Permission<Prisma.RoleInclude, z.ZodUUID>({
     permissions: [PERMISSIONS.ROLE_UPDATE],
     owner: true,
     resource: 'role',
+    validatorParam: UUIDv4Validator,
     include: {
       rolePermissions: {
         include: {permission: true}
