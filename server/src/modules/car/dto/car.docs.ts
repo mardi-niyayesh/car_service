@@ -1,5 +1,6 @@
-import {PERMISSIONS} from "@/common";
 import {ApiOperationOptions} from "@nestjs/swagger";
+import {ONE_MB_OF_BYTE, PERMISSIONS} from "@/common";
+import {allowedFileType, maxFileSize} from "@/modules/car/configs";
 
 const imageCarPermissionsRequired = [
   PERMISSIONS.PRODUCT_UPDATE,
@@ -19,5 +20,8 @@ export const uploadCarImageOperation: ApiOperationOptions = {
   summary: "Upload a car image with ownership permission",
   description: `
   - 🔐 PERMISSIONS REQUIRED: **any of** \`${imageCarPermissionsRequired.join(", ")}\`\n
-  Create a category only roles with permission (owner.all or product.create or product.update) can accessibility to this route`
+  Create a category only roles with permission (owner.all or product.create or product.update) can accessibility to this route
+  
+  - # File Type Allowed: ${allowedFileType.source.split("|").join(", ")}
+  - # Max File Size: ${maxFileSize / ONE_MB_OF_BYTE} MB`
 };

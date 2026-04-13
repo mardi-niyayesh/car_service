@@ -1,3 +1,4 @@
+export * from "./common";
 export * from "./role.constant";
 export * from "./routes.constant";
 export * from "./resources.constant";

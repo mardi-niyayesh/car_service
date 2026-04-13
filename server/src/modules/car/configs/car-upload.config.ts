@@ -2,6 +2,7 @@ import path from "node:path";
 import * as fs from "node:fs";
 import {diskStorage} from "multer";
 import type {Request} from "express";
+import {ONE_MB_OF_BYTE} from "@/common";
 import {deleteExistingFile} from "@/lib";
 import type {BaseException} from "@/types";
 import {BadRequestException} from "@nestjs/common";
@@ -9,7 +10,7 @@ import {MulterOptions} from "@nestjs/platform-express/multer/interfaces/multer-o
 
 export const CAR_FILE_FIELD_NAME = 'image';
 export const allowedFileType = /jpg|jpeg|png|webp/;
-export const maxFileSize = 1024 * 1024 * 10; // 10 MB
+export const maxFileSize = ONE_MB_OF_BYTE * 10; // 10 MB
 
 export function getMulterOptions(destination: string): MulterOptions {
   if (!fs.existsSync(destination)) {
