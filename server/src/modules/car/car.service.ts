@@ -1,5 +1,5 @@
 import * as CarDto from "./dto";
-import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
+import {ConflictException, Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {ApiResponse, BaseException, CarResponse} from "@/types";
 
@@ -97,6 +97,29 @@ export class CarService {
 
     return {
       message,
+      data: {
+        car
+      }
+    };
+  }
+
+  /**
+   * Find a single car by its unique slug.
+   * - **Accessible to all users (public endpoint)**
+   */
+  async findOne(slug: string): Promise<ApiResponse<CarResponse>> {
+    const car = await this.prisma.car.findUnique({
+      where: {slug},
+      include: {category: true}
+    });
+
+    if (!car) throw new NotFoundException({
+      message: 'Car does not exists in database, please make sure and try again',
+      error: 'Car not found'
+    });
+
+    return {
+      message: "car successfully found.",
       data: {
         car
       }

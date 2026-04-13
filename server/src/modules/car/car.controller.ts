@@ -72,7 +72,7 @@ export class CarController {
 
   /**
    * Find a single car by its unique slug.
-   * - Accessible to all users (public endpoint)
+   * - **Accessible to all users (public endpoint)**
    */
   @Public()
   @Get(":slug")
@@ -80,8 +80,8 @@ export class CarController {
   @ApiBadRequestResponse({type: CarDto.FindOneCarBadReq})
   findOne(
     @Param("slug", new ZodPipe(CarDto.CreateCarValidator.shape.slug)) slug: string,
-  ) {
-    console.log(slug);
+  ): Promise<ApiResponse<CarResponse>> {
+    return this.carService.findOne(slug);
   }
 
   /** create a new car
