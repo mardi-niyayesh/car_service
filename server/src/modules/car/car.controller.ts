@@ -83,7 +83,9 @@ export class CarController {
     ttl: ONE_MINUTE_MS * 60,
   })
   @Get(":slug")
+  @HttpCode(HttpStatus.OK)
   @ApiOperation(CarDto.findOneCarOperation)
+  @ApiOkResponse({type: CarDto.FindOneOkRes})
   @ApiBadRequestResponse({type: CarDto.FindOneCarBadReq})
   findOne(
     @Param("slug", new ZodPipe(CarDto.CreateCarValidator.shape.slug)) slug: string,
