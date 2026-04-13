@@ -95,7 +95,7 @@ export class CarController {
    * - **only roles with permission (owner.all or product.create or product.update) can accessibility to this route**
    */
   @Permission({
-    permissions: [PERMISSIONS.PRODUCT_CREATE, PERMISSIONS.PRODUCT_UPDATE],
+    permissions: CarDto.imageCarPermissionsRequired,
     owner: true,
     resource: "car",
     validatorParam: UUIDv4Validator
@@ -118,14 +118,8 @@ export class CarController {
     type: getForbiddenResponse('cars', {
       resource: 'car',
       required_mode: 'ANY',
-      missing_permissions: [
-        PERMISSIONS.PRODUCT_CREATE,
-        PERMISSIONS.PRODUCT_UPDATE
-      ],
-      required_permissions: [
-        PERMISSIONS.PRODUCT_CREATE,
-        PERMISSIONS.PRODUCT_UPDATE
-      ],
+      missing_permissions: CarDto.imageCarPermissionsRequired,
+      required_permissions: CarDto.imageCarPermissionsRequired,
     })
   })
   @ApiNotFoundResponse({type: CarDto.UploadImageNotFound})

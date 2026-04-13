@@ -2,7 +2,7 @@ import {ApiOperationOptions} from "@nestjs/swagger";
 import {ONE_MB_OF_BYTE, PERMISSIONS} from "@/common";
 import {maxFileSize, allowedFileTypeSplit} from "../configs";
 
-const imageCarPermissionsRequired = [
+export const imageCarPermissionsRequired = [
   PERMISSIONS.PRODUCT_UPDATE,
   PERMISSIONS.PRODUCT_CREATE,
 ];
