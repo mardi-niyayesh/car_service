@@ -70,10 +70,7 @@ import {BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param,
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
-  @Public({
-    makePublicAccessGuard: true,
-    makePublicPermissionGuard: true,
-  })
+  @Public()
   @Get(":slug")
   findOne(
     @Param('slug', new ZodPipe(CarDto.CreateCarValidator.shape.slug)) slug: string,

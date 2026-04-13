@@ -14,13 +14,14 @@ import {
   PERMISSION_METADATA,
   type DynamicDelegate,
   type PermissionsType,
+  type PublicDecoratorParams,
   type PermissionDecoratorParams,
 } from "@/common";
 
+import {checkZod} from "@/lib";
 import {Reflector} from "@nestjs/core";
 import {BaseException, OwnershipRequest} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {checkZod} from "@/lib";
 
 interface IsAllowedActionParams {
   requiredAll?: boolean;
@@ -38,12 +39,12 @@ export class PermissionGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<OwnershipRequest<FindDynamicDelegate>>();
 
-    const isPublic: boolean = this.reflector.getAllAndOverride(IS_PUBLIC_KEY, [
+    const isPublic = this.reflector.getAllAndOverride<PublicDecoratorParams>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
 
-    if (isPublic) return true;
+    if (isPublic.makePublicPermissionGuard) return true;
 
     const {
       owner,
