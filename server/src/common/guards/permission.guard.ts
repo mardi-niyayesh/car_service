@@ -10,17 +10,17 @@ import {
 import {
   PERMISSIONS,
   IS_PUBLIC_KEY,
-  FindDynamicDelegate,
   PERMISSION_METADATA,
   type DynamicDelegate,
   type PermissionsType,
+  type FindDynamicDelegate,
   type PublicDecoratorParams,
   type PermissionDecoratorParams,
 } from "@/common";
 
 import {checkZod} from "@/lib";
 import {Reflector} from "@nestjs/core";
-import {BaseException, OwnershipRequest} from "@/types";
+import type {BaseException, OwnershipRequest} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 
 interface IsAllowedActionParams {
