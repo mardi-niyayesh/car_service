@@ -1,4 +1,17 @@
 import {
+  Public,
+  ZodPipe,
+  UUID4Dto,
+  CacheEvict,
+  Permission,
+  PERMISSIONS,
+  UUIDv4Validator,
+  getForbiddenResponse,
+  CAR_IMAGE_UPLOAD_PATH,
+  getUnauthorizedResponse,
+} from "@/common";
+
+import {
   ApiTags,
   ApiBody,
   ApiParam,
@@ -19,8 +32,7 @@ import * as CarConfig from "./configs";
 import {CarService} from "./car.service";
 import {FileInterceptor} from "@nestjs/platform-express";
 import type {AccessRequest, ApiResponse, BaseException, CarResponse, OwnershipRequest} from "@/types";
-import {BadRequestException, Body, Controller, HttpCode, HttpStatus, Param, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
-import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, UUID4Dto, UUIDv4Validator, ZodPipe, CAR_IMAGE_UPLOAD_PATH} from "@/common";
+import {BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -57,6 +69,14 @@ import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, P
 @Controller('cars')
 export class CarController {
   constructor(private readonly carService: CarService) {}
+
+  @Public()
+  @Get(":slug")
+  findOne(
+    @Param('slug') slug: string,
+  ) {
+    console.log(slug);
+  }
 
   /** create a new car
    * - **only roles with permission (owner.all or product.create) can accessibility to this route**
