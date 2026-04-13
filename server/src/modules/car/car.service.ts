@@ -77,7 +77,16 @@ export class CarService {
   /** add image url to car record
    * - **only roles with permission (owner.all or product.create) can accessibility to this route**
    */
-  async uploadImage(id: string, imageUrl: string): Promise<ApiResponse<CarResponse>> {
+  async uploadImage(id: string, imageUrl: string, oldCar: CarResponse["car"]): Promise<ApiResponse<CarResponse>> {
+    const message = 'Image uploaded successfully.';
+
+    if (oldCar.image === imageUrl) return {
+      message,
+      data: {
+        car: oldCar
+      }
+    };
+
     const car = await this.prisma.car.update({
       where: {id},
       data: {
@@ -87,7 +96,7 @@ export class CarService {
     });
 
     return {
-      message: 'Image uploaded successfully.',
+      message,
       data: {
         car
       }

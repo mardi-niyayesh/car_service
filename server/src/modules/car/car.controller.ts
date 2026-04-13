@@ -16,7 +16,7 @@ import * as CarDto from "./dto";
 import * as CarConfig from "./configs";
 import {CarService} from "./car.service";
 import {FileInterceptor} from "@nestjs/platform-express";
-import type {AccessRequest, ApiResponse, CarResponse} from "@/types";
+import type {AccessRequest, ApiResponse, CarResponse, OwnershipRequest} from "@/types";
 import {Body, Controller, HttpCode, HttpStatus, Param, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
 import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, UUID4Dto, UUIDv4Validator, ZodPipe, CAR_IMAGE_UPLOAD_PATH} from "@/common";
 
@@ -124,7 +124,8 @@ export class CarController {
   uploadImage(
     @Param("id") id: string,
     @UploadedFile() file: Express.Multer.File,
+    @Req() req: OwnershipRequest<CarResponse["car"]>
   ): Promise<ApiResponse<CarResponse>> {
-    return this.carService.uploadImage(id, `${CAR_IMAGE_UPLOAD_PATH}/${file.filename}`);
+    return this.carService.uploadImage(id, `${CAR_IMAGE_UPLOAD_PATH}/${file.filename}`, req.ownershipData);
   }
 }
