@@ -8,7 +8,7 @@ import {
   UUIDv4Validator,
   getForbiddenResponse,
   CAR_IMAGE_UPLOAD_PATH,
-  getUnauthorizedResponse,
+  getUnauthorizedResponse, Cacheable,
 } from "@/common";
 
 import {
@@ -26,7 +26,7 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 
-import {getPath} from "@/lib";
+import {getPath, ONE_MINUTE_MS} from "@/lib";
 import * as CarDto from "./dto";
 import * as CarConfig from "./configs";
 import {CarService} from "./car.service";
@@ -75,6 +75,11 @@ export class CarController {
    * - **Accessible to all users (public endpoint)**
    */
   @Public()
+  @Cacheable({
+    resource: 'car',
+    paramsKey: ['slug'],
+    ttl: ONE_MINUTE_MS * 60,
+  })
   @Get(":slug")
   @ApiOperation(CarDto.findOneCarOperation)
   @ApiBadRequestResponse({type: CarDto.FindOneCarBadReq})
