@@ -1,16 +1,17 @@
 import path from "node:path";
+import * as fs from "node:fs";
 import {diskStorage} from "multer";
 import type {Request} from "express";
+import {deleteExistingFile} from "@/lib";
 import type {BaseException} from "@/types";
-import {existsSync, mkdirSync} from "node:fs";
 import {BadRequestException} from "@nestjs/common";
 import {MulterOptions} from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 
 export const CAR_FILE_FIELD_NAME = 'image';
 
 export function getMulterOptions(destination: string): MulterOptions {
-  if (!existsSync(destination)) {
-    mkdirSync(destination, {recursive: true});
+  if (!fs.existsSync(destination)) {
+    fs.mkdirSync(destination, {recursive: true});
   }
 
   return {
@@ -23,6 +24,8 @@ export function getMulterOptions(destination: string): MulterOptions {
         const rawId = req.params.id;
         const id = Array.isArray(rawId) ? rawId[0] : rawId;
         const uniqueName = `${id}${path.extname(file.originalname)}`;
+
+        deleteExistingFile(destination, uniqueName);
 
         callback(null, uniqueName);
       },
