@@ -7,7 +7,7 @@ import {NestFactory} from '@nestjs/core';
 import cookieParser from "cookie-parser";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {NestExpressApplication} from "@nestjs/platform-express";
-import {ResponseInterceptors, ResponseException, UPLOAD_PATH} from "./common";
+import {ResponseInterceptors, ResponseException, UPLOAD_PATH, UPLOAD_PATH_PREFIX} from "./common";
 
 const PORT: string = process.env.PORT ?? "3000";
 const BASE_URL: string = process.env.BASE_URL ?? "api/v1";
@@ -28,7 +28,7 @@ async function bootstrap(): Promise<void> {
 
   // serve uploads files in public directory
   app.useStaticAssets(getPath(UPLOAD_PATH), {
-    prefix: '/uploads/',
+    prefix: UPLOAD_PATH_PREFIX,
   });
 
   // global configs

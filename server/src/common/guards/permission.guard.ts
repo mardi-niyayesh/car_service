@@ -42,7 +42,10 @@ export class PermissionGuard implements CanActivate {
     const isPublic = this.reflector.getAllAndOverride<PublicDecoratorParams>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
-    ]);
+    ]) || {
+      makePublicAccessGuard: false,
+      makePublicPermissionGuard: false,
+    };
 
     if (isPublic.makePublicPermissionGuard) return true;
 

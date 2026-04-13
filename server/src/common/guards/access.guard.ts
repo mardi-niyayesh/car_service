@@ -14,7 +14,10 @@ export class AccessTokenGuard extends AuthGuard("jwt-access") implements CanActi
     const isPublic = this.reflector.getAllAndOverride<PublicDecoratorParams>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
-    ]);
+    ]) || {
+      makePublicAccessGuard: false,
+      makePublicPermissionGuard: false,
+    };
 
     if (isPublic.makePublicAccessGuard) return true;
 

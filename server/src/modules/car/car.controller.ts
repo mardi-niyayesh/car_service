@@ -2,13 +2,15 @@ import {
   Public,
   ZodPipe,
   UUID4Dto,
+  Cacheable,
   CacheEvict,
   Permission,
   PERMISSIONS,
   UUIDv4Validator,
+  UPLOAD_PATH_PREFIX,
   getForbiddenResponse,
   CAR_IMAGE_UPLOAD_PATH,
-  getUnauthorizedResponse, Cacheable,
+  getUnauthorizedResponse,
 } from "@/common";
 
 import {
@@ -26,10 +28,10 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 
-import {getPath, ONE_MINUTE_MS} from "@/lib";
 import * as CarDto from "./dto";
 import * as CarConfig from "./configs";
 import {CarService} from "./car.service";
+import {getPath, ONE_MINUTE_MS} from "@/lib";
 import {FileInterceptor} from "@nestjs/platform-express";
 import type {AccessRequest, ApiResponse, BaseException, CarResponse, OwnershipRequest} from "@/types";
 import {BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
@@ -146,7 +148,7 @@ export class CarController {
   @ApiBadRequestResponse({type: CarDto.UploadImageBadReq})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars')})
   @ApiForbiddenResponse({
-    type: getForbiddenResponse('cars', {
+    type: getForbiddenResponse('cars/id/image', {
       resource: 'car',
       required_mode: 'ANY',
       missing_permissions: CarDto.imageCarPermissionsRequired,
@@ -168,6 +170,6 @@ export class CarController {
       message: "File is Required, Please Try again and send File",
     } as BaseException);
 
-    return this.carService.uploadImage(id, `${CAR_IMAGE_UPLOAD_PATH}/${file.filename}`, req.ownershipData);
+    return this.carService.uploadImage(id, `${UPLOAD_PATH_PREFIX}/${file.filename}`, req.ownershipData);
   }
 }
