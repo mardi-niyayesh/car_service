@@ -70,10 +70,13 @@ import {BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param,
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
-  @Public()
+  @Public({
+    makePublicAccessGuard: true,
+    makePublicPermissionGuard: true,
+  })
   @Get(":slug")
   findOne(
-    @Param('slug') slug: string,
+    @Param('slug', new ZodPipe(CarDto.CreateCarValidator.shape.slug)) slug: string,
   ) {
     console.log(slug);
   }
