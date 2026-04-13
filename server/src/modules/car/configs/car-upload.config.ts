@@ -11,6 +11,7 @@ import {MulterOptions} from "@nestjs/platform-express/multer/interfaces/multer-o
 export const CAR_FILE_FIELD_NAME = 'image';
 export const allowedFileType = /jpg|jpeg|png|webp/;
 export const maxFileSize = ONE_MB_OF_BYTE * 10; // 10 MB
+export const allowedFileTypeSplit = allowedFileType.source.split("|").join(", ");
 
 export function getMulterOptions(destination: string): MulterOptions {
   if (!fs.existsSync(destination)) {
@@ -47,7 +48,7 @@ export function getMulterOptions(destination: string): MulterOptions {
       } else {
         callback(
           new BadRequestException({
-            message: `Only ${allowedFileType} allowed`,
+            message: `Only ${allowedFileTypeSplit} allowed`,
             error: 'Invalid file format'
           } as BaseException),
           false

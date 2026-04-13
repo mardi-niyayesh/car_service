@@ -1,6 +1,6 @@
 import {ApiOperationOptions} from "@nestjs/swagger";
 import {ONE_MB_OF_BYTE, PERMISSIONS} from "@/common";
-import {allowedFileType, maxFileSize} from "@/modules/car/configs";
+import {maxFileSize, allowedFileTypeSplit} from "../configs";
 
 const imageCarPermissionsRequired = [
   PERMISSIONS.PRODUCT_UPDATE,
@@ -22,6 +22,6 @@ export const uploadCarImageOperation: ApiOperationOptions = {
   - # 🔐 PERMISSIONS REQUIRED: **any of** \`${imageCarPermissionsRequired.join(", ")}\`\n
   Create a category only roles with permission (owner.all or product.create or product.update) can accessibility to this route
   
-  - ## File Type Allowed: ${allowedFileType.source.split("|").join(", ")}
+  - ## File Type Allowed: ${allowedFileTypeSplit}
   - ## Max File Size: ${maxFileSize / ONE_MB_OF_BYTE} MB`
 };

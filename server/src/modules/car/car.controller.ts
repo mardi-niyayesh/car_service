@@ -3,12 +3,14 @@ import {
   ApiBody,
   ApiParam,
   ApiConsumes,
+  ApiOperation,
   ApiOkResponse,
   ApiBearerAuth,
+  ApiNotFoundResponse,
   ApiConflictResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
-  ApiUnauthorizedResponse, ApiNotFoundResponse, ApiOperation,
+  ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 
 import {getPath} from "@/lib";
@@ -16,8 +18,8 @@ import * as CarDto from "./dto";
 import * as CarConfig from "./configs";
 import {CarService} from "./car.service";
 import {FileInterceptor} from "@nestjs/platform-express";
-import type {AccessRequest, ApiResponse, CarResponse, OwnershipRequest} from "@/types";
-import {Body, Controller, HttpCode, HttpStatus, Param, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
+import type {AccessRequest, ApiResponse, BaseException, CarResponse, OwnershipRequest} from "@/types";
+import {BadRequestException, Body, Controller, HttpCode, HttpStatus, Param, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
 import {CacheEvict, getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, UUID4Dto, UUIDv4Validator, ZodPipe, CAR_IMAGE_UPLOAD_PATH} from "@/common";
 
 /**
@@ -136,6 +138,11 @@ export class CarController {
     @UploadedFile() file: Express.Multer.File,
     @Req() req: OwnershipRequest<CarResponse["car"]>
   ): Promise<ApiResponse<CarResponse>> {
+    if (!file) throw new BadRequestException({
+      error: 'File not found',
+      message: "File is Required, Please Try again and send File",
+    } as BaseException);
+
     return this.carService.uploadImage(id, `${CAR_IMAGE_UPLOAD_PATH}/${file.filename}`, req.ownershipData);
   }
 }

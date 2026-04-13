@@ -1,7 +1,7 @@
 import {CarResponse} from "@/types";
 import {exampleCarRecord} from "./create.dto";
 import {ApiBodyOptions} from "@nestjs/swagger";
-import {allowedFileType, CAR_FILE_FIELD_NAME} from "../configs";
+import {allowedFileTypeSplit, CAR_FILE_FIELD_NAME} from "../configs";
 import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 export const carUploadApiBody: ApiBodyOptions = {
@@ -31,7 +31,7 @@ export class UploadImageOkRes extends getBaseOkResponseSchema<CarResponse>({
 export class UploadImageBadReq extends getNormalErrorResponse({
   statusCode: 400,
   path: "cars/id/image",
-  message: `Only ${allowedFileType} allowed`,
+  message: `Only ${allowedFileTypeSplit} allowed`,
   error: "Invalid file format"
 }) {}
 
