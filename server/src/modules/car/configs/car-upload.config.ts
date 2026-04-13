@@ -8,6 +8,8 @@ import {BadRequestException} from "@nestjs/common";
 import {MulterOptions} from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 
 export const CAR_FILE_FIELD_NAME = 'image';
+export const allowedFileType = /jpg|jpeg|png|webp/;
+export const maxFileSize = 1024 * 1024 * 10; // 10 MB
 
 export function getMulterOptions(destination: string): MulterOptions {
   if (!fs.existsSync(destination)) {
@@ -32,21 +34,19 @@ export function getMulterOptions(destination: string): MulterOptions {
       destination
     }),
     limits: {
-      fileSize: 1024 * 1024 * 10
+      fileSize: maxFileSize
     },
     fileFilter(
       _req: Request,
       file: Express.Multer.File,
       callback: (error: (Error | null), acceptFile: boolean) => void
     ): void {
-      const allowedFiles = /jpg|jpeg|png|webp/;
-
-      if (allowedFiles.test(path.extname(file.originalname))) {
+      if (allowedFileType.test(path.extname(file.originalname))) {
         callback(null, true);
       } else {
         callback(
           new BadRequestException({
-            message: `Only ${allowedFiles} allowed`,
+            message: `Only ${allowedFileType} allowed`,
             error: 'Invalid file format'
           } as BaseException),
           false
