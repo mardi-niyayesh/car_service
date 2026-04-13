@@ -4,22 +4,9 @@ import type {Request} from "express";
 import type {BaseException} from "@/types";
 import {existsSync, mkdirSync} from "node:fs";
 import {BadRequestException} from "@nestjs/common";
-import {ApiBodyOptions} from "@nestjs/swagger/dist/decorators/api-body.decorator";
 import {MulterOptions} from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 
 export const CAR_FILE_FIELD_NAME = 'image';
-
-export const carUploadApiBody: ApiBodyOptions = {
-  schema: {
-    type: 'object',
-    properties: {
-      [CAR_FILE_FIELD_NAME]: {
-        type: 'string',
-        format: 'binary',
-      }
-    }
-  }
-};
 
 export function getMulterOptions(destination: string): MulterOptions {
   if (!existsSync(destination)) {

@@ -1,4 +1,18 @@
+import {ApiBodyOptions} from "@nestjs/swagger";
+import {CAR_FILE_FIELD_NAME} from "../configs";
 import {getNormalErrorResponse} from "@/common";
+
+export const carUploadApiBody: ApiBodyOptions = {
+  schema: {
+    type: 'object',
+    properties: {
+      [CAR_FILE_FIELD_NAME]: {
+        type: 'string',
+        format: 'binary',
+      }
+    }
+  }
+};
 
 /** bad request example response */
 export class UploadImageBadReq extends getNormalErrorResponse({

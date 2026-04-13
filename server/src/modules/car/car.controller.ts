@@ -105,7 +105,7 @@ export class CarController {
   @ApiBearerAuth("accessToken")
   @ApiParam(UUID4Dto('cars/id/image'))
   @ApiConsumes('multipart/form-data')
-  @ApiBody(CarConfig.carUploadApiBody)
+  @ApiBody(CarDto.carUploadApiBody)
   @ApiBadRequestResponse({type: CarDto.UploadImageBadReq})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars')})
   @ApiForbiddenResponse({
