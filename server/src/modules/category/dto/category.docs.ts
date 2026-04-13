@@ -16,14 +16,14 @@ export const categoryFindAllOperation: ApiOperationOptions = {
 export const categoryCreateOperation: ApiOperationOptions = {
   summary: "create a new category",
   description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.CATEGORY_CREATE}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.CATEGORY_CREATE}\`\n
   Create a category only roles with permission (owner.all or category.create) can accessibility to this route`
 };
 
 export const categoryDeleteOperation: ApiOperationOptions = {
   summary: 'delete a category',
   description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.CATEGORY_DELETE}\`\n    
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.CATEGORY_DELETE}\`\n    
   delete a category with id nd ownership. **only roles with permission (owner.all or category.delete) can accessibility to this route**`,
   operationId: 'delete_categories',
 };
@@ -31,7 +31,7 @@ export const categoryDeleteOperation: ApiOperationOptions = {
 export const categoryUpdateOperation: ApiOperationOptions = {
   summary: 'update a category',
   description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.CATEGORY_UPDATE}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.CATEGORY_UPDATE}\`\n
   
   update a category with id and ownership. **only roles with permission (owner.all or category.update) can accessibility to this route**`,
   operationId: 'update_categories',

@@ -4,7 +4,7 @@ import {ApiOperationOptions} from "@nestjs/swagger/dist/decorators/api-operation
 export const userGetProfileOperation: ApiOperationOptions = {
   summary: 'get user info by self',
   description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_SELF}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_SELF}\`\n
   get user info accessToken. **Access restricted to users with permission: (user.self) only.**`,
   operationId: 'get_profile'
 };
@@ -12,7 +12,7 @@ export const userGetProfileOperation: ApiOperationOptions = {
 export const userUpdateProfileOperation: ApiOperationOptions = {
   summary: 'update user info by self',
   description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_SELF}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_SELF}\`\n
   
   update user info accessToken. **Access restricted to users with permission: (user.self) only.**`,
   operationId: 'update_profile'
@@ -21,7 +21,7 @@ export const userUpdateProfileOperation: ApiOperationOptions = {
 export const userUpdatePasswordOperation: ApiOperationOptions = {
   summary: 'update password',
   description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_SELF}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_SELF}\`\n
   
   update password with accessToken. **Access restricted to users with permission: (user.self) only.**`,
   operationId: 'update_password'
@@ -30,7 +30,7 @@ export const userUpdatePasswordOperation: ApiOperationOptions = {
 export const userFindOneOperation: ApiOperationOptions = {
   summary: 'get user info',
   description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_VIEW}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_VIEW}\`\n
   
   get user info with id or email. **Access restricted to users with permission: (owner.all or user.view) only.**`,
   operationId: 'get_user'
@@ -39,7 +39,7 @@ export const userFindOneOperation: ApiOperationOptions = {
 export const userFindAllOperation: ApiOperationOptions = {
   summary: 'get all user info',
   description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_VIEW}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_VIEW}\`\n
   
   get all users info. **Access restricted to users with permission: (owner.all or user.view) only.**`,
   operationId: 'get_users'
@@ -48,7 +48,7 @@ export const userFindAllOperation: ApiOperationOptions = {
 export const userRoleAssignOperation: ApiOperationOptions = {
   summary: 'Assign roles to a user',
   description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_ASSIGN}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_ASSIGN}\`\n
   
   Assigns one or more roles to a target user with strict validation rules:
 
@@ -71,7 +71,7 @@ export const userRoleAssignOperation: ApiOperationOptions = {
 export const userRoleRevokeOperation: ApiOperationOptions = {
   summary: 'Revoke roles from a user',
   description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_REVOKE}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_REVOKE}\`\n
   
   Removes one or more roles from a target user with strict security enforcement:
   

@@ -4,19 +4,19 @@ import {ApiOperationOptions} from "@nestjs/swagger/dist/decorators/api-operation
 export const findOneRoleOperation: ApiOperationOptions = {
   summary: "find one role with id or name",
   operationId: 'find_role',
-  description: `- **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_VIEW}\``,
+  description: `- # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_VIEW}\``,
 };
 
 export const findAllRoleOperation: ApiOperationOptions = {
   summary: "Get all roles from the list of pagination",
   operationId: 'get_all_role',
-  description: `- **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_VIEW}\``,
+  description: `- # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_VIEW}\``,
 };
 
 export const createRoleOperation: ApiOperationOptions = {
   summary: 'Create a new custom role with specific permission',
   description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_CREATE}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_CREATE}\`\n
   
   Creates a new role and assigns a set of existing permissions to it with strict security and validation enforcement:
   
@@ -45,7 +45,7 @@ export const createRoleOperation: ApiOperationOptions = {
 export const deleteRoleOperation: ApiOperationOptions = {
   summary: 'Delete an existing role from the system',
   description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_DELETE}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_DELETE}\`\n
     
   Deletes a role from the system while enforcing strict security policies to preserve the integrity 
   of the Role‑Based Access Control (RBAC) model.
@@ -84,7 +84,7 @@ export const deleteRoleOperation: ApiOperationOptions = {
 export const updateRoleOperation: ApiOperationOptions = {
   summary: 'Update an existing role',
   description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_UPDATE}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.ROLE_UPDATE}\`\n
   
   Updates the metadata and permissions of an existing role while enforcing strict security rules to preserve the integrity of the Role‑Based Access Control (RBAC) model.
   

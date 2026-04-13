@@ -68,7 +68,7 @@ export class PermissionController {
   @ApiOperation({
     summary: 'get permission info with id',
     description: `  
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.PERMISSION_VIEW}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.PERMISSION_VIEW}\`\n
   
   find one permission with id **Access restricted to users with permission: (owner.all or permission.view) only.**`,
     operationId: 'find_permission',
@@ -97,7 +97,7 @@ export class PermissionController {
   @ApiOperation({
     summary: 'get permission list with pagination',
     description: `
-  - **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.PERMISSION_VIEW}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.PERMISSION_VIEW}\`\n
   
   get permission list with pagination **Access restricted to users with permission: (owner.all or permission.view) only.**`,
     operationId: 'find_all_permission',
