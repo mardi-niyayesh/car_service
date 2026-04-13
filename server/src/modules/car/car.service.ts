@@ -1,7 +1,7 @@
 import * as CarDto from "./dto";
-import {ConflictException, Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {ApiResponse, BaseException, CarResponse} from "@/types";
+import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 
 @Injectable()
 export class CarService {
