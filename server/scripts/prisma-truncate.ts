@@ -17,7 +17,7 @@ async function bootstrap(): Promise<void> {
     console.log("🔄 Connecting to Prisma and Running TRUNCATE script...");
 
     await prisma.$executeRawUnsafe(
-      `TRUNCATE TABLE "users", "user_roles", "roles", "permissions", "role_permission", "refresh_tokens", "password_tokens", "categories", "cars" RESTART IDENTITY CASCADE;`
+      `TRUNCATE TABLE "users", "user_roles", "roles", "permissions", "role_permission", "refresh_tokens", "password_tokens", "categories", "cars", "car_rents" RESTART IDENTITY CASCADE;`
     );
 
     console.log("✅ TRUNCATE completed successfully!");

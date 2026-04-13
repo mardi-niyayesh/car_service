@@ -7,10 +7,11 @@ TRUNCATE TABLE
     refresh_tokens,
     password_tokens,
     roles,
+    user_roles,
     permissions,
     role_permission,
-    user_roles,
     cars,
+    car_rents,
     categories
     CASCADE;
 
