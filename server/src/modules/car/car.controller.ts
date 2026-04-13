@@ -72,6 +72,7 @@ export class CarController {
 
   @Public()
   @Get(":slug")
+  @ApiBadRequestResponse({type: CarDto.FindOneCarBadReq})
   findOne(
     @Param('slug', new ZodPipe(CarDto.CreateCarValidator.shape.slug)) slug: string,
   ) {
