@@ -58,3 +58,6 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # prisma
 prisma/generated
 src/modules/prisma/generated
+
+# upload test files
+public/uploads

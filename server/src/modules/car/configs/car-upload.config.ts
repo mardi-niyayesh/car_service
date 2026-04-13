@@ -25,7 +25,7 @@ export function getMulterOptions(destination: string): MulterOptions {
         const id = Array.isArray(rawId) ? rawId[0] : rawId;
         const uniqueName = `${id}${path.extname(file.originalname)}`;
 
-        deleteExistingFile(destination, uniqueName);
+        deleteExistingFile(destination, id);
 
         callback(null, uniqueName);
       },
