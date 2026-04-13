@@ -1,6 +1,8 @@
+import {CarResponse} from "@/types";
+import {exampleCarRecord} from "./create.dto";
 import {ApiBodyOptions} from "@nestjs/swagger";
 import {CAR_FILE_FIELD_NAME} from "../configs";
-import {getNormalErrorResponse} from "@/common";
+import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 export const carUploadApiBody: ApiBodyOptions = {
   schema: {
@@ -13,6 +15,17 @@ export const carUploadApiBody: ApiBodyOptions = {
     }
   }
 };
+
+/** ok example response */
+export class UploadImageOkRes extends getBaseOkResponseSchema<CarResponse>({
+  path: 'cars',
+  response: {
+    message: 'Image uploaded successfully.',
+    data: {
+      car: exampleCarRecord
+    }
+  }
+}) {}
 
 /** bad request example response */
 export class UploadImageBadReq extends getNormalErrorResponse({

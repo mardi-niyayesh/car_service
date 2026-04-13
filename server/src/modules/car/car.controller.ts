@@ -98,6 +98,7 @@ export class CarController {
     validatorParam: UUIDv4Validator
   })
   @Post(':id/image')
+  @HttpCode(HttpStatus.OK)
   @CacheEvict({
     force: true,
     resource: "car"
@@ -106,6 +107,7 @@ export class CarController {
   @ApiParam(UUID4Dto('cars/id/image'))
   @ApiConsumes('multipart/form-data')
   @ApiBody(CarDto.carUploadApiBody)
+  @ApiOkResponse({type: CarDto.UploadImageOkRes})
   @ApiBadRequestResponse({type: CarDto.UploadImageBadReq})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars')})
   @ApiForbiddenResponse({
