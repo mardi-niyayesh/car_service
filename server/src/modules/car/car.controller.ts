@@ -90,7 +90,7 @@ export class CarController {
   }
 
   /** add image url to car record
-   * - **only roles with permission (owner.all or product.create) can accessibility to this route**
+   * - **only roles with permission (owner.all or product.create or product.update) can accessibility to this route**
    */
   @Permission({
     permissions: [PERMISSIONS.PRODUCT_CREATE, PERMISSIONS.PRODUCT_UPDATE],
@@ -107,6 +107,7 @@ export class CarController {
   @ApiBearerAuth("accessToken")
   @ApiParam(UUID4Dto('cars/id/image'))
   @ApiConsumes('multipart/form-data')
+  @ApiOperation(CarDto.uploadCarImageOperation)
   @ApiBody(CarDto.carUploadApiBody)
   @ApiOkResponse({type: CarDto.UploadImageOkRes})
   @ApiBadRequestResponse({type: CarDto.UploadImageBadReq})
