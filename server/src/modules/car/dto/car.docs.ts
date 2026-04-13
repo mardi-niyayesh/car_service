@@ -2,6 +2,14 @@ import {ApiOperationOptions} from "@nestjs/swagger";
 import {ONE_MB_OF_BYTE, PERMISSIONS} from "@/common";
 import {maxFileSize, allowedFileTypeSplit} from "../configs";
 
+export const findOneCarOperation: ApiOperationOptions = {
+  summary: "Find one car by slug",
+  operationId: "find_one_car",
+  description: `
+  - ## Accessible to all users (public endpoint)
+  - ## Returns detailed information about a car identified by its unique slug.`
+};
+
 export const imageCarPermissionsRequired = [
   PERMISSIONS.PRODUCT_UPDATE,
   PERMISSIONS.PRODUCT_CREATE,

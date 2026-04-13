@@ -70,11 +70,16 @@ import {BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param,
 export class CarController {
   constructor(private readonly carService: CarService) {}
 
+  /**
+   * Find a single car by its unique slug.
+   * - Accessible to all users (public endpoint)
+   */
   @Public()
   @Get(":slug")
+  @ApiOperation(CarDto.findOneCarOperation)
   @ApiBadRequestResponse({type: CarDto.FindOneCarBadReq})
   findOne(
-    @Param('slug', new ZodPipe(CarDto.CreateCarValidator.shape.slug)) slug: string,
+    @Param("slug", new ZodPipe(CarDto.CreateCarValidator.shape.slug)) slug: string,
   ) {
     console.log(slug);
   }
