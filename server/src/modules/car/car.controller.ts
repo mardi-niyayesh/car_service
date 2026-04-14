@@ -7,15 +7,21 @@ import {
   Permission,
   PERMISSIONS,
   UUIDv4Validator,
+  pagePaginationDto,
+  limitPaginationDto,
   UPLOAD_PATH_PREFIX,
+  PaginationValidator,
+  orderByPaginationDto,
   getForbiddenResponse,
   CAR_IMAGE_UPLOAD_PATH,
-  getUnauthorizedResponse, pagePaginationDto, limitPaginationDto, orderByPaginationDto, PaginationValidator, type PaginationValidatorType,
+  getUnauthorizedResponse,
+  type PaginationValidatorType,
 } from "@/common";
 
 import {
   ApiTags,
   ApiBody,
+  ApiQuery,
   ApiParam,
   ApiConsumes,
   ApiOperation,
@@ -25,7 +31,7 @@ import {
   ApiConflictResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
-  ApiUnauthorizedResponse, ApiQuery,
+  ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 
 import * as CarDto from "./dto";
