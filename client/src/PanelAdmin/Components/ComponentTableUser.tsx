@@ -43,9 +43,7 @@ const ComponentTableUser = () => {
   }, [page]);
 
   const handlePageClick = (selectedPage: number) => {
-    if (page !== selectedPage) {
-      setPage(selectedPage);
-    }
+    setPage(selectedPage);
   };
 
   const renderPagination = () => {
