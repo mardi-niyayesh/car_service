@@ -40,7 +40,7 @@ const menuItems = [
     path: "/about",
     icon: <FaInfoCircle size={20} />,
   },
-  { id: 6, label: "تماس با ما", path: "/contact", icon: <FaPhone size={20} /> },
+  { id: 6, label: "تماس ما", path: "/contact", icon: <FaPhone size={20} /> },
 ];
 
 const MenuHeader = () => {
