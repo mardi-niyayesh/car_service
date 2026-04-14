@@ -93,6 +93,12 @@ export class CarController {
     return this.carService.findOne(slug);
   }
 
+  @Public()
+  @Get()
+  findAll() {
+    return "find all cars";
+  }
+
   /** create a new car
    * - **only roles with permission (owner.all or product.create) can accessibility to this route**
    */
