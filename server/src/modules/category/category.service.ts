@@ -3,7 +3,7 @@ import {PaginationValidatorType} from "@/common";
 import {Category} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
-import {ApiResponse, BaseException, CategoryResponse, CategoriesResponse} from "@/types";
+import {ApiResponse, BaseException, CategoryResponse, CategoriesResponse, ListWithCount} from "@/types";
 
 @Injectable()
 export class CategoryService {
@@ -33,21 +33,26 @@ export class CategoryService {
   /** get all categories
    * - all users can access to this route
    */
-  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<CategoriesResponse>> {
-    const categories = await this.prisma.category.findMany({
-      orderBy: {
-        created_at: pagination.orderByLower
-      },
-      take: pagination.limit,
-      skip: pagination.offset
-    });
+  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<ListWithCount<CategoriesResponse>>> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<ListWithCount<CategoriesResponse>>> => {
+      const count: number = await tx.category.count();
 
-    return {
-      message: 'categories successfully found.',
-      data: {
-        categories,
-      }
-    };
+      const categories = await tx.category.findMany({
+        orderBy: {
+          created_at: pagination.orderByLower
+        },
+        take: pagination.limit,
+        skip: pagination.offset,
+      });
+
+      return {
+        message: 'categories successfully found.',
+        data: {
+          count,
+          categories
+        }
+      };
+    });
   }
 
   /** create a new category

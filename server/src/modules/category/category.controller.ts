@@ -35,8 +35,8 @@ import {ONE_MINUTE_MS} from "@/lib";
 import * as CategoryDto from "./dto";
 import {CategoryService} from "./category.service";
 import {Category} from "@/modules/prisma/generated/client";
-import type {AccessRequest, ApiResponse, CategoriesResponse, CategoryResponse, OwnershipRequest} from "@/types";
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Req} from "@nestjs/common";
+import type {AccessRequest, ApiResponse, CategoriesResponse, CategoryResponse, ListWithCount, OwnershipRequest} from "@/types";
 
 /**
  * Category management endpoints for handling category resources.
@@ -101,7 +101,7 @@ export class CategoryController {
   @ApiOkResponse({type: CategoryDto.FindAllCategoriesRes})
   findAll(
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
-  ): Promise<ApiResponse<CategoriesResponse>> {
+  ): Promise<ApiResponse<ListWithCount<CategoriesResponse>>> {
     return this.categoryService.findAll(pagination);
   }
 
