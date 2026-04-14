@@ -1,7 +1,9 @@
 import * as CarDto from "./dto";
+import {PaginationValidatorType} from "@/common";
+import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import type {ApiResponse, BaseException, CarResponse} from "@/types";
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
+import type {ApiResponse, BaseException, CarResponse, CarsResponse} from "@/types";
 
 @Injectable()
 export class CarService {
@@ -124,5 +126,29 @@ export class CarService {
         car
       }
     };
+  }
+
+  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<CarsResponse>> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<CarsResponse>> => {
+      const count = await tx.car.count();
+
+      const cars = await tx.$queryRaw<CarResponse['car'][]>(
+        Prisma.sql`
+        SELECT *,
+        JSON_BUILD_OBJECT('category', c) as category
+        FROM cars
+        INNER JOIN public.categories c ON c.id = cars.category_id
+        ORDER BY cars.created_at ${Prisma.sql([pagination.orderByUpper])}
+        LIMIT ${pagination.limit} OFFSET ${pagination.offset};`
+      );
+
+      return {
+        message: "cars successfully found.",
+        data: {
+          count,
+          cars
+        }
+      };
+    });
   }
 }

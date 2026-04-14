@@ -33,7 +33,7 @@ import * as CarConfig from "./configs";
 import {CarService} from "./car.service";
 import {getPath, ONE_MINUTE_MS} from "@/lib";
 import {FileInterceptor} from "@nestjs/platform-express";
-import type {AccessRequest, ApiResponse, BaseException, CarResponse, OwnershipRequest} from "@/types";
+import type {AccessRequest, ApiResponse, BaseException, CarResponse, CarsResponse, OwnershipRequest} from "@/types";
 import {BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
 
 /**
@@ -106,9 +106,8 @@ export class CarController {
   @ApiQuery(orderByPaginationDto)
   findAll(
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
-  ) {
-    console.log(pagination);
-    return "find all cars";
+  ): Promise<ApiResponse<CarsResponse>> {
+    return this.carService.findAll(pagination);
   }
 
   /** create a new car
