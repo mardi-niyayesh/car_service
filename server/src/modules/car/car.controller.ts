@@ -94,13 +94,20 @@ export class CarController {
   }
 
   @Public()
+  @Cacheable({
+    resource: 'car',
+    pagination: true,
+    ttl: ONE_MINUTE_MS * 60,
+  })
   @Get()
+  @HttpCode(HttpStatus.OK)
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
   findAll(
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
   ) {
+    console.log(pagination);
     return "find all cars";
   }
 
