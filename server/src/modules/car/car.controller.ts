@@ -10,7 +10,7 @@ import {
   UPLOAD_PATH_PREFIX,
   getForbiddenResponse,
   CAR_IMAGE_UPLOAD_PATH,
-  getUnauthorizedResponse,
+  getUnauthorizedResponse, pagePaginationDto, limitPaginationDto, orderByPaginationDto, PaginationValidator, type PaginationValidatorType,
 } from "@/common";
 
 import {
@@ -25,7 +25,7 @@ import {
   ApiConflictResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
-  ApiUnauthorizedResponse,
+  ApiUnauthorizedResponse, ApiQuery,
 } from "@nestjs/swagger";
 
 import * as CarDto from "./dto";
@@ -34,7 +34,7 @@ import {CarService} from "./car.service";
 import {getPath, ONE_MINUTE_MS} from "@/lib";
 import {FileInterceptor} from "@nestjs/platform-express";
 import type {AccessRequest, ApiResponse, BaseException, CarResponse, OwnershipRequest} from "@/types";
-import {BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
+import {BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -95,7 +95,12 @@ export class CarController {
 
   @Public()
   @Get()
-  findAll() {
+  @ApiQuery(pagePaginationDto)
+  @ApiQuery(limitPaginationDto)
+  @ApiQuery(orderByPaginationDto)
+  findAll(
+    @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
+  ) {
     return "find all cars";
   }
 
