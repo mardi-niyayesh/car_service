@@ -220,6 +220,7 @@ export class CarController {
     resource: 'car',
   })
   @HttpCode(HttpStatus.OK)
+  @ApiParam(UUID4Dto('id'))
   @ApiBody({type: CarDto.UpdateCarDto})
   update(
     @Param("id") id: string,
