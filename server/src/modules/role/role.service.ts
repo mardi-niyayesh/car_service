@@ -11,9 +11,9 @@ import {
 } from "@/types";
 
 import * as RolesDto from "./dto";
-import {checkPrismaConflict, getSafeRole} from "@/lib";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {checkConflictRecord, checkPrismaConflict, getSafeRole} from "@/lib";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
 import {basePermissions, basicRoles, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
 
@@ -193,15 +193,9 @@ export class RoleService {
         actionPermissions: actionPayload.permissions
       });
 
-      const conflictData: string[] = [];
+      const {hasConflict, conflictData} = checkConflictRecord(newData, role);
 
-      for (const k in newData) {
-        if (role[k] === newData[k]) {
-          conflictData.push(k);
-        }
-      }
-
-      if (conflictData.length) throw new ConflictException({
+      if (hasConflict) throw new ConflictException({
         message: `At least one field must differ from the existing role data. These fields have unchanged values: ${conflictData.join(', ')}.`,
         error: 'Role update conflict'
       } as BaseException);

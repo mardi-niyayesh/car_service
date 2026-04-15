@@ -4,7 +4,7 @@ import {Category} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {ApiResponse, BaseException, CategoryResponse, CategoriesResponse, ListWithCount} from "@/types";
-import {checkPrismaConflict} from "@/lib";
+import {checkConflictRecord, checkPrismaConflict} from "@/lib";
 
 @Injectable()
 export class CategoryService {
@@ -114,13 +114,9 @@ export class CategoryService {
     category: Category,
     data: CategoryDto.UpdateCategoryType,
   ): Promise<ApiResponse<CategoryResponse>> {
-    const conflictData: string[] = [];
+    const {conflictData, hasConflict} = checkConflictRecord(data, category);
 
-    for (const d in data) {
-      if (category[d] === data[d]) conflictData.push(d);
-    }
-
-    if (conflictData.length) throw new ConflictException({
+    if (hasConflict) throw new ConflictException({
       message: `At least one field must differ from the existing category data. These fields have unchanged values: ${conflictData.join(', ')}.`,
       error: 'Category update conflict'
     } as BaseException);

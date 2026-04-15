@@ -1,9 +1,9 @@
 import * as CarDto from "./dto";
-import {checkConflictRecord, checkPrismaConflict} from "@/lib";
 import {PaginationValidatorType} from "@/common";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {checkConflictRecord, checkPrismaConflict} from "@/lib";
 import type {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse} from "@/types";
 
 @Injectable()

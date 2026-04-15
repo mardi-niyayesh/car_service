@@ -11,7 +11,7 @@ import {
 import * as UserDto from "./dto";
 import {PrismaService} from "../prisma/prisma.service";
 import {Prisma} from "@/modules/prisma/generated/client";
-import {getRolesNPermissions, getSafeUser, compareSecret, hashSecret} from "@/lib";
+import {getRolesNPermissions, getSafeUser, compareSecret, hashSecret, checkConflictRecord} from "@/lib";
 import {PaginationValidatorType, PERMISSIONS, permissionsManagerStrict, basePermissions} from "@/common";
 import {ApiResponse, BaseException, UserResponse, ModifyRoleServiceParams, SafeUser, UserRolePermission, UsersListResponse} from "@/types";
 
