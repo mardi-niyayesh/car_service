@@ -286,7 +286,6 @@ export class CarController {
   delete(
     @Param("id") id: string,
   ) {
-    console.log(id);
-    return 'Car successfully deleted.';
+    return this.carService.delete(id);
   }
 }

@@ -213,4 +213,17 @@ export class CarService {
       });
     }
   }
+
+  /** delete a car record with id and ownership permission
+   * - **only roles with permission (owner.all or product.delete or product.update) can accessibility to this route**
+   */
+  async delete(id: string): Promise<ApiResponse<void>> {
+    await this.prisma.car.delete({
+      where: {id}
+    });
+
+    return {
+      message: 'Car deleted successfully.',
+    };
+  }
 }
