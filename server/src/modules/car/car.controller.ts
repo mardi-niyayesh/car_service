@@ -8,15 +8,15 @@ import {
   PERMISSIONS,
   UUIDv4Validator,
   pagePaginationDto,
+  PREFIX_PUBLIC_PATH,
   limitPaginationDto,
-  UPLOAD_PATH_PREFIX,
   PaginationValidator,
   orderByPaginationDto,
   getForbiddenResponse,
   CAR_IMAGE_UPLOAD_PATH,
   getBaseOkResponseSchema,
   getUnauthorizedResponse,
-  type PaginationValidatorType, PREFIX_PUBLIC_PATH,
+  type PaginationValidatorType,
 } from "@/common";
 
 import {
