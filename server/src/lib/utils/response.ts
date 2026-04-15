@@ -31,8 +31,6 @@ export function formatZodError(zodError: z.ZodError): ZodFieldError[] {
 export function checkZod<T extends z.ZodTypeAny>(schema: T, value: unknown): output<T> {
   const result = schema.safeParse(value);
 
-  console.log(result.error?.issues);
-
   if (!result.success) {
     throw new BadRequestException({
       errors: formatZodError(result.error),
