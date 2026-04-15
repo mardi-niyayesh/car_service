@@ -1,8 +1,9 @@
 import * as CarDto from "./dto";
+import {checkConflict} from "@/lib";
 import {PaginationValidatorType} from "@/common";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import type {ApiResponse, BaseException, CarResponse, CarsResponse} from "@/types";
 
 @Injectable()
@@ -125,11 +126,8 @@ export class CarService {
           car
         }
       };
-    } catch (_) {
-      throw new ConflictException({
-        message: 'car already exists in database, please change slug',
-        error: 'Car already exists'
-      } as BaseException);
+    } catch (e) {
+      checkConflict(e as Error, 'Car', 'slug');
     }
   }
 
