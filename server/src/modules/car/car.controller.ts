@@ -225,11 +225,12 @@ export class CarController {
   @HttpCode(HttpStatus.OK)
   @ApiParam(UUID4Dto('id'))
   @ApiBody({type: CarDto.UpdateCarDto})
+  @ApiBadRequestResponse({type: CarDto.CreateCarBadReq})
   update(
     @Param("id") _id: string,
     @Body(new ZodPipe(CarDto.UpdateCarValidator)) data: CarDto.UpdateCarType,
     @Req() req: OwnershipRequest<CarAndCategory>
-  ) {
+  ): Promise<ApiResponse<CarResponse>> {
     return this.carService.update(req.ownershipData, data);
   }
 }
