@@ -161,74 +161,56 @@ export class CarService {
    * - **only roles with permission (owner.all or product.update or product.update) can accessibility to this route**
    */
   async update(carRecord: CarAndCategory, newData: CarDto.UpdateCarType): Promise<ApiResponse<CarResponse>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<CarResponse>> => {
-      const {hasConflict, conflictData} = checkConflictRecord(newData, carRecord);
+    const {hasConflict, conflictData} = checkConflictRecord(newData, carRecord);
 
-      if (JSON.stringify(newData.tags) === JSON.stringify(carRecord.tags)) {
-        conflictData.push("tags");
-      }
+    if (hasConflict) throw new ConflictException({
+      error: 'Conflict new car data',
+      message: `conflict in new car data, please change new car data. conflict fields: ${conflictData.join(", ")}`,
+    } as BaseException);
 
-      if (hasConflict) throw new ConflictException({
-        error: 'Conflict new car data',
-        message: `conflict in new car data, please change new car data. conflict fields: ${conflictData.join(", ")}`,
-      } as BaseException);
+    const {
+      name,
+      slug,
+      tags,
+      company,
+      can_rent,
+      ownership,
+      description,
+      category_id,
+      price_at_hour,
+    } = newData;
 
-      const {
-        name,
-        slug,
-        tags,
-        company,
-        can_rent,
-        ownership,
-        description,
-        category_id,
-        price_at_hour,
-      } = newData;
-
-      // if (category_id !== undefined) {
-      //   await tx.category.findUnique({
-      //     where: {id: category_id}
-      //   });
-      //
-      //   throw new NotFoundException({
-      //     error: 'Category not found',
-      //     message: `category not found in database, please make sure category exists`,
-      //   } as BaseException);
-      //
-      //   console.log(category);
-      // }
-
-      try {
-        const newCarRecord = await tx.car.update({
-          where: {id: carRecord.id},
-          data: {
-            // name,
-            // slug,
-            // tags,
-            // company,
-            // can_rent,
-            // description,
-            // price_at_hour,
-            // creator_id: ownership === false ? null : undefined,
-            category_id,
-          }
-        });
-      } catch (e) {
-        checkPrismaConflict({
-          e: e as Error,
-          mainResource: 'Car',
-          conflictField: 'slug',
-          notFoundResource: 'Category',
-          notFoundField: 'category_id',
-        });
-      }
+    try {
+      const newCarRecord = await this.prisma.car.update({
+        where: {id: carRecord.id},
+        data: {
+          name,
+          slug,
+          tags,
+          company,
+          can_rent,
+          description,
+          category_id,
+          price_at_hour,
+          creator_id: ownership === false ? null : undefined,
+        },
+        include: {category: true}
+      });
 
       return {
-        message: 'test update car data',
+        message: 'Car Successfully Updated.',
         data: {
-          car: carRecord
+          car: newCarRecord
         }
       };
-    });
+    } catch (e) {
+      checkPrismaConflict({
+        e: e as Error,
+        mainResource: 'Car',
+        conflictField: 'slug',
+        notFoundResource: 'Category',
+        notFoundField: 'category_id',
+      });
+    }
   }
 }

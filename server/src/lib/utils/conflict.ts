@@ -35,7 +35,7 @@ export function checkConflictRecord(newData: Record<string, unknown>, recordData
   const conflictData: string[] = [];
 
   for (const d in newData) {
-    if (newData[d] === recordData[d]) {
+    if (JSON.stringify(newData[d]) === JSON.stringify(recordData[d])) {
       conflictData.push(d);
     }
   }
