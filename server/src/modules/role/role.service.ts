@@ -197,14 +197,14 @@ export class RoleService {
         actionPermissions: actionPayload.permissions
       });
 
-      const {hasConflict, conflictData} = checkConflictRecord(newData, role);
+      const {ownership, name, description, deletePermissions, additionalPermissions} = newData;
+
+      const {hasConflict, conflictData} = checkConflictRecord({name, description}, role);
 
       if (hasConflict) throw new ConflictException({
         message: `At least one field must differ from the existing role data. These fields have unchanged values: ${conflictData.join(', ')}.`,
         error: 'Role update conflict'
       } as BaseException);
-
-      const {ownership, name, description, deletePermissions, additionalPermissions} = newData;
 
       if (deletePermissions?.length) {
         const notExistPermissions: string[] = [];
@@ -272,28 +272,36 @@ export class RoleService {
         });
       }
 
-      const newRoleRecord = await tx.role.update({
-        where: {id: role.id},
-        data: {
-          name: name,
-          description: description,
-          creator_id: ownership === false ? null : undefined
-        },
-        include: {
-          rolePermissions: {
-            include: {permission: true}
+      try {
+        const newRoleRecord = await tx.role.update({
+          where: {id: role.id},
+          data: {
+            name,
+            description,
+            creator_id: ownership === false ? null : undefined
+          },
+          include: {
+            rolePermissions: {
+              include: {permission: true}
+            }
           }
-        }
-      });
+        });
 
-      const newRoleData = getSafeRole(newRoleRecord);
+        const newRoleData = getSafeRole(newRoleRecord);
 
-      return {
-        message: 'Role successfully updated.',
-        data: {
-          role: newRoleData,
-        }
-      };
+        return {
+          message: 'Role successfully updated.',
+          data: {
+            role: newRoleData,
+          }
+        };
+      } catch (e) {
+        checkPrismaConflict({
+          e: e as Error,
+          conflictField: 'name',
+          mainResource: 'Role',
+        });
+      }
     });
   }
 
