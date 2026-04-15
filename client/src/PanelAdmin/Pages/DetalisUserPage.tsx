@@ -1,5 +1,5 @@
 //components
-import ComponentCategoryDatailUser from "../Components/ComponentUsersDatailUser";
+import ComponentDatailUser from "../Components/ComponentDatailUser";
 //icon or logo
 import ArrowLeft from "../../../assets/Arrowleft.png";
 //
@@ -24,7 +24,7 @@ const DetalisUserPage = () => {
         </div>
         {/*Components CategoryDatailUser */}
         <div className="flex flex-col gap-4 ">
-          <ComponentCategoryDatailUser />
+          <ComponentDatailUser />
         </div>
       </div>
     </div>
