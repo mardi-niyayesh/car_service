@@ -41,6 +41,7 @@ import {getPath, ONE_MINUTE_MS} from "@/lib";
 import {FileInterceptor} from "@nestjs/platform-express";
 import type {AccessRequest, ApiResponse, BaseException, CarResponse, CarsResponse, OwnershipRequest} from "@/types";
 import {BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
+import {FindAllCarOkRes} from "./dto";
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -91,7 +92,7 @@ export class CarController {
   @Get(":slug")
   @HttpCode(HttpStatus.OK)
   @ApiOperation(CarDto.findOneCarOperation)
-  @ApiOkResponse({type: CarDto.FindOneOkRes})
+  @ApiOkResponse({type: CarDto.FindOneCarOkRes})
   @ApiBadRequestResponse({type: CarDto.FindOneCarBadReq})
   findOne(
     @Param("slug", new ZodPipe(CarDto.CreateCarValidator.shape.slug)) slug: string,
@@ -112,6 +113,7 @@ export class CarController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation(CarDto.findAllCarOperation)
+  @ApiOkResponse({type: FindAllCarOkRes})
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
