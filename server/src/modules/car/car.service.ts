@@ -9,6 +9,57 @@ import type {ApiResponse, BaseException, CarResponse, CarsResponse} from "@/type
 export class CarService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * Find a single car by its unique slug.
+   * - **Accessible to all users (public endpoint)**
+   */
+  async findOne(slug: string): Promise<ApiResponse<CarResponse>> {
+    const car = await this.prisma.car.findUnique({
+      where: {slug},
+      include: {category: true}
+    });
+
+    if (!car) throw new NotFoundException({
+      message: 'Car does not exists in database, please make sure and try again',
+      error: 'Car not found'
+    });
+
+    return {
+      message: "car successfully found.",
+      data: {
+        car
+      }
+    };
+  }
+
+  /**
+   * get list of car by pagination query.
+   * - **Accessible to all users (public endpoint)**
+   */
+  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<CarsResponse>> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<CarsResponse>> => {
+      const count = await tx.car.count();
+
+      const cars = await tx.$queryRaw<CarResponse['car'][]>(
+        Prisma.sql`
+        SELECT *,
+        JSON_BUILD_OBJECT('category', c) as category
+        FROM cars
+        INNER JOIN public.categories c ON c.id = cars.category_id
+        ORDER BY cars.created_at ${Prisma.sql([pagination.orderByUpper])}
+        LIMIT ${pagination.limit} OFFSET ${pagination.offset};`
+      );
+
+      return {
+        message: "cars successfully found.",
+        data: {
+          count,
+          cars
+        }
+      };
+    });
+  }
+
   /** create a new car
    * - **only roles with permission (owner.all or product.create) can accessibility to this route**
    */
@@ -103,52 +154,5 @@ export class CarService {
         car
       }
     };
-  }
-
-  /**
-   * Find a single car by its unique slug.
-   * - **Accessible to all users (public endpoint)**
-   */
-  async findOne(slug: string): Promise<ApiResponse<CarResponse>> {
-    const car = await this.prisma.car.findUnique({
-      where: {slug},
-      include: {category: true}
-    });
-
-    if (!car) throw new NotFoundException({
-      message: 'Car does not exists in database, please make sure and try again',
-      error: 'Car not found'
-    });
-
-    return {
-      message: "car successfully found.",
-      data: {
-        car
-      }
-    };
-  }
-
-  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<CarsResponse>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<CarsResponse>> => {
-      const count = await tx.car.count();
-
-      const cars = await tx.$queryRaw<CarResponse['car'][]>(
-        Prisma.sql`
-        SELECT *,
-        JSON_BUILD_OBJECT('category', c) as category
-        FROM cars
-        INNER JOIN public.categories c ON c.id = cars.category_id
-        ORDER BY cars.created_at ${Prisma.sql([pagination.orderByUpper])}
-        LIMIT ${pagination.limit} OFFSET ${pagination.offset};`
-      );
-
-      return {
-        message: "cars successfully found.",
-        data: {
-          count,
-          cars
-        }
-      };
-    });
   }
 }

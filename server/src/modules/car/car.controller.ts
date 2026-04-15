@@ -99,6 +99,10 @@ export class CarController {
     return this.carService.findOne(slug);
   }
 
+  /**
+   * get list of car by pagination query.
+   * - **Accessible to all users (public endpoint)**
+   */
   @Public()
   @Cacheable({
     resource: 'car',
