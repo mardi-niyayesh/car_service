@@ -29,24 +29,25 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       const accessToken = ResponseData?.response?.data?.accessToken;
       const user = ResponseData?.response?.data?.user;
 
-      
       if (accessToken && user) {
         console.log("Found User:", user);
         console.log("Found Access Token:", accessToken);
 
         setTokenState(accessToken);
-        setUserState(user); 
+        setUserState(user);
         // Set token in axios client for requests
         setAxiosToken(accessToken);
       } else {
-        
         console.log("Token or user not found in the response.");
         setUserState(null);
         setTokenState(null);
         setAxiosToken(null);
       }
     } catch (error) {
-      console.error("خطا در بازیابی اطلاعات کاربر با refresh token:", error);
+      console.error(
+        "  Error to rest information user to refresh token:",
+        error,
+      );
       setUserState(null);
       setTokenState(null);
       setAxiosToken(null);
@@ -54,7 +55,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       // finish loading
       setIsLoading(false);
     }
-  }, [setIsLoading, setTokenState, setUserState, setAxiosToken]); 
+  }, [setIsLoading, setTokenState, setUserState, setAxiosToken]);
 
   const handleAuthUpdate = useCallback(
     (newToken: string | null, newUser: User | null) => {
@@ -89,7 +90,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     setUserState(null);
     setTokenState(null);
     setAxiosToken(null);
-    console.log("کاربر با موفقیت خارج شد .");
+    console.log(" logout to successfully ");
   }, []);
 
   const contextValue: UserContextType = {
