@@ -41,3 +41,11 @@ export const uploadCarImageOperation: ApiOperationOptions = {
   - ## File Type Allowed: ${allowedFileTypeSplit}
   - ## Max File Size: ${maxFileSize / ONE_MB_OF_BYTE} MB`
 };
+
+export const updateCarOperation: ApiOperationOptions = {
+  operationId: 'update_car',
+  summary: "Update a exist car with id and ownership permission",
+  description: `
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.PRODUCT_UPDATE}\`\n
+  Update a exist car with id and ownership permission (owner.all or product.update) can accessibility to this route`
+};

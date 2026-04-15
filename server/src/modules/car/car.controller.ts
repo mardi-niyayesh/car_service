@@ -40,7 +40,7 @@ import * as CarConfig from "./configs";
 import {CarService} from "./car.service";
 import {getPath, ONE_MINUTE_MS} from "@/lib";
 import {FileInterceptor} from "@nestjs/platform-express";
-import {Car, Prisma} from "@/modules/prisma/generated/client";
+import {Prisma} from "@/modules/prisma/generated/client";
 import type {AccessRequest, ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, OwnershipRequest} from "@/types";
 import {BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
 
@@ -226,6 +226,7 @@ export class CarController {
   @HttpCode(HttpStatus.OK)
   @ApiParam(UUID4Dto('id'))
   @ApiBody({type: CarDto.UpdateCarDto})
+  @ApiOperation(CarDto.updateCarOperation)
   @ApiBadRequestResponse({type: CarDto.CreateCarBadReq})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars/id')})
   @ApiForbiddenResponse({
