@@ -2,7 +2,7 @@ import type {BaseException} from "@/types";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {ConflictException, NotFoundException} from "@nestjs/common";
 
-interface CheckPrismaConflictParams {
+interface CheckPrismaErrorParams {
   e: Error;
   mainResource: string;
   conflictField: string;
@@ -10,7 +10,7 @@ interface CheckPrismaConflictParams {
   notFoundResource?: string;
 }
 
-export function checkPrismaConflict(data: CheckPrismaConflictParams): never {
+export function checkPrismaError(data: CheckPrismaErrorParams): never {
   const {conflictField, notFoundField, notFoundResource, mainResource, e} = data;
 
   if (e instanceof Prisma.PrismaClientKnownRequestError) {

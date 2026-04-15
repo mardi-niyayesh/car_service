@@ -1,8 +1,8 @@
 import * as CarDto from "./dto";
-import {PaginationValidatorType} from "@/common";
-import {Prisma} from "@/modules/prisma/generated/client";
+import {PaginationValidatorType, PREFIX_PUBLIC_PATH} from "@/common";
+import {Car, Prisma} from "@/modules/prisma/generated/client";
+import {checkConflictRecord, checkPrismaError, deleteOneFile} from "@/lib";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {checkConflictRecord, checkPrismaConflict} from "@/lib";
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import type {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse} from "@/types";
 
@@ -118,7 +118,7 @@ export class CarService {
         }
       };
     } catch (e) {
-      checkPrismaConflict({
+      checkPrismaError({
         e: e as Error,
         mainResource: 'Car',
         conflictField: 'slug',
@@ -204,7 +204,7 @@ export class CarService {
         }
       };
     } catch (e) {
-      checkPrismaConflict({
+      checkPrismaError({
         e: e as Error,
         mainResource: 'Car',
         conflictField: 'slug',
@@ -217,13 +217,27 @@ export class CarService {
   /** delete a car record with id and ownership permission
    * - **only roles with permission (owner.all or product.delete or product.update) can accessibility to this route**
    */
-  async delete(id: string): Promise<ApiResponse<void>> {
-    await this.prisma.car.delete({
-      where: {id}
-    });
+  async delete(id: string, car: Car): Promise<ApiResponse<void>> {
+    try {
+      await this.prisma.car.delete({
+        where: {id}
+      });
 
-    return {
-      message: 'Car deleted successfully.',
-    };
+      const fullPathImage  = `${PREFIX_PUBLIC_PATH}/${car.image}`;
+
+      deleteOneFile(fullPathImage);
+
+      return {
+        message: 'Car deleted successfully.',
+      };
+    } catch (e) {
+      checkPrismaError({
+        e: e as Error,
+        mainResource: '',
+        conflictField: '',
+        notFoundField: 'id',
+        notFoundResource: 'Car',
+      });
+    }
   }
 }

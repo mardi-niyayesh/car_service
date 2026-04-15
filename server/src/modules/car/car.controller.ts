@@ -16,7 +16,7 @@ import {
   CAR_IMAGE_UPLOAD_PATH,
   getBaseOkResponseSchema,
   getUnauthorizedResponse,
-  type PaginationValidatorType,
+  type PaginationValidatorType, PREFIX_PUBLIC_PATH,
 } from "@/common";
 
 import {
@@ -42,7 +42,7 @@ import * as CarConfig from "./configs";
 import {CarService} from "./car.service";
 import {getPath, ONE_MINUTE_MS} from "@/lib";
 import {FileInterceptor} from "@nestjs/platform-express";
-import {Prisma} from "@/modules/prisma/generated/client";
+import {Car, Prisma} from "@/modules/prisma/generated/client";
 import type {AccessRequest, ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, OwnershipRequest} from "@/types";
 import {BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
 
@@ -206,7 +206,7 @@ export class CarController {
       message: "File is Required, Please Try again and send File",
     } as BaseException);
 
-    return this.carService.uploadImage(id, `${UPLOAD_PATH_PREFIX}/${file.filename}`, req.ownershipData);
+    return this.carService.uploadImage(id, `${CAR_IMAGE_UPLOAD_PATH.slice(PREFIX_PUBLIC_PATH.length + 1)}/${file.filename}`, req.ownershipData);
   }
 
   /** update a car record with id and ownership permission
@@ -287,7 +287,8 @@ export class CarController {
   })
   delete(
     @Param("id") id: string,
+    @Req() req: OwnershipRequest<Car>
   ) {
-    return this.carService.delete(id);
+    return this.carService.delete(id, req.ownershipData);
   }
 }

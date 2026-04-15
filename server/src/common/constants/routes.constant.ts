@@ -1,5 +1,7 @@
+export const PREFIX_PUBLIC_PATH = 'public';
+
 /** Real Upload Path in DIR */
-export const UPLOAD_PATH: string = "public/uploads";
+export const UPLOAD_PATH: string = PREFIX_PUBLIC_PATH + "/uploads";
 
 /** Prefix Upload Path for URL */
 export const UPLOAD_PATH_PREFIX: string = "/uploads";

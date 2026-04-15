@@ -2,7 +2,7 @@ import * as CategoryDto from "./dto";
 import {PaginationValidatorType} from "@/common";
 import {Category} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {checkConflictRecord, checkPrismaConflict} from "@/lib";
+import {checkConflictRecord, checkPrismaError} from "@/lib";
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {ApiResponse, BaseException, CategoryResponse, CategoriesResponse, ListWithCount} from "@/types";
 
@@ -78,7 +78,7 @@ export class CategoryService {
         }
       };
     } catch (e) {
-      checkPrismaConflict({
+      checkPrismaError({
         e: e as Error,
         conflictField: 'name',
         mainResource: 'Category',
@@ -145,7 +145,7 @@ export class CategoryService {
         }
       };
     } catch (e) {
-      checkPrismaConflict({
+      checkPrismaError({
         e: e as Error,
         conflictField: 'slug',
         mainResource: 'Category',

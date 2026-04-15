@@ -13,7 +13,7 @@ import {
 import * as RolesDto from "./dto";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {checkConflictRecord, checkPrismaConflict, getSafeRole} from "@/lib";
+import {checkConflictRecord, checkPrismaError, getSafeRole} from "@/lib";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
 import {basePermissions, basicRoles, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
 
@@ -150,7 +150,7 @@ export class RoleService {
           }
         };
       } catch (e) {
-        checkPrismaConflict({
+        checkPrismaError({
           e: e as Error,
           mainResource: 'Role',
           conflictField: 'name',
@@ -296,7 +296,7 @@ export class RoleService {
           }
         };
       } catch (e) {
-        checkPrismaConflict({
+        checkPrismaError({
           e: e as Error,
           conflictField: 'name',
           mainResource: 'Role',

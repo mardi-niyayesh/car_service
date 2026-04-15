@@ -28,3 +28,16 @@ export function deleteExistingFile(baseDir: string, fileNameWithoutExt: string) 
     }
   }
 }
+
+/** delete one file exist */
+export function deleteOneFile(fullPath: string) {
+  try {
+    const file = fs.existsSync(fullPath);
+
+    if (!file) return;
+
+    fs.unlinkSync(fullPath);
+  } catch (e) {
+    console.error(`Error while delete One File(${fullPath})`, e);
+  }
+}

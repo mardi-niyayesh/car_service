@@ -7,7 +7,7 @@ import {ConfigService} from "@nestjs/config";
 import {EventEmitter2} from "@nestjs/event-emitter";
 import {PrismaService} from "../prisma/prisma.service";
 import {EmailService} from "@/modules/email/email.service";
-import {buildEmailHtml, checkPrismaConflict, compareSecret, generateRandomToken, getSafeUser, hashSecret, hashSecretToken} from "@/lib";
+import {buildEmailHtml, checkPrismaError, compareSecret, generateRandomToken, getSafeUser, hashSecret, hashSecretToken} from "@/lib";
 import type {AccessTokenPayload, RefreshTokenPayload, ApiResponse, UserResponse, LoginResponse, BaseException, NormalizedClientInfo} from "@/types";
 import {BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException} from '@nestjs/common';
 
@@ -110,7 +110,7 @@ export class AuthService {
           data
         };
       } catch (e) {
-        checkPrismaConflict({
+        checkPrismaError({
           e: e as Error,
           mainResource: 'User',
           conflictField: 'email',
