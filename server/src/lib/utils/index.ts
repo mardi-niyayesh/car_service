@@ -6,6 +6,6 @@ export * from "./roles";
 export * from "./crypto";
 export * from "./common";
 export * from "./response";
-export * from "./exceptions";
+export * from "./conflict";
 export * from "./buildEmailHtml";
 export * from "./normalize-client-info";

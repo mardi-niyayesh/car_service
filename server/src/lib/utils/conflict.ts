@@ -12,3 +12,21 @@ export function checkPrismaConflict(e: Error, resource: string, field: string): 
 
   throw e;
 }
+
+/** check conflict in object data
+ * @record<string, unknown>
+ *   */
+export function checkConflictRecord(newData: Record<string, unknown>, recordData: Record<string, unknown>) {
+  const conflictData: string[] = [];
+
+  for (const d in newData) {
+    if (newData[d] === recordData[d]) {
+      conflictData.push(d);
+    }
+  }
+
+  return {
+    conflictData,
+    hasConflict: !!conflictData.length,
+  };
+}

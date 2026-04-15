@@ -1,5 +1,5 @@
 import * as CarDto from "./dto";
-import {checkPrismaConflict} from "@/lib";
+import {checkConflictRecord, checkPrismaConflict} from "@/lib";
 import {PaginationValidatorType} from "@/common";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {Injectable, NotFoundException} from '@nestjs/common';
@@ -164,8 +164,14 @@ export class CarService {
    * - **only roles with permission (owner.all or product.update or product.update) can accessibility to this route**
    */
   update(carRecord: CarAndCategory, newData: CarDto.UpdateCarType) {
-    console.log(newData);
-    console.log(carRecord);
+    const {hasConflict, conflictData} = checkConflictRecord(newData, carRecord);
+
+    if (JSON.stringify(newData.tags) === JSON.stringify(carRecord.tags)) {
+      conflictData.push("tags");
+    }
+
+    console.log(hasConflict);
+    console.log(conflictData);
 
     return 'car successfully updated';
   }
