@@ -218,11 +218,14 @@ export class CarController {
     force: true,
     resource: 'car',
   })
+  @HttpCode(HttpStatus.OK)
   update(
     @Param("id") id: string,
+    @Body(new ZodPipe(CarDto.UpdateCarValidator)) data: CarDto.UpdateCarType,
     @Req() req: OwnershipRequest<CarResponse['car']>
   ) {
     console.log(id);
+    console.log(data);
     console.log(req.ownershipData);
     return 'car successfully updated';
   }
