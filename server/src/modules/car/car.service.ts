@@ -42,12 +42,29 @@ export class CarService {
 
       const cars = await tx.$queryRaw<CarResponse['car'][]>(
         Prisma.sql`
-        SELECT *,
-        JSON_BUILD_OBJECT('category', c) as category
-        FROM cars
-        INNER JOIN public.categories c ON c.id = cars.category_id
-        ORDER BY cars.created_at ${Prisma.sql([pagination.orderByUpper])}
-        LIMIT ${pagination.limit} OFFSET ${pagination.offset};`
+        SELECT cars.id,
+            cars.created_at,
+            cars.updated_at,
+            cars.name,
+            cars.slug,
+            cars.price_at_hour,
+            cars.description,
+            cars.can_rent,
+            cars.company,
+            cars.in_rent,
+            cars.tags,
+            cars.image,
+            JSON_BUILD_OBJECT(
+                'id', c.id,
+                'slug', c.slug,
+                'created_at', c.created_at,
+                'updated_at', c.updated_at,
+                'description', c.description
+        ) AS category
+         FROM cars
+                  INNER JOIN public.categories c ON c.id = cars.category_id
+         ORDER BY cars.created_at ${Prisma.sql([pagination.orderByUpper])}
+         LIMIT ${pagination.limit} OFFSET ${pagination.offset};`
       );
 
       return {
