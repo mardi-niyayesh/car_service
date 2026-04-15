@@ -34,14 +34,15 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 
+import z from "zod";
 import * as CarDto from "./dto";
 import * as CarConfig from "./configs";
 import {CarService} from "./car.service";
 import {getPath, ONE_MINUTE_MS} from "@/lib";
+import {Prisma} from "@/modules/prisma/generated/client";
 import {FileInterceptor} from "@nestjs/platform-express";
 import type {AccessRequest, ApiResponse, BaseException, CarResponse, CarsResponse, OwnershipRequest} from "@/types";
-import {BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
-import {FindAllCarOkRes} from "./dto";
+import {BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -113,7 +114,7 @@ export class CarController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation(CarDto.findAllCarOperation)
-  @ApiOkResponse({type: FindAllCarOkRes})
+  @ApiOkResponse({type: CarDto.FindAllCarOkRes})
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
@@ -203,5 +204,22 @@ export class CarController {
     } as BaseException);
 
     return this.carService.uploadImage(id, `${UPLOAD_PATH_PREFIX}/${file.filename}`, req.ownershipData);
+  }
+
+  @Permission<Prisma.CarInclude, z.ZodUUID>({
+    owner: true,
+    resource: 'car',
+    include: {category: true},
+    validatorParam: UUIDv4Validator,
+    permissions: [PERMISSIONS.PRODUCT_UPDATE],
+  })
+  @Put(':id')
+  update(
+    @Param("id") id: string,
+    @Req() req: OwnershipRequest<CarResponse['car']>
+  ) {
+    console.log(id);
+    console.log(req.ownershipData);
+    return 'car successfully updated';
   }
 }
