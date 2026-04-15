@@ -226,6 +226,7 @@ export class CarController {
   @ApiParam(UUID4Dto('id'))
   @ApiBody({type: CarDto.UpdateCarDto})
   @ApiBadRequestResponse({type: CarDto.CreateCarBadReq})
+  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars/id')})
   update(
     @Param("id") _id: string,
     @Body(new ZodPipe(CarDto.UpdateCarValidator)) data: CarDto.UpdateCarType,
