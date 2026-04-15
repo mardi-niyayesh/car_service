@@ -4,6 +4,7 @@ import {Category} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {ApiResponse, BaseException, CategoryResponse, CategoriesResponse, ListWithCount} from "@/types";
+import {checkPrismaConflict} from "@/lib";
 
 @Injectable()
 export class CategoryService {
@@ -34,25 +35,23 @@ export class CategoryService {
    * - all users can access to this route
    */
   async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<ListWithCount<CategoriesResponse>>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<ListWithCount<CategoriesResponse>>> => {
-      const count: number = await tx.category.count();
+    const count: number = await this.prisma.category.count();
 
-      const categories = await tx.category.findMany({
-        orderBy: {
-          created_at: pagination.orderByLower
-        },
-        take: pagination.limit,
-        skip: pagination.offset,
-      });
-
-      return {
-        message: 'categories successfully found.',
-        data: {
-          count,
-          categories
-        }
-      };
+    const categories = await this.prisma.category.findMany({
+      orderBy: {
+        created_at: pagination.orderByLower
+      },
+      take: pagination.limit,
+      skip: pagination.offset,
     });
+
+    return {
+      message: 'categories successfully found.',
+      data: {
+        count,
+        categories
+      }
+    };
   }
 
   /** create a new category
@@ -62,17 +61,8 @@ export class CategoryService {
     userId: string,
     {name, slug, description, ownership}: CategoryDto.CreateCategoryType
   ): Promise<ApiResponse<CategoryResponse>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<CategoryResponse>> => {
-      const categoryExist = await tx.category.findUnique({
-        where: {slug}
-      });
-
-      if (categoryExist) throw new ConflictException({
-        message: `Category already exists in database`,
-        error: 'category exists'
-      } as BaseException);
-
-      const category = await tx.category.create({
+    try {
+      const category = await this.prisma.category.create({
         data: {
           slug,
           name,
@@ -87,7 +77,9 @@ export class CategoryService {
           category
         }
       };
-    });
+    } catch (e) {
+      checkPrismaConflict(e as Error, 'Category', 'slug');
+    }
   }
 
   /** delete a category
