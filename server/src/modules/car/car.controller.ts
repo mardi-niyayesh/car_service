@@ -259,12 +259,14 @@ export class CarController {
     validatorParam: UUIDv4Validator,
     permissions: [PERMISSIONS.PRODUCT_DELETE],
   })
+  @ApiBearerAuth("accessToken")
   @Delete(':id')
   @CacheEvict({
     force: true,
     resource: 'car',
   })
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiParam(UUID4Dto('id'))
   @ApiOperation(CarDto.deleteCarOperation)
   @ApiNoContentResponse({
     type: getBaseOkResponseSchema<void>({
