@@ -78,7 +78,11 @@ export class CategoryService {
         }
       };
     } catch (e) {
-      checkPrismaConflict(e as Error, 'Category', 'slug');
+      checkPrismaConflict({
+        e: e as Error,
+        conflictField: 'name',
+        mainResource: 'Category',
+      });
     }
   }
 

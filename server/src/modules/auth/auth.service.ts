@@ -110,7 +110,11 @@ export class AuthService {
           data
         };
       } catch (e) {
-        checkPrismaConflict(e as Error, 'User', 'email');
+        checkPrismaConflict({
+          e: e as Error,
+          mainResource: 'User',
+          conflictField: 'email',
+        });
       }
     });
   }

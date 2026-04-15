@@ -1,12 +1,27 @@
 import type {BaseException} from "@/types";
-import {ConflictException} from "@nestjs/common";
 import {Prisma} from "@/modules/prisma/generated/client";
+import {ConflictException, NotFoundException} from "@nestjs/common";
 
-export function checkPrismaConflict(e: Error, resource: string, field: string): never {
+interface CheckPrismaConflictParams {
+  e: Error;
+  mainResource: string;
+  conflictField: string;
+  notFoundField?: string;
+  notFoundResource?: string;
+}
+
+export function checkPrismaConflict(data: CheckPrismaConflictParams): never {
+  const {conflictField, notFoundField, notFoundResource, mainResource, e} = data;
+
   if (e instanceof Prisma.PrismaClientKnownRequestError) {
     if (e.code === 'P2002') throw new ConflictException({
-      message: `${resource} already exists in database, please change ${field}`,
-      error: `${resource} already exists`
+      message: `${mainResource} already exists in database, please change ${conflictField}`,
+      error: `${mainResource} already exists`
+    } as BaseException);
+
+    if (e.code === 'P2003') throw new NotFoundException({
+      message: `${notFoundResource} not exist exists in database, please change ${notFoundField}`,
+      error: `${notFoundResource} not exists`
     } as BaseException);
   }
 

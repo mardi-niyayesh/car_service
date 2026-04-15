@@ -150,7 +150,11 @@ export class RoleService {
           }
         };
       } catch (e) {
-        checkPrismaConflict(e as Error, 'Role', 'name');
+        checkPrismaConflict({
+          e: e as Error,
+          mainResource: 'Role',
+          conflictField: 'name',
+        });
       }
     });
   }

@@ -1,7 +1,7 @@
 import * as CarDto from "./dto";
 import {PaginationValidatorType} from "@/common";
 import {Prisma} from "@/modules/prisma/generated/client";
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {checkConflictRecord, checkPrismaConflict} from "@/lib";
 import type {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse} from "@/types";
@@ -92,15 +92,6 @@ export class CarService {
       price_at_hour,
     } = data;
 
-    const category = await this.prisma.category.findUnique({
-      where: {id: category_id}
-    });
-
-    if (!category) throw new NotFoundException({
-      message: 'category not found in database, please make sure category exists',
-      error: 'Category not found'
-    } as BaseException);
-
     try {
       const car = await this.prisma.car.create({
         data: {
@@ -127,7 +118,13 @@ export class CarService {
         }
       };
     } catch (e) {
-      checkPrismaConflict(e as Error, 'Car', 'slug');
+      checkPrismaConflict({
+        e: e as Error,
+        mainResource: 'Car',
+        conflictField: 'slug',
+        notFoundResource: 'Category',
+        notFoundField: 'category_id',
+      });
     }
   }
 
@@ -163,16 +160,75 @@ export class CarService {
   /** update a car record with id and ownership permission
    * - **only roles with permission (owner.all or product.update or product.update) can accessibility to this route**
    */
-  update(carRecord: CarAndCategory, newData: CarDto.UpdateCarType) {
-    const {hasConflict, conflictData} = checkConflictRecord(newData, carRecord);
+  async update(carRecord: CarAndCategory, newData: CarDto.UpdateCarType): Promise<ApiResponse<CarResponse>> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<CarResponse>> => {
+      const {hasConflict, conflictData} = checkConflictRecord(newData, carRecord);
 
-    if (JSON.stringify(newData.tags) === JSON.stringify(carRecord.tags)) {
-      conflictData.push("tags");
-    }
+      if (JSON.stringify(newData.tags) === JSON.stringify(carRecord.tags)) {
+        conflictData.push("tags");
+      }
 
-    console.log(hasConflict);
-    console.log(conflictData);
+      if (hasConflict) throw new ConflictException({
+        error: 'Conflict new car data',
+        message: `conflict in new car data, please change new car data. conflict fields: ${conflictData.join(", ")}`,
+      } as BaseException);
 
-    return 'car successfully updated';
+      const {
+        name,
+        slug,
+        tags,
+        company,
+        can_rent,
+        ownership,
+        description,
+        category_id,
+        price_at_hour,
+      } = newData;
+
+      // if (category_id !== undefined) {
+      //   await tx.category.findUnique({
+      //     where: {id: category_id}
+      //   });
+      //
+      //   throw new NotFoundException({
+      //     error: 'Category not found',
+      //     message: `category not found in database, please make sure category exists`,
+      //   } as BaseException);
+      //
+      //   console.log(category);
+      // }
+
+      try {
+        const newCarRecord = await tx.car.update({
+          where: {id: carRecord.id},
+          data: {
+            // name,
+            // slug,
+            // tags,
+            // company,
+            // can_rent,
+            // description,
+            // price_at_hour,
+            // creator_id: ownership === false ? null : undefined,
+            category_id,
+          }
+        });
+      } catch (e) {
+        checkPrismaConflict({
+          e: e as Error,
+          mainResource: 'Car',
+          conflictField: 'slug',
+          notFoundResource: 'Category',
+          notFoundField: 'category_id',
+        });
+      }
+
+      return {
+        message: 'test update car data',
+        data: {
+          car: carRecord
+        }
+      };
+    });
   }
 }
