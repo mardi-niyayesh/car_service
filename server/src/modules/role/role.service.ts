@@ -11,7 +11,7 @@ import {
 } from "@/types";
 
 import * as RolesDto from "./dto";
-import {getSafeRole} from "@/lib";
+import {checkPrismaConflict, getSafeRole} from "@/lib";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
@@ -50,12 +50,11 @@ export class RoleService {
   /** get all roles info with pagination
    * - only roles with permission (owner.all or role.view) can accessibility to this route
    */
-  findAll(pagination: PaginationValidatorType): Promise<ApiResponse<FindAllRolesRes>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<FindAllRolesRes>> => {
-      const count: number = await tx.role.count();
+  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<FindAllRolesRes>> {
+    const count: number = await this.prisma.role.count();
 
-      const roles = await tx.$queryRaw<RoleResponse[]>(
-        Prisma.sql`
+    const roles = await this.prisma.$queryRaw<RoleResponse[]>(
+      Prisma.sql`
           SELECT r.id,
              r.name,
              r.created_at,
@@ -68,16 +67,15 @@ export class RoleService {
           GROUP BY r.id
           ORDER BY r.created_at ${Prisma.sql([pagination.orderByUpper])}
           LIMIT ${pagination.limit} OFFSET ${pagination.offset}`
-      );
+    );
 
-      return {
-        message: 'roles successfully found.',
-        data: {
-          count,
-          roles: roles || [],
-        }
-      };
-    });
+    return {
+      message: 'roles successfully found.',
+      data: {
+        count,
+        roles: roles || [],
+      }
+    };
   }
 
   /** create a new role with exist permission
@@ -93,18 +91,6 @@ export class RoleService {
     }: RolesDto.CreateRoleType
   ): Promise<ApiResponse<FindOneRoleRes>> {
     return this.prisma.$transaction(async (tx): Promise<ApiResponse<FindOneRoleRes>> => {
-      const existRole = await tx.role.findUnique({
-        where: {
-          name
-        }
-      });
-
-      // if role name exist in database
-      if (existRole) throw new ConflictException({
-        message: 'role name already exists in database',
-        error: 'role name conflict'
-      } as BaseException);
-
       // find all permission with id
       const permissionsRecord = await tx.permission.findMany({
         where: {
@@ -133,35 +119,39 @@ export class RoleService {
 
       const creator_id: string | null = ownership ? actionPayload.userId : null;
 
-      const newRole = await tx.role.create({
-        data: {
-          creator_id,
-          name,
-          description
-        }
-      });
-
-      await tx.rolePermission.createMany({
-        data: permissions.map(p => ({
-          role_id: newRole.id,
-          permission_id: p
-        }))
-      });
-
-      const newRolePermissions = permissionsRecord.map(p => ({
-        id: p.id,
-        name: p.name,
-      }));
-
-      return {
-        message: 'role successfully created.',
-        data: {
-          role: {
-            ...newRole,
-            permissions: newRolePermissions
+      try {
+        const newRole = await tx.role.create({
+          data: {
+            creator_id,
+            name,
+            description
           }
-        }
-      };
+        });
+
+        await tx.rolePermission.createMany({
+          data: permissions.map(p => ({
+            role_id: newRole.id,
+            permission_id: p
+          }))
+        });
+
+        const newRolePermissions = permissionsRecord.map(p => ({
+          id: p.id,
+          name: p.name,
+        }));
+
+        return {
+          message: 'role successfully created.',
+          data: {
+            role: {
+              ...newRole,
+              permissions: newRolePermissions
+            }
+          }
+        };
+      } catch (e) {
+        checkPrismaConflict(e as Error, 'Role', 'name');
+      }
     });
   }
 
