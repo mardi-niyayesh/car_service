@@ -39,6 +39,13 @@ export class ForbiddenUpdateCategoryRes extends getNormalErrorResponse({
   error: "Ownership Verification Failed"
 }) {}
 
+export class NotFoundUpdateCategoryRes extends getNormalErrorResponse({
+  statusCode: 409,
+  path: "categories/id",
+  message: "Category already exists in database, please change slug",
+  error: "Category already exists"
+}) {}
+
 /** conflict example response */
 export class UpdateCategoryConflictRes extends getNormalErrorResponse({
   statusCode: 409,

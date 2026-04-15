@@ -179,6 +179,7 @@ export class CategoryController {
   @ApiParam(UUID4Dto('id'))
   @ApiOkResponse({type: CategoryDto.UpdateCategoryOkRes})
   @ApiForbiddenResponse({type: CategoryDto.ForbiddenUpdateCategoryRes})
+  @ApiNotFoundResponse({type: CategoryDto.NotFoundUpdateCategoryRes})
   @ApiConflictResponse({type: CategoryDto.UpdateCategoryConflictRes})
   async update(
     @Req() req: OwnershipRequest<Category>,
