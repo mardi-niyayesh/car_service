@@ -214,6 +214,10 @@ export class CarController {
     permissions: [PERMISSIONS.PRODUCT_UPDATE],
   })
   @Put(':id')
+  @CacheEvict({
+    force: true,
+    resource: 'car',
+  })
   update(
     @Param("id") id: string,
     @Req() req: OwnershipRequest<CarResponse['car']>
