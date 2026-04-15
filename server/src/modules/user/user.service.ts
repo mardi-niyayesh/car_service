@@ -62,47 +62,45 @@ export class UserService {
    * - **Requires authentication and "user.self" permission.**
    */
   async updateProfile(id: string, {age, display_name}: UserDto.UpdateProfileType): Promise<ApiResponse<{ user: SafeUser }>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<{ user: SafeUser }>> => {
-      const user = await tx.user.findUnique({
-        where: {id},
-        omit: {password: true},
-      });
-
-      if (!user) throw new NotFoundException({
-        message: "User not exist in database",
-        error: "User Not Found",
-      } as BaseException);
-
-      const conflictData: string[] = [];
-
-      if (age === user.age) conflictData.push('age');
-      if (display_name === user.display_name) conflictData.push('display_name');
-
-      if (conflictData.length) {
-        throw new ConflictException({
-          message: `No changes detected in the provided data. Please update at least one field.`,
-          error: `Data Unchanged (${conflictData.join(', ')})`
-        } as BaseException);
-      }
-
-      const newUserData = await tx.user.update({
-        where: {id},
-        data: {
-          age,
-          display_name,
-        },
-        omit: {password: true},
-      });
-
-      return {
-        message: 'User profile updated successfully.',
-        data: {
-          user: {
-            ...newUserData,
-          }
-        }
-      };
+    const user = await this.prisma.user.findUnique({
+      where: {id},
+      omit: {password: true},
     });
+
+    if (!user) throw new NotFoundException({
+      message: "User not exist in database",
+      error: "User Not Found",
+    } as BaseException);
+
+    const conflictData: string[] = [];
+
+    if (age === user.age) conflictData.push('age');
+    if (display_name === user.display_name) conflictData.push('display_name');
+
+    if (conflictData.length) {
+      throw new ConflictException({
+        message: `No changes detected in the provided data. Please update at least one field.`,
+        error: `Data Unchanged (${conflictData.join(', ')})`
+      } as BaseException);
+    }
+
+    const newUserData = await this.prisma.user.update({
+      where: {id},
+      data: {
+        age,
+        display_name,
+      },
+      omit: {password: true},
+    });
+
+    return {
+      message: 'User profile updated successfully.',
+      data: {
+        user: {
+          ...newUserData,
+        }
+      }
+    };
   }
 
   /**
@@ -147,38 +145,36 @@ export class UserService {
   /** get all users info
    * - **only users with permission (owner.all or user.view) can accessibility to this route**
    */
-  findAll(pagination: PaginationValidatorType): Promise<ApiResponse<UsersListResponse>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<UsersListResponse>> => {
-      const count: number = await tx.user.count();
+  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<UsersListResponse>> {
+    const count: number = await this.prisma.user.count();
 
-      const result = await tx.$queryRaw<UserRolePermission[]>(
-        Prisma.sql`
-        SELECT u.id,
-               u.email,
-               u.display_name,
-               u.age,
-               u.created_at,
-               u.updated_at,
-               ARRAY_AGG(DISTINCT r.name) AS roles,
-               ARRAY_AGG(DISTINCT p.name) AS permissions
-        FROM users u
-                 INNER JOIN user_roles ur ON u.id = ur.user_id
-                 INNER JOIN roles r ON ur.role_id = r.id
-                 INNER JOIN role_permission rp ON r.id = rp.role_id
-                 INNER JOIN permissions p ON rp.permission_id = p.id
-        GROUP BY u.id
-        ORDER BY u.created_at ${Prisma.sql([pagination.orderByUpper])}
-        LIMIT ${pagination.limit} OFFSET ${pagination.offset}`
-      );
+    const result = await this.prisma.$queryRaw<UserRolePermission[]>(
+      Prisma.sql`
+      SELECT u.id,
+             u.email,
+             u.display_name,
+             u.age,
+             u.created_at,
+             u.updated_at,
+             ARRAY_AGG(DISTINCT r.name) AS roles,
+             ARRAY_AGG(DISTINCT p.name) AS permissions
+      FROM users u
+               INNER JOIN user_roles ur ON u.id = ur.user_id
+               INNER JOIN roles r ON ur.role_id = r.id
+               INNER JOIN role_permission rp ON r.id = rp.role_id
+               INNER JOIN permissions p ON rp.permission_id = p.id
+      GROUP BY u.id
+      ORDER BY u.created_at ${Prisma.sql([pagination.orderByUpper])}
+      LIMIT ${pagination.limit} OFFSET ${pagination.offset}`
+    );
 
-      return {
-        message: "Users Successfully find.",
-        data: {
-          count,
-          users: result || [],
-        }
-      };
-    });
+    return {
+      message: "Users Successfully find.",
+      data: {
+        count,
+        users: result || [],
+      }
+    };
   }
 
   /** Assign roles to user
