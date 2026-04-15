@@ -37,11 +37,10 @@ export class CarService {
    * - **Accessible to all users (public endpoint)**
    */
   async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<CarsResponse>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<CarsResponse>> => {
-      const count = await tx.car.count();
+    const count = await this.prisma.car.count();
 
-      const cars = await tx.$queryRaw<CarResponse['car'][]>(
-        Prisma.sql`
+    const cars = await this.prisma.$queryRaw<CarResponse['car'][]>(
+      Prisma.sql`
         SELECT cars.id,
             cars.created_at,
             cars.updated_at,
@@ -65,24 +64,22 @@ export class CarService {
                   INNER JOIN public.categories c ON c.id = cars.category_id
          ORDER BY cars.created_at ${Prisma.sql([pagination.orderByUpper])}
          LIMIT ${pagination.limit} OFFSET ${pagination.offset};`
-      );
+    );
 
-      return {
-        message: "cars successfully found.",
-        data: {
-          count,
-          cars
-        }
-      };
-    });
+    return {
+      message: "cars successfully found.",
+      data: {
+        count,
+        cars
+      }
+    };
   }
 
   /** create a new car
    * - **only roles with permission (owner.all or product.create) can accessibility to this route**
    */
-  create(
-    userId: string,
-    {
+  async create(userId: string, data: CarDto.CreateCarType): Promise<ApiResponse<CarResponse>> {
+    const {
       name,
       slug,
       tags,
@@ -92,32 +89,19 @@ export class CarService {
       category_id,
       description,
       price_at_hour,
-    }: CarDto.CreateCarType
-  ): Promise<ApiResponse<CarResponse>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<CarResponse>> => {
-      const carExist = await tx.car.findUnique({
-        where: {
-          slug
-        }
-      });
+    } = data;
 
-      if (carExist) throw new ConflictException({
-        message: 'car already exists in database, please change slug',
-        error: 'Car already exists'
-      } as BaseException);
+    const category = await this.prisma.category.findUnique({
+      where: {id: category_id}
+    });
 
-      const category = await tx.category.findUnique({
-        where: {
-          id: category_id
-        }
-      });
+    if (!category) throw new NotFoundException({
+      message: 'category not found in database, please make sure category exists',
+      error: 'Category not found'
+    } as BaseException);
 
-      if (!category) throw new NotFoundException({
-        message: 'category not found in database, please make sure category exists',
-        error: 'Category not found'
-      } as BaseException);
-
-      const car = await tx.car.create({
+    try {
+      const car = await this.prisma.car.create({
         data: {
           name,
           slug,
@@ -141,7 +125,12 @@ export class CarService {
           car
         }
       };
-    });
+    } catch (_) {
+      throw new ConflictException({
+        message: 'car already exists in database, please change slug',
+        error: 'Car already exists'
+      } as BaseException);
+    }
   }
 
   /** add image url to car record
