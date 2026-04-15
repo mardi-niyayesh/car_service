@@ -4,14 +4,16 @@ import {CreateCarValidator} from "./create.dto";
 
 /** Update car validator */
 export const UpdateCarValidator = CreateCarValidator.omit({
-  ownership: true
+  ownership: true,
+  can_rent: true,
 }).extend({
-  ownership: z.literal(false)
+  ownership: z.literal(false),
+  can_rent: z.boolean(),
 }).partial().refine(data =>
     Object.keys(data).length > 0,
   {
-    error: issue => issue.message,
-    params: [
+    error: "At least one field must be provided to update a car.",
+    path: [
       'name',
       'slug',
       'tags',
@@ -21,10 +23,12 @@ export const UpdateCarValidator = CreateCarValidator.omit({
       'category_id',
       'description',
       'price_at_hour',
-    ]
+    ],
   }
 );
 
+/** type of update car validator */
 export type UpdateCarType = z.infer<typeof UpdateCarValidator>;
 
+/** example swagger body */
 export class UpdateCarDto extends createZodDto(UpdateCarValidator) {}

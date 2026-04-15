@@ -213,12 +213,14 @@ export class CarController {
     validatorParam: UUIDv4Validator,
     permissions: [PERMISSIONS.PRODUCT_UPDATE],
   })
+  @ApiBearerAuth("accessToken")
   @Put(':id')
   @CacheEvict({
     force: true,
     resource: 'car',
   })
   @HttpCode(HttpStatus.OK)
+  @ApiBody({type: CarDto.UpdateCarDto})
   update(
     @Param("id") id: string,
     @Body(new ZodPipe(CarDto.UpdateCarValidator)) data: CarDto.UpdateCarType,
