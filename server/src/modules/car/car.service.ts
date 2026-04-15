@@ -1,5 +1,5 @@
 import * as CarDto from "./dto";
-import {checkConflict} from "@/lib";
+import {checkPrismaConflict} from "@/lib";
 import {PaginationValidatorType} from "@/common";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
@@ -127,7 +127,7 @@ export class CarService {
         }
       };
     } catch (e) {
-      checkConflict(e as Error, 'Car', 'slug');
+      checkPrismaConflict(e as Error, 'Car', 'slug');
     }
   }
 

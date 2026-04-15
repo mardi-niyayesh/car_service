@@ -10,6 +10,14 @@ export const findOneCarOperation: ApiOperationOptions = {
   - ## Returns detailed information about a car identified by its unique slug.`
 };
 
+export const findAllCarOperation: ApiOperationOptions = {
+  summary: "Find list of cars with pagination",
+  operationId: "find_all_cars",
+  description: `
+  - ## Accessible to all users (public endpoint)
+  - ## Returns detailed information about a car identified by its unique slug.`
+};
+
 export const imageCarPermissionsRequired = [
   PERMISSIONS.PRODUCT_UPDATE,
   PERMISSIONS.PRODUCT_CREATE,

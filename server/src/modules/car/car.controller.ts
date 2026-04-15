@@ -111,6 +111,7 @@ export class CarController {
   })
   @Get()
   @HttpCode(HttpStatus.OK)
+  @ApiOperation(CarDto.findAllCarOperation)
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
