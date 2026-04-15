@@ -4,11 +4,10 @@ import type {StringValue} from "ms";
 import {randomUUID} from "node:crypto";
 import {JwtService} from "@nestjs/jwt";
 import {ConfigService} from "@nestjs/config";
-import {User} from "../prisma/generated/client";
 import {EventEmitter2} from "@nestjs/event-emitter";
 import {PrismaService} from "../prisma/prisma.service";
 import {EmailService} from "@/modules/email/email.service";
-import {buildEmailHtml, compareSecret, generateRandomToken, getSafeUser, hashSecret, hashSecretToken} from "@/lib";
+import {buildEmailHtml, checkPrismaConflict, compareSecret, generateRandomToken, getSafeUser, hashSecret, hashSecretToken} from "@/lib";
 import type {AccessTokenPayload, RefreshTokenPayload, ApiResponse, UserResponse, LoginResponse, BaseException, NormalizedClientInfo} from "@/types";
 import {BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException} from '@nestjs/common';
 
@@ -33,17 +32,6 @@ export class AuthService {
   /** create user in db */
   async register(createData: AuthDto.CreateUserInput, clientInfo: NormalizedClientInfo): Promise<ApiResponse<UserResponse>> {
     return this.prisma.$transaction(async tx => {
-      const user: User | null = await tx.user.findUnique({
-        where: {
-          email: createData.email,
-        }
-      });
-
-      if (user) throw new ConflictException({
-        message: 'User already exists in database',
-        error: 'Conflict Users'
-      } as BaseException);
-
       const hashPassword: string = await hashSecret(createData.password);
 
       const selfRole = await tx.role.findUnique({
@@ -57,69 +45,73 @@ export class AuthService {
         error: 'Self Role not exist'
       } as BaseException);
 
-      const newUser = await tx.user.create({
-        data: {
-          ...createData,
-          password: hashPassword
-        }
-      });
+      try {
+        const newUser = await tx.user.create({
+          data: {
+            ...createData,
+            password: hashPassword
+          }
+        });
 
-      const roles = await tx.userRole.create({
-        data: {
-          role_id: selfRole.id,
-          user_id: newUser.id
-        },
-        include: {
-          role: {
-            include: {
-              rolePermissions: {
-                include: {permission: true}
+        const roles = await tx.userRole.create({
+          data: {
+            role_id: selfRole.id,
+            user_id: newUser.id
+          },
+          include: {
+            role: {
+              include: {
+                rolePermissions: {
+                  include: {permission: true}
+                }
               }
             }
           }
-        }
-      });
-
-      const permissions: string[] = [...new Set(
-        roles.role.rolePermissions.map(p => p.permission.name)
-      )];
-
-      const data: UserResponse = {
-        user: {
-          updated_at: newUser.updated_at,
-          created_at: newUser.created_at,
-          age: newUser.age,
-          id: newUser.id,
-          email: newUser.email,
-          display_name: newUser.display_name,
-          roles: [roles.role.name],
-          permissions,
-        }
-      };
-
-      try {
-        const clientName: string = this.config.get<string>("CLIENT_NAME") ?? "Car Service";
-        const dashboardLink: string = this.config.get<string>("CLIENT_DASHBOARD") ?? "http://localhost:5173/dashboard";
-
-        this.eventEmitter.emit("signup.welcome", {
-          email: data.user.email,
-          html: buildEmailHtml({
-            title: `Welcome To ${clientName}`,
-            clientInfo,
-            contentName: "welcome",
-            extra: {
-              titleText: "Welcome to " + clientName,
-              messageText: "Your account has been successfully created.",
-              dashboardLink,
-            }
-          })
         });
-      } catch (_) { /* empty */ }
 
-      return {
-        message: "user created successfully",
-        data
-      };
+        const permissions: string[] = [...new Set(
+          roles.role.rolePermissions.map(p => p.permission.name)
+        )];
+
+        const data: UserResponse = {
+          user: {
+            updated_at: newUser.updated_at,
+            created_at: newUser.created_at,
+            age: newUser.age,
+            id: newUser.id,
+            email: newUser.email,
+            display_name: newUser.display_name,
+            roles: [roles.role.name],
+            permissions,
+          }
+        };
+
+        try {
+          const clientName: string = this.config.get<string>("CLIENT_NAME") ?? "Car Service";
+          const dashboardLink: string = this.config.get<string>("CLIENT_DASHBOARD") ?? "http://localhost:5173/dashboard";
+
+          this.eventEmitter.emit("signup.welcome", {
+            email: data.user.email,
+            html: buildEmailHtml({
+              title: `Welcome To ${clientName}`,
+              clientInfo,
+              contentName: "welcome",
+              extra: {
+                titleText: "Welcome to " + clientName,
+                messageText: "Your account has been successfully created.",
+                dashboardLink,
+              }
+            })
+          });
+        } catch (_) { /* empty */ }
+
+        return {
+          message: "user created successfully",
+          data
+        };
+      } catch (e) {
+        checkPrismaConflict(e as Error, 'User', 'email');
+      }
     });
   }
 
