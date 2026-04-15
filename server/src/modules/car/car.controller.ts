@@ -265,6 +265,14 @@ export class CarController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation(CarDto.deleteCarOperation)
   @ApiNotFoundResponse({type: CarDto.NotFoundUpdateCarRes})
+  @ApiForbiddenResponse({
+    type: getForbiddenResponse('cars/id', {
+      resource: 'car',
+      required_mode: 'ANY',
+      missing_permissions: [PERMISSIONS.PRODUCT_DELETE],
+      required_permissions: [PERMISSIONS.PRODUCT_DELETE],
+    })
+  })
   delete(
     @Param("id") id: string,
   ) {
