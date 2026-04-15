@@ -39,10 +39,10 @@ import * as CarDto from "./dto";
 import * as CarConfig from "./configs";
 import {CarService} from "./car.service";
 import {getPath, ONE_MINUTE_MS} from "@/lib";
-import {Prisma} from "@/modules/prisma/generated/client";
 import {FileInterceptor} from "@nestjs/platform-express";
+import {Car, Prisma} from "@/modules/prisma/generated/client";
 import type {AccessRequest, ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, OwnershipRequest} from "@/types";
-import {BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
+import {BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -244,5 +244,27 @@ export class CarController {
     @Req() req: OwnershipRequest<CarAndCategory>
   ): Promise<ApiResponse<CarResponse>> {
     return this.carService.update(req.ownershipData, data);
+  }
+
+  /** delete a car record with id and ownership permission
+   * - **only roles with permission (owner.all or product.delete or product.update) can accessibility to this route**
+   */
+  @Permission({
+    owner: true,
+    resource: 'car',
+    validatorParam: UUIDv4Validator,
+    permissions: [PERMISSIONS.PRODUCT_DELETE],
+  })
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @CacheEvict({
+    force: true,
+    resource: 'car',
+  })
+  delete(
+    @Param("id") id: string,
+  ) {
+    console.log(id);
+    return 'car successfully deleted.';
   }
 }
