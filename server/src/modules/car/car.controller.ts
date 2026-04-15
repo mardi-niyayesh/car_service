@@ -14,8 +14,9 @@ import {
   orderByPaginationDto,
   getForbiddenResponse,
   CAR_IMAGE_UPLOAD_PATH,
+  getBaseOkResponseSchema,
   getUnauthorizedResponse,
-  type PaginationValidatorType, getBaseOkResponseSchema,
+  type PaginationValidatorType,
 } from "@/common";
 
 import {
@@ -30,6 +31,7 @@ import {
   ApiNotFoundResponse,
   ApiConflictResponse,
   ApiForbiddenResponse,
+  ApiNoContentResponse,
   ApiBadRequestResponse,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
@@ -264,12 +266,14 @@ export class CarController {
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation(CarDto.deleteCarOperation)
-  @ApiOkResponse({
+  @ApiNoContentResponse({
     type: getBaseOkResponseSchema<void>({
       path: 'cars/id',
+      statusCode: 204,
       response: {message: 'Car successfully deleted.'}
     })
   })
+  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars/id')})
   @ApiNotFoundResponse({type: CarDto.NotFoundUpdateCarRes})
   @ApiForbiddenResponse({
     type: getForbiddenResponse('cars/id', {

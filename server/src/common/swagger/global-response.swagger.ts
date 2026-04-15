@@ -145,8 +145,15 @@ export function getForbiddenResponse(path: string, data?: GetForbiddenResponse) 
   }[className];
 }
 
+interface GetBaseOkResponseParams<T> {
+  path: string;
+  create?: boolean;
+  statusCode?: number;
+  response: ApiResponse<T>;
+}
+
 /** get schema when request is ok */
-export function getBaseOkResponseSchema<T>(props: { create?: boolean, response: ApiResponse<T>, path: string }) {
+export function getBaseOkResponseSchema<T>(props: GetBaseOkResponseParams<T>) {
   const responseData = props.response as BaseApiResponseData<T>;
 
   const response = {
@@ -158,7 +165,13 @@ export function getBaseOkResponseSchema<T>(props: { create?: boolean, response: 
   }
 
   class BaseOkResponse {
-    @ApiProperty({example: props.create ? 201 : 200})
+    @ApiProperty({
+      example: props?.statusCode
+        ? props.statusCode
+        : props.create
+          ? 201
+          : 200
+    })
     statusCode: number;
 
     @ApiProperty({example: true})
