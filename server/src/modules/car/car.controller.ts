@@ -258,6 +258,7 @@ export class CarController {
   })
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation(CarDto.deleteCarOperation)
   @CacheEvict({
     force: true,
     resource: 'car',
