@@ -30,6 +30,11 @@ const axiosClient: AxiosInstance = axios.create({
 axiosClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const token = getCurrentToken();
+
+    // ✅ این دو خط رو اضافه کن
+    console.log("token in interceptor:", token);
+    console.log("heder in  Authorization:", token ? `Bearer ${token}` : "Not");
+
     if (token) {
       // Ensure Authorization header is always a string
       config.headers.Authorization = `Bearer ${token}`;
@@ -57,6 +62,7 @@ let tokenUpdateCallback:
 export const initializeTokenRefresh = (
   callback: (token: string | null, user: User | null) => void,
 ) => {
+  console.log(" initializeTokenRefresh call"); 
   tokenUpdateCallback = callback;
   // If a callback is set, we can now process the queued requests
   if (failedQueue.length) {
@@ -88,7 +94,7 @@ axiosClient.interceptors.response.use(
 
     if (error.response?.status === 401 || error.response?.status === 403) {
       if (originalRequest && !originalRequest._retry && tokenUpdateCallback) {
-        originalRequest._retry = true; 
+        originalRequest._retry = true;
 
         if (!isRefreshing) {
           isRefreshing = true;
@@ -96,9 +102,13 @@ axiosClient.interceptors.response.use(
             console.log("Attempting to refresh token...");
             const responseData: RefreshResponse | null = await apiRefreshAuth();
 
-            if (responseData?.accessToken && responseData.user) {
+            
+            if (
+              responseData?.accessToken && 
+              responseData?.user 
+            ) {
               console.log("Token refreshed successfully.");
-              const newToken = responseData.accessToken;
+              const newToken = responseData.accessToken; 
               const newUser = responseData.user;
 
               // Update  token state and callback
@@ -138,18 +148,16 @@ axiosClient.interceptors.response.use(
               tokenUpdateCallback(null, null);
             }
             // Reject the original request
-            return Promise.reject(refreshError || error); 
+            return Promise.reject(refreshError || error);
           } finally {
             isRefreshing = false;
           }
         } else {
-    
           console.log("Refresh in progress, adding request to queue.");
           return new Promise((resolve, reject) => {
             processQueue(error, resolve, reject);
           })
             .then(() => {
-       
               if (originalRequest.headers) {
                 originalRequest.headers.Authorization = `Bearer ${getCurrentToken()}`;
               }
@@ -162,7 +170,6 @@ axiosClient.interceptors.response.use(
             });
         }
       } else if (originalRequest && originalRequest._retry && isRefreshing) {
-      
         console.log("Request already marked for retry, adding to queue.");
         return new Promise((resolve, reject) => {
           processQueue(error, resolve, reject);
