@@ -15,7 +15,7 @@ import {
   getForbiddenResponse,
   CAR_IMAGE_UPLOAD_PATH,
   getUnauthorizedResponse,
-  type PaginationValidatorType,
+  type PaginationValidatorType, getBaseOkResponseSchema,
 } from "@/common";
 
 import {
@@ -264,6 +264,12 @@ export class CarController {
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation(CarDto.deleteCarOperation)
+  @ApiOkResponse({
+    type: getBaseOkResponseSchema<void>({
+      path: 'cars/id',
+      response: {message: 'Car successfully deleted.'}
+    })
+  })
   @ApiNotFoundResponse({type: CarDto.NotFoundUpdateCarRes})
   @ApiForbiddenResponse({
     type: getForbiddenResponse('cars/id', {
@@ -277,6 +283,6 @@ export class CarController {
     @Param("id") id: string,
   ) {
     console.log(id);
-    return 'car successfully deleted.';
+    return 'Car successfully deleted.';
   }
 }
