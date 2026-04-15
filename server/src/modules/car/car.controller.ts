@@ -237,6 +237,7 @@ export class CarController {
     })
   })
   @ApiNotFoundResponse({type: CarDto.NotFoundUpdateCarRes})
+  @ApiConflictResponse({type: CarDto.ConflictUpdateCarRes})
   update(
     @Param("id") _id: string,
     @Body(new ZodPipe(CarDto.UpdateCarValidator)) data: CarDto.UpdateCarType,

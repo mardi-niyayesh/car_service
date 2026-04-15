@@ -40,3 +40,10 @@ export class NotFoundUpdateCarRes extends getNormalErrorResponse({
   path: 'cars/id',
   statusCode: 404
 }) {}
+
+export class ConflictUpdateCarRes extends getNormalErrorResponse({
+  statusCode: 409,
+  path: "cars/id",
+  message: "conflict in new car data, please change new car data. conflict fields: category_id",
+  error: "Conflict new car data"
+}) {}
