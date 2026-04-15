@@ -227,6 +227,14 @@ export class CarController {
   @ApiBody({type: CarDto.UpdateCarDto})
   @ApiBadRequestResponse({type: CarDto.CreateCarBadReq})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars/id')})
+  @ApiForbiddenResponse({
+    type: getForbiddenResponse('cars/id', {
+      resource: 'car',
+      required_mode: 'ANY',
+      missing_permissions: [PERMISSIONS.PRODUCT_UPDATE],
+      required_permissions: [PERMISSIONS.PRODUCT_UPDATE],
+    })
+  })
   update(
     @Param("id") _id: string,
     @Body(new ZodPipe(CarDto.UpdateCarValidator)) data: CarDto.UpdateCarType,
