@@ -4,7 +4,7 @@ import {PaginationValidatorType} from "@/common";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import type {ApiResponse, BaseException, CarResponse, CarsResponse} from "@/types";
+import type {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse} from "@/types";
 
 @Injectable()
 export class CarService {
@@ -134,13 +134,13 @@ export class CarService {
   /** add image url to car record
    * - **only roles with permission (owner.all or product.create) can accessibility to this route**
    */
-  async uploadImage(id: string, imageUrl: string, oldCar: CarResponse["car"]): Promise<ApiResponse<CarResponse>> {
+  async uploadImage(id: string, imageUrl: string, carRecord: CarAndCategory): Promise<ApiResponse<CarResponse>> {
     const message = 'Image uploaded successfully.';
 
-    if (oldCar.image === imageUrl) return {
+    if (carRecord.image === imageUrl) return {
       message,
       data: {
-        car: oldCar
+        car: carRecord
       }
     };
 
@@ -158,5 +158,15 @@ export class CarService {
         car
       }
     };
+  }
+
+  /** update a car record with id and ownership permission
+   * - **only roles with permission (owner.all or product.update or product.update) can accessibility to this route**
+   */
+  update(carRecord: CarAndCategory, newData: CarDto.UpdateCarType) {
+    console.log(newData);
+    console.log(carRecord);
+
+    return 'car successfully updated';
   }
 }

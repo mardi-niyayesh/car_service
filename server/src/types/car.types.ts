@@ -1,13 +1,15 @@
 import {ListWithCount} from "./response.types";
 import type {Car, Category} from "@/modules/prisma/generated/client";
 
+export type CarAndCategory = Car & {
+  category: Category;
+};
+
 /** car api response */
 export interface CarResponse {
-  car: Car & {
-    category: Category;
-  };
+  car: CarAndCategory;
 }
 
 export type CarsResponse = ListWithCount<{
-  cars: CarResponse['car'][];
+  cars: CarAndCategory[];
 }>;

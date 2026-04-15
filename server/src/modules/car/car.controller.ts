@@ -41,7 +41,7 @@ import {CarService} from "./car.service";
 import {getPath, ONE_MINUTE_MS} from "@/lib";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {FileInterceptor} from "@nestjs/platform-express";
-import type {AccessRequest, ApiResponse, BaseException, CarResponse, CarsResponse, OwnershipRequest} from "@/types";
+import type {AccessRequest, ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, OwnershipRequest} from "@/types";
 import {BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
 
 /**
@@ -196,7 +196,7 @@ export class CarController {
   uploadImage(
     @Param("id") id: string,
     @UploadedFile() file: Express.Multer.File,
-    @Req() req: OwnershipRequest<CarResponse["car"]>
+    @Req() req: OwnershipRequest<CarAndCategory>
   ): Promise<ApiResponse<CarResponse>> {
     if (!file) throw new BadRequestException({
       error: 'File not found',
@@ -206,6 +206,9 @@ export class CarController {
     return this.carService.uploadImage(id, `${UPLOAD_PATH_PREFIX}/${file.filename}`, req.ownershipData);
   }
 
+  /** update a car record with id and ownership permission
+   * - **only roles with permission (owner.all or product.update or product.update) can accessibility to this route**
+   */
   @Permission<Prisma.CarInclude, z.ZodUUID>({
     owner: true,
     resource: 'car',
@@ -223,13 +226,10 @@ export class CarController {
   @ApiParam(UUID4Dto('id'))
   @ApiBody({type: CarDto.UpdateCarDto})
   update(
-    @Param("id") id: string,
+    @Param("id") _id: string,
     @Body(new ZodPipe(CarDto.UpdateCarValidator)) data: CarDto.UpdateCarType,
-    @Req() req: OwnershipRequest<CarResponse['car']>
+    @Req() req: OwnershipRequest<CarAndCategory>
   ) {
-    console.log(id);
-    console.log(data);
-    console.log(req.ownershipData);
-    return 'car successfully updated';
+    return this.carService.update(req.ownershipData, data);
   }
 }
