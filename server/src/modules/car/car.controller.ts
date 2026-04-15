@@ -227,6 +227,7 @@ export class CarController {
   @ApiParam(UUID4Dto('id'))
   @ApiBody({type: CarDto.UpdateCarDto})
   @ApiOperation(CarDto.updateCarOperation)
+  @ApiOkResponse({type: CarDto.OkResponseUpdateCar})
   @ApiBadRequestResponse({type: CarDto.CreateCarBadReq})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars/id')})
   @ApiForbiddenResponse({
@@ -257,12 +258,13 @@ export class CarController {
     permissions: [PERMISSIONS.PRODUCT_DELETE],
   })
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation(CarDto.deleteCarOperation)
   @CacheEvict({
     force: true,
     resource: 'car',
   })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation(CarDto.deleteCarOperation)
+  @ApiNotFoundResponse({type: CarDto.NotFoundUpdateCarRes})
   delete(
     @Param("id") id: string,
   ) {
