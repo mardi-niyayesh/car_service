@@ -1,6 +1,7 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
 import {CreateCarValidator} from "./create.dto";
+import {getNormalErrorResponse} from "@/common";
 
 /** Update car validator */
 export const UpdateCarValidator = CreateCarValidator.omit({
@@ -32,3 +33,10 @@ export type UpdateCarType = z.infer<typeof UpdateCarValidator>;
 
 /** example swagger body */
 export class UpdateCarDto extends createZodDto(UpdateCarValidator) {}
+
+export class NotFoundUpdateCarRes extends getNormalErrorResponse({
+  message: 'Car does not exists in database, please make sure and try again',
+  error: 'Car not found',
+  path: 'cars/id',
+  statusCode: 404
+}) {}

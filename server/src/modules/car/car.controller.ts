@@ -95,6 +95,7 @@ export class CarController {
   @ApiOperation(CarDto.findOneCarOperation)
   @ApiOkResponse({type: CarDto.FindOneCarOkRes})
   @ApiBadRequestResponse({type: CarDto.FindOneCarBadReq})
+  @ApiNotFoundResponse({type: CarDto.NotFoundOneCarRes})
   findOne(
     @Param("slug", new ZodPipe(CarDto.CreateCarValidator.shape.slug)) slug: string,
   ): Promise<ApiResponse<CarResponse>> {
@@ -235,6 +236,7 @@ export class CarController {
       required_permissions: [PERMISSIONS.PRODUCT_UPDATE],
     })
   })
+  @ApiNotFoundResponse({type: CarDto.NotFoundUpdateCarRes})
   update(
     @Param("id") _id: string,
     @Body(new ZodPipe(CarDto.UpdateCarValidator)) data: CarDto.UpdateCarType,
