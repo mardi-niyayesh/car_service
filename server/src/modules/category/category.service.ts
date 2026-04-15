@@ -2,9 +2,9 @@ import * as CategoryDto from "./dto";
 import {PaginationValidatorType} from "@/common";
 import {Category} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {checkConflictRecord, checkPrismaConflict} from "@/lib";
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {ApiResponse, BaseException, CategoryResponse, CategoriesResponse, ListWithCount} from "@/types";
-import {checkConflictRecord, checkPrismaConflict} from "@/lib";
 
 @Injectable()
 export class CategoryService {
@@ -125,16 +125,31 @@ export class CategoryService {
       error: 'Category update conflict'
     } as BaseException);
 
-    const newCategoryData = await this.prisma.category.update({
-      where: {id},
-      data
-    });
+    const {name, slug, description, ownership} = data;
 
-    return {
-      message: "category updated successfully.",
-      data: {
-        category: newCategoryData
-      }
-    };
+    try {
+      const newCategoryData = await this.prisma.category.update({
+        where: {id},
+        data: {
+          name,
+          slug,
+          description,
+          creator_id: ownership === false ? null : undefined
+        }
+      });
+
+      return {
+        message: "category updated successfully.",
+        data: {
+          category: newCategoryData
+        }
+      };
+    } catch (e) {
+      checkPrismaConflict({
+        e: e as Error,
+        conflictField: 'slug',
+        mainResource: 'Category',
+      });
+    }
   }
 }
