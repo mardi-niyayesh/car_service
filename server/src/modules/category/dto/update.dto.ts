@@ -5,12 +5,13 @@ import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 import {categoryExampleRes, CreateCategoryValidator} from "./create.dto";
 
 /** validator */
-export const UpdateCategoryValidator = CreateCategoryValidator.pick({
-  name: true,
-  description: true,
-}).partial().refine(data => data.name || data.description, {
-  error: 'Either name or id must be provided',
-  path: ['name', 'description'],
+export const UpdateCategoryValidator = CreateCategoryValidator.omit({
+  ownership: true
+}).extend({
+  ownership: z.literal(false)
+}).partial().refine(data => Object.keys(data).length > 0, {
+  error: 'Either name, id or ownership must be provided',
+  path: ['name', 'description', 'ownership'],
 });
 
 /** type of validator */
