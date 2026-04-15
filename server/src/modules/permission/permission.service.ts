@@ -32,24 +32,22 @@ export class PermissionService {
    * - only roles with permission (owner.all or permission.view) can accessibility to this route
    */
   async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<PermissionsResponse>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<PermissionsResponse>> => {
-      const count: number = await tx.permission.count();
+    const count: number = await this.prisma.permission.count();
 
-      const permissions = await tx.permission.findMany({
-        orderBy: {
-          created_at: pagination.orderByLower
-        },
-        skip: pagination.offset,
-        take: pagination.limit
-      });
-
-      return {
-        message: 'permission successfully found',
-        data: {
-          count,
-          permissions,
-        }
-      };
+    const permissions = await this.prisma.permission.findMany({
+      orderBy: {
+        created_at: pagination.orderByLower
+      },
+      skip: pagination.offset,
+      take: pagination.limit
     });
+
+    return {
+      message: 'permission successfully found',
+      data: {
+        count,
+        permissions,
+      }
+    };
   }
 }
