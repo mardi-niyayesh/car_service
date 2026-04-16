@@ -6,8 +6,7 @@ const minLimit = 1;
 const defaultLimit = 10;
 const minPage = 1;
 
-/** Validate Pagination in Query Params */
-export const PaginationValidator = z.object({
+export const BasePaginationValidator = z.object({
   page: z
     .coerce.number()
     .int()
@@ -27,7 +26,10 @@ export const PaginationValidator = z.object({
     .enum(["asc", "desc"])
     .optional()
     .default("desc"),
-}).transform(data => ({
+});
+
+/** Validate Pagination in Query Params */
+export const PaginationValidator = BasePaginationValidator.transform(data => ({
   page: data.page,
   limit: data.limit,
   orderByLower: data.order,

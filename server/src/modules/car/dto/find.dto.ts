@@ -1,4 +1,4 @@
-import {CarResponse, CarsResponse} from "@/types";
+import type {CarResponse} from "@/types";
 import {exampleCarRecord} from "./create.dto";
 import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
 
@@ -22,18 +22,6 @@ export class FindOneCarBadReq extends getZodErrorBody({
       error: "Too small: expected string to have >=2 characters"
     }
   ]
-}) {}
-
-/** ok example response for find all cars */
-export class FindAllCarOkRes extends getBaseOkResponseSchema<CarsResponse>({
-  path: 'cars',
-  response: {
-    message: 'cars successfully found.',
-    data: {
-      count: 5,
-      cars: Array.from({length: 5}, () => exampleCarRecord)
-    }
-  }
 }) {}
 
 export class NotFoundOneCarRes extends getNormalErrorResponse({
