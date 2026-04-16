@@ -10,13 +10,11 @@ import {
   pagePaginationDto,
   PREFIX_PUBLIC_PATH,
   limitPaginationDto,
-  PaginationValidator,
   orderByPaginationDto,
   getForbiddenResponse,
   CAR_IMAGE_UPLOAD_PATH,
   getBaseOkResponseSchema,
   getUnauthorizedResponse,
-  type PaginationValidatorType,
 } from "@/common";
 
 import {
