@@ -1,4 +1,4 @@
-import {ListWithCount} from "./response.types";
+import type {ListWithCount} from "./response.types";
 import type {Car, Category} from "@/modules/prisma/generated/client";
 
 export type CarAndCategory = Car & {
