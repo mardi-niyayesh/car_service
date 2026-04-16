@@ -180,7 +180,7 @@ model Car {
   creator_id String? @db.Uuid
   creator    User?   @relation(fields: [creator_id], references: [id], onDelete: SetNull)
 
-  activeRent CarRent?
+  activeRent CarRent? @relation("activeRent")
 
   @@index([category_id])
   @@map("cars")
@@ -201,7 +201,7 @@ model CarRent {
   user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   car_id String @unique @db.Uuid
-  car    Car    @relation(fields: [car_id], references: [id], onDelete: Restrict)
+  car    Car    @relation("activeRent", fields: [car_id], references: [id], onDelete: Restrict)
 
   @@map("car_rents")
 }
