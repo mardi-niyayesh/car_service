@@ -1,7 +1,7 @@
 import * as CarDto from "./dto";
+import {PREFIX_PUBLIC_PATH} from "@/common";
 import {Car, Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {PaginationValidatorType, PREFIX_PUBLIC_PATH} from "@/common";
 import {checkConflictRecord, checkPrismaError, deleteOneFile} from "@/lib";
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import type {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse} from "@/types";
