@@ -42,7 +42,7 @@ import DetalisUserPage from "./PanelAdmin/Pages/DetalisUserPage";
 import ProductPage from "./PanelAdmin/Pages/ProductPage";
 import CategoryPage from "./PanelAdmin/Pages/CategoryPage";
 import UsersPage from "./PanelAdmin/Pages/UsersPage";
-import DescriptionRole from "./PanelAdmin/Components/DescriptionRole";
+import DescriptionRolePage from "./PanelAdmin/Pages/DescriptionRolePage";
 
 function App() {
   return (
@@ -101,7 +101,7 @@ function App() {
             <Route path="users/detail/:userId" element={<DetalisUserPage />} />
             <Route
               path="users/detail/:userId/description"
-              element={<DescriptionRole />}
+              element={<DescriptionRolePage />}
             />
             <Route path="product" element={<ProductPage />} />
             <Route path="category" element={<CategoryPage />} />
