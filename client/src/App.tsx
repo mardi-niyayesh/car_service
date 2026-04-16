@@ -42,6 +42,7 @@ import DetalisUserPage from "./PanelAdmin/Pages/DetalisUserPage";
 import ProductPage from "./PanelAdmin/Pages/ProductPage";
 import CategoryPage from "./PanelAdmin/Pages/CategoryPage";
 import UsersPage from "./PanelAdmin/Pages/UsersPage";
+import DescriptionRole from "./PanelAdmin/Components/DescriptionRole";
 
 function App() {
   return (
@@ -84,15 +85,24 @@ function App() {
             <Route path="wallet" element={<WalletPages />} />
             <Route path="card" element={<CardPages />} />
             <Route path="logout" element={<LogoutPage />} />
-            <Route path="Profile/updateUser" element={<ComponentFormUpdateUser />} />
+            <Route
+              path="Profile/updateUser"
+              element={<ComponentFormUpdateUser />}
+            />
             <Route path="Profile" element={<Profile />} />
-             <Route path="Profile/updatePassword" element={<ComponnetUpdetePassword />} />
-
+            <Route
+              path="Profile/updatePassword"
+              element={<ComponnetUpdetePassword />}
+            />
           </Route>
           {/* ------- Panel Admin Layout ------- */}
           <Route path="/panel" element={<PanelAdminLayout />}>
             <Route path="users" element={<UsersPage />} />
             <Route path="users/detail/:userId" element={<DetalisUserPage />} />
+            <Route
+              path="users/detail/:userId/description"
+              element={<DescriptionRole />}
+            />
             <Route path="product" element={<ProductPage />} />
             <Route path="category" element={<CategoryPage />} />
           </Route>
