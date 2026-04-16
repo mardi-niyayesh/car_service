@@ -2,11 +2,11 @@ import z from "zod";
 import type {CarsResponse} from "@/types";
 import {exampleCarRecord} from "./create.dto";
 import type {ApiQueryOptions} from "@nestjs/swagger";
-import {getBaseOkResponseSchema, BasePaginationValidator} from "@/common";
+import {getBaseOkResponseSchema, BasePaginationValidator, getSafePaginationValidator} from "@/common";
 
 const minPrice = 0;
 
-export const FindAllCarValidator = z.object({
+export const FindAllCarValidator = getSafePaginationValidator(z.object({
   price_at_hour: z.coerce.number()
     .int()
     .min(minPrice)
@@ -23,7 +23,7 @@ export const FindAllCarValidator = z.object({
     .default(true)
     .optional()
     .catch(true),
-}).extend(BasePaginationValidator.shape);
+}).extend(BasePaginationValidator.shape));
 
 export type FindAllCarValidatorType = z.infer<typeof FindAllCarValidator>;
 

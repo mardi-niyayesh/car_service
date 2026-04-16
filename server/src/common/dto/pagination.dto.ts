@@ -14,6 +14,7 @@ export const BasePaginationValidator = z.object({
     .optional()
     .default(minPage)
     .catch(minPage),
+
   limit: z
     .coerce.number()
     .int()
@@ -22,20 +23,26 @@ export const BasePaginationValidator = z.object({
     .optional()
     .default(defaultLimit)
     .catch(defaultLimit),
+
   order: z
     .enum(["asc", "desc"])
     .optional()
     .default("desc"),
 });
 
+type BasePaginationValidatorType = z.infer<typeof BasePaginationValidator>;
+
+export function getSafePaginationValidator<T extends z.ZodTypeAny<BasePaginationValidatorType>>(Pagination: T) {
+  return Pagination.transform(({order, ...data}) => ({
+    ...data,
+    orderByLower: order,
+    orderByUpper: order === 'asc' ? 'ASC' : 'DESC',
+    offset: data.limit * (data.page - 1),
+  }));
+}
+
 /** Validate Pagination in Query Params */
-export const PaginationValidator = BasePaginationValidator.transform(data => ({
-  page: data.page,
-  limit: data.limit,
-  orderByLower: data.order,
-  orderByUpper: data.order === 'asc' ? 'ASC' : 'DESC',
-  offset: data.limit * (data.page - 1)
-}));
+export const PaginationValidator = getSafePaginationValidator(BasePaginationValidator);
 
 /** @typeof Validate Pagination in Query Params */
 export type PaginationValidatorType = z.infer<typeof PaginationValidator>;
