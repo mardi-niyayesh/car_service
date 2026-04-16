@@ -4,6 +4,7 @@ import { FaUser } from "react-icons/fa";
 //hooks
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 type User = {
   id: number;
@@ -70,22 +71,36 @@ const ComponentCategoryDatailUser = () => {
   };
 
   const giveRolse = async () => {
-    console.log("selectedRoleId:", selectedRoleId);
     try {
-      //find Id role = self
+      //roles current user
+      const userRoleNames = Array.isArray(user?.roles)
+        ? user.roles
+        : [user?.roles];
+      console.log("userRoleNames :", userRoleNames);
+
+      //Id roles current user
+      const currentRoleIds = roles
+        .filter((r) => userRoleNames.includes(r.name))
+        .map((r) => r.id);
+      console.log("currentRoleIds :", currentRoleIds);
+
+      // new role without current role user
+      const newRolesToAdd = selectedRoleId.filter(
+        (id) => !currentRoleIds.includes(id),
+      );
+
+      // deleat role= self  to newRolesToAdd
       const selfRoleId = roles.find((r) => r.name === "self")?.id;
-      // filter roles az self role
-      const filteredRoleIds = selectedRoleId.filter((id) => id !== selfRoleId);
-      const response = await axiosClient.post(`/users/${userId}/roles`, {
-        rolesId: filteredRoleIds,
+      const filtered = newRolesToAdd.filter((id) => id !== selfRoleId);
+
+      const res = await axiosClient.post(`/users/${userId}/roles`, {
+        rolesId: filtered,
       });
-      console.log("selectedRoleId  :", selectedRoleId);
-      console.log("response  giveRoles", response);
-      console.log("back  in filter :", selectedRoleId);
-      console.log("Next in filter  :", filteredRoleIds);
+
+      console.log("Added roles:", filtered);
+      await fetchUser(roles);
     } catch (err) {
-      console.log("Error  giveRoles :", err);
-      console.log("selectedRoleId  :", selectedRoleId);
+      console.log("Error giveRoles:", err);
     }
   };
 
@@ -181,6 +196,7 @@ const ComponentCategoryDatailUser = () => {
                   onChange={() => handleRoleChange(role.id)}
                   className="w-5 h-5 text-blue-600"
                 />
+                {/* <div>{role.permissions.join(" ,")}</div> */}
                 <span className="flex items-center gap-2">
                   <span className="font-medium">{role.name}</span>
                   {isDisabled && (
@@ -200,6 +216,11 @@ const ComponentCategoryDatailUser = () => {
         >
           ثبت تغییرات
         </button>
+        <Link to="description">
+          <div className="hover:text-blue-600  mt-2">
+          برای خواندن توضیحات هر نقش کلیک کنید
+          </div>
+        </Link>
       </div>
     </>
   );
