@@ -37,7 +37,7 @@ export class CarService {
    * get list of car by pagination query.
    * - **Accessible to all users (public endpoint)**
    */
-  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<CarsResponse>> {
+  async findAll(pagination: CarDto.FindAllCarValidatorType): Promise<ApiResponse<CarsResponse>> {
     const count = await this.prisma.car.count();
 
     const cars = await this.prisma.$queryRaw<CarResponse['car'][]>(

@@ -15,7 +15,7 @@ export const findAllCarOperation: ApiOperationOptions = {
   operationId: "find_all_cars",
   description: `
   - ## Accessible to all users (public endpoint)
-  - ## Returns detailed information about a car identified by its unique slug.`
+  - ## Returns detailed information about a list of car identified by pagination.`
 };
 
 export const imageCarPermissionsRequired = [

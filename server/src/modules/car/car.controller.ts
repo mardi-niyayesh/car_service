@@ -109,11 +109,11 @@ export class CarController {
    * - **Accessible to all users (public endpoint)**
    */
   @Public()
-  @Cacheable({
-    resource: 'car',
-    pagination: true,
-    ttl: ONE_MINUTE_MS * 60,
-  })
+  // @Cacheable({
+  //   resource: 'car',
+  //   pagination: true,
+  //   ttl: ONE_MINUTE_MS * 60,
+  // })
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation(CarDto.findAllCarOperation)
@@ -121,9 +121,13 @@ export class CarController {
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
+  @ApiQuery(CarDto.priceFindAllCarQuery)
+  @ApiQuery(CarDto.inRentFindAllCarQuery)
+  @ApiQuery(CarDto.canRentFindAllCarQuery)
   findAll(
-    @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
+    @Query(new ZodPipe(CarDto.FindAllCarValidator)) pagination: CarDto.FindAllCarValidatorType
   ): Promise<ApiResponse<CarsResponse>> {
+    console.log(pagination);
     return this.carService.findAll(pagination);
   }
 
