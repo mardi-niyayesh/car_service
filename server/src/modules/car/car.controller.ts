@@ -111,7 +111,7 @@ export class CarController {
     resource: 'car',
     pagination: true,
     ttl: ONE_MINUTE_MS * 60,
-    query: CarDto.findAllCarsQuery
+    query: CarDto.findAllCarsQuery,
   })
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -124,6 +124,7 @@ export class CarController {
   @ApiQuery(CarDto.canRentFindAllCarQuery)
   @ApiQuery(CarDto.priceLteFindAllCarQuery)
   @ApiQuery(CarDto.priceGteFindAllCarQuery)
+  @ApiQuery(CarDto.orderByFieldFindAllCarQuery)
   findAll(
     @Query(new ZodPipe(CarDto.FindAllCarValidator)) pagination: CarDto.FindAllCarValidatorType
   ): Promise<ApiResponse<CarsResponse>> {

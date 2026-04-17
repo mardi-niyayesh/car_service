@@ -44,9 +44,12 @@ export class CarService {
       in_rent,
       can_rent,
       orderByLower,
+      order_by_field,
       price_at_hour_lte,
       price_at_hour_gte,
     } = pagination;
+
+    console.log(pagination);
 
     const where: Prisma.CarWhereInput = {
       can_rent,
@@ -69,7 +72,7 @@ export class CarService {
       take: limit,
       skip: offset,
       orderBy: {
-        created_at: orderByLower,
+        [order_by_field]: orderByLower,
       },
     });
 

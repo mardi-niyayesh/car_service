@@ -10,6 +10,8 @@ function checkStringBoolean(value?: string): undefined | boolean {
   return undefined;
 }
 
+const orderByFieldEnum = ['create_at', 'price_at_hour'] as const;
+
 export const FindAllCarValidator = getSafePaginationValidator(z.object({
   price_at_hour_gte: z.coerce.number()
     .int()
@@ -34,16 +36,23 @@ export const FindAllCarValidator = getSafePaginationValidator(z.object({
     .string()
     .optional()
     .transform(v => checkStringBoolean(v)),
+
+  order_by_field: z
+    .enum(orderByFieldEnum)
+    .optional()
+    .default('create_at')
+    .catch('create_at')
 }).extend(BasePaginationValidator.shape));
 
 export type FindAllCarValidatorType = z.infer<typeof FindAllCarValidator>;
 
-export const findAllCarsQuery: string[] = [
-  'price_at_hour_gte',
-  'price_at_hour_lte',
+export const findAllCarsQuery = [
   'in_rent',
   'can_rent',
-] as const;
+  'order_by_field',
+  'price_at_hour_gte',
+  'price_at_hour_lte',
+];
 
 /** ok example response for find all cars */
 export class FindAllCarOkRes extends getBaseOkResponseSchema<CarsResponse>({
@@ -94,5 +103,20 @@ export const canRentFindAllCarQuery: ApiQueryOptions = {
   description: 'filter query for car of can_rent',
   schema: {
     type: 'boolean',
+  }
+};
+
+export const orderByFieldFindAllCarQuery: ApiQueryOptions = {
+  deprecated: false,
+  type: 'string',
+  required: false,
+  name: 'order_by_field',
+  enum: [...orderByFieldEnum],
+  default: 'create_at',
+  description: 'sorted by create_at or price_at_hour field',
+  schema: {
+    type: 'string',
+    enum: [...orderByFieldEnum],
+    default: 'create_at',
   }
 };
