@@ -125,7 +125,6 @@ export class CarController {
   findAll(
     @Query(new ZodPipe(CarDto.FindAllCarValidator)) pagination: CarDto.FindAllCarValidatorType
   ): Promise<ApiResponse<CarsResponse>> {
-    console.log(pagination);
     return this.carService.findAll(pagination);
   }
 
@@ -235,7 +234,7 @@ export class CarController {
   @ApiBadRequestResponse({type: CarDto.CreateCarBadReq})
   @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars/id')})
   @ApiForbiddenResponse({
-    type: getForbiddenResponse('cars/id', {
+    type: getForbiddenResponse('api/v1/cars/id', {
       resource: 'car',
       required_mode: 'ANY',
       missing_permissions: [PERMISSIONS.PRODUCT_UPDATE],

@@ -6,6 +6,11 @@ import {getBaseOkResponseSchema, BasePaginationValidator, getSafePaginationValid
 
 const minPrice = 0;
 
+function checkStringBoolean(value?: string): undefined | boolean {
+  if (!value) return undefined;
+  return value === 'true';
+}
+
 export const FindAllCarValidator = getSafePaginationValidator(z.object({
   price_at_hour: z.coerce.number()
     .int()
@@ -13,13 +18,15 @@ export const FindAllCarValidator = getSafePaginationValidator(z.object({
     .optional()
     .catch(minPrice),
 
-  in_rent: z.coerce.boolean()
+  in_rent: z
+    .string()
     .optional()
-    .catch(false),
+    .transform(v => checkStringBoolean(v)),
 
-  can_rent: z.coerce.boolean()
+  can_rent: z
+    .string()
     .optional()
-    .catch(true),
+    .transform(v => checkStringBoolean(v)),
 }).extend(BasePaginationValidator.shape));
 
 export type FindAllCarValidatorType = z.infer<typeof FindAllCarValidator>;

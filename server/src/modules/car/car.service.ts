@@ -1,6 +1,6 @@
 import * as CarDto from "./dto";
 import {PREFIX_PUBLIC_PATH} from "@/common";
-import {Car, Prisma} from "@/modules/prisma/generated/client";
+import {Car} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {checkConflictRecord, checkPrismaError, deleteOneFile} from "@/lib";
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
@@ -40,32 +40,32 @@ export class CarService {
   async findAll(pagination: CarDto.FindAllCarValidatorType): Promise<ApiResponse<CarsResponse>> {
     const count = await this.prisma.car.count();
 
-    const cars = await this.prisma.$queryRaw<CarResponse['car'][]>(
-      Prisma.sql`
-        SELECT cars.id,
-            cars.created_at,
-            cars.updated_at,
-            cars.name,
-            cars.slug,
-            cars.price_at_hour,
-            cars.description,
-            cars.can_rent,
-            cars.company,
-            cars.in_rent,
-            cars.tags,
-            cars.image,
-            JSON_BUILD_OBJECT(
-                'id', c.id,
-                'slug', c.slug,
-                'created_at', c.created_at,
-                'updated_at', c.updated_at,
-                'description', c.description
-        ) AS category
-         FROM cars
-                  INNER JOIN public.categories c ON c.id = cars.category_id
-         ORDER BY cars.created_at ${Prisma.sql([pagination.orderByUpper])}
-         LIMIT ${pagination.limit} OFFSET ${pagination.offset};`
-    );
+    const {
+      limit,
+      offset,
+      in_rent,
+      can_rent,
+      orderByLower,
+      price_at_hour
+    } = pagination;
+
+    const cars = await this.prisma.car.findMany({
+      include: {
+        category: true
+      },
+      take: limit,
+      skip: offset,
+      where: {
+        can_rent,
+        in_rent,
+        price_at_hour: {
+          gte: price_at_hour
+        }
+      },
+      orderBy: {
+        created_at: orderByLower,
+      }
+    });
 
     return {
       message: "cars successfully found.",
