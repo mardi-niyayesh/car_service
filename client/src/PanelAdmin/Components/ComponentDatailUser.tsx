@@ -32,6 +32,9 @@ const ComponentCategoryDatailUser = () => {
 
   //get select rolesId
   const [selectedRoleId, setSelectedRoleId] = useState<string[]>([]);
+
+  //for get initial Role
+  const [initialRoles, setInitialRoles] = useState<string[]>([]);
   console.log("selectedRoleId:", selectedRoleId);
 
   const fetchUser = async (allRoles: Role[]) => {
@@ -70,48 +73,87 @@ const ComponentCategoryDatailUser = () => {
     return allRoles;
   };
 
-  const giveRolse = async () => {
-    try {
-      //roles current user
-      const userRoleNames = Array.isArray(user?.roles)
-        ? user.roles
-        : [user?.roles];
-      console.log("userRoleNames :", userRoleNames);
-
-      //Id roles current user
-      const currentRoleIds = roles
-        .filter((r) => userRoleNames.includes(r.name))
-        .map((r) => r.id);
-      console.log("currentRoleIds :", currentRoleIds);
-
-      // new role without current role user
-      const newRolesToAdd = selectedRoleId.filter(
-        (id) => !currentRoleIds.includes(id),
-      );
-
-      // deleat role= self  to newRolesToAdd
-      const selfRoleId = roles.find((r) => r.name === "self")?.id;
-      const filtered = newRolesToAdd.filter((id) => id !== selfRoleId);
-
-      const res = await axiosClient.post(`/users/${userId}/roles`, {
-        rolesId: filtered,
-      });
-
-      console.log("Added roles:", filtered);
-      await fetchUser(roles);
-    } catch (err) {
-      console.log("Error giveRoles:", err);
-    }
-  };
-
   useEffect(() => {
     const init = async () => {
       const allRoles = await getRoles();
       await fetchUser(allRoles);
+      if (response.data.response.data.user) {
+        //fetch all information user
+        const userData = response.data.response.data.user;
+        //fetch all roles user
+        const userNameRoles = Array.isArray(userData.roles)
+          ? userData.roles
+          : [userData.roles];
+        //convert userNameRoles to userIdRoles
+        const userIdRoles = allRoles.filter((role) =>
+          userNameRoles.includes(role.name).map((role) => role.id),
+        );
+        selectedRoleId(userIdRoles);
+        setInitialRoles(userIdRoles);
+      }
     };
     init();
   }, [userId]);
 
+  const handleSaveChanges = async () => {
+    if (!user || !userId || !roles || roles.length === 0) return;
+
+    // add roles => to selectedRoleId but not initialRoles
+    const RolesToAdd = selectedRoleId.filter(
+      (id) => !initialRoles.includes(id),
+    );
+    console.log("RolesToAdd :",RolesToAdd);
+    
+
+    //remove rolse => to initialRoles but not selectedRoleId
+    const RolesToRemove = initialRoles.filter(
+      (id) => !selectedRoleId.includes(id),
+    );
+  console.log("RolesToRemove :",RolesToRemove);
+  
+    //get Id self role
+    const selfroleId = roles.find((rol) => rol.name === "self")?.id;
+    //get Id owner role
+    const ownerroleId = roles.find((rol) => rol.name === "owner")?.id;
+
+    const filterRolesToRemove = RolesToRemove.filter(
+      (id) => id !== selfroleId && id !== ownerroleId,
+    );
+    console.log("filterRolesToRemove :", filterRolesToRemove);
+
+    const filterRolesToAdd = RolesToAdd.filter((id) => id !== selfroleId);
+    console.log("filterRolesToAdd :",filterRolesToAdd);
+    
+    try {
+      if (filterRolesToAdd.length > 0) {
+        const responseAd = await axiosClient.post(`/users/${userId}/roles`, {
+          rolesId: filterRolesToAdd,
+        });
+        console.log("response to add roles : ", responseAd);
+        console.log("Add roles:", filterRolesToAdd);
+      }
+      if (filterRolesToRemove.length > 0) {
+        const responseRemov = await axiosClient.delete(
+          `/users/${userId}/roles`,
+          {
+            data: {
+              rolesId: filterRolesToRemove,
+            },
+          },
+        );
+        console.log("response to remove roles : ", responseRemov);
+        console.log("Removed roles:", filterRolesToRemove);
+      }
+      //for updat initialRole
+      await fetchUser(roles);
+      alert("تغییرات با موفقیت انجامم شد:)");
+    } catch (err) {
+      console.log("Error in change roles:", err);
+      alert("خطا در انجام تغییرات :(");
+    }
+  };
+
+  //roleId = role.id
   const handleRoleChange = (roleId: string) => {
     setSelectedRoleId((prev) => {
       if (prev.includes(roleId)) {
@@ -121,14 +163,14 @@ const ComponentCategoryDatailUser = () => {
       }
     });
   };
-
+  //roleName = role.name
   const isRoleDisabled = (roleName: string) => {
     if (["owner", "self"].includes(roleName)) {
       return true;
     }
     return false;
   };
-
+  //roleId = role.id
   const isRoleChecked = (roleId: string) => {
     return selectedRoleId.includes(roleId);
   };
@@ -151,21 +193,23 @@ const ComponentCategoryDatailUser = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-gray-500 font-medium">ایمیل</p>
+              <p className="text-sm text-gray-500 font-medium">ایمیل:</p>
               <p className="text-base text-gray-700">{user.email}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 font-medium">اسم</p>
+              <p className="text-sm text-gray-500 font-medium">اسم:</p>
               <p className="text-base text-gray-600 font-medium">
                 {user.display_name}
               </p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 font-medium">سن</p>
+              <p className="text-sm text-gray-500 font-medium">سن :</p>
               <p className="text-base text-gray-700">{user.age}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 font-medium">نقش های فعلی</p>
+              <p className="text-sm text-gray-500 font-medium">
+                نقش های فعلی :
+              </p>
               <p className="text-base text-green-600 font-medium">
                 {Array.isArray(user.roles) ? user.roles.join(", ") : user.roles}
               </p>
@@ -196,7 +240,6 @@ const ComponentCategoryDatailUser = () => {
                   onChange={() => handleRoleChange(role.id)}
                   className="w-5 h-5 text-blue-600"
                 />
-                {/* <div>{role.permissions.join(" ,")}</div> */}
                 <span className="flex items-center gap-2">
                   <span className="font-medium">{role.name}</span>
                   {isDisabled && (
@@ -211,14 +254,14 @@ const ComponentCategoryDatailUser = () => {
         </div>
 
         <button
-          onClick={giveRolse}
+          onClick={handleSaveChanges}
           className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
           ثبت تغییرات
         </button>
         <Link to="description">
           <div className="hover:text-blue-600  mt-2">
-          برای خواندن توضیحات هر نقش کلیک کنید
+            برای خواندن توضیحات هر نقش کلیک کنید
           </div>
         </Link>
       </div>
