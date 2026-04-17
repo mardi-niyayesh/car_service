@@ -1,22 +1,29 @@
 import z from "zod";
 import type {CarsResponse} from "@/types";
-import {exampleCarRecord} from "./create.dto";
 import type {ApiQueryOptions} from "@nestjs/swagger";
+import {exampleCarRecord, minPriceAtHourCar, maxPriceAtHourCar} from "./create.dto";
 import {getBaseOkResponseSchema, BasePaginationValidator, getSafePaginationValidator} from "@/common";
 
-const minPrice = 0;
-
 function checkStringBoolean(value?: string): undefined | boolean {
-  if (!value) return undefined;
-  return value === 'true';
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  return undefined;
 }
 
 export const FindAllCarValidator = getSafePaginationValidator(z.object({
-  price_at_hour: z.coerce.number()
+  price_at_hour_gte: z.coerce.number()
     .int()
-    .min(minPrice)
+    .min(minPriceAtHourCar)
+    .max(maxPriceAtHourCar)
     .optional()
-    .catch(minPrice),
+    .catch(minPriceAtHourCar),
+
+  price_at_hour_lte: z.coerce.number()
+    .int()
+    .min(minPriceAtHourCar)
+    .max(maxPriceAtHourCar)
+    .optional()
+    .catch(maxPriceAtHourCar),
 
   in_rent: z
     .string()
@@ -43,16 +50,24 @@ export class FindAllCarOkRes extends getBaseOkResponseSchema<CarsResponse>({
   }
 }) {}
 
-export const priceFindAllCarQuery: ApiQueryOptions = {
+export const priceGteFindAllCarQuery: ApiQueryOptions = {
   type: 'integer',
-  minimum: minPrice,
+  minimum: minPriceAtHourCar,
+  maximum: maxPriceAtHourCar,
   required: false,
-  name: 'price_at_hour',
-  description: 'filter query for car of price_at_hour',
+  name: 'price_at_hour_gte',
+  description: 'filter query for car of great than equal price_at_hour',
   schema: {
     type: 'integer',
-    minimum: minPrice
+    minimum: minPriceAtHourCar,
+    maximum: maxPriceAtHourCar,
   }
+};
+
+export const priceLteFindAllCarQuery: ApiQueryOptions = {
+  ...priceGteFindAllCarQuery,
+  description: 'filter query for car of lessen than equal price_at_hour',
+  name: 'price_at_hour_lte',
 };
 
 export const inRentFindAllCarQuery: ApiQueryOptions = {

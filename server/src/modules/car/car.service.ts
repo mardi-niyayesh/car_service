@@ -1,6 +1,6 @@
 import * as CarDto from "./dto";
 import {PREFIX_PUBLIC_PATH} from "@/common";
-import {Car} from "@/modules/prisma/generated/client";
+import {Car, Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {checkConflictRecord, checkPrismaError, deleteOneFile} from "@/lib";
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
@@ -38,33 +38,39 @@ export class CarService {
    * - **Accessible to all users (public endpoint)**
    */
   async findAll(pagination: CarDto.FindAllCarValidatorType): Promise<ApiResponse<CarsResponse>> {
-    const count = await this.prisma.car.count();
-
     const {
       limit,
       offset,
       in_rent,
       can_rent,
       orderByLower,
-      price_at_hour
+      price_at_hour_lte,
+      price_at_hour_gte,
     } = pagination;
+
+    const where: Prisma.CarWhereInput = {
+      can_rent,
+      in_rent,
+      price_at_hour: {
+        gte: price_at_hour_gte,
+        lte: price_at_hour_lte,
+      },
+    };
+
+    const count = await this.prisma.car.count({
+      where
+    });
 
     const cars = await this.prisma.car.findMany({
       include: {
         category: true
       },
+      where,
       take: limit,
       skip: offset,
-      where: {
-        can_rent,
-        in_rent,
-        price_at_hour: {
-          gte: price_at_hour
-        }
-      },
       orderBy: {
         created_at: orderByLower,
-      }
+      },
     });
 
     return {

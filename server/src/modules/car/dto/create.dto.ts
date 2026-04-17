@@ -5,6 +5,8 @@ import type {CarResponse} from "@/types";
 import {categoryExampleRes} from "@/modules/category/dto";
 import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody, OwnerShipValidator} from "@/common";
 
+export const minPriceAtHourCar = 0;
+export const maxPriceAtHourCar = 50_000_000;
 const NameRegex: RegExp = /^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FFa-zA-Z0-9۰-۹ _-]+$/;
 
 /** create car validator */
@@ -40,8 +42,8 @@ export const CreateCarValidator = OwnerShipValidator.extend({
 
   price_at_hour: z
     .number()
-    .min(0)
-    .max(50_000_000),
+    .min(minPriceAtHourCar)
+    .max(maxPriceAtHourCar),
 
   tags: z
     .array(
