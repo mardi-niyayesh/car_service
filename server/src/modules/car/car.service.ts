@@ -60,7 +60,7 @@ export class CarService {
       },
     };
 
-    const count = await this.prisma.car.count({
+    const count: number = await this.prisma.car.count({
       where
     });
 

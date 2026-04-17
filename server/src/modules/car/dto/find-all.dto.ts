@@ -10,7 +10,7 @@ function checkStringBoolean(value?: string): undefined | boolean {
   return undefined;
 }
 
-const orderByFieldEnum = ['create_at', 'price_at_hour'] as const;
+const orderByFieldEnum = ['created_at', 'price_at_hour'] as const;
 
 export const FindAllCarValidator = getSafePaginationValidator(z.object({
   price_at_hour_gte: z.coerce.number()
@@ -40,8 +40,8 @@ export const FindAllCarValidator = getSafePaginationValidator(z.object({
   order_by_field: z
     .enum(orderByFieldEnum)
     .optional()
-    .default('create_at')
-    .catch('create_at')
+    .default('created_at')
+    .catch('created_at')
 }).extend(BasePaginationValidator.shape));
 
 export type FindAllCarValidatorType = z.infer<typeof FindAllCarValidator>;
@@ -112,11 +112,11 @@ export const orderByFieldFindAllCarQuery: ApiQueryOptions = {
   required: false,
   name: 'order_by_field',
   enum: [...orderByFieldEnum],
-  default: 'create_at',
-  description: 'sorted by create_at or price_at_hour field',
+  default: 'created_at',
+  description: 'sorted by created_at or price_at_hour field',
   schema: {
     type: 'string',
     enum: [...orderByFieldEnum],
-    default: 'create_at',
+    default: 'created_at',
   }
 };
