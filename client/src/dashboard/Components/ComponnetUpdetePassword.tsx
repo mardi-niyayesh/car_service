@@ -23,6 +23,7 @@ const ComponentFormUpdateUser = () => {
       });
       if (result.ok) {
         console.log("success:", result);
+        alert("رمز عبور شما با موفقیت به تغییر کرد")
       }
       reset();
     } catch (err) {
