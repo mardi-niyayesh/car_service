@@ -107,11 +107,12 @@ export class CarController {
    * - **Accessible to all users (public endpoint)**
    */
   @Public()
-  // @Cacheable({
-  //   resource: 'car',
-  //   pagination: true,
-  //   ttl: ONE_MINUTE_MS * 60,
-  // })
+  @Cacheable({
+    resource: 'car',
+    pagination: true,
+    ttl: ONE_MINUTE_MS * 60,
+    query: CarDto.findAllCarsQuery
+  })
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation(CarDto.findAllCarOperation)

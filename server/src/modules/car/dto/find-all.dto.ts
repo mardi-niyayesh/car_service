@@ -38,6 +38,13 @@ export const FindAllCarValidator = getSafePaginationValidator(z.object({
 
 export type FindAllCarValidatorType = z.infer<typeof FindAllCarValidator>;
 
+export const findAllCarsQuery: string[] = [
+  'price_at_hour_gte',
+  'price_at_hour_lte',
+  'in_rent',
+  'can_rent',
+] as const;
+
 /** ok example response for find all cars */
 export class FindAllCarOkRes extends getBaseOkResponseSchema<CarsResponse>({
   path: 'cars',
