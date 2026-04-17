@@ -49,8 +49,6 @@ export class CarService {
       price_at_hour_gte,
     } = pagination;
 
-    console.log(pagination);
-
     const where: Prisma.CarWhereInput = {
       can_rent,
       in_rent,
