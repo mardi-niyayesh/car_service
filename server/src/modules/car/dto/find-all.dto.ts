@@ -1,6 +1,7 @@
 import z from "zod";
 import type {CarsResponse} from "@/types";
 import type {ApiQueryOptions} from "@nestjs/swagger";
+import {SlugCategoryRegex, CreateCategoryValidator} from "@/modules/category/dto";
 import {exampleCarRecord, minPriceAtHourCar, maxPriceAtHourCar} from "./create.dto";
 import {getBaseOkResponseSchema, BasePaginationValidator, getSafePaginationValidator} from "@/common";
 
@@ -13,6 +14,8 @@ function checkStringBoolean(value?: string): undefined | boolean {
 const orderByFieldEnum = ['created_at', 'price_at_hour'] as const;
 
 export const FindAllCarValidator = getSafePaginationValidator(z.object({
+  category: CreateCategoryValidator.shape.slug,
+
   price_at_hour_gte: z.coerce.number()
     .int()
     .min(minPriceAtHourCar)
@@ -47,6 +50,7 @@ export const FindAllCarValidator = getSafePaginationValidator(z.object({
 export type FindAllCarValidatorType = z.infer<typeof FindAllCarValidator>;
 
 export const findAllCarsQuery = [
+  'category',
   'in_rent',
   'can_rent',
   'order_by_field',
@@ -65,6 +69,18 @@ export class FindAllCarOkRes extends getBaseOkResponseSchema<CarsResponse>({
     }
   }
 }) {}
+
+export const categoryFindAllCarQuery: ApiQueryOptions = {
+  type: 'string',
+  required: false,
+  name: 'category',
+  description: 'filter query for car by category slug',
+  pattern: SlugCategoryRegex.source,
+  schema: {
+    type: 'string',
+    pattern: SlugCategoryRegex.source
+  }
+};
 
 export const priceGteFindAllCarQuery: ApiQueryOptions = {
   type: 'integer',

@@ -6,6 +6,7 @@ import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody, OwnerS
 
 export const minCategorySlug = 2;
 export const maxCategorySlug = 150;
+export const SlugCategoryRegex: RegExp = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 /** base category validator */
 export const CreateCategoryValidator = OwnerShipValidator.extend({
@@ -17,7 +18,7 @@ export const CreateCategoryValidator = OwnerShipValidator.extend({
     .toLowerCase()
     .min(minCategorySlug)
     .max(maxCategorySlug)
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+    .regex(SlugCategoryRegex, {
       message: "Slug can only contain lowercase letters, numbers, and hyphens (-).",
     }),
 

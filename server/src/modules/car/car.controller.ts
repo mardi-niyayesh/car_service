@@ -120,11 +120,12 @@ export class CarController {
   @ApiQuery(pagePaginationDto)
   @ApiQuery(limitPaginationDto)
   @ApiQuery(orderByPaginationDto)
+  @ApiQuery(CarDto.orderByFieldFindAllCarQuery)
+  @ApiQuery(CarDto.categoryFindAllCarQuery)
   @ApiQuery(CarDto.inRentFindAllCarQuery)
   @ApiQuery(CarDto.canRentFindAllCarQuery)
   @ApiQuery(CarDto.priceLteFindAllCarQuery)
   @ApiQuery(CarDto.priceGteFindAllCarQuery)
-  @ApiQuery(CarDto.orderByFieldFindAllCarQuery)
   findAll(
     @Query(new ZodPipe(CarDto.FindAllCarValidator)) pagination: CarDto.FindAllCarValidatorType
   ): Promise<ApiResponse<CarsResponse>> {

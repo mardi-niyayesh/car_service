@@ -43,6 +43,7 @@ export class CarService {
       offset,
       in_rent,
       can_rent,
+      category,
       orderByLower,
       order_by_field,
       price_at_hour_lte,
@@ -56,6 +57,9 @@ export class CarService {
         gte: price_at_hour_gte,
         lte: price_at_hour_lte,
       },
+      category: {
+        slug: category,
+      }
     };
 
     const count: number = await this.prisma.car.count({
