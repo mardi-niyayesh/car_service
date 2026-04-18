@@ -22,7 +22,7 @@ type Role = {
 
 const ComponentCategoryDatailUser = () => {
   const { userId } = useParams();
-  console.log("userId:", userId);
+  // console.log("userId:", userId);
 
   //get information user
   const [user, setUser] = useState<User | null>(null);
@@ -32,10 +32,11 @@ const ComponentCategoryDatailUser = () => {
 
   //get select rolesId
   const [selectedRoleId, setSelectedRoleId] = useState<string[]>([]);
+  // console.log("selectedRoleId:", selectedRoleId);
 
   //for get initial Role
   const [initialRoles, setInitialRoles] = useState<string[]>([]);
-  console.log("selectedRoleId:", selectedRoleId);
+  // console.log("initialRoles:", initialRoles);
 
   const fetchUser = async (allRoles: Role[]) => {
     if (!userId) {
@@ -60,6 +61,7 @@ const ComponentCategoryDatailUser = () => {
         .map((role) => role.id);
 
       setSelectedRoleId(userRoleIds);
+      setInitialRoles(userRoleIds);
     } catch (err) {
       console.log("Error in get users :", err);
       setUser(null);
@@ -77,20 +79,6 @@ const ComponentCategoryDatailUser = () => {
     const init = async () => {
       const allRoles = await getRoles();
       await fetchUser(allRoles);
-      if (response.data.response.data.user) {
-        //fetch all information user
-        const userData = response.data.response.data.user;
-        //fetch all roles user
-        const userNameRoles = Array.isArray(userData.roles)
-          ? userData.roles
-          : [userData.roles];
-        //convert userNameRoles to userIdRoles
-        const userIdRoles = allRoles.filter((role) =>
-          userNameRoles.includes(role.name).map((role) => role.id),
-        );
-        selectedRoleId(userIdRoles);
-        setInitialRoles(userIdRoles);
-      }
     };
     init();
   }, [userId]);
@@ -102,15 +90,14 @@ const ComponentCategoryDatailUser = () => {
     const RolesToAdd = selectedRoleId.filter(
       (id) => !initialRoles.includes(id),
     );
-    console.log("RolesToAdd :",RolesToAdd);
-    
+    console.log("Roles To Add :", RolesToAdd);
 
     //remove rolse => to initialRoles but not selectedRoleId
     const RolesToRemove = initialRoles.filter(
       (id) => !selectedRoleId.includes(id),
     );
-  console.log("RolesToRemove :",RolesToRemove);
-  
+    console.log("Roles To Remove :", RolesToRemove);
+
     //get Id self role
     const selfroleId = roles.find((rol) => rol.name === "self")?.id;
     //get Id owner role
@@ -119,11 +106,13 @@ const ComponentCategoryDatailUser = () => {
     const filterRolesToRemove = RolesToRemove.filter(
       (id) => id !== selfroleId && id !== ownerroleId,
     );
-    console.log("filterRolesToRemove :", filterRolesToRemove);
+    console.log("filter Roles To Remove :", filterRolesToRemove);
 
-    const filterRolesToAdd = RolesToAdd.filter((id) => id !== selfroleId);
-    console.log("filterRolesToAdd :",filterRolesToAdd);
-    
+    const filterRolesToAdd = RolesToAdd.filter(
+      (id) => id !== selfroleId && id !== ownerroleId,
+    );
+    console.log("filter Roles To Add :", filterRolesToAdd);
+
     try {
       if (filterRolesToAdd.length > 0) {
         const responseAd = await axiosClient.post(`/users/${userId}/roles`, {
@@ -131,6 +120,8 @@ const ComponentCategoryDatailUser = () => {
         });
         console.log("response to add roles : ", responseAd);
         console.log("Add roles:", filterRolesToAdd);
+        setSelectedRoleId(selectedRoleId);
+        setInitialRoles(selectedRoleId);
       }
       if (filterRolesToRemove.length > 0) {
         const responseRemov = await axiosClient.delete(
@@ -143,9 +134,15 @@ const ComponentCategoryDatailUser = () => {
         );
         console.log("response to remove roles : ", responseRemov);
         console.log("Removed roles:", filterRolesToRemove);
+        setSelectedRoleId((prev) =>
+          prev.filter((id) => !filterRolesToRemove.includes(id)),
+        );
+        setInitialRoles((prev) =>
+          prev.filter((id) => !filterRolesToRemove.includes(id)),
+        );
       }
       //for updat initialRole
-      await fetchUser(roles);
+      setInitialRoles((prev) => [...prev]);
       alert("تغییرات با موفقیت انجامم شد:)");
     } catch (err) {
       console.log("Error in change roles:", err);
