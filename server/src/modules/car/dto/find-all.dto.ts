@@ -74,7 +74,7 @@ export const categoryFindAllCarQuery: ApiQueryOptions = {
   type: 'string',
   required: false,
   name: 'category',
-  description: 'filter query for car by category slug',
+  description: 'Filter cars by category slug',
   pattern: SlugCategoryRegex.source,
   schema: {
     type: 'string',
@@ -88,7 +88,7 @@ export const priceGteFindAllCarQuery: ApiQueryOptions = {
   maximum: maxPriceAtHourCar,
   required: false,
   name: 'price_at_hour_gte',
-  description: 'filter query for car of great than equal price_at_hour',
+  description: 'Filter cars with price per hour greater than or equal to this value',
   schema: {
     type: 'integer',
     minimum: minPriceAtHourCar,
@@ -98,7 +98,7 @@ export const priceGteFindAllCarQuery: ApiQueryOptions = {
 
 export const priceLteFindAllCarQuery: ApiQueryOptions = {
   ...priceGteFindAllCarQuery,
-  description: 'filter query for car of lessen than equal price_at_hour',
+  description: 'Filter cars with price per hour less than or equal to this value',
   name: 'price_at_hour_lte',
 };
 
@@ -106,7 +106,7 @@ export const inRentFindAllCarQuery: ApiQueryOptions = {
   type: 'boolean',
   required: false,
   name: 'in_rent',
-  description: 'filter query for car of in_rent',
+  description: 'Filter cars by rental status (currently rented or not)',
   schema: {
     type: 'boolean',
   }
@@ -116,7 +116,7 @@ export const canRentFindAllCarQuery: ApiQueryOptions = {
   type: 'boolean',
   required: false,
   name: 'can_rent',
-  description: 'filter query for car of can_rent',
+  description: 'Filter cars by availability for rent',
   schema: {
     type: 'boolean',
   }
@@ -129,7 +129,7 @@ export const orderByFieldFindAllCarQuery: ApiQueryOptions = {
   name: 'order_by_field',
   enum: [...orderByFieldEnum],
   default: 'created_at',
-  description: 'sorted by created_at or price_at_hour field',
+  description: 'Sort results by field (created_at or price_at_hour)',
   schema: {
     type: 'string',
     enum: [...orderByFieldEnum],
