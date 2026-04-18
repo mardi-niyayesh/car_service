@@ -7,10 +7,7 @@ import {
   Permission,
   PERMISSIONS,
   UUIDv4Validator,
-  pagePaginationDto,
   PREFIX_PUBLIC_PATH,
-  limitPaginationDto,
-  orderByPaginationDto,
   getForbiddenResponse,
   CAR_IMAGE_UPLOAD_PATH,
   getBaseOkResponseSchema,
@@ -20,7 +17,6 @@ import {
 import {
   ApiTags,
   ApiBody,
-  ApiQuery,
   ApiParam,
   ApiConsumes,
   ApiOperation,
@@ -34,6 +30,24 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 
+import {
+  Put,
+  Get,
+  Req,
+  Body,
+  Post,
+  Param,
+  Query,
+  Delete,
+  HttpCode,
+  HttpStatus,
+  Controller,
+  UploadedFile,
+  UseInterceptors,
+  applyDecorators,
+  BadRequestException,
+} from '@nestjs/common';
+
 import z from "zod";
 import * as CarDto from "./dto";
 import * as CarConfig from "./configs";
@@ -42,7 +56,6 @@ import {getPath, ONE_MINUTE_MS} from "@/lib";
 import {FileInterceptor} from "@nestjs/platform-express";
 import {Car, Prisma} from "@/modules/prisma/generated/client";
 import type {AccessRequest, ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, OwnershipRequest} from "@/types";
-import {BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -117,15 +130,7 @@ export class CarController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation(CarDto.findAllCarOperation)
   @ApiOkResponse({type: CarDto.FindAllCarOkRes})
-  @ApiQuery(pagePaginationDto)
-  @ApiQuery(limitPaginationDto)
-  @ApiQuery(orderByPaginationDto)
-  @ApiQuery(CarDto.orderByFieldFindAllCarQuery)
-  @ApiQuery(CarDto.categoryFindAllCarQuery)
-  @ApiQuery(CarDto.inRentFindAllCarQuery)
-  @ApiQuery(CarDto.canRentFindAllCarQuery)
-  @ApiQuery(CarDto.priceLteFindAllCarQuery)
-  @ApiQuery(CarDto.priceGteFindAllCarQuery)
+  @applyDecorators(...CarDto.findAllCarPaginationDecorators)
   findAll(
     @Query(new ZodPipe(CarDto.FindAllCarValidator)) pagination: CarDto.FindAllCarValidatorType
   ): Promise<ApiResponse<CarsResponse>> {

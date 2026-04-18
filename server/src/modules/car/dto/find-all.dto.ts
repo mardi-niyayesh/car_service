@@ -1,9 +1,9 @@
 import z from "zod";
 import type {CarsResponse} from "@/types";
-import type {ApiQueryOptions} from "@nestjs/swagger";
+import {ApiQuery, ApiQueryOptions} from "@nestjs/swagger";
 import {SlugCategoryRegex, CreateCategoryValidator} from "@/modules/category/dto";
 import {exampleCarRecord, minPriceAtHourCar, maxPriceAtHourCar} from "./create.dto";
-import {getBaseOkResponseSchema, BasePaginationValidator, getSafePaginationValidator} from "@/common";
+import {getBaseOkResponseSchema, BasePaginationValidator, getSafePaginationValidator, pagePaginationDto, limitPaginationDto, orderByPaginationDto} from "@/common";
 
 function checkStringBoolean(value?: string): undefined | boolean {
   if (value === 'true') return true;
@@ -136,3 +136,15 @@ export const orderByFieldFindAllCarQuery: ApiQueryOptions = {
     default: 'created_at',
   }
 };
+
+export const findAllCarPaginationDecorators = [
+  ApiQuery(pagePaginationDto),
+  ApiQuery(limitPaginationDto),
+  ApiQuery(orderByPaginationDto),
+  ApiQuery(orderByFieldFindAllCarQuery),
+  ApiQuery(categoryFindAllCarQuery),
+  ApiQuery(inRentFindAllCarQuery),
+  ApiQuery(canRentFindAllCarQuery),
+  ApiQuery(priceLteFindAllCarQuery),
+  ApiQuery(priceGteFindAllCarQuery),
+];
