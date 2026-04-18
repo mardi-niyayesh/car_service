@@ -1,5 +1,6 @@
 /** 1 minutes in milliseconds */
-export const ONE_MINUTE_MS = 60_000;
+export const ONE_MINUTE_MS = 60_000 as const;
+export const ONE_HOUR_MS = ONE_MINUTE_MS * 60;
 
 /** static example date for responses */
 export const exampleDate = new Date();

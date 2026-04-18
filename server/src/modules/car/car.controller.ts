@@ -52,7 +52,7 @@ import z from "zod";
 import * as CarDto from "./dto";
 import * as CarConfig from "./configs";
 import {CarService} from "./car.service";
-import {getPath, ONE_MINUTE_MS} from "@/lib";
+import {getPath, ONE_HOUR_MS} from "@/lib";
 import {FileInterceptor} from "@nestjs/platform-express";
 import {Car, Prisma} from "@/modules/prisma/generated/client";
 import type {AccessRequest, ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, OwnershipRequest} from "@/types";
@@ -101,7 +101,7 @@ export class CarController {
   @Cacheable({
     resource: 'car',
     paramsKey: ['slug'],
-    ttl: ONE_MINUTE_MS * 60,
+    ttl: ONE_HOUR_MS,
   })
   @Get(":slug")
   @HttpCode(HttpStatus.OK)
@@ -123,7 +123,7 @@ export class CarController {
   @Cacheable({
     resource: 'car',
     pagination: true,
-    ttl: ONE_MINUTE_MS * 60,
+    ttl: ONE_HOUR_MS,
     query: CarDto.findAllCarsQuery,
   })
   @Get()
