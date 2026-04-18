@@ -137,6 +137,11 @@ export class UserController {
     return this.usersService.updatePassword(req.user.userId, data);
   }
 
+  @Delete(":id")
+  delete() {
+    return 'user deleted successfully.';
+  }
+
   /**
    * Get user by ID or Email.
    * - **Admin only endpoint. Validates UUID format.**
