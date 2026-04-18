@@ -8,19 +8,21 @@ export const minCategorySlug = 2;
 export const maxCategorySlug = 150;
 export const SlugCategoryRegex: RegExp = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
+export const CategorySlugValidator = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .min(minCategorySlug)
+  .max(maxCategorySlug)
+  .regex(SlugCategoryRegex, {
+    message: "Slug can only contain lowercase letters, numbers, and hyphens (-).",
+  });
+
 /** base category validator */
 export const CreateCategoryValidator = OwnerShipValidator.extend({
   name: z.string().trim().min(2).max(100),
 
-  slug: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .min(minCategorySlug)
-    .max(maxCategorySlug)
-    .regex(SlugCategoryRegex, {
-      message: "Slug can only contain lowercase letters, numbers, and hyphens (-).",
-    }),
+  slug: CategorySlugValidator,
 
   description: z.string().trim().min(10).max(500).optional(),
 });

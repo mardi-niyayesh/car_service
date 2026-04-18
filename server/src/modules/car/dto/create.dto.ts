@@ -9,6 +9,16 @@ export const minPriceAtHourCar = 0;
 export const maxPriceAtHourCar = 50_000_000;
 const NameRegex: RegExp = /^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FFa-zA-Z0-9۰-۹ _-]+$/;
 
+export const CarSlugValidator = z
+  .string()
+  .trim()
+  .min(2)
+  .max(150)
+  .regex(/^(?!.*--)(?!.*__)[a-z][a-z0-9_-]*$/, {
+    error:
+      'Slug must start with a lowercase letter and contain only lowercase letters, numbers, "_" or "-". No spaces, no repeating "--" or "__".',
+  });
+
 /** create car validator */
 export const CreateCarValidator = OwnerShipValidator.extend({
   name: z
@@ -20,15 +30,7 @@ export const CreateCarValidator = OwnerShipValidator.extend({
       error: 'Characters allowed: Persian, Arabic, English, numbers, spaces, "-" and "_".',
     }),
 
-  slug: z
-    .string()
-    .trim()
-    .min(2)
-    .max(150)
-    .regex(/^(?!.*--)(?!.*__)[a-z][a-z0-9_-]*$/, {
-      error:
-        'Slug must start with a lowercase letter and contain only lowercase letters, numbers, "_" or "-". No spaces, no repeating "--" or "__".',
-    }),
+  slug: CarSlugValidator,
 
   company: z
     .string()

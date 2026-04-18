@@ -110,7 +110,7 @@ export class CarController {
   @ApiBadRequestResponse({type: CarDto.FindOneCarBadReq})
   @ApiNotFoundResponse({type: CarDto.NotFoundOneCarRes})
   findOne(
-    @Param("slug", new ZodPipe(CarDto.CreateCarValidator.shape.slug)) slug: string,
+    @Param("slug", new ZodPipe(CarDto.CarSlugValidator)) slug: string,
   ): Promise<ApiResponse<CarResponse>> {
     return this.carService.findOne(slug);
   }

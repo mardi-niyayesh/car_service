@@ -1,7 +1,7 @@
 import z from "zod";
 import type {CarsResponse} from "@/types";
 import {ApiQuery, ApiQueryOptions} from "@nestjs/swagger";
-import {SlugCategoryRegex, CreateCategoryValidator} from "@/modules/category/dto";
+import {SlugCategoryRegex, CategorySlugValidator} from "@/modules/category/dto";
 import {exampleCarRecord, minPriceAtHourCar, maxPriceAtHourCar} from "./create.dto";
 import {getBaseOkResponseSchema, BasePaginationValidator, getSafePaginationValidator, pagePaginationDto, limitPaginationDto, orderByPaginationDto} from "@/common";
 
@@ -14,7 +14,7 @@ function checkStringBoolean(value?: string): undefined | boolean {
 const orderByFieldEnum = ['created_at', 'price_at_hour'] as const;
 
 export const FindAllCarValidator = getSafePaginationValidator(z.object({
-  category: CreateCategoryValidator.shape.slug.optional(),
+  category: CategorySlugValidator.optional(),
 
   price_at_hour_gte: z.coerce.number()
     .int()
