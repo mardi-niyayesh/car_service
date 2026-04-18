@@ -14,7 +14,7 @@ function checkStringBoolean(value?: string): undefined | boolean {
 const orderByFieldEnum = ['created_at', 'price_at_hour'] as const;
 
 export const FindAllCarValidator = getSafePaginationValidator(z.object({
-  category: CreateCategoryValidator.shape.slug,
+  category: CreateCategoryValidator.shape.slug.optional(),
 
   price_at_hour_gte: z.coerce.number()
     .int()
