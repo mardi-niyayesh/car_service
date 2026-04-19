@@ -162,7 +162,7 @@ export const AssignRoleDecorators = () => {
     }),
     ApiForbiddenResponse({
       type: UserDto.UserRoleAssignedForbiddenRes,
-      description: 'Access denied: Target user or new role is a manager/owner or requester lacks sufficien,t rank.'
+      description: 'Access denied: Target user or new role is a manager/owner or requester lacks sufficient rank.'
     }),
     ApiNotFoundResponse({
       type: UserDto.NotFoundGetUserResponse,
@@ -198,7 +198,7 @@ export const RevokeRoleDecorator = () => {
     }),
     ApiForbiddenResponse({
       type: UserDto.UserRoleRevokedForbiddenRes,
-      description: 'Access denied: Target user or new role is a manager/owner or requester lacks sufficien,t rank.'
+      description: 'Access denied: Target user or new role is a manager/owner or requester lacks sufficient rank.'
     }),
     ApiNotFoundResponse({
       type: UserDto.NotFoundGetUserResponse,
