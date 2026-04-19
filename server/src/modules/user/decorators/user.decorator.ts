@@ -21,12 +21,14 @@ import {
   limitPaginationDto,
   orderByPaginationDto,
   getForbiddenResponse,
-  getUnauthorizedResponse,
+  getUnauthorizedResponse, UUIDv4Validator,
 } from "@/common";
 
 import * as UserDto from "../dto";
 import {ONE_MINUTE_MS} from "@/lib";
+import {Prisma} from "@/modules/prisma/generated/client";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
+import z from "zod";
 
 export const GetProfileDecorators = () => {
   return applyDecorators(
@@ -136,6 +138,20 @@ export const FindAllDecorators = () => {
       type: getForbiddenResponse("users"),
       description: 'when target user not access to get all users'
     }),
+  );
+};
+
+export const DeleteDecorators = () => {
+  return applyDecorators(
+    Permission({
+      resource: "user",
+      permissions: [PERMISSIONS.USER_DELETE]
+    }),
+    CacheEvict({
+      force: true,
+      resource: "user",
+    }),
+    HttpCode(HttpStatus.NO_CONTENT),
   );
 };
 

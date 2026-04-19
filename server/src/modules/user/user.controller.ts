@@ -62,11 +62,6 @@ export class UserController {
     return this.usersService.updatePassword(req.user.userId, data);
   }
 
-  @Delete(":id")
-  delete() {
-    return 'user deleted successfully.';
-  }
-
   /**
    * Get user by ID or Email.
    * - **Admin only endpoint. Validates UUID format.**
@@ -89,6 +84,21 @@ export class UserController {
     @Query(new ZodPipe(PaginationValidator)) query: PaginationValidatorType
   ): Promise<ApiResponse<UsersListResponse>> {
     return this.usersService.findAll(query);
+  }
+
+  /**
+   * Delete exist User.
+   * - **Requires authentication and "user.delete" or "owner.all" permission.**
+   */
+  @Delete(":id")
+  @UserDecorator.DeleteDecorators()
+  delete(
+    @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
+    @Req() req: AccessRequest
+  ) {
+    console.log(id);
+    console.log(req.user);
+    return 'user deleted successfully.';
   }
 
   /**
