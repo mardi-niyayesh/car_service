@@ -11,3 +11,7 @@
 .swagger-ui .opblock-description-wrapper .renderedMarkdown ol li::marker {
     color: #c0392b;
 }
+
+html.dark-mode .swagger-ui .opblock-description-wrapper {
+    color: #bdbdbd;
+}

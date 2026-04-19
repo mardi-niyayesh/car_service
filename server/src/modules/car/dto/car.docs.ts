@@ -14,8 +14,53 @@ export const findAllCarOperation: ApiOperationOptions = {
   summary: "Find list of cars with pagination",
   operationId: "find_all_cars",
   description: `
-  - ## Accessible to all users (public endpoint)
-  - ## Returns detailed information about a list of car identified by pagination.`
+  ## 🚗 Get paginated list of cars
+
+  ### 🔓 Access
+  - **Public endpoint** - No authentication required
+
+  ### 📊 Available Filters
+
+  | Filter | Type | Description |
+  | :--- | :--- | :--- |
+  | \`category\` | string | Filter by category slug (e.g., "shiraz", "tehran") |
+  | \`price_at_day_gte\` | integer | Minimum price per day (inclusive) |
+  | \`price_at_day_lte\` | integer | Maximum price per day (inclusive) |
+  | \`in_rent\` | boolean | Filter cars currently being rented |
+  | \`can_rent\` | boolean | Filter cars available for rent |
+
+  ### 📈 Sorting
+
+  | Parameter | Values | Default |
+  | :--- | :--- | :--- |
+  | \`order_by_field\` | \`created_at\`, \`price_at_day\` | \`created_at\` |
+  | \`order_by\` | \`asc\`, \`desc\` | \`desc\` |
+
+  ### 📄 Pagination
+
+  | Parameter | Type | Default | Description |
+  | :--- | :--- | :--- | :--- |
+  | \`page\` | integer | \`1\` | Page number |
+  | \`limit\` | integer | \`10\` | Items per page |
+
+  ### 📝 Example Request
+
+  \`\`\`http
+  GET /cars?category=suv&price_at_day_gte=500000&price_at_day_lte=1500000&order_by_field=price_at_day&order_by=asc&page=1&limit=10
+  \`\`\`
+
+  ### ✅ Example Response
+
+  \`\`\`json
+  {
+    "message": "cars successfully found.",
+    "data": {
+      "count": 25,
+      "cars": [...]
+    }
+  }
+  \`\`\`
+  `,
 };
 
 export const imageCarPermissionsRequired = [
