@@ -87,21 +87,6 @@ export class UserController {
   }
 
   /**
-   * Delete exist User.
-   * - **Requires authentication and "user.delete" or "owner.all" permission.**
-   */
-  @Delete(":id")
-  @UserDecorator.DeleteDecorators()
-  delete(
-    @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
-    @Req() req: AccessRequest
-  ) {
-    console.log(id);
-    console.log(req.user);
-    return 'user deleted successfully.';
-  }
-
-  /**
    * Assign Role to Users ID.
    * Admins only endpoint. Validates UUID format.
    */

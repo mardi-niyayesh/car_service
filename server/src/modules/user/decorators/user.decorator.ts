@@ -139,20 +139,6 @@ export const FindAllDecorators = () => {
   );
 };
 
-export const DeleteDecorators = () => {
-  return applyDecorators(
-    Permission({
-      resource: "user",
-      permissions: [PERMISSIONS.USER_DELETE]
-    }),
-    CacheEvict({
-      force: true,
-      resource: "user",
-    }),
-    HttpCode(HttpStatus.NO_CONTENT),
-  );
-};
-
 export const AssignRoleDecorators = () => {
   return applyDecorators(
     Permission({
