@@ -1,41 +1,10 @@
-import {
-  ApiBody,
-  ApiTags,
-  ApiQuery,
-  ApiParam,
-  ApiOperation,
-  ApiBearerAuth,
-  ApiOkResponse,
-  ApiNotFoundResponse,
-  ApiConflictResponse,
-  ApiForbiddenResponse,
-  ApiBadRequestResponse,
-  ApiUnauthorizedResponse,
-} from "@nestjs/swagger";
-
-import {
-  Public,
-  ZodPipe,
-  UUID4Dto,
-  Cacheable,
-  Permission,
-  CacheEvict,
-  PERMISSIONS,
-  UUIDv4Validator,
-  pagePaginationDto,
-  limitPaginationDto,
-  PaginationValidator,
-  orderByPaginationDto,
-  getForbiddenResponse,
-  getUnauthorizedResponse,
-  type PaginationValidatorType,
-} from "@/common";
-
-import {ONE_MINUTE_MS} from "@/lib";
 import * as CategoryDto from "./dto";
+import {ApiTags} from "@nestjs/swagger";
+import * as CategoryDecorator from "./decorators";
 import {CategoryService} from "./category.service";
 import {Category} from "@/modules/prisma/generated/client";
-import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, Req} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Param, Post, Put, Query, Req} from "@nestjs/common";
+import {ZodPipe, UUIDv4Validator, PaginationValidator, type PaginationValidatorType} from "@/common";
 import type {AccessRequest, ApiResponse, CategoriesResponse, CategoryResponse, ListWithCount, OwnershipRequest} from "@/types";
 
 /**
@@ -64,19 +33,8 @@ export class CategoryController {
   /** get one category with slug(unique)
    * - all users can access to this route
    */
-  @Public()
-  @Cacheable({
-    resource: 'category',
-    paramsKey: ['id'],
-    ttl: ONE_MINUTE_MS * 60
-  })
   @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation(CategoryDto.categoryFindOneOperation)
-  @ApiParam(UUID4Dto('id'))
-  @ApiOkResponse({type: CategoryDto.FindOneCategoryOkRes})
-  @ApiBadRequestResponse({type: CategoryDto.FindOneBadRequest})
-  @ApiNotFoundResponse({type: CategoryDto.FindOneCategoryNotFound})
+  @CategoryDecorator.FindOneDecorators()
   findOne(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
   ): Promise<ApiResponse<CategoryResponse>> {
@@ -86,19 +44,8 @@ export class CategoryController {
   /** get all categories
    * - all users can access to this route
    */
-  @Public()
-  @Cacheable({
-    resource: 'category',
-    pagination: true,
-    ttl: ONE_MINUTE_MS * 60
-  })
   @Get()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation(CategoryDto.categoryFindAllOperation)
-  @ApiQuery(pagePaginationDto)
-  @ApiQuery(limitPaginationDto)
-  @ApiQuery(orderByPaginationDto)
-  @ApiOkResponse({type: CategoryDto.FindAllCategoriesRes})
+  @CategoryDecorator.FindAllDecorators()
   findAll(
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
   ): Promise<ApiResponse<ListWithCount<CategoriesResponse>>> {
@@ -108,21 +55,8 @@ export class CategoryController {
   /** create a new category
    * - only roles with permission (owner.all or category.create) can accessibility to this route
    */
-  @Permission({
-    permissions: [PERMISSIONS.CATEGORY_CREATE]
-  })
-  @ApiBearerAuth("accessToken")
   @Post()
-  @CacheEvict({
-    prefix: `*category:list*`,
-  })
-  @ApiOperation(CategoryDto.categoryCreateOperation)
-  @ApiBody({type: CategoryDto.CreateCategoryDto})
-  @ApiOkResponse({type: CategoryDto.CreateCategoryOkRes})
-  @ApiBadRequestResponse({type: CategoryDto.CreateCategoryBadReq})
-  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('categories')})
-  @ApiForbiddenResponse({type: getForbiddenResponse('categories')})
-  @ApiConflictResponse({type: CategoryDto.CrateCategoryConflict})
+  @CategoryDecorator.CreateDecorators()
   create(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(CategoryDto.CreateCategoryValidator)) body: CategoryDto.CreateCategoryType,
@@ -133,25 +67,8 @@ export class CategoryController {
   /** delete a category
    * - only roles with permission (owner.all or category.delete) can accessibility to this route
    */
-  @Permission({
-    permissions: [PERMISSIONS.CATEGORY_DELETE],
-    owner: true,
-    resource: "category",
-    validatorParam: UUIDv4Validator
-  })
-  @ApiBearerAuth("accessToken")
-  @CacheEvict({
-    force: true,
-    resource: "category",
-  })
   @Delete(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation(CategoryDto.categoryDeleteOperation)
-  @ApiParam(UUID4Dto('id'))
-  @ApiOkResponse({type: CategoryDto.DeleteCategoryOkRes})
-  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('categories/id')})
-  @ApiForbiddenResponse({type: CategoryDto.DeleteForbiddenResponse})
-  @ApiNotFoundResponse({type: CategoryDto.DeleteCategoryNotFound})
+  @CategoryDecorator.DeleteDecorators()
   delete(
     @Param('id') id: string,
   ): Promise<ApiResponse<CategoryResponse>> {
@@ -161,26 +78,8 @@ export class CategoryController {
   /** update a category with id and ownership
    * - only roles with permission (owner.all or category.update) can accessibility to this route
    */
-  @Permission({
-    permissions: [PERMISSIONS.CATEGORY_UPDATE],
-    owner: true,
-    resource: "category",
-    validatorParam: UUIDv4Validator
-  })
-  @ApiBearerAuth("accessToken")
-  @CacheEvict({
-    force: true,
-    resource: "category",
-  })
   @Put(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation(CategoryDto.categoryUpdateOperation)
-  @ApiBody({type: CategoryDto.UpdateCategoryDto})
-  @ApiParam(UUID4Dto('id'))
-  @ApiOkResponse({type: CategoryDto.UpdateCategoryOkRes})
-  @ApiForbiddenResponse({type: CategoryDto.ForbiddenUpdateCategoryRes})
-  @ApiNotFoundResponse({type: CategoryDto.NotFoundUpdateCategoryRes})
-  @ApiConflictResponse({type: CategoryDto.UpdateCategoryConflictRes})
+  @CategoryDecorator.UpdateDecorators()
   async update(
     @Req() req: OwnershipRequest<Category>,
     @Param('id') id: string,
