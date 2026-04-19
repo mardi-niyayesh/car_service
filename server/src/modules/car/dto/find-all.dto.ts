@@ -2,7 +2,7 @@ import z from "zod";
 import type {CarsResponse} from "@/types";
 import {ApiQueryOptions} from "@nestjs/swagger";
 import {SlugCategoryRegex, CategorySlugValidator} from "@/modules/category/dto";
-import {exampleCarRecord, minPriceAtHourCar, maxPriceAtHourCar} from "./create.dto";
+import {exampleCarRecord, minPriceAtDayCar, maxPriceAtDayCar} from "./create.dto";
 import {getBaseOkResponseSchema, BasePaginationValidator, getSafePaginationValidator} from "@/common";
 
 function checkStringBoolean(value?: string): undefined | boolean {
@@ -18,17 +18,17 @@ export const FindAllCarValidator = getSafePaginationValidator(z.object({
 
   price_at_day_gte: z.coerce.number()
     .int()
-    .min(minPriceAtHourCar)
-    .max(maxPriceAtHourCar)
+    .min(minPriceAtDayCar)
+    .max(maxPriceAtDayCar)
     .optional()
-    .catch(minPriceAtHourCar),
+    .catch(minPriceAtDayCar),
 
   price_at_day_lte: z.coerce.number()
     .int()
-    .min(minPriceAtHourCar)
-    .max(maxPriceAtHourCar)
+    .min(minPriceAtDayCar)
+    .max(maxPriceAtDayCar)
     .optional()
-    .catch(maxPriceAtHourCar),
+    .catch(maxPriceAtDayCar),
 
   in_rent: z
     .string()
@@ -84,15 +84,15 @@ export const categoryFindAllCarQuery: ApiQueryOptions = {
 
 export const priceGteFindAllCarQuery: ApiQueryOptions = {
   type: 'integer',
-  minimum: minPriceAtHourCar,
-  maximum: maxPriceAtHourCar,
+  minimum: minPriceAtDayCar,
+  maximum: maxPriceAtDayCar,
   required: false,
   name: 'price_at_day_gte',
   description: 'Filter cars with price per hour greater than or equal to this value',
   schema: {
     type: 'integer',
-    minimum: minPriceAtHourCar,
-    maximum: maxPriceAtHourCar,
+    minimum: minPriceAtDayCar,
+    maximum: maxPriceAtDayCar,
   }
 };
 
