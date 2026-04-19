@@ -1,52 +1,9 @@
-import {
-  Req,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Query,
-  Delete,
-  HttpCode,
-  HttpStatus,
-  Controller,
-} from '@nestjs/common';
-
-import {
-  ZodPipe,
-  UUID4Dto,
-  Cacheable,
-  CacheEvict,
-  Permission,
-  PERMISSIONS,
-  UUIDv4Validator,
-  pagePaginationDto,
-  limitPaginationDto,
-  PaginationValidator,
-  getForbiddenResponse,
-  orderByPaginationDto,
-  getUnauthorizedResponse,
-  type PaginationValidatorType,
-} from "@/common";
-
-import {
-  ApiBody,
-  ApiTags,
-  ApiQuery,
-  ApiParam,
-  ApiOperation,
-  ApiBearerAuth,
-  ApiOkResponse,
-  ApiConflictResponse,
-  ApiNotFoundResponse,
-  ApiForbiddenResponse,
-  ApiBadRequestResponse,
-  ApiUnauthorizedResponse,
-} from "@nestjs/swagger";
-
 import * as UserDto from "./dto";
-import {ONE_MINUTE_MS} from "@/lib";
 import {UserService} from "./user.service";
+import * as UserDecorator from "./decorators";
+import {ApiTags, ApiBearerAuth} from "@nestjs/swagger";
+import {Req, Get, Post, Body, Patch, Param, Query, Delete, Controller} from '@nestjs/common';
+import {ZodPipe, UUIDv4Validator, PaginationValidator, type PaginationValidatorType} from "@/common";
 import type {UsersListResponse, AccessRequest, ApiResponse, UserResponse, SafeUser, BaseApiResponse} from "@/types";
 
 /**
@@ -71,19 +28,8 @@ export class UserController {
    * Get current user profile.
    * Requires authentication and "user.self" permission.
    */
-  @Permission({
-    permissions: [PERMISSIONS.USER_SELF]
-  })
   @Get("profile")
-  @HttpCode(HttpStatus.OK)
-  @Cacheable({
-    resource: "user",
-    self: true,
-    ttl: ONE_MINUTE_MS * 30
-  })
-  @ApiOperation(UserDto.userGetProfileOperation)
-  @ApiOkResponse({type: UserDto.GetMeOkResponse})
-  @ApiUnauthorizedResponse({type: getUnauthorizedResponse("users/getProfile")})
+  @UserDecorator.GetProfileDecorators()
   getProfile(
     @Req() req: AccessRequest
   ): Promise<ApiResponse<UserResponse>> {
@@ -94,21 +40,8 @@ export class UserController {
    * Update user profile by self.
    * - Requires authentication and "user.self" permission.
    */
-  @Permission({
-    permissions: [PERMISSIONS.USER_SELF]
-  })
   @Patch("profile")
-  @CacheEvict({
-    self: true,
-    resource: "user",
-  })
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation(UserDto.userUpdateProfileOperation)
-  @ApiBody({type: UserDto.UpdateProfileDto})
-  @ApiOkResponse({type: UserDto.UpdateProfileOkResponse})
-  @ApiBadRequestResponse({type: UserDto.UpdateProfileBadReqRes})
-  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('users/updateProfile')})
-  @ApiConflictResponse({type: UserDto.UpdateProfileConflictRes})
+  @UserDecorator.UpdateProfileDecorators()
   updateProfile(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UpdateProfileValidator)) data: UserDto.UpdateProfileType
@@ -120,16 +53,8 @@ export class UserController {
    * Update Current Password.
    * - **Requires authentication and "user.self" permission.**
    */
-  @Permission({
-    permissions: [PERMISSIONS.USER_SELF]
-  })
   @Patch("password")
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation(UserDto.userUpdatePasswordOperation)
-  @ApiBody({type: UserDto.UpdatePasswordDto})
-  @ApiOkResponse({type: UserDto.OkUpdatePasswordRes})
-  @ApiBadRequestResponse({type: UserDto.UpdatePasswordBadReqRes})
-  @ApiUnauthorizedResponse({type: UserDto.UnauthorizedUpdatePasswordRes})
+  @UserDecorator.UpdatePasswordDecorators()
   updatePassword(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UpdatePasswordValidator)) data: UserDto.UpdatePasswordType
@@ -147,36 +72,8 @@ export class UserController {
    * - **Admin only endpoint. Validates UUID format.**
    * - **Access restricted to users with permission: (owner.all or user.view) only.**
    */
-  @Permission({
-    permissions: [PERMISSIONS.USER_VIEW]
-  })
   @Get('find')
-  @HttpCode(HttpStatus.OK)
-  @Cacheable({
-    resource: "user",
-    ttl: ONE_MINUTE_MS * 30,
-    query: ['id', 'email'],
-  })
-  @ApiOperation(UserDto.userFindOneOperation)
-  @ApiQuery(UserDto.ExampleIdQuery)
-  @ApiQuery(UserDto.GetOneUserEmailQuery)
-  @ApiOkResponse({type: UserDto.GetUserOkResponse})
-  @ApiBadRequestResponse({
-    type: UserDto.GetOneUserBadReqRes,
-    description: 'Validation failed. Ensure the ID is a valid UUIDv4 and email.'
-  })
-  @ApiUnauthorizedResponse({
-    type: getUnauthorizedResponse("users/:id"),
-    description: 'Invalid or missing authentication token.'
-  })
-  @ApiForbiddenResponse({
-    type: getForbiddenResponse("users/:id"),
-    description: 'when target user not access to get user'
-  })
-  @ApiNotFoundResponse({
-    type: UserDto.NotFoundGetUserResponse,
-    description: 'The requested user does not exist in the database.'
-  })
+  @UserDecorator.FindOneDecorators()
   findOne(
     @Query(new ZodPipe(UserDto.GetOneUserValidator)) query: UserDto.GetOneUserType,
   ): Promise<ApiResponse<UserResponse>> {
@@ -186,29 +83,8 @@ export class UserController {
   /** get all user info.
    * - **Access restricted to users with permission: (owner.all or user.view) only.**
    * */
-  @Permission({
-    permissions: [PERMISSIONS.USER_VIEW]
-  })
   @Get()
-  @HttpCode(HttpStatus.OK)
-  @Cacheable({
-    resource: "user",
-    pagination: true,
-    ttl: ONE_MINUTE_MS * 30
-  })
-  @ApiOperation(UserDto.userFindAllOperation)
-  @ApiQuery(pagePaginationDto)
-  @ApiQuery(limitPaginationDto)
-  @ApiQuery(orderByPaginationDto)
-  @ApiOkResponse({type: UserDto.FindAllUsersOKRes})
-  @ApiUnauthorizedResponse({
-    type: getUnauthorizedResponse("users"),
-    description: 'Invalid or missing authentication token.'
-  })
-  @ApiForbiddenResponse({
-    type: getForbiddenResponse("users"),
-    description: 'when target user not access to get all users'
-  })
+  @UserDecorator.FindAllDecorators()
   async findAll(
     @Query(new ZodPipe(PaginationValidator)) query: PaginationValidatorType
   ): Promise<ApiResponse<UsersListResponse>> {
@@ -219,38 +95,8 @@ export class UserController {
    * Assign Role to Users ID.
    * Admins only endpoint. Validates UUID format.
    */
-  @Permission({
-    permissions: [PERMISSIONS.ROLE_ASSIGN]
-  })
   @Post(":id/roles")
-  @HttpCode(HttpStatus.OK)
-  @CacheEvict({
-    findPrefix: {param: 'id'}
-  })
-  @ApiOperation(UserDto.userRoleAssignOperation)
-  @ApiParam(UUID4Dto("user"))
-  @ApiBody({type: UserDto.UserRoleAssignedDto})
-  @ApiOkResponse({type: UserDto.RoleAssignOkRes})
-  @ApiBadRequestResponse({
-    type: UserDto.UserRoleAssignBadReqRes,
-    description: 'Conflict User Roles'
-  })
-  @ApiUnauthorizedResponse({
-    type: getUnauthorizedResponse(":id/roles"),
-    description: 'Invalid or missing authentication token.'
-  })
-  @ApiForbiddenResponse({
-    type: UserDto.UserRoleAssignedForbiddenRes,
-    description: 'Access denied: Target user or new role is a manager/owner or requester lacks sufficient rank.'
-  })
-  @ApiNotFoundResponse({
-    type: UserDto.NotFoundGetUserResponse,
-    description: 'The requested user or role does not exist in the database.'
-  })
-  @ApiConflictResponse({
-    type: UserDto.UserRoleAssignedConflictRes,
-    description: 'Conflict: The user already possesses this role.'
-  })
+  @UserDecorator.AssignRoleDecorators()
   assignRole(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UserRoleAssigned)) body: UserDto.UserRoleAssignedType,
@@ -264,34 +110,12 @@ export class UserController {
     });
   }
 
-  @Permission({
-    permissions: [PERMISSIONS.ROLE_REVOKE]
-  })
+  /**
+   * Revoke Role from Users ID.
+   * Admins only endpoint. Validates UUID format.
+   */
   @Delete(":id/roles")
-  @HttpCode(HttpStatus.OK)
-  @CacheEvict({
-    findPrefix: {param: 'id'}
-  })
-  @ApiOperation(UserDto.userRoleRevokeOperation)
-  @ApiParam(UUID4Dto("user"))
-  @ApiBody({type: UserDto.UserRoleAssignedDto})
-  @ApiOkResponse({type: UserDto.RoleRevokeOkRes})
-  @ApiBadRequestResponse({
-    type: UserDto.UserRevokeBadReqRes,
-    description: "Roles Not Found in Target Roles"
-  })
-  @ApiUnauthorizedResponse({
-    type: getUnauthorizedResponse(":id/roles"),
-    description: 'Invalid or missing authentication token.'
-  })
-  @ApiForbiddenResponse({
-    type: UserDto.UserRoleRevokedForbiddenRes,
-    description: 'Access denied: Target user or new role is a manager/owner or requester lacks sufficient rank.'
-  })
-  @ApiNotFoundResponse({
-    type: UserDto.NotFoundGetUserResponse,
-    description: 'The requested user or role does not exist in the database.'
-  })
+  @UserDecorator.RevokeRoleDecorator()
   revokeRole(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(UserDto.UserRoleAssigned)) body: UserDto.UserRoleAssignedType,
