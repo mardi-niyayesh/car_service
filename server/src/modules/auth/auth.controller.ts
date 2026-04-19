@@ -1,26 +1,13 @@
-import {
-  ApiTags,
-  ApiBody,
-  ApiOperation,
-  ApiCookieAuth,
-  ApiOkResponse,
-  ApiCreatedResponse,
-  ApiConflictResponse,
-  ApiNotFoundResponse,
-  ApiForbiddenResponse,
-  ApiBadRequestResponse,
-  ApiUnauthorizedResponse,
-  ApiTooManyRequestsResponse,
-} from "@nestjs/swagger";
-
 import * as AuthDto from "./dto";
 import {isProduction} from "@/lib";
+import {ApiTags} from "@nestjs/swagger";
 import {AuthService} from "./auth.service";
+import * as AuthDecorator from "./decorators";
 import type {CookieOptions, Response} from "express";
 import {BaseUserSchema} from "../user/dto/validators.dto";
-import {Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UseGuards} from '@nestjs/common';
+import {ZodPipe, Public, NormalizeClientInfo} from "@/common";
+import {Body, Controller, Post, Req, Res} from '@nestjs/common';
 import type {RefreshRequest, LoginResponse, ApiResponse, UserResponse, NormalizedClientInfo} from "@/types";
-import {RefreshTokenGuard, ZodPipe, TooManyRequestResponse, Public, NormalizeClientInfo, CacheEvict} from "@/common";
 
 /**
  * Authentication endpoints for user registration, login, and token refresh.
@@ -53,14 +40,7 @@ export class AuthController {
    * Creating new user accounts
    */
   @Post("register")
-  @HttpCode(HttpStatus.CREATED)
-  @CacheEvict({prefix: '*users:list*'})
-  @ApiOperation(AuthDto.authRegisterOperation)
-  @ApiBody({type: AuthDto.CreateUserSchema})
-  @ApiCreatedResponse({type: AuthDto.CreateUserOkResponse})
-  @ApiBadRequestResponse({type: AuthDto.CreateUserBadRequestResponse})
-  @ApiConflictResponse({type: AuthDto.CreateUserConflictResponse})
-  @ApiTooManyRequestsResponse({type: TooManyRequestResponse})
+  @AuthDecorator.RegisterDecorators()
   register(
     @NormalizeClientInfo() clientInfo: NormalizedClientInfo,
     @Body(new ZodPipe(BaseUserSchema)) data: AuthDto.CreateUserInput
@@ -72,12 +52,7 @@ export class AuthController {
    * Authenticating users with email/password and Issuing access tokens
    */
   @Post("login")
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation(AuthDto.authLoginOperation)
-  @ApiBody({type: AuthDto.LoginUserSchema})
-  @ApiOkResponse({type: AuthDto.LoginUserOkResponse})
-  @ApiBadRequestResponse({type: AuthDto.LoginUserBadRequestResponse})
-  @ApiUnauthorizedResponse({type: AuthDto.LoginUserInvalidAuthResponse})
+  @AuthDecorator.LoginDecorators()
   async login(
     @NormalizeClientInfo() clientInfo: NormalizedClientInfo,
     @Body(new ZodPipe(AuthDto.LoginUser)) data: AuthDto.LoginUserInput,
@@ -101,13 +76,8 @@ export class AuthController {
   }
 
   /** Refreshing access tokens using secure httpOnly cookies */
-  @UseGuards(RefreshTokenGuard)
   @Post("refresh")
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation(AuthDto.authRefreshOperation)
-  @ApiCookieAuth("refreshToken")
-  @ApiOkResponse({type: AuthDto.RefreshUsersOkResponse})
-  @ApiUnauthorizedResponse({type: AuthDto.RefreshUsersUnAuthResponse})
+  @AuthDecorator.RefreshDecorators()
   refresh(
     @Req() req: RefreshRequest
   ): ApiResponse<LoginResponse> {
@@ -134,14 +104,8 @@ export class AuthController {
   }
 
   /** Logout users in system and revoked refresh token */
-  @UseGuards(RefreshTokenGuard)
   @Post("logout")
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation(AuthDto.authLogoutOperation)
-  @ApiCookieAuth("refreshToken")
-  @ApiOkResponse({type: AuthDto.LogoutOkResponse})
-  @ApiUnauthorizedResponse({type: AuthDto.RefreshUsersUnAuthResponse})
-  @ApiForbiddenResponse({type: AuthDto.RefreshForbiddenResponse})
+  @AuthDecorator.LogoutDecorators()
   logout(
     @Req() req: RefreshRequest,
     @Res({passthrough: true}) res: Response
@@ -152,22 +116,7 @@ export class AuthController {
 
   /** Send Email for Reset password */
   @Post("forgot-password")
-  @HttpCode(HttpStatus.OK)
-  @ApiBody({type: AuthDto.ForgotPasswordSchema})
-  @ApiOperation(AuthDto.authForgotPasswordOperation)
-  @ApiOkResponse({type: AuthDto.OkForgotPasswordRes})
-  @ApiNotFoundResponse({
-    type: AuthDto.NotFoundUserForgotPassRes,
-    description: 'The requested user does not exist in the database.'
-  })
-  @ApiConflictResponse({
-    type: AuthDto.ConflictForgotPasswordRes,
-    description: `
-  A password reset token is already active for this user.
-     
-  - **Please check your email for the existing reset link. 
-  - **You must wait until the token expires before requesting a new one.`
-  })
+  @AuthDecorator.ForgotPasswordDecorators()
   forgotPassword(
     @NormalizeClientInfo() clientInfo: NormalizedClientInfo,
     @Body(new ZodPipe(AuthDto.ForgotPassword)) body: AuthDto.ForgotPasswordType
@@ -177,12 +126,7 @@ export class AuthController {
 
   /** reset password with token */
   @Post("reset-password")
-  @HttpCode(HttpStatus.OK)
-  @ApiBody({type: AuthDto.ResetPasswordSchema})
-  @ApiOperation(AuthDto.authResetPasswordOperation)
-  @ApiOkResponse({type: AuthDto.OkResetPasswordRes})
-  @ApiBadRequestResponse({type: AuthDto.BadRequestResetPasswordRes})
-  @ApiNotFoundResponse({type: AuthDto.NotFoundResetPasswordRes})
+  @AuthDecorator.ResetPasswordDecorators()
   resetPassword(
     @NormalizeClientInfo() clientInfo: NormalizedClientInfo,
     @Body(new ZodPipe(AuthDto.ResetPassword)) body: AuthDto.ResetPasswordType
