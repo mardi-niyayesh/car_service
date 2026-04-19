@@ -42,7 +42,7 @@ export const CreateCarValidator = OwnerShipValidator.extend({
         'Characters allowed: Persian, Arabic, English, numbers, spaces, "-" and "_".',
     }),
 
-  price_at_hour: z
+  price_at_day: z
     .number()
     .min(minPriceAtHourCar)
     .max(maxPriceAtHourCar),
@@ -89,7 +89,7 @@ export const exampleCarRecord: CarResponse['car'] = {
   name: "car",
   slug: "car",
   company: "car",
-  price_at_hour: 200000,
+  price_at_day: 200000,
   tags: [
     "car",
     "test"
@@ -140,7 +140,7 @@ export class CreateCarBadReq extends getZodErrorBody({
       error: "Invalid input: expected string, received number"
     },
     {
-      field: "price_at_hour",
+      field: "price_at_day",
       error: "Invalid input: expected number, received string"
     },
     {

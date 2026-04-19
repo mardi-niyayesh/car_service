@@ -16,14 +16,14 @@ const orderByFieldEnum = ['created_at', 'price_at_hour'] as const;
 export const FindAllCarValidator = getSafePaginationValidator(z.object({
   category: CategorySlugValidator.optional(),
 
-  price_at_hour_gte: z.coerce.number()
+  price_at_day_gte: z.coerce.number()
     .int()
     .min(minPriceAtHourCar)
     .max(maxPriceAtHourCar)
     .optional()
     .catch(minPriceAtHourCar),
 
-  price_at_hour_lte: z.coerce.number()
+  price_at_day_lte: z.coerce.number()
     .int()
     .min(minPriceAtHourCar)
     .max(maxPriceAtHourCar)
@@ -54,8 +54,8 @@ export const findAllCarsQuery = [
   'in_rent',
   'can_rent',
   'order_by_field',
-  'price_at_hour_gte',
-  'price_at_hour_lte',
+  'price_at_day_gte',
+  'price_at_day_lte',
 ];
 
 /** ok example response for find all cars */
@@ -87,7 +87,7 @@ export const priceGteFindAllCarQuery: ApiQueryOptions = {
   minimum: minPriceAtHourCar,
   maximum: maxPriceAtHourCar,
   required: false,
-  name: 'price_at_hour_gte',
+  name: 'price_at_day_gte',
   description: 'Filter cars with price per hour greater than or equal to this value',
   schema: {
     type: 'integer',
@@ -99,7 +99,7 @@ export const priceGteFindAllCarQuery: ApiQueryOptions = {
 export const priceLteFindAllCarQuery: ApiQueryOptions = {
   ...priceGteFindAllCarQuery,
   description: 'Filter cars with price per hour less than or equal to this value',
-  name: 'price_at_hour_lte',
+  name: 'price_at_day_lte',
 };
 
 export const inRentFindAllCarQuery: ApiQueryOptions = {
@@ -129,7 +129,7 @@ export const orderByFieldFindAllCarQuery: ApiQueryOptions = {
   name: 'order_by_field',
   enum: [...orderByFieldEnum],
   default: 'created_at',
-  description: 'Sort results by field (created_at or price_at_hour)',
+  description: 'Sort results by field (created_at or price_at_day)',
   schema: {
     type: 'string',
     enum: [...orderByFieldEnum],
