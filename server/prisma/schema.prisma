@@ -29,6 +29,7 @@ model User {
   categories    Category[]
   carsCreator   Car[]          @relation("carsCreator")
   carRents      CarRent[]
+  cart          Cart?
 
   @@map("users")
 }
@@ -210,4 +211,13 @@ model CarRent {
   car    Car    @relation("carRents", fields: [car_id], references: [id], onDelete: Restrict)
 
   @@map("car_rents")
+}
+
+model Cart {
+  id         String   @id @default(uuid(4)) @db.Uuid
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user_id String @unique @db.Uuid
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
