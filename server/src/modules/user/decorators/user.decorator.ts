@@ -21,14 +21,12 @@ import {
   limitPaginationDto,
   orderByPaginationDto,
   getForbiddenResponse,
-  getUnauthorizedResponse, UUIDv4Validator,
+  getUnauthorizedResponse,
 } from "@/common";
 
 import * as UserDto from "../dto";
 import {ONE_MINUTE_MS} from "@/lib";
-import {Prisma} from "@/modules/prisma/generated/client";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
-import z from "zod";
 
 export const GetProfileDecorators = () => {
   return applyDecorators(
