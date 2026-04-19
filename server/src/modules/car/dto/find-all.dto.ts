@@ -136,15 +136,3 @@ export const orderByFieldFindAllCarQuery: ApiQueryOptions = {
     default: 'created_at',
   }
 };
-
-export const findAllCarPaginationDecorators = [
-  ApiQuery(pagePaginationDto),
-  ApiQuery(limitPaginationDto),
-  ApiQuery(orderByPaginationDto),
-  ApiQuery(orderByFieldFindAllCarQuery),
-  ApiQuery(categoryFindAllCarQuery),
-  ApiQuery(inRentFindAllCarQuery),
-  ApiQuery(canRentFindAllCarQuery),
-  ApiQuery(priceLteFindAllCarQuery),
-  ApiQuery(priceGteFindAllCarQuery),
-];

@@ -1,60 +1,10 @@
-import {
-  Public,
-  ZodPipe,
-  UUID4Dto,
-  Cacheable,
-  CacheEvict,
-  Permission,
-  PERMISSIONS,
-  UUIDv4Validator,
-  PREFIX_PUBLIC_PATH,
-  getForbiddenResponse,
-  CAR_IMAGE_UPLOAD_PATH,
-  getBaseOkResponseSchema,
-  getUnauthorizedResponse,
-} from "@/common";
-
-import {
-  ApiTags,
-  ApiBody,
-  ApiParam,
-  ApiConsumes,
-  ApiOperation,
-  ApiOkResponse,
-  ApiBearerAuth,
-  ApiNotFoundResponse,
-  ApiConflictResponse,
-  ApiForbiddenResponse,
-  ApiNoContentResponse,
-  ApiBadRequestResponse,
-  ApiUnauthorizedResponse,
-} from "@nestjs/swagger";
-
-import {
-  Put,
-  Get,
-  Req,
-  Body,
-  Post,
-  Param,
-  Query,
-  Delete,
-  HttpCode,
-  HttpStatus,
-  Controller,
-  UploadedFile,
-  UseInterceptors,
-  applyDecorators,
-  BadRequestException,
-} from '@nestjs/common';
-
-import z from "zod";
 import * as CarDto from "./dto";
-import * as CarConfig from "./configs";
+import {ApiTags} from "@nestjs/swagger";
 import {CarService} from "./car.service";
-import {getPath, ONE_HOUR_MS} from "@/lib";
-import {FileInterceptor} from "@nestjs/platform-express";
-import {Car, Prisma} from "@/modules/prisma/generated/client";
+import * as CarDecorator from "./decorators";
+import {Car} from "@/modules/prisma/generated/client";
+import {ZodPipe, PREFIX_PUBLIC_PATH, CAR_IMAGE_UPLOAD_PATH} from "@/common";
+import {Put, Get, Req, Body, Post, Param, Query, Delete, Controller, UploadedFile, BadRequestException} from '@nestjs/common';
 import type {AccessRequest, ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, OwnershipRequest} from "@/types";
 
 /**
@@ -97,18 +47,8 @@ export class CarController {
    * Find a single car by its unique slug.
    * - **Accessible to all users (public endpoint)**
    */
-  @Public()
-  @Cacheable({
-    resource: 'car',
-    paramsKey: ['slug'],
-    ttl: ONE_HOUR_MS,
-  })
   @Get(":slug")
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation(CarDto.findOneCarOperation)
-  @ApiOkResponse({type: CarDto.FindOneCarOkRes})
-  @ApiBadRequestResponse({type: CarDto.FindOneCarBadReq})
-  @ApiNotFoundResponse({type: CarDto.NotFoundOneCarRes})
+  @CarDecorator.FindOneDecorators()
   findOne(
     @Param("slug", new ZodPipe(CarDto.CarSlugValidator)) slug: string,
   ): Promise<ApiResponse<CarResponse>> {
@@ -119,18 +59,8 @@ export class CarController {
    * get list of car by pagination query.
    * - **Accessible to all users (public endpoint)**
    */
-  @Public()
-  @Cacheable({
-    resource: 'car',
-    pagination: true,
-    ttl: ONE_HOUR_MS,
-    query: CarDto.findAllCarsQuery,
-  })
   @Get()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation(CarDto.findAllCarOperation)
-  @ApiOkResponse({type: CarDto.FindAllCarOkRes})
-  @applyDecorators(...CarDto.findAllCarPaginationDecorators)
+  @CarDecorator.FindAllDecorators()
   findAll(
     @Query(new ZodPipe(CarDto.FindAllCarValidator)) pagination: CarDto.FindAllCarValidatorType
   ): Promise<ApiResponse<CarsResponse>> {
@@ -140,29 +70,8 @@ export class CarController {
   /** create a new car
    * - **only roles with permission (owner.all or product.create) can accessibility to this route**
    */
-  @Permission({
-    permissions: [PERMISSIONS.PRODUCT_CREATE]
-  })
-  @ApiBearerAuth("accessToken")
   @Post()
-  @CacheEvict({
-    prefix: '*car:list*'
-  })
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation(CarDto.createCarOperation)
-  @ApiBody({type: CarDto.CreateCarDto})
-  @ApiOkResponse({type: CarDto.CreateCarOkRes})
-  @ApiBadRequestResponse({type: CarDto.CreateCarBadReq})
-  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars')})
-  @ApiForbiddenResponse({
-    type: getForbiddenResponse('cars', {
-      resource: 'car',
-      required_mode: 'ANY',
-      missing_permissions: [PERMISSIONS.PRODUCT_CREATE],
-      required_permissions: [PERMISSIONS.PRODUCT_CREATE],
-    })
-  })
-  @ApiConflictResponse({type: CarDto.CreateConflictCarResponse})
+  @CarDecorator.CreateDecorator()
   create(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(CarDto.CreateCarValidator)) body: CarDto.CreateCarType
@@ -173,39 +82,8 @@ export class CarController {
   /** add image url to car record
    * - **only roles with permission (owner.all or product.create or product.update) can accessibility to this route**
    */
-  @Permission({
-    permissions: CarDto.imageCarPermissionsRequired,
-    owner: true,
-    resource: "car",
-    validatorParam: UUIDv4Validator
-  })
   @Post(':id/image')
-  @HttpCode(HttpStatus.OK)
-  @CacheEvict({
-    force: true,
-    resource: "car"
-  })
-  @ApiBearerAuth("accessToken")
-  @ApiParam(UUID4Dto('cars/id/image'))
-  @ApiConsumes('multipart/form-data')
-  @ApiOperation(CarDto.uploadCarImageOperation)
-  @ApiBody(CarDto.carUploadApiBody)
-  @ApiOkResponse({type: CarDto.UploadImageOkRes})
-  @ApiBadRequestResponse({type: CarDto.UploadImageBadReq})
-  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars')})
-  @ApiForbiddenResponse({
-    type: getForbiddenResponse('cars/id/image', {
-      resource: 'car',
-      required_mode: 'ANY',
-      missing_permissions: CarDto.imageCarPermissionsRequired,
-      required_permissions: CarDto.imageCarPermissionsRequired,
-    })
-  })
-  @ApiNotFoundResponse({type: CarDto.UploadImageNotFound})
-  @UseInterceptors(FileInterceptor(
-    CarConfig.CAR_FILE_FIELD_NAME,
-    CarConfig.getMulterOptions(getPath(CAR_IMAGE_UPLOAD_PATH)))
-  )
+  @CarDecorator.UploadImageDecorator()
   uploadImage(
     @Param("id") id: string,
     @UploadedFile() file: Express.Multer.File,
@@ -222,36 +100,8 @@ export class CarController {
   /** update a car record with id and ownership permission
    * - **only roles with permission (owner.all or product.update or product.update) can accessibility to this route**
    */
-  @Permission<Prisma.CarInclude, z.ZodUUID>({
-    owner: true,
-    resource: 'car',
-    include: {category: true},
-    validatorParam: UUIDv4Validator,
-    permissions: [PERMISSIONS.PRODUCT_UPDATE],
-  })
-  @ApiBearerAuth("accessToken")
   @Put(':id')
-  @CacheEvict({
-    force: true,
-    resource: 'car',
-  })
-  @HttpCode(HttpStatus.OK)
-  @ApiParam(UUID4Dto('id'))
-  @ApiBody({type: CarDto.UpdateCarDto})
-  @ApiOperation(CarDto.updateCarOperation)
-  @ApiOkResponse({type: CarDto.OkResponseUpdateCar})
-  @ApiBadRequestResponse({type: CarDto.CreateCarBadReq})
-  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars/id')})
-  @ApiForbiddenResponse({
-    type: getForbiddenResponse('api/v1/cars/id', {
-      resource: 'car',
-      required_mode: 'ANY',
-      missing_permissions: [PERMISSIONS.PRODUCT_UPDATE],
-      required_permissions: [PERMISSIONS.PRODUCT_UPDATE],
-    })
-  })
-  @ApiNotFoundResponse({type: CarDto.NotFoundUpdateCarRes})
-  @ApiConflictResponse({type: CarDto.ConflictUpdateCarRes})
+  @CarDecorator.UpdateDecorator()
   update(
     @Param("id") _id: string,
     @Body(new ZodPipe(CarDto.UpdateCarValidator)) data: CarDto.UpdateCarType,
@@ -263,38 +113,8 @@ export class CarController {
   /** delete a car record with id and ownership permission
    * - **only roles with permission (owner.all or product.delete or product.update) can accessibility to this route**
    */
-  @Permission({
-    owner: true,
-    resource: 'car',
-    validatorParam: UUIDv4Validator,
-    permissions: [PERMISSIONS.PRODUCT_DELETE],
-  })
-  @ApiBearerAuth("accessToken")
   @Delete(':id')
-  @CacheEvict({
-    force: true,
-    resource: 'car',
-  })
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiParam(UUID4Dto('id'))
-  @ApiOperation(CarDto.deleteCarOperation)
-  @ApiNoContentResponse({
-    type: getBaseOkResponseSchema<void>({
-      path: 'cars/id',
-      statusCode: 204,
-      response: {message: 'Car successfully deleted.'}
-    })
-  })
-  @ApiUnauthorizedResponse({type: getUnauthorizedResponse('cars/id')})
-  @ApiNotFoundResponse({type: CarDto.NotFoundUpdateCarRes})
-  @ApiForbiddenResponse({
-    type: getForbiddenResponse('cars/id', {
-      resource: 'car',
-      required_mode: 'ANY',
-      missing_permissions: [PERMISSIONS.PRODUCT_DELETE],
-      required_permissions: [PERMISSIONS.PRODUCT_DELETE],
-    })
-  })
+  @CarDecorator.DeleteDecorator()
   delete(
     @Param("id") id: string,
     @Req() req: OwnershipRequest<Car>
