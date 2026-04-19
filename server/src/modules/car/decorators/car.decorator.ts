@@ -190,13 +190,12 @@ export const DeleteDecorator = () => {
       force: true,
       resource: 'car',
     }),
-    HttpCode(HttpStatus.NO_CONTENT),
+    HttpCode(HttpStatus.OK),
     ApiParam(UUID4Dto('id')),
     ApiOperation(CarDto.deleteCarOperation),
     ApiNoContentResponse({
       type: getBaseOkResponseSchema<void>({
         path: 'cars/id',
-        statusCode: 204,
         response: {message: 'Car successfully deleted.'}
       })
     }),
