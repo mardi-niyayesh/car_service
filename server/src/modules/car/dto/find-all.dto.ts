@@ -1,9 +1,9 @@
 import z from "zod";
 import type {CarsResponse} from "@/types";
-import {ApiQuery, ApiQueryOptions} from "@nestjs/swagger";
+import {ApiQueryOptions} from "@nestjs/swagger";
 import {SlugCategoryRegex, CategorySlugValidator} from "@/modules/category/dto";
 import {exampleCarRecord, minPriceAtHourCar, maxPriceAtHourCar} from "./create.dto";
-import {getBaseOkResponseSchema, BasePaginationValidator, getSafePaginationValidator, pagePaginationDto, limitPaginationDto, orderByPaginationDto} from "@/common";
+import {getBaseOkResponseSchema, BasePaginationValidator, getSafePaginationValidator} from "@/common";
 
 function checkStringBoolean(value?: string): undefined | boolean {
   if (value === 'true') return true;

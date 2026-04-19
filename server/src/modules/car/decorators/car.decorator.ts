@@ -1,33 +1,43 @@
-import * as CarDto from "../dto";
-import {getPath, ONE_HOUR_MS} from "@/lib";
 import {
+  Public,
+  UUID4Dto,
   Cacheable,
-  CacheEvict, CAR_IMAGE_UPLOAD_PATH, getBaseOkResponseSchema,
-  getForbiddenResponse,
-  getUnauthorizedResponse,
-  limitPaginationDto,
-  orderByPaginationDto,
-  pagePaginationDto,
+  CacheEvict,
   Permission,
   PERMISSIONS,
-  Public, UUID4Dto, UUIDv4Validator
+  UUIDv4Validator,
+  pagePaginationDto,
+  limitPaginationDto,
+  orderByPaginationDto,
+  getForbiddenResponse,
+  CAR_IMAGE_UPLOAD_PATH,
+  getUnauthorizedResponse,
+  getBaseOkResponseSchema,
 } from "@/common";
-import {applyDecorators, HttpCode, HttpStatus, UseInterceptors} from "@nestjs/common";
+
 import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
   ApiBody,
-  ApiConflictResponse, ApiConsumes,
-  ApiForbiddenResponse, ApiNoContentResponse,
-  ApiNotFoundResponse,
+  ApiParam,
+  ApiQuery,
+  ApiConsumes,
+  ApiOperation,
+  ApiBearerAuth,
   ApiOkResponse,
-  ApiOperation, ApiParam, ApiQuery,
+  ApiConflictResponse,
+  ApiNotFoundResponse,
+  ApiForbiddenResponse,
+  ApiNoContentResponse,
+  ApiBadRequestResponse,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
-import {FileInterceptor} from "@nestjs/platform-express";
-import * as CarConfig from "@/modules/car/configs";
-import {Prisma} from "@/modules/prisma/generated/client";
+
 import z from "zod";
+import * as CarDto from "../dto";
+import {getPath, ONE_HOUR_MS} from "@/lib";
+import * as CarConfig from "@/modules/car/configs";
+import {FileInterceptor} from "@nestjs/platform-express";
+import {Prisma} from "@/modules/prisma/generated/client";
+import {applyDecorators, HttpCode, HttpStatus, UseInterceptors} from "@nestjs/common";
 
 export const FindOneDecorators = () => {
   return applyDecorators(
