@@ -4,20 +4,38 @@ import { Link } from "react-router-dom";
 import ArrowLeft from "../../../assets/Arrowleft.png";
 import { FaUser } from "react-icons/fa";
 import { HiOutlineHome } from "react-icons/hi";
-import {  FaListUl } from 'react-icons/fa';
+import { FaListUl } from "react-icons/fa";
 import { FaBoxOpen } from "react-icons/fa";
+import { FiFilePlus } from 'react-icons/fi';
 
 const Menu = [
-  { to: "/", label: "خانه", icon: <HiOutlineHome size={20} style={{ opacity: 0.6 }} /> },
+  {
+    to: "/",
+    label: "خانه",
+    icon: <HiOutlineHome size={20} style={{ opacity: 0.6 }} />,
+  },
   { to: "users", label: "کاربران ", icon: <FaUser style={{ opacity: 0.6 }} /> },
-  { to: "product", label: "محصولات ", icon: <FaBoxOpen style={{ opacity: 0.6 }} /> },
-  { to: "category", label: "دسته بندی", icon: <FaListUl style={{ opacity: 0.6 }} /> },
+  {
+    to: "customrole",
+    label: "ساختن نقش سفارشی",
+    icon: <FiFilePlus style={{ opacity: 0.6 }} />,
+  },
+  {
+    to: "product",
+    label: "محصولات ",
+    icon: <FaBoxOpen style={{ opacity: 0.6 }} />,
+  },
+  {
+    to: "category",
+    label: "دسته بندی",
+    icon: <FaListUl style={{ opacity: 0.6 }} />,
+  },
 ];
 const ComponentsPanelAdmin = () => {
   return (
     <>
       <div>
-        {/* Desktop and tablet* */}
+        {/* Desktop and tablet */}
 
         <div
           className="hidden md:flex fixed top-0 right-0 h-full w-72 bg-[#F6F6F6]
