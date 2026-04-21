@@ -31,7 +31,7 @@ export class AuthService {
 
   /** create user in db */
   async register(createData: AuthDto.CreateUserInput, clientInfo: NormalizedClientInfo): Promise<ApiResponse<UserResponse>> {
-    return this.prisma.$transaction(async tx => {
+    const result = await this.prisma.$transaction(async tx => {
       const hashPassword: string = await hashSecret(createData.password);
 
       const selfRole = await tx.role.findUnique({
@@ -87,10 +87,6 @@ export class AuthService {
         };
 
         try {
-          this.eventEmitter.emit(eventsEmitter.SIGNUP_CREATE_CART, {
-            id: newUser.id
-          } as CreateCartSignup);
-
           const clientName: string = this.config.get<string>("CLIENT_NAME") ?? "Car Service";
           const dashboardLink: string = this.config.get<string>("CLIENT_DASHBOARD") ?? "http://localhost:5173/dashboard";
 
@@ -121,6 +117,14 @@ export class AuthService {
         });
       }
     });
+
+    try {
+      this.eventEmitter.emit(eventsEmitter.SIGNUP_CREATE_CART, {
+        id: result?.data?.user?.id
+      } as CreateCartSignup);
+    } catch (_) { /* empty */ }
+
+    return result;
   }
 
   /** login users */
