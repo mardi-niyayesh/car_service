@@ -43,7 +43,7 @@ import ProductPage from "./PanelAdmin/Pages/ProductPage";
 import CategoryPage from "./PanelAdmin/Pages/CategoryPage";
 import UsersPage from "./PanelAdmin/Pages/UsersPage";
 import DescriptionRolePage from "./PanelAdmin/Pages/DescriptionRolePage";
-
+import CreatCustomRolePage from "./PanelAdmin/Pages/CreatCustomRolePage";
 function App() {
   return (
     <>
@@ -103,6 +103,7 @@ function App() {
               path="users/detail/:userId/description"
               element={<DescriptionRolePage />}
             />
+            <Route path="customrole" element={<CreatCustomRolePage />} />
             <Route path="product" element={<ProductPage />} />
             <Route path="category" element={<CategoryPage />} />
           </Route>
