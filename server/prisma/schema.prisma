@@ -84,14 +84,21 @@ model Permission {
   @@map("permissions")
 }
 
+enum RoleType {
+  BASE
+  SYSTEM
+  CUSTOM
+}
+
 // Role Model
 model Role {
   id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  name        String  @unique @db.VarChar(100)
-  description String? @db.VarChar(500)
+  name        String   @unique @db.VarChar(100)
+  description String?  @db.VarChar(500)
+  role_type   RoleType @default(CUSTOM)
 
   creator_id String? @db.Uuid
   creator    User?   @relation(fields: [creator_id], references: [id], onDelete: SetNull)
