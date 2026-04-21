@@ -24,8 +24,8 @@ export const findAllCarOperation: ApiOperationOptions = {
   | Filter | Type | Description |
   | :--- | :--- | :--- |
   | \`category\` | string | Filter by category slug (e.g., "shiraz", "tehran") |
-  | \`price_at_day_gte\` | integer | Minimum price per day (inclusive) |
-  | \`price_at_day_lte\` | integer | Maximum price per day (inclusive) |
+  | \`price_per_day_gte\` | integer | Minimum price per day (inclusive) |
+  | \`price_per_day_lte\` | integer | Maximum price per day (inclusive) |
   | \`in_rent\` | boolean | Filter cars currently being rented |
   | \`can_rent\` | boolean | Filter cars available for rent |
 
@@ -33,7 +33,7 @@ export const findAllCarOperation: ApiOperationOptions = {
 
   | Parameter | Values | Default |
   | :--- | :--- | :--- |
-  | \`order_by_field\` | \`created_at\`, \`price_at_day\` | \`created_at\` |
+  | \`order_by_field\` | \`created_at\`, \`price_per_day\` | \`created_at\` |
   | \`order_by\` | \`asc\`, \`desc\` | \`desc\` |
 
   ### 📄 Pagination
@@ -46,7 +46,7 @@ export const findAllCarOperation: ApiOperationOptions = {
   ### 📝 Example Request
 
   \`\`\`http
-  GET /cars?category=suv&price_at_day_gte=500000&price_at_day_lte=1500000&order_by_field=price_at_day&order_by=asc&page=1&limit=10
+  GET /cars?category=suv&price_per_day_gte=500000&price_per_day_lte=1500000&order_by_field=price_per_day&order_by=asc&page=1&limit=10
   \`\`\`
 
   ### ✅ Example Response

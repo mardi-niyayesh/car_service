@@ -11,19 +11,19 @@ function checkStringBoolean(value?: string): undefined | boolean {
   return undefined;
 }
 
-const orderByFieldEnum = ['created_at', 'price_at_hour'] as const;
+const orderByFieldEnum = ['created_at', 'price_per_day'] as const;
 
 export const FindAllCarValidator = getSafePaginationValidator(z.object({
   category: CategorySlugValidator.optional(),
 
-  price_at_day_gte: z.coerce.number()
+  price_per_day_gte: z.coerce.number()
     .int()
     .min(minPriceAtDayCar)
     .max(maxPriceAtDayCar)
     .optional()
     .catch(minPriceAtDayCar),
 
-  price_at_day_lte: z.coerce.number()
+  price_per_day_lte: z.coerce.number()
     .int()
     .min(minPriceAtDayCar)
     .max(maxPriceAtDayCar)
@@ -54,8 +54,8 @@ export const findAllCarsQuery = [
   'in_rent',
   'can_rent',
   'order_by_field',
-  'price_at_day_gte',
-  'price_at_day_lte',
+  'price_per_day_gte',
+  'price_per_day_lte',
 ];
 
 /** ok example response for find all cars */
@@ -87,7 +87,7 @@ export const priceGteFindAllCarQuery: ApiQueryOptions = {
   minimum: minPriceAtDayCar,
   maximum: maxPriceAtDayCar,
   required: false,
-  name: 'price_at_day_gte',
+  name: 'price_per_day_gte',
   description: 'Filter cars with price per hour greater than or equal to this value',
   schema: {
     type: 'integer',
@@ -99,7 +99,7 @@ export const priceGteFindAllCarQuery: ApiQueryOptions = {
 export const priceLteFindAllCarQuery: ApiQueryOptions = {
   ...priceGteFindAllCarQuery,
   description: 'Filter cars with price per hour less than or equal to this value',
-  name: 'price_at_day_lte',
+  name: 'price_per_day_lte',
 };
 
 export const inRentFindAllCarQuery: ApiQueryOptions = {
@@ -129,7 +129,7 @@ export const orderByFieldFindAllCarQuery: ApiQueryOptions = {
   name: 'order_by_field',
   enum: [...orderByFieldEnum],
   default: 'created_at',
-  description: 'Sort results by field (created_at or price_at_day)',
+  description: 'Sort results by field (created_at or price_per_day)',
   schema: {
     type: 'string',
     enum: [...orderByFieldEnum],

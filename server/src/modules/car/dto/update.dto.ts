@@ -24,7 +24,7 @@ export const UpdateCarValidator = CreateCarValidator.omit({
       'ownership',
       'category_id',
       'description',
-      'price_at_hour',
+      'price_per_hour',
     ],
   }
 );

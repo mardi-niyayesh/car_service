@@ -46,16 +46,16 @@ export class CarService {
       category,
       orderByLower,
       order_by_field,
-      price_at_day_lte,
-      price_at_day_gte,
+      price_per_day_lte,
+      price_per_day_gte,
     } = pagination;
 
     const where: Prisma.CarWhereInput = {
       can_rent,
       in_rent,
-      price_at_day: {
-        gte: price_at_day_gte,
-        lte: price_at_day_lte,
+      price_per_day: {
+        gte: price_per_day_gte,
+        lte: price_per_day_lte,
       },
       category: {
         slug: category,
@@ -100,7 +100,7 @@ export class CarService {
       ownership,
       category_id,
       description,
-      price_at_day,
+      price_per_day,
     } = data;
 
     try {
@@ -113,7 +113,7 @@ export class CarService {
           can_rent,
           description,
           category_id,
-          price_at_day,
+          price_per_day,
           in_rent: false,
           creator_id: ownership ? userId : null,
         },
@@ -188,7 +188,7 @@ export class CarService {
       ownership,
       description,
       category_id,
-      price_at_day,
+      price_per_day,
     } = newData;
 
     try {
@@ -202,7 +202,7 @@ export class CarService {
           can_rent,
           description,
           category_id,
-          price_at_day,
+          price_per_day,
           creator_id: ownership === false ? null : undefined,
         },
         include: {category: true}
