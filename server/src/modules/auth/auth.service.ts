@@ -1,9 +1,9 @@
-import {ROLES} from "@/common";
 import * as AuthDto from "./dto";
 import type {StringValue} from "ms";
 import {randomUUID} from "node:crypto";
 import {JwtService} from "@nestjs/jwt";
 import {ConfigService} from "@nestjs/config";
+import {ROLES, eventsEmitter} from "@/common";
 import {EventEmitter2} from "@nestjs/event-emitter";
 import {PrismaService} from "../prisma/prisma.service";
 import {EmailService} from "@/modules/email/email.service";
@@ -87,10 +87,14 @@ export class AuthService {
         };
 
         try {
+          this.eventEmitter.emit(eventsEmitter.SIGNUP_CREATE_CART, {
+
+          });
+
           const clientName: string = this.config.get<string>("CLIENT_NAME") ?? "Car Service";
           const dashboardLink: string = this.config.get<string>("CLIENT_DASHBOARD") ?? "http://localhost:5173/dashboard";
 
-          this.eventEmitter.emit("signup.welcome", {
+          this.eventEmitter.emit(eventsEmitter.SIGNUP_WELCOME, {
             email: data.user.email,
             html: buildEmailHtml({
               title: `Welcome To ${clientName}`,
@@ -184,7 +188,7 @@ export class AuthService {
     });
 
     try {
-      this.eventEmitter.emit("login.welcome", {
+      this.eventEmitter.emit(eventsEmitter.LOGIN_WELCOME, {
         email: user.email,
         html: buildEmailHtml({
           title: `New Login Detected`,
@@ -362,7 +366,7 @@ export class AuthService {
         title: "Your Password Updated",
       });
 
-      this.eventEmitter.emit("password.changed", {
+      this.eventEmitter.emit(eventsEmitter.PASSWORD_CHANGED, {
         email: result.email,
         html
       });

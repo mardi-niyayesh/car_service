@@ -1,7 +1,8 @@
+import {eventsEmitter} from "@/common";
 import {Injectable} from '@nestjs/common';
+import {ConfigService} from "@nestjs/config";
 import {OnEvent} from "@nestjs/event-emitter";
 import {MailerService} from "@nestjs-modules/mailer";
-import {ConfigService} from "@nestjs/config";
 
 interface PayloadEventEmail {
   email: string;
@@ -22,8 +23,8 @@ export class EmailService {
     this.defaultReplay = this.config.get<string>("EMAIL_REPLAY") ?? "";
   }
 
-  @OnEvent("signup.welcome")
-  @OnEvent("login.welcome")
+  @OnEvent(eventsEmitter.SIGNUP_WELCOME)
+  @OnEvent(eventsEmitter.LOGIN_WELCOME)
   signupWelcome(payload: PayloadEventEmail) {
     return this.miler.sendMail({
       to: payload.email,
@@ -45,7 +46,7 @@ export class EmailService {
     });
   }
 
-  @OnEvent("password.changed")
+  @OnEvent(eventsEmitter.PASSWORD_CHANGED)
   passwordChanged(payload: PayloadEventEmail) {
     return this.miler.sendMail({
       to: payload.email,
