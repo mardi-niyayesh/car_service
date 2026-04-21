@@ -8,7 +8,7 @@ import {EventEmitter2} from "@nestjs/event-emitter";
 import {PrismaService} from "../prisma/prisma.service";
 import {EmailService} from "@/modules/email/email.service";
 import {buildEmailHtml, checkPrismaError, compareSecret, generateRandomToken, getSafeUser, hashSecret, hashSecretToken} from "@/lib";
-import type {AccessTokenPayload, RefreshTokenPayload, ApiResponse, UserResponse, LoginResponse, BaseException, NormalizedClientInfo} from "@/types";
+import type {AccessTokenPayload, RefreshTokenPayload, ApiResponse, UserResponse, LoginResponse, BaseException, NormalizedClientInfo, CreateCartSignup} from "@/types";
 import {BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException} from '@nestjs/common';
 
 @Injectable()
@@ -88,8 +88,8 @@ export class AuthService {
 
         try {
           this.eventEmitter.emit(eventsEmitter.SIGNUP_CREATE_CART, {
-
-          });
+            id: newUser.id
+          } as CreateCartSignup);
 
           const clientName: string = this.config.get<string>("CLIENT_NAME") ?? "Car Service";
           const dashboardLink: string = this.config.get<string>("CLIENT_DASHBOARD") ?? "http://localhost:5173/dashboard";
