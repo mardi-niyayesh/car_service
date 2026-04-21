@@ -3,6 +3,7 @@ export * from "./cli";
 export * from "./role";
 export * from "./auth";
 export * from "./user";
+export * from "./cart";
 export * from "./email";
 export * from "./redis";
 export * from "./prisma";
