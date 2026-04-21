@@ -28,7 +28,6 @@ model User {
   createdRoles  Role[] // User Created Roles
   categories    Category[]
   carsCreator   Car[]          @relation("carsCreator")
-  carRents      CarRent[]
   cart          Cart?
 
   @@map("users")
@@ -163,11 +162,11 @@ model Car {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  name         String  @db.VarChar(100)
-  slug         String  @unique @db.VarChar(150)
-  company      String  @db.VarChar(100)
-  price_at_day Int     @db.Integer
-  image        String? @db.VarChar(500)
+  name          String  @db.VarChar(100)
+  slug          String  @unique @db.VarChar(150)
+  company       String  @db.VarChar(100)
+  price_per_day Int     @db.Integer
+  image         String? @db.VarChar(500)
 
   tags        String[] @db.VarChar(50)
   description String?  @db.VarChar(500)
@@ -187,7 +186,23 @@ model Car {
   @@map("cars")
 }
 
+model Cart {
+  id         String   @id @default(uuid(4)) @db.Uuid
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  total_price Int @db.Integer
+
+  user_id String @unique @db.Uuid
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  carRents CarRent[] @relation("carRentCart")
+
+  @@map("carts")
+}
+
 enum RentStatus {
+  PENDING
   ACTIVE
   COMPLETED
 }
@@ -199,25 +214,19 @@ model CarRent {
 
   description String? @db.VarChar(500)
 
-  price      Int        @db.Integer
-  status     RentStatus @default(ACTIVE)
-  started_at DateTime   @default(now())
-  end_at     DateTime
-
-  user_id String @db.Uuid
-  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  price        Int        @db.Integer
+  status       RentStatus @default(PENDING)
+  started_date DateTime   @default(now())
+  end_date     DateTime
 
   car_id String @db.Uuid
   car    Car    @relation("carRents", fields: [car_id], references: [id], onDelete: Restrict)
 
+  cart_id String @db.Uuid
+  cart    Cart   @relation("carRentCart", fields: [cart_id], references: [id], onDelete: Cascade)
+
+  @@unique([car_id, started_date, end_date])
+  @@index([cart_id])
+  @@index([status])
   @@map("car_rents")
-}
-
-model Cart {
-  id         String   @id @default(uuid(4)) @db.Uuid
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  user_id String @unique @db.Uuid
-  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
