@@ -26,10 +26,10 @@ const DescriptionRole = () => {
 
       setRoles(getRoles);
 
-      const totalpermession= response.data.response.data.count;
-      const calculatedTotalPages = Math.ceil(totalpermession / 10);
+      const totalpermession = response.data.response.data.count;
+      const TotalPages = Math.ceil(totalpermession / 10);
 
-      setTotalPages(calculatedTotalPages);
+      setTotalPages(TotalPages);
     } catch (error) {
       console.error("Error fetching roles:", error);
       setRoles([]);
@@ -44,9 +44,7 @@ const DescriptionRole = () => {
   }, [page]);
 
   const handlePageChange = (selectedPage: number) => {
-    if (selectedPage >= 1 && selectedPage <= totalPages) {
-      setPage(selectedPage);
-    }
+    setPage(selectedPage);
   };
 
   const renderPagination = () => {
