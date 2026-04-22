@@ -5,6 +5,7 @@ import logout from "../../../assets/logout.png";
 import { useUser } from "../../hooks/useUser";
 //icon
 import { FaUser } from "react-icons/fa";
+import { HiOutlineHome } from "react-icons/hi";
 //hooks
 import { Link } from "react-router-dom";
 
@@ -32,7 +33,6 @@ const HeaderDashbord = () => {
         </div>
         <div className="flex items-center justify-between gap-5">
           <Link to="logout">
-     
             <img
               src={logout}
               alt="logout"
@@ -42,6 +42,9 @@ const HeaderDashbord = () => {
 
           <Link to="Profile">
             <FaUser style={{ opacity: 0.5, cursor: "pointer" }} size={18} />
+          </Link>
+          <Link to="/">
+            <HiOutlineHome size={22} style={{ opacity: 0.6 }} />
           </Link>
         </div>
       </header>
