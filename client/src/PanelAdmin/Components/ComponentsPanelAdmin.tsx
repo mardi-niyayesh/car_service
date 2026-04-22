@@ -3,23 +3,23 @@ import { Link } from "react-router-dom";
 //img or icon
 import ArrowLeft from "../../../assets/Arrowleft.png";
 import { FaUser } from "react-icons/fa";
-import { HiOutlineHome } from "react-icons/hi";
 import { FaListUl } from "react-icons/fa";
 import { FaBoxOpen } from "react-icons/fa";
-import { FiFilePlus } from 'react-icons/fi';
+import { FiFilePlus } from "react-icons/fi";
 
 const Menu = [
-  {
-    to: "/",
-    label: "خانه",
-    icon: <HiOutlineHome size={20} style={{ opacity: 0.6 }} />,
-  },
   { to: "users", label: "کاربران ", icon: <FaUser style={{ opacity: 0.6 }} /> },
   {
-    to: "customrole",
-    label: "ساختن نقش سفارشی",
+    to: "roles",
+    label: "نقش ها",
     icon: <FiFilePlus style={{ opacity: 0.6 }} />,
   },
+  {
+    to: "customrole",
+    label: " نقش سفارشی",
+    icon: <FiFilePlus style={{ opacity: 0.6 }} />,
+  },
+
   {
     to: "product",
     label: "محصولات ",
