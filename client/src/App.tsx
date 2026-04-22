@@ -107,7 +107,7 @@ function App() {
             <Route path="customrole" element={<CreatCustomRolePage />} />
             <Route path="product" element={<ProductPage />} />
             <Route path="category" element={<CategoryPage />} />
-            <Route path="roles" element={<CategoryPage />} />
+            <Route path="roles" element={<RolesPage />} />
           </Route>
           {/* ------- 404 ------- */}
           <Route path="*" element={<NotFoundPage />} />
