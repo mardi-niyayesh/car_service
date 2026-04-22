@@ -44,6 +44,7 @@ import CategoryPage from "./PanelAdmin/Pages/CategoryPage";
 import UsersPage from "./PanelAdmin/Pages/UsersPage";
 import DescriptionRolePage from "./PanelAdmin/Pages/DescriptionRolePage";
 import CreatCustomRolePage from "./PanelAdmin/Pages/CreatCustomRolePage";
+import RolesPage from "./PanelAdmin/Pages/RolesPage";
 function App() {
   return (
     <>
@@ -106,6 +107,7 @@ function App() {
             <Route path="customrole" element={<CreatCustomRolePage />} />
             <Route path="product" element={<ProductPage />} />
             <Route path="category" element={<CategoryPage />} />
+            <Route path="roles" element={<CategoryPage />} />
           </Route>
           {/* ------- 404 ------- */}
           <Route path="*" element={<NotFoundPage />} />
