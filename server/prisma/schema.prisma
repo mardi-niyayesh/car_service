@@ -237,3 +237,4 @@ model CarRent {
   @@index([status])
   @@map("car_rents")
 }
+
