@@ -10,15 +10,15 @@ import {DefaultArgs} from "@prisma/client/runtime/client";
 import {RoleType} from "@/modules/prisma/generated/enums";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {PrismaClient} from "@/modules/prisma/generated/client";
-import {PERMISSIONS, ROLES, RolesType, PermissionsType} from "@/common";
+import {RAW_PERMISSIONS_OBJECT, ROLES, RolesType, PermissionsKeyType, PERMISSIONS} from "@/common";
 
 interface SeedCreateRoleParams {
   app: INestApplicationContext;
   prisma: Omit<PrismaClient<never, undefined, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$transaction" | "$extends"> | PrismaService;
   role: RolesType;
-  permissions: PermissionsType;
-  not?: PermissionsType[];
-  advanced?: PermissionsType[];
+  permissions: PermissionsKeyType;
+  not?: PermissionsKeyType[];
+  advanced?: PermissionsKeyType[];
   description: string;
 }
 
@@ -50,8 +50,8 @@ async function createNewRole(data: SeedCreateRoleParams): Promise<void> {
     process.exit(1);
   }
 
-  type Exact = { name: PermissionsType }[];
-  type Contains = { name: { contains: PermissionsType } }[];
+  type Exact = { name: PermissionsKeyType }[];
+  type Contains = { name: { contains: PermissionsKeyType } }[];
 
   const NOT: Contains = (not || []).map(n => ({name: {contains: n}}));
 
@@ -95,8 +95,8 @@ async function bootstrap(): Promise<void> {
 
   const prisma = app.get(PrismaService);
 
-  const permissions = Object.entries(PERMISSIONS)
-    .filter(p => p[1] !== PERMISSIONS.USER_SELF && p[1] !== PERMISSIONS.OWNER_ALL)
+  const permissions = Object.entries(RAW_PERMISSIONS_OBJECT)
+    .filter(p => p[1] !== RAW_PERMISSIONS_OBJECT.USER_SELF && p[1] !== RAW_PERMISSIONS_OBJECT.OWNER_ALL)
     .map(p => p[1]);
 
   try {
@@ -104,34 +104,37 @@ async function bootstrap(): Promise<void> {
       for (const p of permissions) {
         await tx.permission.upsert({
           where: {
-            name: p
+            name: p.name,
           },
           update: {},
           create: {
-            name: p,
-            description: `this permission allows ${p.split(".")[1]} on ${p.split(".")[0]}`,
+            name: p.name,
+            permission_type: p.permission_type,
+            description: `this permission allows ${p.name.split(".")[1]} on ${p.name.split(".")[0]}`,
           }
         });
       }
 
       const selfPermission = await tx.permission.upsert({
         where: {
-          name: PERMISSIONS.USER_SELF
+          name: RAW_PERMISSIONS_OBJECT.USER_SELF.name,
         },
         update: {},
         create: {
-          name: PERMISSIONS.USER_SELF,
+          name: RAW_PERMISSIONS_OBJECT.USER_SELF.name,
+          permission_type: RAW_PERMISSIONS_OBJECT.USER_SELF.permission_type,
           description: "Basic permission for users to view and update their own personal information"
         }
       });
 
       const ownerPermission = await tx.permission.upsert({
         where: {
-          name: PERMISSIONS.OWNER_ALL
+          name: RAW_PERMISSIONS_OBJECT.OWNER_ALL.name
         },
         update: {},
         create: {
-          name: PERMISSIONS.OWNER_ALL,
+          name: RAW_PERMISSIONS_OBJECT.OWNER_ALL.name,
+          permission_type: RAW_PERMISSIONS_OBJECT.OWNER_ALL.permission_type,
           description: "this permission allows to access all routes"
         }
       });

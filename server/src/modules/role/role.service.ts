@@ -11,11 +11,11 @@ import {
 } from "@/types";
 
 import * as RolesDto from "./dto";
-import {Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {type PaginationValidatorType, PERMISSIONS} from "@/common";
 import {checkConflictRecord, checkPrismaError, getSafeRole} from "@/lib";
+import {PermissionType, Prisma, RoleType} from "@/modules/prisma/generated/client";
 import {ConflictException, ForbiddenException, Injectable, NotFoundException} from "@nestjs/common";
-import {basePermissions, basicRoles, type PaginationValidatorType, PERMISSIONS, permissionsManagerStrict} from "@/common";
 
 @Injectable()
 export class RoleService {
@@ -55,12 +55,8 @@ export class RoleService {
 
     const roles = await this.prisma.$queryRaw<RoleResponse[]>(
       Prisma.sql`
-          SELECT r.id,
-             r.name,
-             r.created_at,
-             r.updated_at,
-             r.creator_id,
-             ARRAY_AGG(JSON_BUILD_OBJECT('id', p.id, 'name', p.name)) AS permissions
+          SELECT r.*,
+             ARRAY_AGG(JSON_BUILD_OBJECT(p.*)) AS permissions
           FROM roles r
                INNER JOIN role_permission rp ON r.id = rp.role_id
                INNER JOIN permissions p ON rp.permission_id = p.id
@@ -106,16 +102,16 @@ export class RoleService {
         error: 'Permission Not Found',
       } as BaseException);
 
-      const permissionNames: string[] = permissionsRecord.map(p => p.name);
-
-      const isPermissionsBase: string[] = basePermissions.filter(p => permissionNames.includes(p));
+      const isPermissionsBase = permissionsRecord.filter(p =>
+        (p.permission_type === PermissionType.CORE || p.name === PERMISSIONS.OWNER_ALL)
+      ).map(p => p.name);
 
       if (isPermissionsBase.length) throw new ForbiddenException({
         message: `you cannot create a new role with base Permissions(${isPermissionsBase.join(', ')})`,
         error: 'Permission Denied, base permission',
       } as BaseException);
 
-      this.rolePermissionPolicy({mode: "create", actionPermissions: actionPayload.permissions, permissions: permissionNames});
+      this.rolePermissionPolicy({mode: "create", actionPermissions: actionPayload.permissions, permissions: permissionsRecord});
 
       const creator_id: string | null = ownership ? actionPayload.userId : null;
 
@@ -124,7 +120,8 @@ export class RoleService {
           data: {
             creator_id,
             name,
-            description
+            description,
+            role_type: RoleType.CUSTOM
           }
         });
 
@@ -135,17 +132,12 @@ export class RoleService {
           }))
         });
 
-        const newRolePermissions = permissionsRecord.map(p => ({
-          id: p.id,
-          name: p.name,
-        }));
-
         return {
           message: 'role successfully created.',
           data: {
             role: {
               ...newRole,
-              permissions: newRolePermissions
+              permissions: permissionsRecord
             }
           }
         };
@@ -260,7 +252,7 @@ export class RoleService {
 
         this.rolePermissionPolicy({
           mode: "update",
-          permissions: findPermissions.map(p => p.name),
+          permissions: findPermissions,
           actionPermissions: actionPayload.permissions
         });
 
@@ -310,9 +302,9 @@ export class RoleService {
    * - **delete**
    * */
   rolePolicy({mode, role, actionPermissions}: RolePolicyParams) {
-    const isBasicRole: boolean = (basicRoles as string[]).includes(role.name);
+    const isSystemRole: boolean = role.role_type !== RoleType.CUSTOM;
 
-    if (isBasicRole) throw new ForbiddenException({
+    if (isSystemRole) throw new ForbiddenException({
       message: `Basic roles are essential to the system and cannot be ${mode}d.`,
       error: `${mode} Denied`
     });
@@ -320,7 +312,7 @@ export class RoleService {
     this.rolePermissionPolicy({
       mode,
       actionPermissions,
-      permissions: role.permissions.map(p => p.name)
+      permissions: role.permissions
     });
   }
 
@@ -331,14 +323,17 @@ export class RoleService {
    * */
   rolePermissionPolicy({actionPermissions, permissions, mode}: RolePermissionPolicyParams) {
     const isActorOwner: boolean = actionPermissions.includes(PERMISSIONS.OWNER_ALL);
-    const isPermissionsManager: boolean = permissions.some(p => permissionsManagerStrict.includes(p));
 
-    if (!isActorOwner && isPermissionsManager) {
+    const hasPermissionsManager = permissions.filter(p =>
+      p.permission_type === PermissionType.MANAGER || p.name === PERMISSIONS.OWNER_ALL
+    ).map(p => p.name);
+
+    if (!isActorOwner && hasPermissionsManager.length) {
       throw new ForbiddenException({
         message: [
           "High‑level permission protection:",
           `You lack the required OWNER privileges to ${mode} a role that includes management‑level permissions.`,
-          `(${permissionsManagerStrict.join(", ")})`,
+          `(${hasPermissionsManager.join(", ")})`,
         ].join(' '),
         error: "Permission Denied",
       } as BaseException);

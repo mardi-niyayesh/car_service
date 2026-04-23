@@ -12,7 +12,7 @@ import {
   IS_PUBLIC_KEY,
   PERMISSION_METADATA,
   type DynamicDelegate,
-  type PermissionsType,
+  type PermissionsKeyType,
   type FindDynamicDelegate,
   type PublicDecoratorParams,
   type PermissionDecoratorParams,
@@ -25,8 +25,8 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 
 interface IsAllowedActionParams {
   requiredAll?: boolean;
-  actionPermissions: PermissionsType[];
-  requiredPermissions: PermissionsType[];
+  actionPermissions: PermissionsKeyType[];
+  requiredPermissions: PermissionsKeyType[];
 }
 
 @Injectable()
@@ -73,7 +73,7 @@ export class PermissionGuard implements CanActivate {
       error: "Permission Not Send",
     } as BaseException);
 
-    const actionPermissions = req.user.permissions as PermissionsType[];
+    const actionPermissions = req.user.permissions as PermissionsKeyType[];
 
     const isAllowed: boolean = this.isAllowedAction({
       requiredAll,
@@ -150,7 +150,7 @@ export class PermissionGuard implements CanActivate {
     data: FindDynamicDelegate | undefined,
     userId: string,
     resource: string,
-    actionPermissions: PermissionsType[]
+    actionPermissions: PermissionsKeyType[]
   ): boolean {
     if (!data) throw new NotFoundException({
       message: `this ${resource} does not exist in database`,

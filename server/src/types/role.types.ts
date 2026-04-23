@@ -1,10 +1,10 @@
 import {UserAccess} from "@/types/request.types";
 import {ListWithCount} from "@/types/response.types";
-import {Prisma, Role} from "@/modules/prisma/generated/client";
+import type {Permission, Prisma, Role} from "@/modules/prisma/generated/client";
 
 /** role with permission[] type */
 export type RoleResponse = Role & {
-  permissions: { id: string; name: string }[];
+  permissions: Permission[];
 };
 
 /** type for find one role response */
@@ -29,7 +29,7 @@ export interface RolePolicyParams {
 /** role permissions modified policy params type */
 export interface RolePermissionPolicyParams {
   mode: RolePolicyMode | 'create';
-  permissions: string[];
+  permissions: Permission[];
   actionPermissions: UserAccess['permissions'];
 }
 
