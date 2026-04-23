@@ -7,7 +7,8 @@ export const findOnePermissionExample: FindOnePermission['permission'] = {
   created_at: exampleDate,
   updated_at: exampleDate,
   name: "permission.view",
-  description: "this permission allows view on permission"
+  description: "this permission allows view on permission",
+  permission_type: 'MANAGER'
 };
 
 export class FindOnePermissionOkRes extends getBaseOkResponseSchema<FindOnePermission>({

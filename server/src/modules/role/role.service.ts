@@ -56,7 +56,7 @@ export class RoleService {
     const roles = await this.prisma.$queryRaw<RoleResponse[]>(
       Prisma.sql`
           SELECT r.*,
-             ARRAY_AGG(JSON_BUILD_OBJECT(p.*)) AS permissions
+             ARRAY_AGG(ROW_TO_JSON(p.*)) AS permissions
           FROM roles r
                INNER JOIN role_permission rp ON r.id = rp.role_id
                INNER JOIN permissions p ON rp.permission_id = p.id
