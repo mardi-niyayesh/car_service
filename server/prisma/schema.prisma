@@ -70,14 +70,21 @@ model RefreshToken {
 
 // <=== Permissions & Roles Schema ===>
 
+enum PermissionType {
+  CORE
+  MANAGER
+  STANDARD
+}
+
 // Permisisons Model
 model Permission {
   id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  name        String  @unique @db.VarChar(100)
-  description String? @db.VarChar(500)
+  name            String         @unique @db.VarChar(100)
+  description     String?        @db.VarChar(500)
+  permission_type PermissionType @default(STANDARD)
 
   rolePermissions RolePermission[]
 
@@ -237,4 +244,3 @@ model CarRent {
   @@index([status])
   @@map("car_rents")
 }
-
