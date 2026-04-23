@@ -107,9 +107,9 @@ export const PERMISSIONS = Object.fromEntries(
 
 export const permissionsManagerStrict = [
   PERMISSIONS.OWNER_ALL,
-  ...Object.values(USER_PERMISSIONS),
-  ...Object.values(ROLE_PERMISSIONS),
-] as const;
+  ...Object.values(USER_PERMISSIONS).map(p => p.name),
+  ...Object.values(ROLE_PERMISSIONS).map(p => p.name),
+];
 
 export const basePermissions = [
   BASE_PERMISSIONS.OWNER_ALL.name,

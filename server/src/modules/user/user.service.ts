@@ -231,7 +231,7 @@ export class UserService {
       const {roles: newRoles, permissions: newPermissions} = getRolesNPermissions(newRolesRecord);
 
       // Block restricted roles
-      const restricted: string[] = newPermissions.filter(r => basePermissions.includes(r));
+      const restricted: string[] = newPermissions.filter(r => (basePermissions as string[]).includes(r));
 
       if (restricted.length)
         throw new ForbiddenException({
@@ -266,8 +266,8 @@ export class UserService {
       }
 
       const isActorOwner: boolean = actionPayload.permissions.includes(PERMISSIONS.OWNER_ALL);
-      const isTargetManager: boolean = targetUser.permissions.some(r => permissionsManagerStrict.includes(r));
-      const isNewPermissionsManager: boolean = newPermissions.some(r => permissionsManagerStrict.includes(r));
+      const isTargetManager: boolean = targetUser.permissions.some(r => (permissionsManagerStrict as string[]).includes(r));
+      const isNewPermissionsManager: boolean = newPermissions.some(r => (permissionsManagerStrict as string[]).includes(r));
 
       /**
        * action permission != 'PERMISSIONS.OWNER_ALL':
