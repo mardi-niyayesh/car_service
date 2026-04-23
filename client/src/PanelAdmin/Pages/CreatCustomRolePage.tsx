@@ -1,6 +1,7 @@
 import axiosClient from "../../services/axiosClient";
 //hooks
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 //icons to react-icon
 import { FiKey, FiCheckSquare } from "react-icons/fi";
 
@@ -16,6 +17,7 @@ type RoleType = {
 };
 
 const CreateCustomRolePage = () => {
+  const navigate=useNavigate()
   //state for get all permesssions
   const [permissions, setPermissions] = useState<Permission[]>([]);
   //state for loadig
@@ -49,6 +51,7 @@ const CreateCustomRolePage = () => {
       console.error("Error in get list permessions :", err);
     } finally {
       setloading(false);
+   
     }
   };
 
@@ -153,6 +156,8 @@ const CreateCustomRolePage = () => {
       console.log("response creat custom role :", customroles);
 
       alert(" رول با موفقیت ساخته شد ");
+      navigate("/panel/roles")
+      
     } catch (err) {
       console.log("Error in creat custom role :", err);
     }
