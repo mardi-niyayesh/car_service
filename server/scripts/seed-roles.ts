@@ -7,6 +7,7 @@ import {NestFactory} from "@nestjs/core";
 import {CliModule} from "@/modules/cli/cli.module";
 import {INestApplicationContext} from "@nestjs/common";
 import {DefaultArgs} from "@prisma/client/runtime/client";
+import {RoleType} from "@/modules/prisma/generated/enums";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {PrismaClient} from "@/modules/prisma/generated/client";
 import {PERMISSIONS, ROLES, RolesType, PermissionsType} from "@/common";
@@ -38,7 +39,8 @@ async function createNewRole(data: SeedCreateRoleParams): Promise<void> {
     update: {},
     create: {
       name: role,
-      description
+      description,
+      role_type: RoleType.SYSTEM
     }
   });
 
@@ -142,6 +144,7 @@ async function bootstrap(): Promise<void> {
         create: {
           name: ROLES.SELF,
           description: "Basic role for users to view and update their own personal information",
+          role_type: RoleType.BASE
         }
       });
 
@@ -152,7 +155,8 @@ async function bootstrap(): Promise<void> {
         update: {},
         create: {
           name: ROLES.OWNER,
-          description: "System owner with full access to all resources"
+          description: "System owner with full access to all resources",
+          role_type: RoleType.BASE
         }
       });
 
