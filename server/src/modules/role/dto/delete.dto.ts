@@ -1,6 +1,15 @@
 import {exampleDate} from "@/lib";
 import {FindOneRoleRes} from "@/types";
+import type {Permission} from "@/modules/prisma/generated/client";
 import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
+
+export const fakePermissionData: Omit<Permission, 'name'> = {
+  id: 'e537de94-2f4f-4685-8c2b-29809d52bcb2',
+  description: "a description",
+  permission_type: 'STANDARD',
+  created_at: exampleDate,
+  updated_at: exampleDate
+};
 
 export const testRoleExample: FindOneRoleRes['role'] = {
   id: "0ee2a90b-5ca4-4f83-b3ab-b1a5e2ff7a13",
@@ -9,9 +18,16 @@ export const testRoleExample: FindOneRoleRes['role'] = {
   created_at: exampleDate,
   creator_id: "e537de94-2f4f-4685-8c2b-29809d52bcb2",
   description: "This a Test Role",
+  role_type: 'CUSTOM',
   permissions: [
-    {name: "product.create", id: 'e537de94-2f4f-4685-8c2b-29809d52bcb2'},
-    {name: "category.create", id: "e537de94-2f4f-4685-8c2b-29809d52bcb2"},
+    {
+      name: "product.create",
+      ...fakePermissionData
+    },
+    {
+      name: "category.create",
+      ...fakePermissionData
+    },
   ]
 };
 

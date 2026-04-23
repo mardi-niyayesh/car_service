@@ -1,9 +1,9 @@
 import z from "zod";
-import {createZodDto} from "nestjs-zod";
-import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
-import {CreateRoleValidator} from "./create.dto";
 import {FindOneRoleRes} from "@/types";
+import {createZodDto} from "nestjs-zod";
+import {CreateRoleValidator} from "./create.dto";
 import {testRoleExample} from "@/modules/role/dto/delete.dto";
+import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
 
 /** Update role validator */
 export const UpdateRoleValidator = CreateRoleValidator

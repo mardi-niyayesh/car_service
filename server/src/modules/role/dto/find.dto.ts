@@ -2,6 +2,7 @@ import {z} from 'zod';
 import {exampleDate} from "@/lib";
 import {FindOneRoleRes} from "@/types";
 import {ApiQueryOptions} from "@nestjs/swagger";
+import {fakePermissionData} from "./delete.dto";
 import {getZodErrorBody, getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** validator for one role query */
@@ -32,11 +33,24 @@ export const findOneRoleResponse: FindOneRoleRes = {
     created_at: exampleDate,
     creator_id: null,
     description: "Full administrative access to manage all role in the system",
+    role_type: 'SYSTEM',
     permissions: [
-      {name: "role.view", id: "133e0257-bd87-4d30-9a8f-4026296f5498"},
-      {name: "role.delete", id: "133e0257-bd87-4d30-9a8f-4026296f5498"},
-      {name: "role.update", id: "133e0257-bd87-4d30-9a8f-4026296f5498"},
-      {name: "role.create", id: "133e0257-bd87-4d30-9a8f-4026296f5498"}
+      {
+        name: "role.view",
+        ...fakePermissionData
+      },
+      {
+        name: "role.delete",
+        ...fakePermissionData
+      },
+      {
+        name: "role.update",
+        ...fakePermissionData
+      },
+      {
+        name: "role.create",
+        ...fakePermissionData
+      }
     ]
   }
 };
