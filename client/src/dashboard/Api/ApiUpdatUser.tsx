@@ -26,18 +26,28 @@ export const useUpdateUser = () => {
             ...user,
             ...response.data.response.data.user,
           });
-          return {
-            success: true,
-            message: " update information user, to Success",
-          };
           setAxiosToken(response.data.accessToken);
+          return {
+            ok: true,
+            message: "پروفایل شما با موفقیت به روزرسانی شد ",
+          };
         }
-        return { success: false, message: " Errror..." };
       }
+      return {
+        ok: false,
+        message: "خطا در به روز رسانی پروفایل کاربر",
+      };
     } catch (err) {
       console.log("Error in update user ", err);
-
-      return { success: false, message: "Error in connection server " };
+      const status = err?.response?.status;
+      if (status === 409) {
+        return {
+          ok: false,
+          message: "  هیچ تغییری در پروفایل خود ایجاد نکردید",
+        };
+      } else {
+        return { ok: false, message: "خطایی در سرور رخ داده است." };
+      }
     }
   };
 
