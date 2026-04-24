@@ -4,16 +4,9 @@ import card from "../../../assets/card-pos.png";
 import reserv from "../../../assets/reserve.png";
 import comment from "../../../assets/comment.png";
 import logout from "../../../assets/logout.png";
-import { HiOutlineHome } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
 const Menu = [
-  {
-    to: "/",
-    label: "خانه",
-    icon: <HiOutlineHome size={20} style={{ opacity: 0.5 }} />,
-  },
-
   { to: "/dashboard/wallet", label: "کیف پول", icon: wallet },
   { to: "reserve", label: "رزروها", icon: reserv },
   { to: "card", label: "پرداخت", icon: card },
@@ -92,19 +85,6 @@ const MenuItems = () => {
           </div>
         </Link>
       ))}
-
-      <Link to="logout">
-        <div className="flex items-center gap-3 p-3 bg-[#EDEDED] rounded-xl hover:bg-red-500 hover:text-white transition-all duration-300 cursor-pointer group">
-          <img
-            src={logout}
-            alt="logout"
-            className="w-5 h-5 md:w-6 md:h-6 group-hover:brightness-0 group-hover:invert transition-all duration-300"
-          />
-          <p className="text-[12px] md:text-[13px] font-medium text-[#494949] group-hover:text-white">
-            خروج
-          </p>
-        </div>
-      </Link>
     </div>
   );
 };
