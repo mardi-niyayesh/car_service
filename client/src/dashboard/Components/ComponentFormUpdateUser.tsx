@@ -45,7 +45,7 @@ const ComponentFormUpdateUser = () => {
 
       reset();
     } catch (err) {
-      console.log("Error:", err);
+      console.log("Error in update information user :", err);
     }
   };
 
