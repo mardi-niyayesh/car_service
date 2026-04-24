@@ -1,6 +1,7 @@
 import axiosClient from "../../services/axiosClient";
 import { useUser } from "../../hooks/useUser";
 import { setAxiosToken } from "../../services/axiosClient";
+
 type UpdateUserData = {
   display_name: string;
   age: number;
@@ -16,33 +17,27 @@ export const useUpdateUser = () => {
         display_name: data.display_name,
         age: Number(data.age),
       });
-
+      console.log("Update successful, status:", response.data);
       if (response.status === 200) {
         console.log("Update successful, status:", response.data);
+
         if (setUser) {
           setUser({
             ...user,
             ...response.data.response.data.user,
           });
-             setAxiosToken(response.data.accessToken);
+          return {
+            success: true,
+            message: " update information user, to Success",
+          };
+          setAxiosToken(response.data.accessToken);
         }
-      
-        alert("اطلاعات کاربر با موفقیت به‌روزرسانی شد.");
-        console.log("Update successful, status:", response.data);
-        return response.data;
+        return { success: false, message: " Errror..." };
       }
     } catch (err) {
-      const status = err.response?.status;
+      console.log("Error in update user ", err);
 
-      if (status === 409) {
-        alert("هیچ تغییری شناسایی نشد.");
-      } else if (status === 400) {
-        alert("خطا در به روز رسانی اطلاعات");
-      } else {
-        alert("خطایی در سرور رخ داده است");
-      }
-      console.error("Error in FetchUpdateUser:", err);
-      throw err;
+      return { success: false, message: "Error in connection server " };
     }
   };
 
