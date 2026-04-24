@@ -31,12 +31,12 @@ const HeaderDashbord = () => {
             </p>
           </div>
         </div>
-        <div className="flex items-center justify-between gap-5">
+        <div className="flex items-center justify-between gap-2">
           <Link to="logout">
             <img
               src={logout}
               alt="logout"
-              className="w-5 h-5 md:w-6 md:h-6 group-hover:brightness-0 group-hover:invert transition-all duration-300"
+              className="w-5 h-5 md:w-6 md:h-5 group-hover:brightness-0 group-hover:invert transition-all duration-300"
             />
           </Link>
 
