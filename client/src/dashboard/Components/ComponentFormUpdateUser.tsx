@@ -1,5 +1,10 @@
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { useUpdateUser } from "../Api/ApiUpdatUser";
+//Modal
+import SuccessModal from "../../components/common/SuccessModal";
+import ErrorModal from "../../components/common/ErrorModal";
+import { useState } from "react";
 
 type FormData = {
   display_name: string;
@@ -38,9 +43,16 @@ const ComponentFormUpdateUser = () => {
       className="border border-[#EDEDED] rounded-xl bg-white shadow-sm"
     >
       <div className="p-6 bg-white">
-        <p className="text-[#4b33b5] text-[20px] font-bold mb-4">
-          فرم ویرایش کاربر
-        </p>
+        <div className="mb-4">
+          <Link to="/dashboard/Profile">
+            <span className="text-gray-800 text-[20px] hover:text-blue-600 font-medium cursor-pointer  mb-4">
+              پروفایل/
+            </span>
+          </Link>
+          <span className="text-gray-800 text-[20px] font-medium mb-4">
+            فرم ویرایش کاربر
+          </span>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 mb-8">
           <div>
