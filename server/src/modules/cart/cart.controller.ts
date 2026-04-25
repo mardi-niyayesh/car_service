@@ -1,5 +1,6 @@
 import {CartService} from "./cart.service";
 import {ApiBearerAuth} from "@nestjs/swagger";
+import * as CartDecorator from "./decorators";
 import {Permission, PERMISSIONS} from "@/common";
 import {Controller, Get, Req} from '@nestjs/common';
 import type {AccessRequest, ApiResponse, CartResponse} from "@/types";
@@ -16,6 +17,7 @@ export class CartController {
    * - **only roles with permission (user.self) can accessibility to this route**
    */
   @Get()
+  @CartDecorator.GetCartDecorators()
   getCart(
     @Req() req: AccessRequest
   ): Promise<ApiResponse<CartResponse>> {
