@@ -1,7 +1,10 @@
 import axiosClient from "../../services/axiosClient";
-import { RiDeleteBinLine } from 'react-icons/ri'
+import { RiDeleteBinLine } from "react-icons/ri";
 //hooks
 import { useState, useEffect } from "react";
+//Modal
+import SuccessModal from "../../components/common/SuccessModal";
+import WarningModal from "../../components/common/WarningModal ";
 type RoleType = {
   id: string;
   name: string;
@@ -12,6 +15,13 @@ const RolesPage = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(5);
+  //success Modal
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  //Warning Modal
+  const [isWarningOpen, setIsWarningOpen] = useState(false);
+  const [WarningMessage, setWarningMessage] = useState("");
+
   const fetchGetRoles = async () => {
     setLoading(true);
     try {
@@ -33,6 +43,34 @@ const RolesPage = () => {
       setLoading(false);
     }
   };
+
+  const handelDleatRole = async (roleId: string) => {
+    try {
+      const res = await axiosClient.delete(`/roles/${roleId}`);
+      console.log("response to deleat role :", res);
+      const status = res.status;
+      if (status === 200) {
+        alert("success....");
+        fetchGetRoles();
+      }
+    } catch (err) {
+      console.error("خطا در حذف نقش:", err);
+
+      if (err.response) {
+        if (err.response.status === 404) {
+          setIsWarningOpen(true);
+          setWarningMessage(`رول با این ایدی پیدا نشد ${roleId}`);
+        } else if (err.response.status === 403 || err.response.status === 401) {
+          setIsWarningOpen(true);
+          setWarningMessage(" شما مجوز حذف این نقش را ندارید.");
+        }
+      } else if (err.request) {
+        setIsWarningOpen(true);
+        setWarningMessage(" مشکلی در ارتباط با سرور وجود دارد.");
+      }
+    }
+  };
+
   useEffect(() => {
     fetchGetRoles();
   }, [page]);
@@ -84,67 +122,93 @@ const RolesPage = () => {
     );
   };
   return (
-    <div>
-      {loading ? (
-        <div> در حال گرفتن همه ی نقش ها ...</div>
-      ) : (
-        <>
-          <div className="rounded-lg shadow-sm border border-gray-200 bg-white">
-            <table className="min-w-full text-right text-sm text-gray-700">
-              <thead className="bg-gray-100 text-gray-700">
-                <tr>
-                  <th className="px-4 py-3 font-medium hidden sm:table-cell">
-                    ردیف
-                  </th>
-                  <th className="px-4 py-3 font-medium sm:table-cell">
-                    اسم نقش
-                  </th>
-                  <th className="px-4 py-3 font-medium sm:table-cell">
-                    مجوز ها
-                  </th>
-                   <th className="px-4 py-3 font-medium sm:table-cell">
-                     حذف 
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {Roles.length === 0 ? (
+    <>
+      <div>
+        {loading ? (
+          <div> در حال گرفتن همه ی نقش ها ...</div>
+        ) : (
+          <>
+            <div className="rounded-lg shadow-sm border border-gray-200 bg-white">
+              <table className="min-w-full text-right text-sm text-gray-700">
+                <thead className="bg-gray-100 text-gray-700">
                   <tr>
-                    <td colSpan={3} className="px-4 py-3 text-center">
-                      هیچ نقشی یافت نشد.
-                    </td>
+                    <th className="px-4 py-3 font-medium hidden sm:table-cell">
+                      ردیف
+                    </th>
+                    <th className="px-4 py-3 font-medium sm:table-cell">
+                      اسم نقش
+                    </th>
+                    <th className="px-4 py-3 font-medium sm:table-cell">
+                      مجوز ها
+                    </th>
+                    <th className="px-4 py-3 font-medium sm:table-cell">حذف</th>
                   </tr>
-                ) : (
-                  Roles.map((rol, index) => {
-                    return (
-                      <tr
-                        key={rol.id}
-                        className="hover:bg-gray-50 transition-colors border-b border-gray-100"
-                      >
-                        <td className="px-4 py-3 hidden sm:table-cell">
-                          {(page - 1) * 5 + index + 1}
-                        </td>
-                        <td className="px-4 py-3 text-green-600 sm:table-cell">
-                          {rol.name}
-                        </td>
-                        <td className="px-4 py-3 text-blue-400">
-                          {Array.isArray(rol.permissions)
-                            ? rol.permissions.join("  , ")
-                            : rol.permissions}
-                        </td>
-                        <td>{<RiDeleteBinLine size={20} color="red" className="cursor-pointer"/>}</td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
-          </div>
-          {totalPage > 1 && renderPagination()}
-        </>
-      )}
-    </div>
+                </thead>
+
+                <tbody>
+                  {Roles.length === 0 ? (
+                    <tr>
+                      <td colSpan={3} className="px-4 py-3 text-center">
+                        هیچ نقشی یافت نشد.
+                      </td>
+                    </tr>
+                  ) : (
+                    Roles.map((rol, index) => {
+                      return (
+                        <tr
+                          key={rol.id}
+                          className="hover:bg-gray-50 transition-colors border-b border-gray-100"
+                        >
+                          <td className="px-4 py-3 hidden sm:table-cell">
+                            {(page - 1) * 5 + index + 1}
+                          </td>
+                          <td className="px-4 py-3 text-green-600 sm:table-cell">
+                            {rol.name}
+                          </td>
+                          <td className="px-4 py-3 text-blue-400">
+                            {Array.isArray(rol.permissions)
+                              ? rol.permissions.join("  , ")
+                              : rol.permissions}
+                          </td>
+                          <td>
+                            {
+                              <RiDeleteBinLine
+                                size={20}
+                                color="red"
+                                className="cursor-pointer"
+                                onClick={() => {
+                                  console.log(
+                                    ` ${rol.name} : get role wth ID: `,
+                                    rol.id,
+                                  );
+                                  handelDleatRole(rol.id);
+                                }}
+                              />
+                            }
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+            {totalPage > 1 && renderPagination()}
+          </>
+        )}
+      </div>
+      <SuccessModal
+        isOpen={isSuccessOpen}
+        onClose={() => setIsSuccessOpen(false)}
+        message={successMessage}
+      />
+
+      <WarningModal
+        isOpen={isWarningOpen}
+        onClose={() => setIsWarningOpen(false)}
+        message={WarningMessage}
+      />
+    </>
   );
 };
 
