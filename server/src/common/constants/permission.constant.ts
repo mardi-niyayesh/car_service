@@ -96,14 +96,14 @@ export const RAW_PERMISSIONS_OBJECT = {
   ...PRODUCT_PERMISSIONS,
 } as const satisfies PermissionStructure;
 
-type ReturnPermissionObject = {
+type ReturnPermissionObject = Readonly<{
   [K in keyof typeof RAW_PERMISSIONS_OBJECT]: typeof RAW_PERMISSIONS_OBJECT[K]['name'];
-};
+}>;
 
 export const PERMISSIONS = Object.fromEntries(
   Object.entries(RAW_PERMISSIONS_OBJECT)
     .map(([key, value]) => ([key, value.name]))
-) as ReturnPermissionObject;
+) as ReturnPermissionObject satisfies ReturnPermissionObject;
 
 export const permissionsManagerStrict = [
   PERMISSIONS.OWNER_ALL,
