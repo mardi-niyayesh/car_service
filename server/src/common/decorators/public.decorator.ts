@@ -1,8 +1,8 @@
 import {SetMetadata} from '@nestjs/common';
 
 export interface PublicDecoratorParams {
-  makePublicAccessGuard: boolean;
-  makePublicPermissionGuard: boolean;
+  makePublicAccessGuard?: boolean;
+  makePublicPermissionGuard?: boolean;
 }
 
 export const IS_PUBLIC_KEY = "IS_PUBLIC";
