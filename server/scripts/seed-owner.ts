@@ -93,6 +93,13 @@ async function bootstrap() {
           {role_id: selfRole.id, user_id: owner.id},
         ]
       });
+      
+      await tx.cart.create({
+        data: {
+          total_price: 0,
+          user_id: owner.id,
+        }
+      });
 
       console.log(`✅ owner created:\nemail: ${owner.email}\nid: ${owner.id}\nrole: ${ownerRole.name}`);
     });
