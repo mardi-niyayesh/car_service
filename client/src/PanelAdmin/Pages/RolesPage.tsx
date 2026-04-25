@@ -1,4 +1,5 @@
 import axiosClient from "../../services/axiosClient";
+import { RiDeleteBinLine } from 'react-icons/ri'
 //hooks
 import { useState, useEffect } from "react";
 type RoleType = {
@@ -101,6 +102,9 @@ const RolesPage = () => {
                   <th className="px-4 py-3 font-medium sm:table-cell">
                     مجوز ها
                   </th>
+                   <th className="px-4 py-3 font-medium sm:table-cell">
+                     حذف 
+                  </th>
                 </tr>
               </thead>
 
@@ -129,6 +133,7 @@ const RolesPage = () => {
                             ? rol.permissions.join("  , ")
                             : rol.permissions}
                         </td>
+                        <td>{<RiDeleteBinLine size={20} color="red" className="cursor-pointer"/>}</td>
                       </tr>
                     );
                   })
