@@ -15,6 +15,8 @@ interface DynamicDelegateArgs {
   include?: Record<string, unknown>;
 }
 
+export type ReturnDynamicDelegate = null | FindDynamicDelegate;
+
 export type DynamicDelegate = {
-  findUnique: (args: DynamicDelegateArgs) => Promise<undefined | FindDynamicDelegate>;
+  findUnique: (args: DynamicDelegateArgs) => Promise<ReturnDynamicDelegate>;
 };

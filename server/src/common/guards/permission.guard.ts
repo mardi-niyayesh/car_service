@@ -14,6 +14,7 @@ import {
   type DynamicDelegate,
   type PermissionsKeyType,
   type FindDynamicDelegate,
+  type ReturnDynamicDelegate,
   type PublicDecoratorParams,
   type PermissionDecoratorParams,
 } from "@/common";
@@ -147,7 +148,7 @@ export class PermissionGuard implements CanActivate {
   }
 
   checkOwnership(
-    data: FindDynamicDelegate | undefined,
+    data: ReturnDynamicDelegate,
     userId: string,
     resource: string,
     actionPermissions: PermissionsKeyType[]
