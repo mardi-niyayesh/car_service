@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 //icons to react-icon
 import { FiKey, FiCheckSquare } from "react-icons/fi";
-
+//Modal
+import SuccessModal from "../../components/common/SuccessModal";
+import WarningModal from "../../components/common/WarningModal ";
 type Permission = {
   id: string;
   name: string;
@@ -17,7 +19,13 @@ type RoleType = {
 };
 
 const CreateCustomRolePage = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+  //success Modal
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  //Warning Modal
+  const [isWarningOpen, setIsWarningOpen] = useState(false);
+  const [WarningMessage, setWarningMessage] = useState("");
   //state for get all permesssions
   const [permissions, setPermissions] = useState<Permission[]>([]);
   //state for loadig
@@ -51,7 +59,6 @@ const CreateCustomRolePage = () => {
       console.error("Error in get list permessions :", err);
     } finally {
       setloading(false);
-   
     }
   };
 
@@ -123,7 +130,8 @@ const CreateCustomRolePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (nameError) {
-      alert("لطفاً نام نقش را اصلاح کنید.");
+      setIsWarningOpen(true);
+      setWarningMessage("نام نقش را اصلاح کنید");
       return;
     }
     try {
@@ -154,165 +162,182 @@ const CreateCustomRolePage = () => {
         permissions: formData.permissions,
       });
       console.log("response creat custom role :", customroles);
-
-      alert(" رول با موفقیت ساخته شد ");
-      navigate("/panel/roles")
-      
+      setIsSuccessOpen(true);
+      setSuccessMessage("رول با موفقیت ساخته شد :)");
+      setTimeout(() => {
+        navigate("/panel/roles");
+      }, 2000);
     } catch (err) {
-      console.log("Error in creat custom role :", err);
+      console.log("Error in response creat custom role", err);
+
+      setIsWarningOpen(true);
+      setSuccessMessage("خطا در ایجاد نقش جدید ");
     }
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-xl font-bold mb-6">ساخت نقش سفارشی جدید</h1>
+    <>
+      <div className="p-6 max-w-4xl mx-auto">
+        <h1 className="text-xl font-bold mb-6">ساخت نقش سفارشی جدید</h1>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="text-lg font-semibold mb-4">اطلاعات نقش</h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="bg-white p-4 rounded shadow">
+            <h2 className="text-lg font-semibold mb-4">اطلاعات نقش</h2>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">نام نقش</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className={`w-full p-2 border rounded ${nameError ? "border-red-500 bg-red-50" : "border-gray-300"}`}
-              placeholder="مثال: ادیتور"
-              required
-            />
-          </div>
-          {nameError && (
-            <p className="text-red-600 text-sm mt-1">{nameError}</p>
-          )}
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">توضیحات</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              rows={3}
-              placeholder="توضیحی درباره این نقش..."
-            />
-          </div>
-
-          <div className="flex items-center mb-4 p-3 bg-yellow-50 rounded border border-yellow-200">
-            <input
-              type="checkbox"
-              checked={formData.ownership}
-              onChange={handleOwnershipChange}
-              className="w-5 h-5 text-yellow-600 rounded"
-            />
-            <label
-              htmlFor="ownership"
-              className="ml-2 text-gray-800 font-medium cursor-pointer"
-            >
-              این نقش به عنوان نقش مالکیت (Owner) عمل کند؟
-            </label>
-          </div>
-          {formData.ownership && (
-            <p className="text-sm text-red-600 bg-red-50 p-2 mb-4">
-              هشدار: این نقش همه ی دسترسی‌های را به سیستم خواهد داشت.
-            </p>
-          )}
-        </div>
-
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="text-lg font-semibold mb-4">انتخاب دسترسی‌ها</h2>
-
-          {permissions.length === 0 ? (
-            <p className="text-gray-500 ">در حال دریافت پرمشن ها...</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="border p-3 rounded bg-gray-50">
-                <h3 className="font-medium mb-2 flex items-center">
-                  <FiCheckSquare className="mr-2 text-green-600" size={23} />
-                  دسترسی‌های عمومی
-                </h3>
-                <div className="space-y-2">
-                  {permissions
-                    .filter(
-                      (p) =>
-                        !p.name.startsWith("role.") &&
-                        !p.name.startsWith("user.") &&
-                        p.name !== "owner.all",
-                    )
-                    .map((perm) => (
-                      <label
-                        key={perm.id}
-                        className="flex items-center cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={formData.permissions.includes(perm.id)}
-                          onChange={() => handlePermissionChange(perm.id)}
-                          className="mr-2"
-                        />
-
-                        <span className="text-sm">{perm.description}</span>
-                      </label>
-                    ))}
-                </div>
-              </div>
-
-              <div className="border p-3 rounded bg-gray-50">
-                <h3 className="font-medium mb-2 flex items-center">
-                  <FiKey className="mr-2 text-red-500" size={23} />
-                  دسترسی‌های مدیریتی (مخصوص Owner)
-                </h3>
-                <div className="space-y-2">
-                  {permissions
-                    .filter(
-                      (p) =>
-                        p.name.startsWith("role.") ||
-                        p.name.startsWith("user.") ||
-                        p.name === "owner.all",
-                    )
-                    .map((perm) => (
-                      <label
-                        key={perm.id}
-                        className={`flex items-center cursor-pointer ${!formData.ownership ? "opacity-50 pointer-events-none" : ""}`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={formData.permissions.includes(perm.id)}
-                          onChange={() => handlePermissionChange(perm.id)}
-                          disabled={!formData.ownership}
-                          className="mr-2"
-                        />
-                        <span className="text-sm">{perm.description}</span>
-                      </label>
-                    ))}
-                </div>
-                {!formData.ownership && (
-                  <p className="text-xs text-gray-500 mt-2">
-                    برای انتخاب این پرمشن ها اول باید تیک بخش مالکیت رو بزنید
-                  </p>
-                )}
-              </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">نام نقش</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className={`w-full p-2 border rounded ${nameError ? "border-red-500 bg-red-50" : "border-gray-300"}`}
+                placeholder="مثال: ادیتور"
+                required
+              />
             </div>
-          )}
-        </div>
+            {nameError && (
+              <p className="text-red-600 text-sm mt-1">{nameError}</p>
+            )}
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">توضیحات</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                rows={3}
+                placeholder="توضیحی درباره این نقش..."
+              />
+            </div>
 
-        <div className="flex justify-end gap-4">
-          <button
-            type="button"
-            className="px-6 py-2 border rounded text-gray-600 hover:bg-gray-100"
-          >
-            لغو
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className={`px-6 py-2 rounded text-white ${loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
-          >
-            {loading ? "در حال ساخت..." : "ذخیره نقش"}
-          </button>
-        </div>
-      </form>
-    </div>
+            <div className="flex items-center mb-4 p-3 bg-yellow-50 rounded border border-yellow-200">
+              <input
+                type="checkbox"
+                checked={formData.ownership}
+                onChange={handleOwnershipChange}
+                className="w-5 h-5 text-yellow-600 rounded"
+              />
+              <label
+                htmlFor="ownership"
+                className="ml-2 text-gray-800 font-medium cursor-pointer"
+              >
+                این نقش به عنوان نقش مالکیت (Owner) عمل کند؟
+              </label>
+            </div>
+            {formData.ownership && (
+              <p className="text-sm text-red-600 bg-red-50 p-2 mb-4">
+                هشدار: این نقش همه ی دسترسی‌های را به سیستم خواهد داشت.
+              </p>
+            )}
+          </div>
+
+          <div className="bg-white p-4 rounded shadow">
+            <h2 className="text-lg font-semibold mb-4">انتخاب دسترسی‌ها</h2>
+
+            {permissions.length === 0 ? (
+              <p className="text-gray-500 ">در حال دریافت پرمشن ها...</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="border p-3 rounded bg-gray-50">
+                  <h3 className="font-medium mb-2 flex items-center">
+                    <FiCheckSquare className="mr-2 text-green-600" size={23} />
+                    دسترسی‌های عمومی
+                  </h3>
+                  <div className="space-y-2">
+                    {permissions
+                      .filter(
+                        (p) =>
+                          !p.name.startsWith("role.") &&
+                          !p.name.startsWith("user.") &&
+                          p.name !== "owner.all",
+                      )
+                      .map((perm) => (
+                        <label
+                          key={perm.id}
+                          className="flex items-center cursor-pointer"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={formData.permissions.includes(perm.id)}
+                            onChange={() => handlePermissionChange(perm.id)}
+                            className="mr-2"
+                          />
+
+                          <span className="text-sm">{perm.description}</span>
+                        </label>
+                      ))}
+                  </div>
+                </div>
+
+                <div className="border p-3 rounded bg-gray-50">
+                  <h3 className="font-medium mb-2 flex items-center">
+                    <FiKey className="mr-2 text-red-500" size={23} />
+                    دسترسی‌های مدیریتی (مخصوص Owner)
+                  </h3>
+                  <div className="space-y-2">
+                    {permissions
+                      .filter(
+                        (p) =>
+                          p.name.startsWith("role.") ||
+                          p.name.startsWith("user.") ||
+                          p.name === "owner.all",
+                      )
+                      .map((perm) => (
+                        <label
+                          key={perm.id}
+                          className={`flex items-center cursor-pointer ${!formData.ownership ? "opacity-50 pointer-events-none" : ""}`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={formData.permissions.includes(perm.id)}
+                            onChange={() => handlePermissionChange(perm.id)}
+                            disabled={!formData.ownership}
+                            className="mr-2"
+                          />
+                          <span className="text-sm">{perm.description}</span>
+                        </label>
+                      ))}
+                  </div>
+                  {!formData.ownership && (
+                    <p className="text-xs text-gray-500 mt-2">
+                      برای انتخاب این پرمشن ها اول باید تیک بخش مالکیت رو بزنید
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="flex justify-end gap-4">
+            <button
+              type="button"
+              className="px-6 py-2 border rounded text-gray-600 hover:bg-gray-100"
+            >
+              لغو
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className={`px-6 py-2 rounded text-white ${loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
+            >
+              {loading ? "در حال ساخت..." : "ذخیره نقش"}
+            </button>
+          </div>
+        </form>
+      </div>
+      <SuccessModal
+        isOpen={isSuccessOpen}
+        onClose={() => setIsSuccessOpen(false)}
+        message={successMessage}
+      />
+
+      <WarningModal
+        isOpen={isWarningOpen}
+        onClose={() => setIsWarningOpen(false)}
+        message={WarningMessage}
+      />
+    </>
   );
 };
 
