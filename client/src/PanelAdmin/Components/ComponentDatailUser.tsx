@@ -5,6 +5,9 @@ import { FaUser } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+//Modal
+import SuccessModal from "../../components/common/SuccessModal";
+import WarningModal from "../../components/common/WarningModal ";
 
 type User = {
   id: number;
@@ -23,6 +26,13 @@ type Role = {
 const ComponentCategoryDatailUser = () => {
   const { userId } = useParams();
   // console.log("userId:", userId);
+
+  //success Modal
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  //Warning Modal
+  const [isWarningOpen, setIsWarningOpen] = useState(false);
+  const [WarningMessage, setWarningMessage] = useState("");
 
   //get information user
   const [user, setUser] = useState<User | null>(null);
@@ -43,6 +53,7 @@ const ComponentCategoryDatailUser = () => {
       console.log("userId  missing.");
       setUser(null);
       return;
+      alert();
     }
     try {
       const response = await axiosClient.get(`/users/find?id=${userId}`);
@@ -143,10 +154,12 @@ const ComponentCategoryDatailUser = () => {
       }
       //for updat initialRole
       setInitialRoles((prev) => [...prev]);
-      alert("تغییرات با موفقیت انجامم شد:)");
+      setIsSuccessOpen(true)
+      setSuccessMessage("تغییرات با موفقیت انجامم شد:)");
     } catch (err) {
       console.log("Error in change roles:", err);
-      alert("خطا در انجام تغییرات :(");
+      setIsWarningOpen(true)
+      setWarningMessage("خطا در انجام تغییرات :(");
     }
   };
 
@@ -262,6 +275,18 @@ const ComponentCategoryDatailUser = () => {
           </div>
         </Link>
       </div>
+
+      <SuccessModal
+        isOpen={isSuccessOpen}
+        onClose={() => setIsSuccessOpen(false)}
+        message={successMessage}
+      />
+
+      <WarningModal
+        isOpen={isWarningOpen}
+        onClose={() => setIsWarningOpen(false)}
+        message={WarningMessage}
+      />
     </>
   );
 };
