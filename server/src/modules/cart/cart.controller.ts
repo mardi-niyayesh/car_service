@@ -16,7 +16,6 @@ export class CartController {
   getCart(
     @Req() req: AccessRequest
   ) {
-    console.log(req.user);
-    return 'cart successfully find.';
+    return this.cartService.getCart(req.user.userId);
   }
 }

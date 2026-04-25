@@ -1,8 +1,9 @@
 import {eventsEmitter} from "@/common";
-import {Injectable} from '@nestjs/common';
 import {OnEvent} from "@nestjs/event-emitter";
-import type {CreateCartSignup} from "@/types";
+import {Cart} from "@/modules/prisma/generated/client";
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import type {ApiResponse, BaseException, CreateCartSignup} from "@/types";
 
 @Injectable()
 export class CartService {
@@ -19,5 +20,25 @@ export class CartService {
         user_id: data.id,
       }
     });
+  }
+
+  async getCart(id: string): Promise<ApiResponse<{ cart: Cart; }>> {
+    const cart = await this.prisma.cart.findUnique({
+      where: {
+        user_id: id
+      }
+    });
+
+    if (!cart) throw new NotFoundException({
+      message: 'Cart not found in database, please contact to administrator',
+      error: 'Cart not found.'
+    } as BaseException);
+
+    return {
+      message: `Cart successfully found`,
+      data: {
+        cart
+      }
+    };
   }
 }
