@@ -1,8 +1,8 @@
 import {CartService} from "./cart.service";
-import type {AccessRequest} from "@/types";
 import {ApiBearerAuth} from "@nestjs/swagger";
 import {Permission, PERMISSIONS} from "@/common";
 import {Controller, Get, Req} from '@nestjs/common';
+import type {AccessRequest, ApiResponse, CartResponse} from "@/types";
 
 @Controller('carts')
 @ApiBearerAuth("accessToken")
@@ -12,10 +12,13 @@ import {Controller, Get, Req} from '@nestjs/common';
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
+  /** get self cart
+   * - **only roles with permission (user.self) can accessibility to this route**
+   */
   @Get()
   getCart(
     @Req() req: AccessRequest
-  ) {
-    return this.cartService.getCart(req.user.userId);
+  ): Promise<ApiResponse<CartResponse>> {
+    return this.cartService.getCart(req.user.userId, req.user);
   }
 }

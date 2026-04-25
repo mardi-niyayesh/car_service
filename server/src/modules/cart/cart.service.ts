@@ -1,9 +1,8 @@
 import {eventsEmitter} from "@/common";
 import {OnEvent} from "@nestjs/event-emitter";
-import {Cart} from "@/modules/prisma/generated/client";
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import type {ApiResponse, BaseException, CreateCartSignup} from "@/types";
+import type {ApiResponse, BaseException, CartResponse, CreateCartSignup, UserAccess} from "@/types";
 
 @Injectable()
 export class CartService {
@@ -22,10 +21,25 @@ export class CartService {
     });
   }
 
-  async getCart(id: string): Promise<ApiResponse<{ cart: Cart; }>> {
+  /** get self cart
+   * - **only roles with permission (user.self) can accessibility to this route**
+   */
+  async getCart(id: string, user: UserAccess): Promise<ApiResponse<CartResponse>> {
     const cart = await this.prisma.cart.findUnique({
       where: {
         user_id: id
+      },
+      include: {
+        carRents: {
+          include: {
+            car: {
+              select: {
+                image: true,
+                slug: true,
+              }
+            }
+          }
+        }
       }
     });
 
@@ -37,7 +51,19 @@ export class CartService {
     return {
       message: `Cart successfully found`,
       data: {
-        cart
+        cart: {
+          id: cart.id,
+          created_at: cart.created_at,
+          updated_at: cart.updated_at,
+          total_price: cart.total_price,
+          carRents: cart.carRents,
+          user: {
+            id: user.userId,
+            roles: user.roles,
+            permissions: user.permissions,
+            display_name: user.display_name,
+          }
+        }
       }
     };
   }
