@@ -4,7 +4,7 @@ import {Car, Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {checkConflictRecord, checkPrismaError, deleteOneFile} from "@/lib";
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
-import type {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse} from "@/types";
+import type {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, SafeCarNCategory} from "@/types";
 
 @Injectable()
 export class CarService {
@@ -14,7 +14,7 @@ export class CarService {
    * Find a single car by its unique slug.
    * - **Accessible to all users (public endpoint)**
    */
-  async findOne(slug: string): Promise<ApiResponse<CarResponse>> {
+  async findOne(slug: string): Promise<ApiResponse<SafeCarNCategory>> {
     const car = await this.prisma.car.findUnique({
       where: {slug},
       include: {

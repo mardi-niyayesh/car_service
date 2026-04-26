@@ -2,7 +2,7 @@ import {categoryExampleRes} from "./create.dto";
 import type {SafeCategoryResponse} from "@/types";
 import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
 
-const {creator_id, ...category} = categoryExampleRes;
+export const {creator_id, ...safeCategoryExampleRes} = categoryExampleRes;
 
 void creator_id;
 
@@ -11,7 +11,7 @@ export class FindOneCategoryOkRes extends getBaseOkResponseSchema<SafeCategoryRe
   path: "categories/id",
   response: {
     message: "category found successfully.",
-    data: {category}
+    data: {category: safeCategoryExampleRes}
   }
 }) {}
 

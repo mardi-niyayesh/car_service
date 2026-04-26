@@ -1,8 +1,9 @@
 import z from "zod";
 import type {CarsResponse} from "@/types";
 import {ApiQueryOptions} from "@nestjs/swagger";
+import {exampleSafeCarRecord} from "./find-one.dto";
+import {minPriceAtDayCar, maxPriceAtDayCar} from "./create.dto";
 import {SlugCategoryRegex, CategorySlugValidator} from "@/modules/category/dto";
-import {exampleCarRecord, minPriceAtDayCar, maxPriceAtDayCar} from "./create.dto";
 import {getBaseOkResponseSchema, BasePaginationValidator, getSafePaginationValidator} from "@/common";
 
 function checkStringBoolean(value?: string): undefined | boolean {
@@ -65,7 +66,7 @@ export class FindAllCarOkRes extends getBaseOkResponseSchema<CarsResponse>({
     message: 'cars successfully found.',
     data: {
       count: 5,
-      cars: Array.from({length: 5}, () => exampleCarRecord)
+      cars: Array.from({length: 5}, () => exampleSafeCarRecord)
     }
   }
 }) {}

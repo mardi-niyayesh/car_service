@@ -1,14 +1,25 @@
-import type {CarResponse} from "@/types";
 import {exampleCarRecord} from "./create.dto";
+import type {SafeCarNCategory} from "@/types";
+import {safeCategoryExampleRes} from "@/modules/category/dto";
 import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
 
+const {creator_id, category, ...car} = exampleCarRecord;
+
+void category;
+void creator_id;
+
+export const exampleSafeCarRecord = {
+  ...car,
+  category: safeCategoryExampleRes
+};
+
 /** Ok example response for find one car */
-export class FindOneCarOkRes extends getBaseOkResponseSchema<CarResponse>({
+export class FindOneCarOkRes extends getBaseOkResponseSchema<SafeCarNCategory>({
   path: "cars/slug",
   response: {
     message: "Car successfully found.",
     data: {
-      car: exampleCarRecord
+      car: exampleSafeCarRecord
     }
   }
 }) {}

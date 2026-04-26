@@ -1,10 +1,6 @@
-import {categoryExampleRes} from "./create.dto";
 import {getBaseOkResponseSchema} from "@/common";
 import type {CategoriesResponseCount} from "@/types";
-
-const {creator_id, ...category} = categoryExampleRes;
-
-void creator_id;
+import {safeCategoryExampleRes} from "./find.one.dto";
 
 /** find all categories example response */
 export class FindAllCategoriesRes extends getBaseOkResponseSchema<CategoriesResponseCount>({
@@ -13,7 +9,7 @@ export class FindAllCategoriesRes extends getBaseOkResponseSchema<CategoriesResp
     message: 'categories successfully found.',
     data: {
       count: 5,
-      categories: Array.from({length: 5}, () => category),
+      categories: Array.from({length: 5}, () => safeCategoryExampleRes),
     }
   }
 }) {}
