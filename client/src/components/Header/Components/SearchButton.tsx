@@ -3,7 +3,7 @@ const SearchButton = () => {
   return (
     <div className="relative w-full md:w-[300px] lg:w-[500px] mx-auto my-2 md:my-0">
       <div className="relative flex items-center w-full gap-2">
-        <button className=" md:flex absolute inset-y-0 left-0 ml-2 m-2 items-center bg-[#137cfd] text-white font-medium text-sm md:text-[16px] px-4 py-3 md:py-4 rounded-[5px] hover:bg-[#0d52a7]">
+        <button className=" md:flex absolute inset-y-0 left-0 ml-2 m-2 items-center hidden bg-[#137cfd] text-white font-medium text-sm md:text-[16px] px-4 py-3 md:py-4 rounded-[5px] hover:bg-[#0d52a7]">
           جست و جو
         </button>
 
