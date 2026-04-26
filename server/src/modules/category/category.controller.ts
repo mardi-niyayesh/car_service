@@ -5,7 +5,7 @@ import {CategoryService} from "./category.service";
 import {Category} from "@/modules/prisma/generated/client";
 import {Body, Controller, Delete, Get, Param, Post, Put, Query, Req} from "@nestjs/common";
 import {ZodPipe, UUIDv4Validator, PaginationValidator, type PaginationValidatorType} from "@/common";
-import type {AccessRequest, ApiResponse, CategoriesResponse, CategoryResponse, ListWithCount, OwnershipRequest} from "@/types";
+import type {AccessRequest, ApiResponse, CategoriesResponseCount, CategoryResponse, OwnershipRequest} from "@/types";
 
 /**
  * Category management endpoints for handling category resources.
@@ -48,7 +48,7 @@ export class CategoryController {
   @CategoryDecorator.FindAllDecorators()
   findAll(
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
-  ): Promise<ApiResponse<ListWithCount<CategoriesResponse>>> {
+  ): Promise<ApiResponse<CategoriesResponseCount>> {
     return this.categoryService.findAll(pagination);
   }
 

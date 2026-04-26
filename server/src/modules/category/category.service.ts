@@ -4,7 +4,7 @@ import {Category} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {checkConflictRecord, checkPrismaError} from "@/lib";
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
-import {ApiResponse, BaseException, CategoryResponse, CategoriesResponse, ListWithCount} from "@/types";
+import {ApiResponse, BaseException, CategoryResponse, CategoriesResponseCount} from "@/types";
 
 @Injectable()
 export class CategoryService {
@@ -16,6 +16,7 @@ export class CategoryService {
   async findOne(id: string): Promise<ApiResponse<CategoryResponse>> {
     const category = await this.prisma.category.findUnique({
       where: {id},
+      omit: {creator_id: true}
     });
 
     if (!category) throw new NotFoundException({
@@ -34,7 +35,7 @@ export class CategoryService {
   /** get all categories
    * - all users can access to this route
    */
-  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<ListWithCount<CategoriesResponse>>> {
+  async findAll(pagination: PaginationValidatorType): Promise<ApiResponse<CategoriesResponseCount>> {
     const count: number = await this.prisma.category.count();
 
     const categories = await this.prisma.category.findMany({
@@ -43,6 +44,7 @@ export class CategoryService {
       },
       take: pagination.limit,
       skip: pagination.offset,
+      omit: {creator_id: true}
     });
 
     return {
