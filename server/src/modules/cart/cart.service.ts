@@ -67,4 +67,26 @@ export class CartService {
       }
     };
   }
+
+  /** add rent of car to cart
+   * - **only roles with permission (user.self) can accessibility to this route**
+   */
+  async addToCart(slug: string) {
+    const car = await this.prisma.car.findUnique({
+      where: {slug},
+      include: {
+        category: {
+          omit: {creator_id: true}
+        }
+      },
+      omit: {creator_id: true}
+    });
+
+    if (!car) throw new NotFoundException({
+      message: 'This car slug does not exist in database',
+      error: 'Car slug not found.'
+    } as BaseException);
+
+    console.log(car);
+  }
 }
