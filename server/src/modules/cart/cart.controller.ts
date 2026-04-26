@@ -1,9 +1,9 @@
+import * as CartDto from "./dto";
 import {CartService} from "./cart.service";
 import {ApiBearerAuth} from "@nestjs/swagger";
 import * as CartDecorator from "./decorators";
-import {CarSlugValidator} from "@/modules/car/dto";
 import {Permission, PERMISSIONS, ZodPipe} from "@/common";
-import {Controller, Get, Param, Post, Req} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Req} from '@nestjs/common';
 import type {AccessRequest, ApiResponse, CartResponse} from "@/types";
 
 @Controller('carts')
@@ -28,11 +28,12 @@ export class CartController {
   /** add rent of car to cart
    * - **only roles with permission (user.self) can accessibility to this route**
    */
-  @Post(":slug")
+  @Post()
   @CartDecorator.AddToCartDecorators()
-  addToCart(
-    @Param('slug', new ZodPipe(CarSlugValidator)) slug: string,
+  async addToCart(
+    @Body(new ZodPipe(CartDto.AddToCartValidator)) data: CartDto.AddToCartType
   ) {
-    return slug;
+    await this.cartService.addToCart(data);
+    return data;
   }
 }

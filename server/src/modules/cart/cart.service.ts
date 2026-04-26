@@ -1,3 +1,4 @@
+import * as CartDto from "./dto";
 import {eventsEmitter} from "@/common";
 import {OnEvent} from "@nestjs/event-emitter";
 import {Injectable, NotFoundException} from '@nestjs/common';
@@ -71,13 +72,16 @@ export class CartService {
   /** add rent of car to cart
    * - **only roles with permission (user.self) can accessibility to this route**
    */
-  async addToCart(slug: string) {
+  async addToCart(data: CartDto.AddToCartType) {
+    const {car_slug} = data;
+
     const car = await this.prisma.car.findUnique({
-      where: {slug},
+      where: {slug: car_slug},
       include: {
         category: {
           omit: {creator_id: true}
-        }
+        },
+        carRents: true
       },
       omit: {creator_id: true}
     });
