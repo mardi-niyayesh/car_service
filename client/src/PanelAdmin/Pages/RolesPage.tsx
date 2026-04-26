@@ -50,16 +50,17 @@ const RolesPage = () => {
       console.log("response to deleat role :", res);
       const status = res.status;
       if (status === 200) {
-        alert("success....");
+        setIsSuccessOpen(true);
+        setSuccessMessage("نقش با موفقیت حذف شد.");
         fetchGetRoles();
       }
     } catch (err) {
-      console.error("خطا در حذف نقش:", err);
+      console.error("خطا در حذف نقش:", err.message);
 
       if (err.response) {
         if (err.response.status === 404) {
           setIsWarningOpen(true);
-          setWarningMessage(`رول با این ایدی پیدا نشد ${roleId}`);
+          setWarningMessage(`رول با این اسم پیدا نشد ${roleId}`);
         } else if (err.response.status === 403 || err.response.status === 401) {
           setIsWarningOpen(true);
           setWarningMessage(" شما مجوز حذف این نقش را ندارید.");
@@ -177,11 +178,12 @@ const RolesPage = () => {
                                 color="red"
                                 className="cursor-pointer"
                                 onClick={() => {
-                                  console.log(
-                                    ` ${rol.name} : get role wth ID: `,
-                                    rol.id,
+                                  const confirmDelete = window.confirm(
+                                    `آیا مطمئن هستید که می‌خواهید نقش "${rol.name}" را حذف کنید؟`,
                                   );
-                                  handelDleatRole(rol.id);
+                                  if (confirmDelete) {
+                                    handelDleatRole(rol.id);
+                                  }
                                 }}
                               />
                             }
