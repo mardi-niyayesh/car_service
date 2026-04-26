@@ -25,7 +25,11 @@ export class CartController {
     return this.cartService.getCart(req.user.userId, req.user);
   }
 
+  /** add rent of car to cart
+   * - **only roles with permission (user.self) can accessibility to this route**
+   */
   @Post(":slug")
+  @CartDecorator.AddToCartDecorators()
   addToCart(
     @Param('slug', new ZodPipe(CarSlugValidator)) slug: string,
   ) {
