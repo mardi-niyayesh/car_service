@@ -51,6 +51,7 @@
     "bcrypt": "^6.0.0",
     "cache-manager-ioredis-yet": "^2.1.2",
     "cookie-parser": "^1.4.7",
+    "dayjs": "^1.11.20",
     "geoip-lite": "^2.0.0",
     "helmet": "^8.1.0",
     "ioredis": "^5.10.0",
