@@ -4,7 +4,7 @@ import {Category} from "@/modules/prisma/generated/client";
 import {checkConflictRecord, checkPrismaError} from "@/lib";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
-import {ApiResponse, BaseException, CategoryResponse, CategoriesResponseCount} from "@/types";
+import {ApiResponse, BaseException, CategoryResponse, CategoriesResponseCount, SafeCategoryResponse} from "@/types";
 
 @Injectable()
 export class CategoryService {
@@ -13,7 +13,7 @@ export class CategoryService {
   /** get one category with slug(unique)
    * - all users can access to this route
    */
-  async findOne(id: string): Promise<ApiResponse<CategoryResponse>> {
+  async findOne(id: string): Promise<ApiResponse<SafeCategoryResponse>> {
     const category = await this.prisma.category.findUnique({
       where: {id},
       omit: {creator_id: true}

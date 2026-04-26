@@ -5,6 +5,11 @@ export type SafeCategory = Omit<Category, "creator_id">;
 
 /** one category response */
 export interface CategoryResponse {
+  category: Category;
+}
+
+/** category without creator_id */
+export interface SafeCategoryResponse {
   category: SafeCategory;
 }
 
