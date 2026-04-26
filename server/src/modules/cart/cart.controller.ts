@@ -3,7 +3,7 @@ import {CartService} from "./cart.service";
 import {ApiBearerAuth} from "@nestjs/swagger";
 import * as CartDecorator from "./decorators";
 import {Permission, PERMISSIONS, ZodPipe} from "@/common";
-import {Body, Controller, Get, Param, Post, Req} from '@nestjs/common';
+import {Body, Controller, Get, Post, Req} from '@nestjs/common';
 import type {AccessRequest, ApiResponse, CartResponse} from "@/types";
 
 @Controller('carts')
