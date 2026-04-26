@@ -18,7 +18,6 @@ const DetalisUserPage = () => {
             جزعیات کابران
           </span>
         </div>
-        {/*Components CategoryDatailUser */}
         <div className="flex flex-col gap-4 ">
           <ComponentDatailUser />
         </div>
