@@ -1,7 +1,7 @@
 import {ListWithCount} from "@/types/response.types";
 import {Category} from "@/modules/prisma/generated/client";
 
-type SafeCategory = Omit<Category, "creator_id">;
+export type SafeCategory = Omit<Category, "creator_id">;
 
 /** one category response */
 export interface CategoryResponse {

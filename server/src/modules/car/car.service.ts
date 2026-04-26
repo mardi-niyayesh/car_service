@@ -17,7 +17,12 @@ export class CarService {
   async findOne(slug: string): Promise<ApiResponse<CarResponse>> {
     const car = await this.prisma.car.findUnique({
       where: {slug},
-      include: {category: true}
+      include: {
+        category: {
+          omit: {creator_id: true}
+        }
+      },
+      omit: {creator_id: true}
     });
 
     if (!car) throw new NotFoundException({
@@ -68,7 +73,9 @@ export class CarService {
 
     const cars = await this.prisma.car.findMany({
       include: {
-        category: true
+        category: {
+          omit: {creator_id: true}
+        }
       },
       where,
       take: limit,
@@ -76,6 +83,7 @@ export class CarService {
       orderBy: {
         [order_by_field]: orderByLower,
       },
+      omit: {creator_id: true}
     });
 
     return {

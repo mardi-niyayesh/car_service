@@ -1,8 +1,9 @@
+import type {SafeCategory} from "./category.types";
 import type {ListWithCount} from "./response.types";
-import type {Car, Category} from "@/modules/prisma/generated/client";
+import type {Car} from "@/modules/prisma/generated/client";
 
-export type CarAndCategory = Car & {
-  category: Category;
+export type CarAndCategory = Omit<Car, 'creator_id'> & {
+  category: SafeCategory;
 };
 
 /** car api response */
