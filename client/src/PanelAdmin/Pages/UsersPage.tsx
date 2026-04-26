@@ -1,6 +1,7 @@
 //components
 import ComponentTableUser from "../Components/ComponentTableUser";
 
+
 const UsersPage = () => {
   return (
     <div className="flex flex-col md:flex-row  md:gap-4 p-3 md:p-4 min-h-screen">
