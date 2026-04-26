@@ -5,7 +5,7 @@ import * as CarDecorator from "./decorators";
 import {Car} from "@/modules/prisma/generated/client";
 import {ZodPipe, PREFIX_PUBLIC_PATH, CAR_IMAGE_UPLOAD_PATH} from "@/common";
 import {Put, Get, Req, Body, Post, Param, Query, Delete, Controller, UploadedFile, BadRequestException} from '@nestjs/common';
-import type {AccessRequest, ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, OwnershipRequest} from "@/types";
+import type {AccessRequest, ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, OwnershipRequest, SafeCarNCategory} from "@/types";
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -51,7 +51,7 @@ export class CarController {
   @CarDecorator.FindOneDecorators()
   findOne(
     @Param("slug", new ZodPipe(CarDto.CarSlugValidator)) slug: string,
-  ): Promise<ApiResponse<CarResponse>> {
+  ): Promise<ApiResponse<SafeCarNCategory>> {
     return this.carService.findOne(slug);
   }
 

@@ -5,7 +5,7 @@ import {CategoryService} from "./category.service";
 import {Category} from "@/modules/prisma/generated/client";
 import {Body, Controller, Delete, Get, Param, Post, Put, Query, Req} from "@nestjs/common";
 import {ZodPipe, UUIDv4Validator, PaginationValidator, type PaginationValidatorType} from "@/common";
-import type {AccessRequest, ApiResponse, CategoriesResponseCount, CategoryResponse, OwnershipRequest} from "@/types";
+import type {AccessRequest, ApiResponse, CategoriesResponseCount, CategoryResponse, OwnershipRequest, SafeCategoryResponse} from "@/types";
 
 /**
  * Category management endpoints for handling category resources.
@@ -37,7 +37,7 @@ export class CategoryController {
   @CategoryDecorator.FindOneDecorators()
   findOne(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
-  ): Promise<ApiResponse<CategoryResponse>> {
+  ): Promise<ApiResponse<SafeCategoryResponse>> {
     return this.categoryService.findOne(id);
   }
 

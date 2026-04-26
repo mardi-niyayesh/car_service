@@ -24,11 +24,9 @@ export class CartService {
   /** get self cart
    * - **only roles with permission (user.self) can accessibility to this route**
    */
-  async getCart(id: string, user: UserAccess): Promise<ApiResponse<CartResponse>> {
+  async getCart(user_id: string, user: UserAccess): Promise<ApiResponse<CartResponse>> {
     const cart = await this.prisma.cart.findUnique({
-      where: {
-        user_id: id
-      },
+      where: {user_id},
       include: {
         carRents: {
           include: {
@@ -42,6 +40,8 @@ export class CartService {
         }
       }
     });
+
+    console.log(cart);
 
     if (!cart) throw new NotFoundException({
       message: 'Cart not found in database, please contact to administrator',
