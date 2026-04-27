@@ -52,6 +52,8 @@ const RolesPage = () => {
       if (status === 200) {
         setIsSuccessOpen(true);
         setSuccessMessage("نقش با موفقیت حذف شد.");
+
+        setRoles((prevRoles) => prevRoles.filter((role) => role.id !== roleId));
         fetchGetRoles();
       }
     } catch (err) {
