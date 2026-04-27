@@ -26,24 +26,19 @@ type Role = {
 const ComponentDatailUser = () => {
   const { userId } = useParams<{ userId: string }>();
   // console.log("userId:", userId);
-
   //success Modal
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   //Warning Modal
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
-
   //get information user
   const [user, setUser] = useState<User | null>(null);
-
   //get all roles
   const [roles, setRoles] = useState<Role[]>([]);
-
   //get select rolesId
   const [selectedRoleId, setSelectedRoleId] = useState<string[]>([]);
   // console.log("selectedRoleId:", selectedRoleId);
-
   //for get initial Role
   const [initialRoles, setInitialRoles] = useState<string[]>([]);
   // console.log("initialRoles:", initialRoles);
@@ -69,10 +64,9 @@ const ComponentDatailUser = () => {
       const userResponse = await axiosClient.get(`/users/find?id=${userId}`);
       const userData = userResponse.data.response.data.user;
       setUser(userData);
+      console.log("User data roles:", userData.roles);
 
-      const userRoleNames = Array.isArray(userData.roles)
-        ? userData.roles.map((role: Role) => role.name)
-        : [];
+      const userRoleNames = Array.isArray(userData.roles) ? userData.roles : [];
 
       console.log("use rRole Names :", userRoleNames);
 
@@ -80,6 +74,7 @@ const ComponentDatailUser = () => {
       const userRoleIds = userRole
         .filter((role: Role) => userRoleNames.includes(role.name))
         .map((role: Role) => role.id);
+      console.log("user Role Ids", userRoleIds);
 
       setSelectedRoleId(userRoleIds);
       setInitialRoles(userRoleIds);
@@ -198,7 +193,7 @@ const ComponentDatailUser = () => {
           در حال گرفتن اطلاعات کاربر...
         </p>
       ) : (
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-6">
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
           <div className="flex items-center gap-4 mb-4">
             <div className="bg-blue-100 p-3 rounded-full text-blue-600">
               <FaUser size={24} />
@@ -243,7 +238,7 @@ const ComponentDatailUser = () => {
             return (
               <label
                 key={role.id}
-                className={`flex items-center gap-3 p-2 rounded cursor-pointer transition-colors duration-150 ${
+                className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
                   isDisabled
                     ? "opacity-50 cursor-not-allowed bg-gray-100"
                     : "hover:bg-gray-50"
@@ -254,12 +249,12 @@ const ComponentDatailUser = () => {
                   checked={isChecked}
                   disabled={isDisabled}
                   onChange={() => handleRoleChange(role.id)}
-                  className="w-5 h-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="w-5 h-5 text-blue-600"
                 />
                 <span className="flex items-center gap-2">
-                  <span className="font-medium text-gray-700">{role.name}</span>
+                  <span className="font-medium">{role.name}</span>
                   {isDisabled && (
-                    <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded">
+                    <span className="text-xs bg-gray-200 px-2 py-1 rounded">
                       غیرقابل اختصاص
                     </span>
                   )}
@@ -271,15 +266,14 @@ const ComponentDatailUser = () => {
 
         <button
           onClick={handleSaveChanges}
-          className="mt-6 px-5 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-150"
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
           ثبت تغییرات
         </button>
-        <Link
-          to="description"
-          className="block mt-3 text-sm text-blue-600 hover:underline"
-        >
-          برای خواندن توضیحات هر نقش کلیک کنید
+        <Link to="description">
+          <div className="hover:text-blue-600  mt-2">
+            برای خواندن توضیحات هر نقش کلیک کنید
+          </div>
         </Link>
       </div>
 
