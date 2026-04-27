@@ -2,7 +2,7 @@ import * as CartDto from "./dto";
 import {eventsEmitter} from "@/common";
 import {OnEvent} from "@nestjs/event-emitter";
 import {RentStatus} from "@/modules/prisma/generated/enums";
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {ApiResponse, BaseException, CartResponse, CreateCartSignup, UserAccess} from "@/types";
 
@@ -74,65 +74,62 @@ export class CartService {
    * - **only roles with permission (user.self) can accessibility to this route**
    */
   async addToCart(user_id: string, data: CartDto.AddToCartType) {
-    const end_date: Date = new Date(data.end_date);
-    const start_date: Date = new Date(data.start_date);
+    return this.prisma.$transaction(async (tx) => {
+      const newEnd: Date = new Date(data.end_date);
+      const newStart: Date = new Date(data.start_date);
 
-    console.log(end_date);
-    console.log(start_date);
-
-    const car = await this.prisma.car.findUnique({
-      where: {slug: data.car_slug},
-      include: {
-        category: {
-          omit: {creator_id: true}
-        },
-        carRents: {
-          where: {
-            OR: [
-              {
-                start_date: {}
-              },
-              {
-                end_date: {}
-              }
-            ]
+      const car = await tx.car.findUnique({
+        where: {slug: data.car_slug},
+        include: {
+          category: {
+            omit: {creator_id: true}
+          },
+          carRents: {
+            where: {
+              AND: [
+                {end_date: {gt: newStart}},
+                {start_date: {lt: newEnd}},
+              ],
+            }
           }
+        },
+        omit: {creator_id: true}
+      });
+
+      if (!car) throw new NotFoundException({
+        message: 'This car slug does not exist in database',
+        error: 'Car slug not found.'
+      } as BaseException);
+
+      if (car.carRents.length) throw new ConflictException({
+        message: 'The selected car is already rented for all or part of the requested period. Please choose different dates or another car.',
+        error: 'Car Rental Conflict'
+      } as BaseException);
+
+      const {description, daysCount} = data;
+      const price = daysCount * car.price_per_day;
+
+      const user = await tx.user.findUnique({
+        where: {id: user_id},
+        include: {cart: true}
+      });
+
+      if (!user || !user.cart) throw new NotFoundException({
+        message: 'User Cart does not exist in database, please contact to administrator',
+        error: 'User Cart not found.'
+      });
+
+      const carRent = await tx.carRent.create({
+        data: {
+          price,
+          description,
+          car_id: car.id,
+          end_date: newEnd,
+          start_date: newStart,
+          cart_id: user.cart.id,
+          status: RentStatus.PENDING,
         }
-      },
-      omit: {creator_id: true}
-    });
-
-    if (!car) throw new NotFoundException({
-      message: 'This car slug does not exist in database',
-      error: 'Car slug not found.'
-    } as BaseException);
-
-    console.log(car);
-    console.log(data.daysCount * car.price_per_day);
-
-    const {description, daysCount} = data;
-    const price = daysCount * car.price_per_day;
-
-    const user = await this.prisma.user.findUnique({
-      where: {id: user_id},
-      include: {cart: true}
-    });
-
-    if (!user || !user.cart) throw new NotFoundException({
-      message: 'User Cart does not exist in database, please contact to administrator',
-      error: 'User Cart not found.'
-    });
-
-    await this.prisma.carRent.create({
-      data: {
-        price,
-        end_date,
-        start_date,
-        description,
-        car_id: car.id,
-        cart_id: user.cart.id,
-        status: RentStatus.PENDING,
-      }
+      });
     });
   }
 }
