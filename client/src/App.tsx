@@ -108,6 +108,8 @@ function App() {
             <Route path="product" element={<ProductPage />} />
             <Route path="category" element={<CategoryPage />} />
             <Route path="roles" element={<RolesPage />} />
+            <Route path="Profile" element={<Profile />} />
+            <Route path="logout" element={<LogoutPage />} />
           </Route>
           {/* ------- 404 ------- */}
           <Route path="*" element={<NotFoundPage />} />
