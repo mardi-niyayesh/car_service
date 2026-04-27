@@ -1,6 +1,7 @@
 import * as CartDto from "./dto";
 import {eventsEmitter} from "@/common";
 import {OnEvent} from "@nestjs/event-emitter";
+import {RentStatus} from "@/modules/prisma/generated/enums";
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {ApiResponse, BaseException, CartResponse, CreateCartSignup, UserAccess} from "@/types";
@@ -72,14 +73,31 @@ export class CartService {
   /** add rent of car to cart
    * - **only roles with permission (user.self) can accessibility to this route**
    */
-  async addToCart(data: CartDto.AddToCartType) {
+  async addToCart(user_id: string, data: CartDto.AddToCartType) {
+    const end_date: Date = new Date(data.end_date);
+    const start_date: Date = new Date(data.start_date);
+
+    console.log(end_date);
+    console.log(start_date);
+
     const car = await this.prisma.car.findUnique({
       where: {slug: data.car_slug},
       include: {
         category: {
           omit: {creator_id: true}
         },
-        carRents: true
+        carRents: {
+          where: {
+            OR: [
+              {
+                start_date: {}
+              },
+              {
+                end_date: {}
+              }
+            ]
+          }
+        }
       },
       omit: {creator_id: true}
     });
@@ -91,5 +109,30 @@ export class CartService {
 
     console.log(car);
     console.log(data.daysCount * car.price_per_day);
+
+    const {description, daysCount} = data;
+    const price = daysCount * car.price_per_day;
+
+    const user = await this.prisma.user.findUnique({
+      where: {id: user_id},
+      include: {cart: true}
+    });
+
+    if (!user || !user.cart) throw new NotFoundException({
+      message: 'User Cart does not exist in database, please contact to administrator',
+      error: 'User Cart not found.'
+    });
+
+    await this.prisma.carRent.create({
+      data: {
+        price,
+        end_date,
+        start_date,
+        description,
+        car_id: car.id,
+        cart_id: user.cart.id,
+        status: RentStatus.PENDING,
+      }
+    });
   }
 }

@@ -31,9 +31,10 @@ export class CartController {
   @Post()
   @CartDecorator.AddToCartDecorators()
   async addToCart(
+    @Req() req: AccessRequest,
     @Body(new ZodPipe(CartDto.AddToCartValidator)) data: CartDto.AddToCartType
   ) {
-    await this.cartService.addToCart(data);
+    await this.cartService.addToCart(req.user.userId, data);
     return data;
   }
 }
