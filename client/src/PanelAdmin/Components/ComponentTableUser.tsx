@@ -3,6 +3,8 @@ import axiosClient from "../../services/axiosClient";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+import { useCallback } from "react";
+
 type User = {
   id: number;
   display_name: string;
@@ -18,7 +20,7 @@ const ComponentTableUser = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const response = await axiosClient.get(
@@ -42,15 +44,15 @@ const ComponentTableUser = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchUsers();
   }, [page]);
 
   const handlePageClick = (selectedPage: number) => {
     setPage(selectedPage);
   };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [page,fetchUsers]);
 
   const renderPagination = () => {
     const pageButtons = [];
