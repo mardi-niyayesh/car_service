@@ -73,10 +73,8 @@ export class CartService {
    * - **only roles with permission (user.self) can accessibility to this route**
    */
   async addToCart(data: CartDto.AddToCartType) {
-    const {car_slug} = data;
-
     const car = await this.prisma.car.findUnique({
-      where: {slug: car_slug},
+      where: {slug: data.car_slug},
       include: {
         category: {
           omit: {creator_id: true}
@@ -92,5 +90,6 @@ export class CartService {
     } as BaseException);
 
     console.log(car);
+    console.log(data.daysCount * car.price_per_day);
   }
 }

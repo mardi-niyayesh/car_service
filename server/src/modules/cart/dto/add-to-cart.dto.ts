@@ -3,11 +3,14 @@ import dayjs from "dayjs";
 import {createZodDto} from "nestjs-zod";
 import {CarSlugValidator} from "../../car/dto";
 import IsSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import IsSameOrBefore from "dayjs/plugin/isSameOrBefore";
 
 dayjs.extend(IsSameOrAfter);
+dayjs.extend(IsSameOrBefore);
 
 const today = dayjs().startOf('day');
 const tomorrow = dayjs(today).add(1, 'day');
+const maxEndDate = dayjs(today).add(30, 'day');
 
 /** add to cart validator */
 export const AddToCartValidator = z.object({
@@ -29,7 +32,18 @@ export const AddToCartValidator = z.object({
     .date()
     .refine((dateStr) => dayjs(dateStr).isSameOrAfter(tomorrow), {
       error: 'end_date must be at least one day after today'
+    })
+    .refine((dateStr) => dayjs(dateStr).isSameOrBefore(maxEndDate), {
+      error: `end_date cannot be more than 30 days from today (max: ${maxEndDate.format('YYYY-MM-DD')}`
     }),
+}).transform((data) => {
+  const end = dayjs(data.end_date);
+  const start = dayjs(data.start_date);
+
+  return {
+    ...data,
+    daysCount: end.diff(start, 'days'),
+  };
 });
 
 /** typeof add to cart validator */
