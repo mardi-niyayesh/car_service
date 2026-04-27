@@ -4,7 +4,7 @@ import {ApiBearerAuth} from "@nestjs/swagger";
 import * as CartDecorator from "./decorators";
 import {Permission, PERMISSIONS, ZodPipe} from "@/common";
 import {Body, Controller, Get, Post, Req} from '@nestjs/common';
-import type {AccessRequest, ApiResponse, CartResponse} from "@/types";
+import type {AccessRequest, ApiResponse, CarRentResponse, CartResponse} from "@/types";
 
 @Controller('carts')
 @ApiBearerAuth("accessToken")
@@ -33,8 +33,7 @@ export class CartController {
   async addToCart(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(CartDto.AddToCartValidator)) data: CartDto.AddToCartType
-  ) {
-    await this.cartService.addToCart(req.user.userId, data);
-    return data;
+  ): Promise<ApiResponse<CarRentResponse>> {
+    return this.cartService.addToCart(req.user.userId, data);
   }
 }
