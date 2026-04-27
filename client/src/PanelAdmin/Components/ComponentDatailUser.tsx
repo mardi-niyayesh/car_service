@@ -3,7 +3,7 @@ import axiosClient from "../../services/axiosClient";
 import { FaUser } from "react-icons/fa";
 //hooks
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 //Modal
 import SuccessModal from "../../components/common/SuccessModal";
@@ -23,8 +23,8 @@ type Role = {
   permissions: string[];
 };
 
-const ComponentCategoryDatailUser = () => {
-  const { userId } = useParams();
+const ComponentDatailUser = () => {
+  const { userId } = useParams<{ userId: string }>();
   // console.log("userId:", userId);
 
   //success Modal
@@ -48,54 +48,80 @@ const ComponentCategoryDatailUser = () => {
   const [initialRoles, setInitialRoles] = useState<string[]>([]);
   // console.log("initialRoles:", initialRoles);
 
-  const fetchUser = async (allRoles: Role[]) => {
+  const fetchUser = useCallback(async () => {
     if (!userId) {
-      console.log("userId  missing.");
+      console.log("userId missing.");
       setUser(null);
+      setRoles([]);
+      setSelectedRoleId([]);
+      setInitialRoles([]);
       return;
-      alert();
     }
     try {
-      const response = await axiosClient.get(`/users/find?id=${userId}`);
-      const userData = response.data.response.data.user;
+      // Fetch roles Data
+      const response = await axiosClient.get(
+        `/roles?order=desc&limit=10&page=1`,
+      );
+      const userRole = response.data.response.data.roles;
+      setRoles(userRole);
+
+      // Fetch user data
+      const userResponse = await axiosClient.get(`/users/find?id=${userId}`);
+      const userData = userResponse.data.response.data.user;
       setUser(userData);
 
       const userRoleNames = Array.isArray(userData.roles)
-        ? userData.roles
-        : [userData.roles];
+        ? userData.roles.map((role: Role) => role.name)
+        : [];
 
-      console.log("userRoleNames :", userRoleNames);
+      console.log("use rRole Names :", userRoleNames);
 
       //convert name roles to id Roles
-      const userRoleIds = allRoles
-        .filter((role) => userRoleNames.includes(role.name))
-        .map((role) => role.id);
+      const userRoleIds = userRole
+        .filter((role: Role) => userRoleNames.includes(role.name))
+        .map((role: Role) => role.id);
 
       setSelectedRoleId(userRoleIds);
       setInitialRoles(userRoleIds);
     } catch (err) {
       console.log("Error in get users :", err);
       setUser(null);
+      setRoles([]);
+      setSelectedRoleId([]);
+      setInitialRoles([]);
     }
-  };
-
-  const getRoles = async () => {
-    const response = await axiosClient.get("/roles?order=desc&limit=10&page=1");
-    const allRoles = response.data.response.data.roles;
-    setRoles(allRoles);
-    return allRoles;
-  };
-
-  useEffect(() => {
-    const init = async () => {
-      const allRoles = await getRoles();
-      await fetchUser(allRoles);
-    };
-    init();
   }, [userId]);
 
-  const handleSaveChanges = async () => {
-    if (!user || !userId || !roles || roles.length === 0) return;
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
+
+  //roleId = role.id
+  const handleRoleChange = useCallback((roleId: string) => {
+    setSelectedRoleId((prev) => {
+      if (prev.includes(roleId)) {
+        return prev.filter((id) => id !== roleId);
+      } else {
+        return [...prev, roleId];
+      }
+    });
+  }, []);
+  //roleName = role.name
+  const isRoleDisabled = useCallback((roleName: string) => {
+    if (["owner", "self"].includes(roleName)) {
+      return true;
+    }
+  }, []);
+  //roleId = role.id
+  const isRoleChecked = useCallback(
+    (roleId: string) => {
+      return selectedRoleId.includes(roleId);
+    },
+    [selectedRoleId],
+  );
+
+  const handleSaveChanges = useCallback(async () => {
+    if (!userId || roles.length === 0) return;
 
     // add roles => to selectedRoleId but not initialRoles
     const RolesToAdd = selectedRoleId.filter(
@@ -152,38 +178,18 @@ const ComponentCategoryDatailUser = () => {
           prev.filter((id) => !filterRolesToRemove.includes(id)),
         );
       }
-      //for updat initialRole
+      // for updat initialRole
       setInitialRoles((prev) => [...prev]);
-      setIsSuccessOpen(true)
+      setIsSuccessOpen(true);
+      await fetchUser();
       setSuccessMessage("تغییرات با موفقیت انجامم شد:)");
     } catch (err) {
       console.log("Error in change roles:", err);
-      setIsWarningOpen(true)
+      setIsWarningOpen(true);
+      await fetchUser();
       setWarningMessage("خطا در انجام تغییرات :(");
     }
-  };
-
-  //roleId = role.id
-  const handleRoleChange = (roleId: string) => {
-    setSelectedRoleId((prev) => {
-      if (prev.includes(roleId)) {
-        return prev.filter((id) => id !== roleId);
-      } else {
-        return [...prev, roleId];
-      }
-    });
-  };
-  //roleName = role.name
-  const isRoleDisabled = (roleName: string) => {
-    if (["owner", "self"].includes(roleName)) {
-      return true;
-    }
-    return false;
-  };
-  //roleId = role.id
-  const isRoleChecked = (roleId: string) => {
-    return selectedRoleId.includes(roleId);
-  };
+  }, [userId, roles, selectedRoleId, initialRoles, fetchUser]);
 
   return (
     <>
@@ -192,7 +198,7 @@ const ComponentCategoryDatailUser = () => {
           در حال گرفتن اطلاعات کاربر...
         </p>
       ) : (
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-6">
           <div className="flex items-center gap-4 mb-4">
             <div className="bg-blue-100 p-3 rounded-full text-blue-600">
               <FaUser size={24} />
@@ -237,7 +243,7 @@ const ComponentCategoryDatailUser = () => {
             return (
               <label
                 key={role.id}
-                className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
+                className={`flex items-center gap-3 p-2 rounded cursor-pointer transition-colors duration-150 ${
                   isDisabled
                     ? "opacity-50 cursor-not-allowed bg-gray-100"
                     : "hover:bg-gray-50"
@@ -248,12 +254,12 @@ const ComponentCategoryDatailUser = () => {
                   checked={isChecked}
                   disabled={isDisabled}
                   onChange={() => handleRoleChange(role.id)}
-                  className="w-5 h-5 text-blue-600"
+                  className="w-5 h-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
                 <span className="flex items-center gap-2">
-                  <span className="font-medium">{role.name}</span>
+                  <span className="font-medium text-gray-700">{role.name}</span>
                   {isDisabled && (
-                    <span className="text-xs bg-gray-200 px-2 py-1 rounded">
+                    <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded">
                       غیرقابل اختصاص
                     </span>
                   )}
@@ -265,14 +271,15 @@ const ComponentCategoryDatailUser = () => {
 
         <button
           onClick={handleSaveChanges}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          className="mt-6 px-5 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-150"
         >
           ثبت تغییرات
         </button>
-        <Link to="description">
-          <div className="hover:text-blue-600  mt-2">
-            برای خواندن توضیحات هر نقش کلیک کنید
-          </div>
+        <Link
+          to="description"
+          className="block mt-3 text-sm text-blue-600 hover:underline"
+        >
+          برای خواندن توضیحات هر نقش کلیک کنید
         </Link>
       </div>
 
@@ -291,4 +298,4 @@ const ComponentCategoryDatailUser = () => {
   );
 };
 
-export default ComponentCategoryDatailUser;
+export default ComponentDatailUser;
