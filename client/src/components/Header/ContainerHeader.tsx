@@ -17,23 +17,23 @@ const ContainerHeader = () => {
           <Logo />
           <div className="flex items-center gap-3">
             {user ? (
-              user.display_name === "owner" ? (
-                <Link to="/panel">
-                  <span className="text-[20px] text-blue-700 font-bold">
+              user.roles.length === 1 && user.roles[0] === "self" ? (
+                <Link to="/dashboard">
+                  <span className="text-lg font-semibold border-2 p-3 rounded-lg bg-blue-600 hover:bg-blue-800 text-white">
                     {user.display_name}
                     <IoChevronDown
                       size={18}
-                      className="text-blue-700 inline-block ml-1"
+                      className="text-white inline-block ml-1"
                     />
                   </span>
                 </Link>
               ) : (
-                <Link to="/dashboard">
-                  <span className="text-[20px] text-blue-700 font-bold">
+                <Link to="/panel">
+                  <span className="text-lg font-semibold text-blue-600 border-2 p-3 rounded-lg bg-blue-600 text-white">
                     {user.display_name}
                     <IoChevronDown
                       size={18}
-                      className="text-blue-700 inline-block ml-1"
+                      className="text-white inline-block ml-1"
                     />
                   </span>
                 </Link>
@@ -41,6 +41,7 @@ const ContainerHeader = () => {
             ) : (
               <AuthButton />
             )}
+
             <Basket />
           </div>
         </div>
@@ -60,8 +61,8 @@ const ContainerHeader = () => {
           </div>
           <div className="flex items-center gap-4">
             {user ? (
-              user.display_name === "owner" ? (
-                <Link to="/panel">
+              user.roles.length === 1 && user.roles[0] === "self" ? (
+                <Link to="/dashboard">
                   <span className="text-lg font-semibold border-2 p-3 rounded-lg bg-blue-600 hover:bg-blue-800 text-white">
                     {user.display_name}
                     <IoChevronDown
@@ -71,7 +72,7 @@ const ContainerHeader = () => {
                   </span>
                 </Link>
               ) : (
-                <Link to="/dashboard">
+                <Link to="/panel">
                   <span className="text-lg font-semibold text-blue-600 border-2 p-3 rounded-lg bg-blue-600 text-white">
                     {user.display_name}
                     <IoChevronDown
