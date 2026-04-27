@@ -4,6 +4,7 @@ import {createZodDto} from "nestjs-zod";
 import {CarSlugValidator} from "../../car/dto";
 import IsSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import IsSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import {getNormalErrorResponse} from "@/common";
 
 dayjs.extend(IsSameOrAfter);
 dayjs.extend(IsSameOrBefore);
@@ -51,3 +52,11 @@ export type AddToCartType = z.infer<typeof AddToCartValidator>;
 
 /** add to cart swagger dto */
 export class AddToCartDto extends createZodDto(AddToCartValidator) {}
+
+/** not found example response for add to cart */
+export class AddToCartNotFound extends getNormalErrorResponse({
+  statusCode: 404,
+  path: "/carts",
+  message: "This car slug does not exist in database",
+  error: "Car slug not found."
+}) {}
