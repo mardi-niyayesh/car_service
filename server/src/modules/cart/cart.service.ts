@@ -2,9 +2,9 @@ import * as CartDto from "./dto";
 import {eventsEmitter} from "@/common";
 import {OnEvent} from "@nestjs/event-emitter";
 import {RentStatus} from "@/modules/prisma/generated/enums";
-import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import type {ApiResponse, BaseException, CartResponse, CreateCartSignup, UserAccess} from "@/types";
+import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
+import type {ApiResponse, BaseException, CartResponse, CreateCartSignup, UserAccess, CarRentResponse} from "@/types";
 
 @Injectable()
 export class CartService {
@@ -73,8 +73,8 @@ export class CartService {
   /** add rent of car to cart
    * - **only roles with permission (user.self) can accessibility to this route**
    */
-  async addToCart(user_id: string, data: CartDto.AddToCartType) {
-    return this.prisma.$transaction(async (tx) => {
+  async addToCart(user_id: string, data: CartDto.AddToCartType): Promise<ApiResponse<CarRentResponse>> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse<CarRentResponse>> => {
       const newEnd: Date = new Date(data.end_date);
       const newStart: Date = new Date(data.start_date);
 
@@ -119,6 +119,8 @@ export class CartService {
         error: 'User Cart not found.'
       });
 
+      const {carRents: _carRents, ...carData} = car;
+
       const carRent = await tx.carRent.create({
         data: {
           price,
@@ -130,6 +132,16 @@ export class CartService {
           status: RentStatus.PENDING,
         }
       });
+
+      return {
+        message: 'car rent successfully add to your cart',
+        data: {
+          carRent: {
+            ...carRent,
+            car: carData
+          }
+        }
+      };
     });
   }
 }

@@ -1,5 +1,5 @@
-import {UserAccess} from "@/types/request.types";
-import {Prisma} from "@/modules/prisma/generated/client";
+import type {UserAccess, SafeCarNCategory} from "./";
+import type {CarRent, Prisma} from "@/modules/prisma/generated/client";
 
 type CartIncludeResponseType = Prisma.CartGetPayload<{
   omit: {
@@ -31,4 +31,9 @@ export interface CartResponse {
       id: string;
     }
   };
+}
+
+/** typeof car rent response */
+export interface CarRentResponse {
+  carRent: CarRent & SafeCarNCategory;
 }
