@@ -6,6 +6,33 @@ import {Permission, PERMISSIONS, ZodPipe} from "@/common";
 import {Body, Controller, Get, Post, Req} from '@nestjs/common';
 import type {AccessRequest, ApiResponse, CarRentResponse, CartResponse} from "@/types";
 
+/**
+ * Cart and rental management endpoints.
+ *
+ * This controller handles:
+ * - Retrieving the authenticated user's cart with all active rental items
+ * - Adding a new car rental to the current user's cart
+ *   (automatically validates date conflicts and car availability)
+ * - Creating an empty cart for new users upon signup (via event listener, not direct endpoint)
+ *
+ * Security rules:
+ * - All endpoints require authentication (Bearer token)
+ * - Users can only access their own cart (user.self permission)
+ * - Cart creation during signup is handled automatically, no manual endpoint needed
+ *
+ * Date validation:
+ * - start_date must be today or later
+ * - end_date must be at least one day after today
+ * - Maximum rental period is 30 days from today
+ * - end_date must be after start_date
+ *
+ * Conflict detection:
+ * - Prevents adding a rental if the car is already booked for any overlapping date range
+ * - Returns 409 Conflict with appropriate error message
+ *
+ * @see CartService for business logic implementation
+ * @see AddToCartValidator for date validation rules
+ */
 @Controller('carts')
 @ApiBearerAuth("accessToken")
 @Permission({
