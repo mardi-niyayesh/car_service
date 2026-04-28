@@ -11,6 +11,7 @@ export const GetCartDecorators = () => applyDecorators(
 
 export const AddToCartDecorators = () => applyDecorators(
   HttpCode(HttpStatus.CREATED),
+  ApiOperation(CartDto.addToCartOperation),
   ApiBody({type: CartDto.AddToCartDto}),
   ApiCreatedResponse({type: CartDto.AddToCartOk}),
   ApiUnauthorizedResponse({type: getUnauthorizedResponse('carts')}),
