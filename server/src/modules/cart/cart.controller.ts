@@ -9,29 +9,31 @@ import type {AccessRequest, ApiResponse, CarRentResponse, CartResponse} from "@/
 /**
  * Cart and rental management endpoints.
  *
+ * @description
  * This controller handles:
  * - Retrieving the authenticated user's cart with all active rental items
- * - Adding a new car rental to the current user's cart
- *   (automatically validates date conflicts and car availability)
+ * - Adding a new car rental to the current user's cart (automatically validates date conflicts and car availability)
  * - Creating an empty cart for new users upon signup (via event listener, not direct endpoint)
  *
- * Security rules:
+ * **Security rules:**
  * - All endpoints require authentication (Bearer token)
  * - Users can only access their own cart (user.self permission)
  * - Cart creation during signup is handled automatically, no manual endpoint needed
  *
- * Date validation:
- * - start_date must be today or later
- * - end_date must be at least one day after today
+ * **Date validation:**
+ * - `start_date` must be today or later
+ * - `end_date` must be at least one day after today
  * - Maximum rental period is 30 days from today
- * - end_date must be after start_date
+ * - `end_date` must be after `start_date`
  *
- * Conflict detection:
+ * **Conflict detection:**
  * - Prevents adding a rental if the car is already booked for any overlapping date range
- * - Returns 409 Conflict with appropriate error message
+ * - Returns `409 Conflict` with appropriate error message
  *
- * @see CartService for business logic implementation
- * @see AddToCartValidator for date validation rules
+ * @see {@link CartService} for business logic implementation
+ * @see {@link AddToCartValidator} for date validation rules
+ * @module CartController
+ * @version 1.0
  */
 @Controller('carts')
 @ApiBearerAuth("accessToken")
@@ -41,8 +43,18 @@ import type {AccessRequest, ApiResponse, CarRentResponse, CartResponse} from "@/
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
-  /** get self cart
-   * - **only roles with permission (user.self) can accessibility to this route**
+  /**
+   * Retrieves the current user's cart with all active rental items.
+   *
+   * @param req - Authenticated request object containing user info
+   * @returns Promise containing cart details with all rental items
+   *
+   * @example
+   * GET /api/v1/carts
+   * Authorization: Bearer <token>
+   *
+   * @throws {Unauthorized Exception} If token is missing or invalid
+   * @see {@link CartService.getCart}
    */
   @Get()
   @CartDecorator.GetCartDecorators()
