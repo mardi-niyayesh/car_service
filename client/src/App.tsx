@@ -2,6 +2,8 @@
 import UserProvider from "./Context/UserProvider";
 //hooks
 import { Routes, Route } from "react-router-dom";
+import { useUser } from "./hooks/useUser";
+import ProtectedRoute from "./Routes/ProtectedRoute";
 //layout components
 import MainLayout from "./Layouts/MainLayout";
 import AuthLayout from "./Layouts/AuthLayout";
