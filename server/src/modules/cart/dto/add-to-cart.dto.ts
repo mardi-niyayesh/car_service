@@ -35,7 +35,7 @@ export const AddToCartValidator = z.object({
       error: 'end_date must be at least one day after today'
     })
     .refine((dateStr) => dayjs(dateStr).isSameOrBefore(maxEndDate), {
-      error: `end_date cannot be more than 30 days from today (max: ${maxEndDate.format('YYYY-MM-DD')}`
+      error: `end_date cannot be more than 30 days from today (max: ${maxEndDate.format('YYYY-MM-DD')})`
     }),
 }).transform((data) => {
   const end = dayjs(data.end_date);
@@ -59,4 +59,12 @@ export class AddToCartNotFound extends getNormalErrorResponse({
   path: "/carts",
   message: "This car slug does not exist in database",
   error: "Car slug not found."
+}) {}
+
+/** conflict example response for add to cart */
+export class AddToCartConflict extends getNormalErrorResponse({
+  statusCode: 409,
+  path: "/carts",
+  message: "The selected car is already rented for all or part of the requested period. Please choose different dates or another car.",
+  error: "Car Rental Conflict"
 }) {}
