@@ -55,6 +55,20 @@ export type AddToCartType = z.infer<typeof AddToCartValidator>;
 /** add to cart swagger dto */
 export class AddToCartDto extends createZodDto(AddToCartValidator) {}
 
+export const exampleCarRent: CarRentResponse['carRent'] = {
+  id: "8cabf0eb-ecae-4fe9-a90d-81ed671fb26c",
+  created_at: exampleDate,
+  updated_at: exampleDate,
+  description: "string",
+  price: 40_000_000,
+  status: "PENDING",
+  start_date: exampleDate,
+  end_date: exampleDate,
+  car_id: "c8217255-b4b2-4734-a10c-76a1b752693b",
+  cart_id: "33d944e3-480b-49d5-82d9-644d288347b0",
+  car: exampleCarRecord
+};
+
 /** success example response for add to cart */
 export class AddToCartOk extends getBaseOkResponseSchema<CarRentResponse>({
   create: true,
@@ -62,21 +76,7 @@ export class AddToCartOk extends getBaseOkResponseSchema<CarRentResponse>({
   statusCode: 201,
   response: {
     message: 'car rent successfully add to your cart',
-    data: {
-      carRent: {
-        id: "8cabf0eb-ecae-4fe9-a90d-81ed671fb26c",
-        created_at: exampleDate,
-        updated_at: exampleDate,
-        description: "string",
-        price: 40000000,
-        status: "PENDING",
-        start_date: exampleDate,
-        end_date: exampleDate,
-        car_id: "c8217255-b4b2-4734-a10c-76a1b752693b",
-        cart_id: "33d944e3-480b-49d5-82d9-644d288347b0",
-        car: exampleCarRecord
-      }
-    }
+    data: {carRent: exampleCarRent}
   }
 }) {}
 
