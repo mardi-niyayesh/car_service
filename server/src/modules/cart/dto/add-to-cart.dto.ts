@@ -1,12 +1,12 @@
 import z from "zod";
 import dayjs from "dayjs";
+import {exampleDate} from "@/lib";
 import {createZodDto} from "nestjs-zod";
 import type {CarRentResponse} from "@/types";
-import {CarSlugValidator, exampleCarRecord} from "../../car/dto";
 import IsSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import IsSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import {CarSlugValidator, exampleCarRecord} from "../../car/dto";
 import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
-import {exampleDate} from "@/lib";
 
 dayjs.extend(IsSameOrAfter);
 dayjs.extend(IsSameOrBefore);
