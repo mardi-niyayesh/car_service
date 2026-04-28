@@ -12,7 +12,7 @@ export class GetCartOk extends getBaseOkResponseSchema<CartResponse>({
         id: "33d944e3-480b-49d5-82d9-644d288347b0",
         created_at: exampleDate,
         updated_at: exampleDate,
-        total_price: 180000000,
+        total_price: 40000000,
         user: {
           id: "1dbae5ed-a7bd-4d58-81b0-766e1a4191dd",
           roles: [

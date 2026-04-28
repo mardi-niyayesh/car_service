@@ -99,13 +99,15 @@ export class CartService {
         error: 'Car slug not found.'
       } as BaseException);
 
-      if (car.carRents.length) throw new ConflictException({
+      const {carRents, ...carData} = car;
+
+      if (carRents.length) throw new ConflictException({
         message: 'The selected car is already rented for all or part of the requested period. Please choose different dates or another car.',
         error: 'Car Rental Conflict'
       } as BaseException);
 
       const {description, daysCount} = data;
-      const price = daysCount * car.price_per_day;
+      const price: number = daysCount * car.price_per_day;
 
       const user = await tx.user.findUnique({
         where: {id: user_id},
@@ -116,8 +118,6 @@ export class CartService {
         message: 'User Cart does not exist in database, please contact to administrator',
         error: 'User Cart not found.'
       });
-
-      const {carRents: _carRents, ...carData} = car;
 
       const carRent = await tx.carRent.create({
         data: {
@@ -131,7 +131,7 @@ export class CartService {
         }
       });
 
-      const total_price = user.cart.total_price + price;
+      const total_price: number = user.cart.total_price + price;
 
       await tx.cart.update({
         where: {id: user.cart.id},
