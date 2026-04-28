@@ -109,11 +109,7 @@ export class CartService {
 
       const user = await tx.user.findUnique({
         where: {id: user_id},
-        include: {
-          cart: {
-            include: {carRents: true}
-          }
-        }
+        include: {cart: true}
       });
 
       if (!user || !user.cart) throw new NotFoundException({
