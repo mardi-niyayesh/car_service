@@ -43,8 +43,6 @@ export class CartService {
       }
     });
 
-    console.log(cart);
-
     if (!cart) throw new NotFoundException({
       message: 'Cart not found in database, please contact to administrator',
       error: 'Cart not found.'
@@ -111,7 +109,11 @@ export class CartService {
 
       const user = await tx.user.findUnique({
         where: {id: user_id},
-        include: {cart: true}
+        include: {
+          cart: {
+            include: {carRents: true}
+          }
+        }
       });
 
       if (!user || !user.cart) throw new NotFoundException({
@@ -131,6 +133,13 @@ export class CartService {
           cart_id: user.cart.id,
           status: RentStatus.PENDING,
         }
+      });
+
+      const total_price = user.cart.total_price + price;
+
+      await tx.cart.update({
+        where: {id: user.cart.id},
+        data: {total_price}
       });
 
       return {
