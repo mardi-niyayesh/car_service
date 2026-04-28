@@ -88,6 +88,8 @@ export type UserContextType = {
   setToken: (newToken: string | null) => void;
   logout: () => void;
   isLoading?: boolean;
+   hasPermission: (permission: string) => boolean;
+  hasRole: (role: string) => boolean;
 };
 
 export type RefreshResponse = {
