@@ -80,7 +80,9 @@ export class CartService {
         where: {slug: data.car_slug},
         include: {
           category: {
-            omit: {creator_id: true}
+            omit: {
+              creator_id: true
+            }
           },
           carRents: {
             where: {
@@ -99,6 +101,7 @@ export class CartService {
         error: 'Car slug not found.'
       } as BaseException);
 
+
       const {carRents, ...carData} = car;
 
       if (carRents.length) throw new ConflictException({
@@ -111,7 +114,13 @@ export class CartService {
 
       const user = await tx.user.findUnique({
         where: {id: user_id},
-        include: {cart: true}
+        include: {
+          cart: {
+            select: {
+              id: true
+            }
+          }
+        }
       });
 
       if (!user || !user.cart) throw new NotFoundException({
@@ -131,11 +140,13 @@ export class CartService {
         }
       });
 
-      const total_price: number = user.cart.total_price + price;
-
       await tx.cart.update({
         where: {id: user.cart.id},
-        data: {total_price}
+        data: {
+          total_price: {
+            increment: price
+          }
+        }
       });
 
       return {
