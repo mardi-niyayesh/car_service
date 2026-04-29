@@ -7,9 +7,9 @@ export class RemoveFromCartOk extends getBaseOkResponseSchema<RemoveCarRentRespo
   path: 'carts/id',
   statusCode: 200,
   response: {
-    "message": "car rent successfully removed from the cart",
-    "data": {
-      "carRent": {
+    message: "car rent successfully removed from the cart",
+    data: {
+      carRent: {
         id: "4effb7f7-c37c-4efe-be95-822b14e81afb",
         created_at: exampleDate,
         updated_at: exampleDate,
