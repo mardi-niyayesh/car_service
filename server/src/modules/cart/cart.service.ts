@@ -1,6 +1,5 @@
 import * as CartDto from "./dto";
 import {eventsEmitter} from "@/common";
-import {checkPrismaError} from "@/lib";
 import {OnEvent} from "@nestjs/event-emitter";
 import {RentStatus} from "@/modules/prisma/generated/enums";
 import {PrismaService} from "@/modules/prisma/prisma.service";
