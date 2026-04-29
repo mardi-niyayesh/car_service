@@ -4,7 +4,7 @@ import {ApiBearerAuth} from "@nestjs/swagger";
 import * as CartDecorator from "./decorators";
 import {Permission, PERMISSIONS, UUIDv4Validator, ZodPipe} from "@/common";
 import {Body, Controller, Delete, Get, Param, Post, Req} from '@nestjs/common';
-import type {AccessRequest, ApiResponse, CarRentResponse, CartResponse} from "@/types";
+import type {AccessRequest, ApiResponse, CarRentResponse, CartResponse, RemoveCarRentResponse} from "@/types";
 
 /**
  * Cart and rental management endpoints.
@@ -82,10 +82,8 @@ export class CartController {
   @Delete(':id')
   @CartDecorator.RemoveFromCartDecorators()
   removeFromCart(
-    @Req() req: AccessRequest,
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string
-  ) {
-    console.log(req.user);
-    return id;
+  ): Promise<ApiResponse<RemoveCarRentResponse>> {
+    return this.cartService.removeFromCart(id);
   }
 }

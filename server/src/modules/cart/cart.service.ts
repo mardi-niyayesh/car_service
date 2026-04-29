@@ -1,10 +1,11 @@
 import * as CartDto from "./dto";
 import {eventsEmitter} from "@/common";
+import {checkPrismaError} from "@/lib";
 import {OnEvent} from "@nestjs/event-emitter";
 import {RentStatus} from "@/modules/prisma/generated/enums";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
-import type {ApiResponse, BaseException, CartResponse, CreateCartSignup, UserAccess, CarRentResponse} from "@/types";
+import type {ApiResponse, BaseException, CartResponse, CreateCartSignup, UserAccess, CarRentResponse, RemoveCarRentResponse} from "@/types";
 
 @Injectable()
 export class CartService {
@@ -159,5 +160,30 @@ export class CartService {
         }
       };
     });
+  }
+
+  /** remove rent of car from cart
+   * - **only roles with permission (user.self) can accessibility to this route**
+   */
+  async removeFromCart(rent_id: string): Promise<ApiResponse<RemoveCarRentResponse>> {
+    try {
+      const carRent = await this.prisma.carRent.delete({
+        where: {
+          id: rent_id,
+        }
+      });
+
+      return {
+        message: 'car rent successfully removed from the cart',
+        data: {
+          carRent
+        }
+      };
+    } catch (_) {
+      throw new NotFoundException({
+        message: 'Car Rent not found in database, please check later.',
+        error: 'Car Rent not found'
+      } as BaseException);
+    }
   }
 }

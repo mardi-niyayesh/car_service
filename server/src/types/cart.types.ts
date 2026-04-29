@@ -37,3 +37,8 @@ export interface CartResponse {
 export interface CarRentResponse {
   carRent: CarRent & SafeCarNCategory;
 }
+
+/** typeof remove car rent response */
+export interface RemoveCarRentResponse {
+  carRent: CarRent;
+}
