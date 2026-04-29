@@ -79,7 +79,8 @@ export class CartController {
   /** remove rent of car from cart
    * - **only roles with permission (user.self) can accessibility to this route**
    */
-  @Delete()
+  @Delete(':id')
+  @CartDecorator.RemoveFromCartDecorators()
   removeFromCart(
     @Req() req: AccessRequest,
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string

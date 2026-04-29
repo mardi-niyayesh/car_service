@@ -1,7 +1,7 @@
 import * as CartDto from "../dto";
-import {getUnauthorizedResponse} from "@/common";
+import {getUnauthorizedResponse, UUID4Dto} from "@/common";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
-import {ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 export const GetCartDecorators = () => applyDecorators(
   HttpCode(HttpStatus.OK),
@@ -18,4 +18,9 @@ export const AddToCartDecorators = () => applyDecorators(
   ApiUnauthorizedResponse({type: getUnauthorizedResponse('carts')}),
   ApiNotFoundResponse({type: CartDto.AddToCartNotFound}),
   ApiConflictResponse({type: CartDto.AddToCartConflict})
+);
+
+export const RemoveFromCartDecorators = () => applyDecorators(
+  HttpCode(HttpStatus.OK),
+  ApiParam(UUID4Dto)
 );
