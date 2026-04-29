@@ -2,8 +2,8 @@ import * as CartDto from "./dto";
 import {CartService} from "./cart.service";
 import {ApiBearerAuth} from "@nestjs/swagger";
 import * as CartDecorator from "./decorators";
-import {Permission, PERMISSIONS, ZodPipe} from "@/common";
-import {Body, Controller, Get, Post, Req} from '@nestjs/common';
+import {Permission, PERMISSIONS, UUIDv4Validator, ZodPipe} from "@/common";
+import {Body, Controller, Delete, Get, Param, Post, Req} from '@nestjs/common';
 import type {AccessRequest, ApiResponse, CarRentResponse, CartResponse} from "@/types";
 
 /**
@@ -74,5 +74,17 @@ export class CartController {
     @Body(new ZodPipe(CartDto.AddToCartValidator)) data: CartDto.AddToCartType
   ): Promise<ApiResponse<CarRentResponse>> {
     return this.cartService.addToCart(req.user.userId, data);
+  }
+
+  /** remove rent of car from cart
+   * - **only roles with permission (user.self) can accessibility to this route**
+   */
+  @Delete()
+  removeFromCart(
+    @Req() req: AccessRequest,
+    @Param('id', new ZodPipe(UUIDv4Validator)) id: string
+  ) {
+    console.log(req.user);
+    return id;
   }
 }
