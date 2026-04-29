@@ -172,13 +172,6 @@ export class CartService {
           cart: {
             user_id
           }
-        },
-        include: {
-          cart: {
-            include: {
-              user: true
-            }
-          }
         }
       });
 
