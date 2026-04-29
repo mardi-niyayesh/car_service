@@ -24,6 +24,7 @@ export const RemoveFromCartDecorators = () => applyDecorators(
   HttpCode(HttpStatus.OK),
    ApiOperation(CartDto.removeFromCartOperation),
   ApiParam(UUID4Dto('id')),
+  ApiOkResponse({type: CartDto.RemoveFromCartOk}),
   ApiUnauthorizedResponse({type: getUnauthorizedResponse('carts/id')}),
   ApiNotFoundResponse({type: CartDto.RemoveFromCartNotFound})
 );
