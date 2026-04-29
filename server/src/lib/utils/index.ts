@@ -6,6 +6,6 @@ export * from "./roles";
 export * from "./crypto";
 export * from "./common";
 export * from "./response";
-export * from "./conflict";
+export * from "./prisma-error";
 export * from "./buildEmailHtml";
 export * from "./normalize-client-info";
