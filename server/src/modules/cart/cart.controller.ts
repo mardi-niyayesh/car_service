@@ -82,8 +82,9 @@ export class CartController {
   @Delete(':id')
   @CartDecorator.RemoveFromCartDecorators()
   removeFromCart(
+    @Req() req: AccessRequest,
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string
   ): Promise<ApiResponse<RemoveCarRentResponse>> {
-    return this.cartService.removeFromCart(id);
+    return this.cartService.removeFromCart(req.user.userId, id);
   }
 }

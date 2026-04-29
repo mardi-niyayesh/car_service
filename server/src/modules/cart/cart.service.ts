@@ -164,11 +164,21 @@ export class CartService {
   /** remove rent of car from cart
    * - **only roles with permission (user.self) can accessibility to this route**
    */
-  async removeFromCart(rent_id: string): Promise<ApiResponse<RemoveCarRentResponse>> {
+  async removeFromCart(user_id: string, rent_id: string): Promise<ApiResponse<RemoveCarRentResponse>> {
     try {
       const carRent = await this.prisma.carRent.delete({
         where: {
           id: rent_id,
+          cart: {
+            user_id
+          }
+        },
+        include: {
+          cart: {
+            include: {
+              user: true
+            }
+          }
         }
       });
 
@@ -180,7 +190,7 @@ export class CartService {
       };
     } catch (_) {
       throw new NotFoundException({
-        message: 'Car Rent not found in database, please check later.',
+        message: 'Car Rent not found in your cart, please check later.',
         error: 'Car Rent not found'
       } as BaseException);
     }
