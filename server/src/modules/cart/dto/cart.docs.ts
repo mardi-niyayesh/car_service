@@ -60,3 +60,26 @@ export const addToCartOperation: ApiOperationOptions = {
   `,
   operationId: 'add_to_cart'
 };
+
+export const removeFromCartOperation: ApiOperationOptions = {
+  summary: 'Remove rental item from cart',
+  description: `
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_SELF}\`
+
+  Removes a specific rental item from the current user's cart by its ID.
+
+  The cart total price is automatically recalculated after removal.
+
+  **Rules:**
+  - Only items with status PENDING can be removed
+  - Active or completed rentals cannot be removed
+  - The item must belong to the authenticated user
+  - Returns 404 Not Found if the item does not exist or does not belong to the user
+
+  **Path parameter:**
+  - id: UUID of the CarRent record to remove
+
+  Access restricted to users with permission: user.self only.
+  `,
+  operationId: 'remove_from_cart'
+};

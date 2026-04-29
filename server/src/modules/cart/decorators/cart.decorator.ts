@@ -22,5 +22,6 @@ export const AddToCartDecorators = () => applyDecorators(
 
 export const RemoveFromCartDecorators = () => applyDecorators(
   HttpCode(HttpStatus.OK),
-  ApiParam(UUID4Dto)
+   ApiOperation(CartDto.removeFromCartOperation),
+  ApiParam(UUID4Dto('id'))
 );
