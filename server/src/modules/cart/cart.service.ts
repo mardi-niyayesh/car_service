@@ -175,6 +175,17 @@ export class CartService {
         }
       });
 
+      await this.prisma.cart.update({
+        where: {
+          user_id
+        },
+        data: {
+          total_price: {
+            decrement: carRent.price
+          }
+        }
+      });
+
       return {
         message: 'car rent successfully removed from the cart',
         data: {
