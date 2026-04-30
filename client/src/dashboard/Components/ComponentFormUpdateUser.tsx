@@ -56,16 +56,9 @@ const ComponentFormUpdateUser = () => {
         className="border border-[#EDEDED] rounded-xl bg-white shadow-sm"
       >
         <div className="p-6 bg-white">
-          <div className="mb-4">
-            <Link to="/dashboard/Profile">
-              <span className="text-gray-800 text-[20px] hover:text-blue-600 font-medium cursor-pointer  mb-4">
-                پروفایل/
-              </span>
-            </Link>
-            <span className="text-gray-800 text-[20px] font-medium mb-4">
-              فرم ویرایش کاربر
-            </span>
-          </div>
+          <span className="text-gray-800 text-[20px] font-medium mb-4">
+            فرم ویرایش کاربر
+          </span>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 mb-8">
             <div>
