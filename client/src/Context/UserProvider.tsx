@@ -93,6 +93,31 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     console.log(" logout to successfully ");
   }, []);
 
+  const hasPermission = useCallback(
+    (perm: string) => {
+      //reade All permessions user
+      const permissions = user?.permissions || [];
+
+      if (permissions.includes("owner.all")) return true;
+
+      return permissions.includes(perm);
+    },
+    [user],
+  );
+
+  const hasRole = useCallback(
+    (roleName: string) => {
+      if (!user) return false;
+
+      const userRole = user?.role?.name;
+
+      if (!userRole) return false;
+
+      return userRole === roleName;
+    },
+    [user],
+  );
+
   const contextValue: UserContextType = {
     user,
     token,
@@ -100,6 +125,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     setToken,
     logout,
     isLoading,
+    hasPermission,
+    hasRole,
   };
 
   return (
