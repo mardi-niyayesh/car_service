@@ -72,7 +72,8 @@ export type User = {
   display_name: string;
   email: string;
   age: number;
-  roles:string;
+  roles: string;
+  permissions: string[];
 };
 
 //type for menu hambergery
@@ -88,8 +89,8 @@ export type UserContextType = {
   setToken: (newToken: string | null) => void;
   logout: () => void;
   isLoading?: boolean;
-   hasPermission: (permission: string) => boolean;
-  hasRole: (role: string) => boolean;
+  hasPermission?: (perm: string) => boolean;
+  hasRole: (roleName: string) => boolean;
 };
 
 export type RefreshResponse = {
