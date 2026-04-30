@@ -2,8 +2,6 @@
 import UserProvider from "./Context/UserProvider";
 //hooks
 import { Routes, Route } from "react-router-dom";
-import { useUser } from "./hooks/useUser";
-import ProtectedRoute from "./Routes/ProtectedRoute";
 //layout components
 import MainLayout from "./Layouts/MainLayout";
 import AuthLayout from "./Layouts/AuthLayout";
@@ -110,8 +108,8 @@ function App() {
             <Route path="product" element={<ProductPage />} />
             <Route path="category" element={<CategoryPage />} />
             <Route path="roles" element={<RolesPage />} />
-            <Route path="Profile" element={<Profile />} />
             <Route path="logout" element={<LogoutPage />} />
+            <Route path="Profile" element={<Profile />} />
           </Route>
           {/* ------- 404 ------- */}
           <Route path="*" element={<NotFoundPage />} />
