@@ -29,6 +29,7 @@ model User {
   categories    Category[]
   carsCreator   Car[]          @relation("carsCreator")
   cart          Cart?
+  comments      Comment[]      @relation("UserCommnet")
 
   @@map("users")
 }
@@ -152,6 +153,8 @@ model UserRole {
   @@map("user_roles")
 }
 
+// <=== Prodcut & Cart Schema ===>
+
 // Category Model
 model Category {
   id         String   @id @default(uuid(4)) @db.Uuid
@@ -195,6 +198,7 @@ model Car {
   creator    User?   @relation("carsCreator", fields: [creator_id], references: [id], onDelete: SetNull)
 
   carRents CarRent[] @relation("carRents")
+  comments Comment[] @relation("CarComment")
 
   @@index([category_id])
   @@map("cars")
@@ -243,4 +247,30 @@ model CarRent {
   @@index([cart_id])
   @@index([status])
   @@map("car_rents")
+}
+
+// <=== Comment Schema ===>
+
+model Comment {
+  id         String   @id @default(uuid(4)) @db.Uuid
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  content      String  @db.VarChar(500)
+  is_confirmed Boolean @default(false) @db.Boolean
+  rate         Int     @default(5) @db.Integer
+
+  parent_id String?   @db.Uuid
+  parent    Comment?  @relation("CommentToComment", fields: [parent_id], references: [id])
+  replies   Comment[] @relation("CommentToComment")
+
+  user_id String @db.Uuid
+  user    User   @relation(name: "UserCommnet", fields: [user_id], references: [id])
+
+  car_id String @db.Uuid
+  car    Car    @relation(name: "CarComment", fields: [car_id], references: [id])
+
+  @@index([car_id, parent_id])
+  @@index([is_confirmed, created_at])
+  @@map("comments")
 }
