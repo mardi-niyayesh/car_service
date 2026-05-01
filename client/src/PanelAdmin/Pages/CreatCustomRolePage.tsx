@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 //icons to react-icon
 import { FiKey, FiCheckSquare } from "react-icons/fi";
+
 //Modal
 import SuccessModal from "../../components/common/SuccessModal";
 import WarningModal from "../../components/common/WarningModal ";
+
 type Permission = {
   id: string;
   name: string;
@@ -19,13 +21,6 @@ type RoleType = {
 };
 
 const CreateCustomRolePage = () => {
-  const navigate = useNavigate();
-  //success Modal
-  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  //Warning Modal
-  const [isWarningOpen, setIsWarningOpen] = useState(false);
-  const [WarningMessage, setWarningMessage] = useState("");
   //state for get all permesssions
   const [permissions, setPermissions] = useState<Permission[]>([]);
   //state for loadig
@@ -41,6 +36,14 @@ const CreateCustomRolePage = () => {
     ownership: false,
     permissions: [],
   });
+
+  const navigate = useNavigate();
+  //success Modal
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  //Warning Modal
+  const [isWarningOpen, setIsWarningOpen] = useState(false);
+  const [WarningMessage, setWarningMessage] = useState("");
 
   // function for get All permession and save to state permession
   const fetchAllPermissions = async () => {
@@ -130,8 +133,7 @@ const CreateCustomRolePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (nameError) {
-      setIsWarningOpen(true);
-      setWarningMessage("نام نقش را اصلاح کنید");
+      alert("لطفاً نام نقش را اصلاح کنید.");
       return;
     }
     try {
@@ -154,6 +156,7 @@ const CreateCustomRolePage = () => {
           );
         }
       }
+      //request for creat custom role
       //request for creat custom role
       const customroles = await axiosClient.post("/roles", {
         name: formData.name,
