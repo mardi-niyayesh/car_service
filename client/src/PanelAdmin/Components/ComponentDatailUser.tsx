@@ -5,6 +5,7 @@ import { FaUser } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { useUser } from "../../hooks/useUser";
 //Modal
 import SuccessModal from "../../components/common/SuccessModal";
 import WarningModal from "../../components/common/WarningModal ";
@@ -24,6 +25,7 @@ type Role = {
 };
 
 const ComponentDatailUser = () => {
+  const { hasRole, hasPermission } = useUser();
   const { userId } = useParams<{ userId: string }>();
   // console.log("userId:", userId);
   //success Modal
@@ -42,6 +44,21 @@ const ComponentDatailUser = () => {
   //for get initial Role
   const [initialRoles, setInitialRoles] = useState<string[]>([]);
   // console.log("initialRoles:", initialRoles);
+  const Manege =
+    hasPermission("role.assign") ||
+    hasPermission("role.revoke") ||
+    hasRole("user_manager");
+
+  if (!hasPermission("user.view")) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
+        <h2 className="text-xl font-bold text-red-600 mb-2">دسترسی غیرمجاز</h2>
+        <p className="text-red-500">
+          شما مجوز مشاهده جزئیات کاربران را ندارید.
+        </p>
+      </div>
+    );
+  }
 
   const fetchUser = useCallback(async () => {
     if (!userId) {
@@ -57,11 +74,13 @@ const ComponentDatailUser = () => {
       const response = await axiosClient.get(
         `/roles?order=desc&limit=10&page=1`,
       );
+
       const userRole = response.data.response.data.roles;
       setRoles(userRole);
 
       // Fetch user data
       const userResponse = await axiosClient.get(`/users/find?id=${userId}`);
+
       const userData = userResponse.data.response.data.user;
       setUser(userData);
       console.log("User data roles:", userData.roles);
@@ -80,6 +99,7 @@ const ComponentDatailUser = () => {
       setInitialRoles(userRoleIds);
     } catch (err) {
       console.log("Error in get users :", err);
+
       setUser(null);
       setRoles([]);
       setSelectedRoleId([]);
@@ -179,10 +199,10 @@ const ComponentDatailUser = () => {
       await fetchUser();
       setSuccessMessage("تغییرات با موفقیت انجامم شد:)");
     } catch (err) {
-      console.log("Error in change roles:", err);
-      setIsWarningOpen(true);
-      await fetchUser();
-      setWarningMessage("خطا در انجام تغییرات :(");
+      console.log("Error in change roles:", err.message);
+      // setIsWarningOpen(true);
+      // await fetchUser();
+      // setWarningMessage("خطا در انجام تغییرات :(");
     }
   }, [userId, roles, selectedRoleId, initialRoles, fetchUser]);
 
@@ -228,55 +248,64 @@ const ComponentDatailUser = () => {
           </div>
         </div>
       )}
-
-      <div className="mt-6 bg-white p-4 rounded-lg shadow border border-gray-200">
-        <h3 className="font-bold mb-4 text-lg">نقش‌های قابل اختصاص:</h3>
-        <div className="space-y-2">
-          {roles.map((role) => {
-            const isChecked = isRoleChecked(role.id);
-            const isDisabled = isRoleDisabled(role.name);
-            return (
-              <label
-                key={role.id}
-                className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
-                  isDisabled
-                    ? "opacity-50 cursor-not-allowed bg-gray-100"
-                    : "hover:bg-gray-50"
-                }`}
-              >
-                <input
-                  type="checkbox"
-                  checked={isChecked}
-                  disabled={isDisabled}
-                  onChange={() => handleRoleChange(role.id)}
-                  className="w-5 h-5 text-blue-600"
-                />
-                <span className="flex items-center gap-2">
-                  <span className="font-medium">{role.name}</span>
-                  {isDisabled && (
-                    <span className="text-xs bg-gray-200 px-2 py-1 rounded">
-                      غیرقابل اختصاص
-                    </span>
-                  )}
-                </span>
-              </label>
-            );
-          })}
-        </div>
-
-        <button
-          onClick={handleSaveChanges}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          ثبت تغییرات
-        </button>
-        <Link to="description">
-          <div className="hover:text-blue-600  mt-2">
-            برای خواندن توضیحات هر نقش کلیک کنید
+      {Manege && (
+        <div className="mt-6 bg-white p-4 rounded-lg shadow border border-gray-200">
+          <h3 className="font-bold mb-4 text-lg">نقش‌های قابل اختصاص:</h3>
+          <div className="space-y-2">
+            {roles.map((role) => {
+              const isChecked = isRoleChecked(role.id);
+              const isDisabled = isRoleDisabled(role.name);
+              return (
+                <label
+                  key={role.id}
+                  className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
+                    isDisabled
+                      ? "opacity-50 cursor-not-allowed bg-gray-100"
+                      : "hover:bg-gray-50"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    disabled={isDisabled}
+                    onChange={() => handleRoleChange(role.id)}
+                    className="w-5 h-5 text-blue-600"
+                  />
+                  <span className="flex items-center gap-2">
+                    <span className="font-medium">{role.name}</span>
+                    {isDisabled && (
+                      <span className="text-xs bg-gray-200 px-2 py-1 rounded">
+                        غیرقابل اختصاص
+                      </span>
+                    )}
+                  </span>
+                </label>
+              );
+            })}
           </div>
-        </Link>
-      </div>
 
+          <button
+            onClick={handleSaveChanges}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            ثبت تغییرات
+          </button>
+
+          <Link to="description">
+            <div className="hover:text-blue-600 mt-2">
+              برای خواندن توضیحات هر نقش کلیک کنید
+            </div>
+          </Link>
+        </div>
+      )}
+
+      {!Manege && (
+        <div className="mt-6 bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+          <p className="text-gray-500">
+            شما دسترسی مشاهده و مدیریت نقش‌ها را ندارید.
+          </p>
+        </div>
+      )}
       <SuccessModal
         isOpen={isSuccessOpen}
         onClose={() => setIsSuccessOpen(false)}
