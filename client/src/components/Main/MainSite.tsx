@@ -12,9 +12,8 @@ const MainSite = () => {
   return (
     <>
       <DetailCarService />
-      <CarParts />
       <WhyAutoRent />
-
+      <CarParts />
       <ArticleCar />
       <Desctiption />
       <ComponentQuestion />
