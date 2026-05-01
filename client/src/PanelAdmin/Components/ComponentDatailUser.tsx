@@ -200,9 +200,9 @@ const ComponentDatailUser = () => {
       setSuccessMessage("تغییرات با موفقیت انجامم شد:)");
     } catch (err) {
       console.log("Error in change roles:", err.message);
-      // setIsWarningOpen(true);
-      // await fetchUser();
-      // setWarningMessage("خطا در انجام تغییرات :(");
+      setIsWarningOpen(true);
+      await fetchUser();
+      setWarningMessage("خطا در انجام تغییرات :(");
     }
   }, [userId, roles, selectedRoleId, initialRoles, fetchUser]);
 
