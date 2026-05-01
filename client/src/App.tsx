@@ -45,6 +45,7 @@ import UsersPage from "./PanelAdmin/Pages/UsersPage";
 import DescriptionRolePage from "./PanelAdmin/Pages/DescriptionRolePage";
 import CreatCustomRolePage from "./PanelAdmin/Pages/CreatCustomRolePage";
 import RolesPage from "./PanelAdmin/Pages/RolesPage";
+import { GaurdRoute } from "./Routes/GaurdRoute";
 function App() {
   return (
     <>
@@ -99,10 +100,21 @@ function App() {
           {/* ------- Panel Admin Layout ------- */}
           <Route path="/panel" element={<PanelAdminLayout />}>
             <Route path="users" element={<UsersPage />} />
-            <Route path="users/detail/:userId" element={<DetalisUserPage />} />
+            <Route
+              path="users/detail/:userId"
+              element={
+                <GaurdRoute requiredPermission="user.view">
+                  <DetalisUserPage />
+                </GaurdRoute>
+              }
+            />
             <Route
               path="users/detail/:userId/description"
-              element={<DescriptionRolePage />}
+              element={
+                <GaurdRoute requiredPermission="user.view">
+                  <DescriptionRolePage />
+                </GaurdRoute>
+              }
             />
             <Route path="customrole" element={<CreatCustomRolePage />} />
             <Route path="product" element={<ProductPage />} />
@@ -110,7 +122,16 @@ function App() {
             <Route path="roles" element={<RolesPage />} />
             <Route path="logout" element={<LogoutPage />} />
             <Route path="Profile" element={<Profile />} />
+            <Route
+              path="Profile/updateUser"
+              element={<ComponentFormUpdateUser />}
+            />
+            <Route
+              path="Profile/updatePassword"
+              element={<ComponnetUpdetePassword />}
+            />
           </Route>
+
           {/* ------- 404 ------- */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
