@@ -41,6 +41,7 @@ import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware, CacheableInterc
     Modules.CategoryModule,
     Modules.CarModule,
     Modules.CartModule,
+    Modules.CommentModule,
   ],
   providers: [
     {
