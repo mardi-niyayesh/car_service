@@ -8,7 +8,7 @@ import WarningModal from "../../components/common/WarningModal ";
 type RoleType = {
   id: string;
   name: string;
-  permissions: string[] | null;
+  permissions: Permissions[] | null;
 };
 const RolesPage = () => {
   const [Roles, setRoles] = useState<RoleType[]>([]);
@@ -31,6 +31,9 @@ const RolesPage = () => {
       console.log("response to request :", response);
       const getAllRoles = response.data.response.data.roles;
       console.log("response get alll roles :", getAllRoles);
+
+      console.log("permessions role :", getAllRoles.name);
+
       const getCount = response.data.response.data.count;
       console.log("get count all roles :", getCount);
       const tota = Math.ceil(getCount / 5);
@@ -168,10 +171,19 @@ const RolesPage = () => {
                           <td className="px-4 py-3 text-green-600 sm:table-cell">
                             {rol.name}
                           </td>
-                          <td className="px-4 py-3 text-blue-400">
-                            {Array.isArray(rol.permissions)
-                              ? rol.permissions.join("  , ")
-                              : rol.permissions}
+                          <td className="px-4 py-3">
+                            {rol.permissions && rol.permissions.length > 0 && (
+                              <div className="max-h-20 overflow-y-auto">
+                                {rol.permissions.map((perm) => (
+                                  <span
+                                    key={perm.id}
+                                    className="inline-block bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded m-0.5"
+                                  >
+                                    {perm.name}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
                           </td>
                           <td>
                             {
