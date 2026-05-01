@@ -189,7 +189,7 @@ async function bootstrap(): Promise<void> {
         role: ROLES.USER_MANAGER,
         permissions: PERMISSIONS.USER_VIEW,
         not: [PERMISSIONS.USER_SELF],
-        advanced: [PERMISSIONS.ROLE_ASSIGN, PERMISSIONS.ROLE_REVOKE, PERMISSIONS.PERMISSION_VIEW],
+        advanced: [PERMISSIONS.ROLE_ASSIGN, PERMISSIONS.ROLE_REVOKE, PERMISSIONS.PERMISSION_VIEW, PERMISSIONS.ROLE_VIEW],
         description: "Full administrative access to manage all users in the system",
       });
 
