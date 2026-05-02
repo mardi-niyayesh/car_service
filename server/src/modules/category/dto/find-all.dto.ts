@@ -1,6 +1,6 @@
 import {getBaseOkResponseSchema} from "@/common";
 import type {CategoriesResponseCount} from "@/types";
-import {safeCategoryExampleRes} from "./find.one.dto";
+import {safeCategoryExampleRes} from "./find-one.dto";
 
 /** find all categories example response */
 export class FindAllCategoriesRes extends getBaseOkResponseSchema<CategoriesResponseCount>({
