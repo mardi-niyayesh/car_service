@@ -7,5 +7,5 @@ export * from "./crypto";
 export * from "./common";
 export * from "./response";
 export * from "./prisma-error";
-export * from "./buildEmailHtml";
+export * from "./build-email-html";
 export * from "./normalize-client-info";

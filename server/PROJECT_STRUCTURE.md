@@ -56,7 +56,7 @@ server-root/
 │   │   │   └── 📄 throttler.config.ts
 │   │   ├── 📄 index.ts
 │   │   └── 📁 utils/
-│   │       ├── 📄 buildEmailHtml.ts
+│   │       ├── 📄 build-email-html.ts
 │   │       ├── 📄 common.ts
 │   │       ├── 📄 crypto.ts
 │   │       ├── 📄 date.ts
