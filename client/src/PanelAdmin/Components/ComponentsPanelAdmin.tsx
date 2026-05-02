@@ -29,18 +29,18 @@ const Menu = [
     role: "role_manager",
   },
   {
-    to: "product",
-    label: "محصولات",
-    icon: <FaBoxOpen style={{ opacity: 0.6 }} />,
-    permission: "product.update",
-    role: "product_manager",
-  },
-  {
     to: "category",
     label: "دسته‌بندی",
     icon: <FaListUl style={{ opacity: 0.6 }} />,
     permission: "category.update",
     role: "category_manager",
+  },
+  {
+    to: "product",
+    label: "محصولات",
+    icon: <FaBoxOpen style={{ opacity: 0.6 }} />,
+    permission: "product.update",
+    role: "product_manager",
   },
 ];
 
