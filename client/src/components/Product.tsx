@@ -3,7 +3,7 @@ import car from "../../assets/carii.png";
 const Product = () => {
   return (
     <div>
-      <div className="max-w-[350px] border-2 border-[#D7D7D7] p-4 mb-[300px] mt-[300px] rounded-2xl">
+      <div className="max-w-[350px] border-2 border-[#D7D7D7] p-4 mt-10 rounded-2xl">
         <img src={car} alt="car" />
         <h2 className="font-bold text-[16px] text-[#0C0C0C] mb-2">
           اجاره بنز E350 سدان

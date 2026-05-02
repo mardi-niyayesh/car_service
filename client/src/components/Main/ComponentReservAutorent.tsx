@@ -1,11 +1,6 @@
-type ComponentType = {
-  logo: string;
-  firstname: string;
-  secondname: string;
-  descripton: string;
-  id?:number
-};
-const ComponentReservAutorent = (props: ComponentType) => {
+//Types
+import { type ReservAutorentType } from "../../types/auth.types";
+const ComponentReservAutorent = (props: ReservAutorentType) => {
   return (
     <>
       <div className="text-center lg:text-right">

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <div className="bg-[#1E1E1EE5] mt-8 md:mt-[100px] rounded-2xl px-4 md:px-8 lg:px-8 py-6 md:py-8 max-w-[1200px] mx-auto">
+    <div className="bg-[#1E1E1EE5] w-full mt-8 md:mt-[100px]  px-4 md:px-8 lg:px-8 py-6 md:py-8 ">
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0 border-[#868686] border-2 p-4 md:p-6 rounded-2xl mb-6 md:mb-8">
         <div className="flex justify-start items-center gap-3 md:gap-5 w-full md:w-auto md:px-4 md:border-l-2 border-[#868686] md:first:border-l-0">
           <img
@@ -124,8 +124,7 @@ const Footer = () => {
       </div>
 
       <div className="text-[#9A9A9A] text-xs md:text-[14px] text-center py-4 md:py-6">
-        © {new Date().getFullYear()} تمامی حقوق سایت متعلق به نیایش مردی و
-        همایون شریفی است
+        © {new Date().getFullYear()} تمامی حقوق سایت متعلق به کارسرویس  است
       </div>
     </div>
   );

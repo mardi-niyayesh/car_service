@@ -2,6 +2,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+//context
+import { useUser } from "../hooks/useUser";
 //components
 import AuthForm from "../components/common/AuthForm";
 //api
@@ -15,6 +17,8 @@ import WarningModal from "../components/common/WarningModal ";
 
 function LoginPage() {
   const navigate = useNavigate();
+  //use az context for send infomation user to context
+  const { setUser, setToken } = useUser();
   //SuccessModal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -28,59 +32,54 @@ function LoginPage() {
   const mutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      const token = data?.response?.data?.accessToken;
-      //error 400
-      if (data.statusCode === 400) {
-        setWarningMessage(`مشکلی در اطلاعات ورود وجود داره:
-          ایمیل رو با فرمت صحیح وارد کن
-      رمز عبور باید حداقل ۶ تا حرف و عدد داشته باشه
-      مقدار "مرا به خاطر بسپار" رو درست انتخاب کن `);
-        setIsErrorModalOpen(true);
-      }
-      //error 401
-      else if (data.statusCode === 401) {
-        setModalMessage("اییمل یا رمز عبور اشتباه است لطفا مجدد تلاش کنید");
+      // console.log("data:", data);
+
+      if (data.success === false) {
+        setWarningMessage("ایمیل یا رمز عبور اشتباه است");
         setIsWarningModalOpen(true);
+        return;
       }
-      //error 500
-      else if (data.statusCode === 500) {
-        setErrorMessage("خطای سرور. لطفاً بعداً دوباره تلاش کنید.");
-        setIsErrorModalOpen(true);
-      }
-      //success
-      else if (token) {
-        localStorage.setItem("token", token);
-        setModalMessage(
-          "ورود شما با موفقیت انجام شد! به خانواده کارسرویس خوش آمدید.",
-        );
+
+      const token = data?.response?.data?.accessToken;
+      const userData = data?.response?.data?.user;
+
+      if (token && userData) {
+        setToken(token);
+        setUser(userData);
+        setModalMessage("به خانواده ی کارسرویس خوش امدید:)!");
         setIsModalOpen(true);
-      }
-      //other error
-      else {
-        // console.error("ساختار نامعتبر پاسخ:", data);
-        setErrorMessage("خطایی در ورود رخ داد. لطفاً مجدداً تلاش کنید.");
-        setIsErrorModalOpen(true);
       }
     },
 
-    onError: (error: Error) => {
-      console.error("خطا:", error);
-      setErrorMessage(
-        error.message || "خطایی در ورود رخ داد. لطفاً مجدداً تلاش کنید.",
-      );
-      setIsErrorModalOpen(true);
+    onError: (error: any) => {
+      const status = error.response?.status;
+      const message = error.response?.data?.message;
+
+      console.error("Errror:", error);
+
+      if (status === 500) {
+        setErrorMessage("خطای سرور. لطفاً بعداً دوباره تلاش کنید.");
+        setIsErrorModalOpen(true);
+      } else {
+        setErrorMessage(
+          message || "خطایی در ورود رخ داد. لطفاً مجدداً تلاش کنید.",
+        );
+        setIsErrorModalOpen(true);
+      }
     },
   });
 
   const handleLogin = (data: LoginFormData) => {
     mutation.mutate(data);
   };
+
   //SuccessModal
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    navigate("/dashboard");
+    navigate("/");
   };
-  //SuccessModal
+
+  //ErrorModal
   const handleCloseErrorModal = () => {
     setIsErrorModalOpen(false);
   };

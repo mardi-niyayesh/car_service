@@ -1,16 +1,9 @@
-//component
-import DashboardSidebar from "../Components/DashboardSidebar";
 //img
 import carimg from "../../../assets/pic.png";
 
 const CardPages = () => {
   return (
-    <div className="flex flex-col md:flex-row gap-3 md:gap-4 p-3 md:p-4 min-h-screen bg-gray-50">
-      {/*DashboardSidebar component */}
-      <div className="md:block md:w-64 lg:w-72 xl:w-80">
-        <DashboardSidebar />
-      </div>
-
+    
       <div className="w-full md:flex-1">
         {/* header Card */}
 
@@ -92,7 +85,7 @@ const CardPages = () => {
           </div>
         </div>
       </div>
-    </div>
+    
   );
 };
 

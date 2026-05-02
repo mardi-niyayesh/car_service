@@ -1,20 +1,10 @@
-// components
-import DashboardSidebar from "../Components/DashboardSidebar";
 // img icons
 import ticcircle from "../../../assets/tick-circle.png";
 import timer from "../../../assets/timer.png";
 
 const CommentPages = () => {
   return (
-    <div
-      className="flex flex-col md:flex-row min-h-screen bg-gray-50"
-      dir="rtl"
-    >
-      {/* component DashboardSidebar */}
-      <div className="md:w-64 lg:w-72 flex-shrink-0">
-        <DashboardSidebar />
-      </div>
-
+  
       <div className="flex-1 p-4 sm:p-6 md:p-8">
         {/* title Pages*/}
         <div className="mb-6 md:mb-8">
@@ -83,7 +73,7 @@ const CommentPages = () => {
           </div>
         </div>
       </div>
-    </div>
+
   );
 };
 

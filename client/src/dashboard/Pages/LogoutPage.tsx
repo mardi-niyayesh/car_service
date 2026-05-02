@@ -1,18 +1,18 @@
-//components
-import DashboardSidebar from "../Components/DashboardSidebar";
 //hooks
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 //api
-import { LogoutUser } from "../Api/DashboardApi";
+import { LogoutUser } from "../Api/ApiLogoutUser";
 //Modal
 import SuccessModal from "../../components/common/SuccessModal";
 import ErrorModal from "../../components/common/ErrorModal";
 import WarningModal from "../../components/common/WarningModal ";
+import { useUser } from "../../hooks/useUser";
 
 const LogoutPage = () => {
   const navigate = useNavigate();
+  const { logout } = useUser();
   //SuccessModal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -47,6 +47,7 @@ const LogoutPage = () => {
       // success logout
       if (result.success === true) {
         setModalMessage("شما با موفقیت از حساب کاربری خود خارج شدید");
+        logout();
         setIsModalOpen(true);
         setTimeout(() => {
           navigate("/login");
@@ -93,11 +94,6 @@ const LogoutPage = () => {
       className="flex flex-col md:flex-row min-h-screen bg-gray-50"
       dir="rtl"
     >
-      {/* components DashboardSidebar */}
-      <div className="md:w-64 lg:w-72 flex-shrink-0">
-        <DashboardSidebar />
-      </div>
-
       <div className="flex-1 p-4 sm:p-6 md:p-8">
         {/* title Pages*/}
         <div className="mb-6 md:mb-8">

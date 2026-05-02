@@ -1,16 +1,9 @@
 //icon
 import locationadd from "../../../assets/location-add.png";
-//component
-import DashboardSidebar from "../Components/DashboardSidebar";
 
 const AddressPages = () => {
   return (
-    <div className="flex flex-col md:flex-row gap-3 md:gap-4 p-3 md:p-4 min-h-screen bg-white">
-      {/*DashboardSidebar component */}
-      <div className=" md:block md:w-64 lg:w-72 xl:w-80">
-        <DashboardSidebar />
-      </div>
-
+   
       <div className="w-full md:flex-1">
         {/* header Address*/}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 p-3 sm:p-4 border border-[#EDEDED] rounded-xl bg-white shadow-sm">
@@ -71,7 +64,7 @@ const AddressPages = () => {
           </div>
         </div>
       </div>
-    </div>
+ 
   );
 };
 

@@ -1,4 +1,4 @@
-import ComponentQuestion from "../components/Main/ComponentQuestion/ComponentQuestion";
+import ComponentQuestion from "../components/Main/Question/ComponentQuestion";
 import CarParts from "../components/Main/CarParts";
 const QuestionPage = () => {
   return (

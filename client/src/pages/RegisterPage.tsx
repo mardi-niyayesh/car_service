@@ -48,6 +48,11 @@ function RegisterPage() {
         setErrorMessage("خطای سرور. لطفاً بعداً دوباره تلاش کنید.");
         setIsErrorModalOpen(true);
       }
+       //error 429
+       else if (data.statusCode === 429) {
+        setErrorMessage("لطفا 5 دقیقه دیگر مجدد تلاش کنید");
+        setIsErrorModalOpen(true);
+      }
       //success
       else {
         setModalMessage(

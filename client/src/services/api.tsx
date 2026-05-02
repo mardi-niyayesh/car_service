@@ -1,10 +1,12 @@
 import { type RegisterFormData } from "../types/auth.types";
 import { type LoginFormData } from "../types/auth.types";
-import { type resetPasswordtype } from "../types/auth.types";
+import { type ResetPasswordtype } from "../types/auth.types";
+
+import { setAxiosToken } from "./axiosClient";
 
 export const registerUser = async (userData: RegisterFormData) => {
   try {
-    //  console.log('. داده ارسالی به سرور:', userData);
+    console.log("data send to server:", userData);
     const response = await fetch("/api/auth/register", {
       method: "POST",
       headers: {
@@ -12,35 +14,37 @@ export const registerUser = async (userData: RegisterFormData) => {
       },
       body: JSON.stringify(userData),
     });
-    //  console.log('. وضعیت پاسخ:', response.status);
+    console.log("statuse Response:", response.status);
     const data = await response.json();
-    // console.log('. داده دریافتی از سرور:', data);
+    console.log("Response to server:", data);
     return data;
   } catch (error) {
-    console.error("خطا در درخواست:", error);
+    console.error("  Error Request:", error);
     throw error;
   }
 };
 
 export const loginUser = async (userData: LoginFormData) => {
   try {
-    // console.log('. داده ارسالی به سرور:', userData);
+    console.log("data send to server :", userData);
 
-    const response = await fetch("api/auth/login", {
+    const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
     });
 
-    // console.log('. وضعیت پاسخ:', response.status);
+    console.log("statuse Response:", response.status);
 
     const data = await response.json();
-    // console.log('. داده دریافتی از سرور:', data);
-
+    console.log("Response to server:", data);
+    if (data.response?.data?.accessToken) {
+      setAxiosToken(data.response.data.accessToken);
+    }
     return data;
-  } catch (error) {
-    console.error("خطا در درخواست:", error);
-    throw error;
+  } catch (err) {
+    console.error("Error Request:", err);
+    throw err;
   }
 };
 
@@ -53,15 +57,15 @@ export const forgotPassword = async (email: string) => {
     });
 
     const data = await response.json();
-    console.log(". داده دریافتی از سرور:", data);
+    console.log("Response to server:", data);
     return data;
-  } catch (error) {
-    console.error("خطا در درخواست:", error);
-    throw error;
+  } catch (err) {
+    console.error("Error Request:", err);
+    throw err;
   }
 };
 
-export const resetPassword = async ({ password, token }: resetPasswordtype) => {
+export const resetPassword = async ({ password, token }: ResetPasswordtype) => {
   try {
     const response = await fetch("/api/auth/reset-password", {
       method: "POST",
@@ -70,11 +74,11 @@ export const resetPassword = async ({ password, token }: resetPasswordtype) => {
     });
     const data = await response.json();
     if (!response.ok) {
-      console.log("خطا در تنظیم مجدد رمز عبور");
+      console.log("Error to set again password");
     }
     return data;
   } catch (err) {
-    console.log("خطا در تنظیم مجدد رمز عبور");
+    console.log("Error to set again password :", err);
     return err;
   }
 };
