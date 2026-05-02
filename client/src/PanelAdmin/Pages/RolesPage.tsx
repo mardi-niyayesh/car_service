@@ -173,7 +173,7 @@ const RolesPage = () => {
                           </td>
                           <td className="px-4 py-3">
                             {rol.permissions && rol.permissions.length > 0 && (
-                              <div className="max-h-20 overflow-y-auto">
+                              <div className="max-h-20 ">
                                 {rol.permissions.map((perm) => (
                                   <span
                                     key={perm.id}
