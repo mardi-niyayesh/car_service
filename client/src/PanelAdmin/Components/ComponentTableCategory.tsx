@@ -1,4 +1,21 @@
+import axios from "axios";
+import axiosClient from "../../services/axiosClient";
+import { useEffect } from "react";
+
 const ComponentTableCategory = () => {
+  const GetAllCategory = async () => {
+    try {
+      const resCat = await axiosClient .get(`/categories?page=1&limit=10&order=desc`);
+     const getcat= resCat.data.response.data.categories
+      console.log("response to grt all category :",resCat.data);
+    } catch (err) {
+      console.log("Error in fetch All category :", err);
+    }
+  };
+  useEffect(()=>{
+    GetAllCategory()
+  },[])
+
   return (
     <div>
       <div className="overflow-x-auto rounded-lg shadow-sm border border-gray-200 bg-white">
@@ -14,17 +31,6 @@ const ComponentTableCategory = () => {
             <tr className="hover:bg-gray-300 transition-colors">
               <td className="px-4 py-3">1</td>
               <td className="px-4 py-3">دسته بندی 1</td>
-              <td className="px-4 py-3 text-blue-400 font-medium">/carr </td>
-            </tr>
-            <tr className="hover:bg-gray-300 transition-colors">
-              <td className="px-4 py-3">2</td>
-              <td className="px-4 py-3">دسته بندی 2</td>
-              <td className="px-4 py-3 text-blue-400 font-medium">/carr </td>
-            </tr>
-
-            <tr className="hover:bg-gray-300 transition-colors">
-              <td className="px-4 py-3">3</td>
-              <td className="px-4 py-3">دسته بندی  3</td>
               <td className="px-4 py-3 text-blue-400 font-medium">/carr </td>
             </tr>
           </tbody>
