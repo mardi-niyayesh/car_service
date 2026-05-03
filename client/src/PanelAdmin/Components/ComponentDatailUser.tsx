@@ -28,15 +28,11 @@ const ComponentDatailUser = () => {
   const { hasRole, hasPermission } = useUser();
   const { userId } = useParams<{ userId: string }>();
   // console.log("userId:", userId);
-  //success Modal
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  //Warning Modal
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
-  //get information user
   const [user, setUser] = useState<User | null>(null);
-  //get all roles
   const [roles, setRoles] = useState<Role[]>([]);
   //get select rolesId
   const [selectedRoleId, setSelectedRoleId] = useState<string[]>([]);
