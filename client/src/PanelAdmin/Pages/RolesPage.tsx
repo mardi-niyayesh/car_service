@@ -1,10 +1,9 @@
 import axiosClient from "../../services/axiosClient";
 import { RiDeleteBinLine } from "react-icons/ri";
-//hooks
 import { useState, useEffect } from "react";
-//Modal
 import SuccessModal from "../../components/common/SuccessModal";
 import WarningModal from "../../components/common/WarningModal ";
+import ComponentPaginat from "../../ComponentPublic/ComponentPaginat";
 type RoleType = {
   id: string;
   name: string;
@@ -78,53 +77,6 @@ const RolesPage = () => {
   useEffect(() => {
     fetchGetRoles();
   }, [page]);
-  const handleChangePage = (selected: number) => {
-    if (selected >= 1 && selected <= totalPage) {
-      setPage(selected);
-    }
-  };
-  const renderPagination = () => {
-    const pageButtons = [];
-    for (let i = 1; i <= totalPage; i++) {
-      pageButtons.push(
-        <button
-          key={i}
-          onClick={() => handleChangePage(i)}
-          disabled={page === i}
-          className={`
-            px-3 py-1 border rounded font-medium transition-colors
-            ${
-              page === i
-                ? "bg-blue-500 text-white cursor-not-allowed"
-                : "hover:bg-gray-100 hover:text-blue-600"
-            }
-          `}
-        >
-          {i}
-        </button>,
-      );
-    }
-
-    return (
-      <div className="flex gap-2 items-center justify-center mt-6">
-        <button
-          onClick={() => handleChangePage(page - 1)}
-          disabled={page === 1}
-          className="px-3 py-1 border rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-        >
-          قبلی
-        </button>
-        {pageButtons}
-        <button
-          onClick={() => handleChangePage(page + 1)}
-          disabled={page === totalPage}
-          className="px-3 py-1 border rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-        >
-          بعدی
-        </button>
-      </div>
-    );
-  };
   return (
     <>
       <div>
@@ -152,7 +104,7 @@ const RolesPage = () => {
                 <tbody>
                   {Roles.length === 0 ? (
                     <tr>
-                      <td colSpan={3} className="px-4 py-3 text-center">
+                      <td colSpan={4} className="px-4 py-3 text-center">
                         هیچ نقشی یافت نشد.
                       </td>
                     </tr>
@@ -171,7 +123,7 @@ const RolesPage = () => {
                           </td>
                           <td className="px-4 py-3">
                             {rol.permissions && rol.permissions.length > 0 && (
-                              <div className="max-h-20 ">
+                              <div className="max-h-20">
                                 {rol.permissions.map((perm) => (
                                   <span
                                     key={perm.id}
@@ -184,21 +136,19 @@ const RolesPage = () => {
                             )}
                           </td>
                           <td>
-                            {
-                              <RiDeleteBinLine
-                                size={20}
-                                color="red"
-                                className="cursor-pointer"
-                                onClick={() => {
-                                  const confirmDelete = window.confirm(
-                                    `آیا مطمئن هستید که می‌خواهید نقش "${rol.name}" را حذف کنید؟`,
-                                  );
-                                  if (confirmDelete) {
-                                    handelDleatRole(rol.id);
-                                  }
-                                }}
-                              />
-                            }
+                            <RiDeleteBinLine
+                              size={20}
+                              color="red"
+                              className="cursor-pointer"
+                              onClick={() => {
+                                const confirmDelete = window.confirm(
+                                  `آیا مطمئن هستید که می‌خواهید نقش "${rol.name}" را حذف کنید؟`,
+                                );
+                                if (confirmDelete) {
+                                  handelDleatRole(rol.id);
+                                }
+                              }}
+                            />
                           </td>
                         </tr>
                       );
@@ -207,10 +157,16 @@ const RolesPage = () => {
                 </tbody>
               </table>
             </div>
-            {totalPage > 1 && renderPagination()}
+
+            <ComponentPaginat
+              currentPage={page}
+              totalPages={totalPage}
+              onPageChange={setPage}
+            />
           </>
         )}
       </div>
+
       <SuccessModal
         isOpen={isSuccessOpen}
         onClose={() => setIsSuccessOpen(false)}
