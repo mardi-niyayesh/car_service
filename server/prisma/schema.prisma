@@ -246,7 +246,7 @@ model CarRent {
 
   @@unique([car_id, start_date, end_date])
   @@index([cart_id])
-  @@index([status])
+  @@index([status, created_at])
   @@map("car_rents")
 }
 
