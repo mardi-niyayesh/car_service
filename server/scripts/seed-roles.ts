@@ -219,6 +219,14 @@ async function bootstrap(): Promise<void> {
         description: "Full administrative access to manage all products in the system",
       });
 
+      await createNewRole({
+        app,
+        prisma: tx,
+        role: ROLES.COMMENT_MANAGER,
+        permissions: PERMISSIONS.COMMENT_CONFIRM,
+        description: "Full administrative access to manage all comments in the system",
+      });
+
       console.log("✅ Seed completed: Default roles and permission have been created successfully.");
     });
   } catch (e) {

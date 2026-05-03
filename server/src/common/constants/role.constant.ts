@@ -5,6 +5,7 @@ export const ROLES = {
   ROLE_MANAGER: "role_manager",
   CATEGORY_MANAGER: "category_manager",
   PRODUCT_MANAGER: "product_manager",
+  COMMENT_MANAGER: "comment_manager",
 } as const;
 
 export type RolesType = typeof ROLES[keyof typeof ROLES];
