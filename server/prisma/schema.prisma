@@ -187,7 +187,7 @@ model Car {
 
   tags        String[] @db.VarChar(50)
   description String?  @db.VarChar(500)
-  rate        Int      @default(5) @db.Integer
+  rate        Int      @default(5) @db.SmallInt
 
   in_rent  Boolean @default(false) @db.Boolean
   can_rent Boolean @default(true) @db.Boolean
@@ -259,7 +259,7 @@ model Comment {
 
   content      String  @db.VarChar(500)
   is_confirmed Boolean @default(false) @db.Boolean
-  rate         Int     @default(5) @db.Integer
+  rate         Int     @default(5) @db.SmallInt
 
   parent_id String?   @db.Uuid
   parent    Comment?  @relation("CommentToComment", fields: [parent_id], references: [id])
@@ -271,7 +271,7 @@ model Comment {
   car_id String @db.Uuid
   car    Car    @relation(name: "CarComment", fields: [car_id], references: [id])
 
-  @@index([car_id, parent_id])
   @@index([is_confirmed, created_at])
+  @@index([car_id, parent_id, is_confirmed])
   @@map("comments")
 }

@@ -118,6 +118,7 @@ export class CarService {
           slug,
           tags,
           company,
+          rate: 5,
           can_rent,
           description,
           category_id,
@@ -242,7 +243,7 @@ export class CarService {
         where: {id}
       });
 
-      const fullPathImage  = `${PREFIX_PUBLIC_PATH}/${car.image}`;
+      const fullPathImage = `${PREFIX_PUBLIC_PATH}/${car.image}`;
 
       deleteOneFile(fullPathImage);
 
