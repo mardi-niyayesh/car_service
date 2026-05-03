@@ -1,4 +1,5 @@
 import {Controller} from "@nestjs/common";
+import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 
 /**
  * Comment management endpoints for car reviews and feedback.
@@ -41,5 +42,7 @@ import {Controller} from "@nestjs/common";
  * @module CommentController
  * @version 1.0
  */
+@ApiTags("Comments")
 @Controller('comments')
+@ApiBearerAuth("accessToken")
 export class CommentController {}
