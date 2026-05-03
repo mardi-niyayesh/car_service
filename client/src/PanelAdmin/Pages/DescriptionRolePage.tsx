@@ -1,14 +1,15 @@
 import axiosClient from "../../services/axiosClient";
 import { useState, useEffect } from "react";
+import ComponentPaginat from "../../ComponentPublic/ComponentPaginat";
 
-type RoleType = {
+type PermissionType  = {
   id: string;
   name: string;
   description: string;
 };
 
 const DescriptionRole = () => {
-  const [roles, setRoles] = useState<RoleType[]>([]);
+  const [roles, setRoles] = useState<PermissionType []>([]);
   //now page
   const [page, setPage] = useState(1);
   //All page
@@ -42,53 +43,6 @@ const DescriptionRole = () => {
   useEffect(() => {
     fetchRoles();
   }, [page]);
-
-  const handlePageChange = (selectedPage: number) => {
-    setPage(selectedPage);
-  };
-
-  const renderPagination = () => {
-    const pageButtons = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pageButtons.push(
-        <button
-          key={i}
-          onClick={() => handlePageChange(i)}
-          disabled={page === i}
-          className={`
-            px-3 py-1 border rounded font-medium transition-colors
-            ${
-              page === i
-                ? "bg-blue-500 text-white cursor-not-allowed"
-                : "hover:bg-gray-100 hover:text-blue-600"
-            }
-          `}
-        >
-          {i}
-        </button>,
-      );
-    }
-
-    return (
-      <div className="flex gap-2 items-center justify-center mt-6">
-        <button
-          onClick={() => handlePageChange(page - 1)}
-          disabled={page === 1}
-          className="px-3 py-1 border rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-        >
-          قبلی
-        </button>
-        {pageButtons}
-        <button
-          onClick={() => handlePageChange(page + 1)}
-          disabled={page === totalPages}
-          className="px-3 py-1 border rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-        >
-          بعدی
-        </button>
-      </div>
-    );
-  };
 
   return (
     <div className="container mx-auto p-4">
@@ -139,8 +93,11 @@ const DescriptionRole = () => {
               </tbody>
             </table>
           </div>
-
-          {totalPages > 1 && renderPagination()}
+          <ComponentPaginat
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
         </>
       )}
     </div>
