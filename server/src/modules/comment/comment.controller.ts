@@ -1,7 +1,5 @@
-import {Controller, Param, Post} from "@nestjs/common";
+import {Controller, Post} from "@nestjs/common";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
-import {ZodPipe} from "@/common";
-import {CarSlugValidator} from "@/modules/car/dto";
 
 /**
  * Comment management endpoints for car reviews and feedback.
@@ -49,10 +47,8 @@ import {CarSlugValidator} from "@/modules/car/dto";
 @ApiBearerAuth("accessToken")
 export class CommentController {
 
-  @Post('car/:slug')
-  create(
-    @Param('slug', new ZodPipe(CarSlugValidator)) slug: string,
-  ) {
-    return slug;
+  @Post()
+  create() {
+    return 'create comment';
   }
 }
