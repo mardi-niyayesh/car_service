@@ -1,20 +1,34 @@
-import axios from "axios";
+import { useState, useEffect } from "react";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { FaPencilAlt } from "react-icons/fa";
 import axiosClient from "../../services/axiosClient";
-import { useEffect } from "react";
+type CategoryType = {
+  id: string;
+  name: string;
+  description: string;
+};
 
-const ComponentTableCategory = () => {
+const ComponentTableCategory = (): React.ReactElement => {
+  const [getcat, setGetcat] = useState<CategoryType[]>([]);
   const GetAllCategory = async () => {
     try {
-      const resCat = await axiosClient .get(`/categories?page=1&limit=10&order=desc`);
-     const getcat= resCat.data.response.data.categories
-      console.log("response to grt all category :",resCat.data);
+      const resCat = await axiosClient.get(
+        `/categories?page=1&limit=10&order=desc`,
+      );
+      const Allcat = resCat.data.response.data.categories;
+
+      console.log("response to grt all category :", Allcat);
+      setGetcat(Allcat);
     } catch (err) {
       console.log("Error in fetch All category :", err);
     }
   };
-  useEffect(()=>{
-    GetAllCategory()
-  },[])
+  useEffect(() => {
+    GetAllCategory();
+  }, []);
+
+  const handleDeleatCategory = () => {};
+  const handleupdatCategory = () => {};
 
   return (
     <div>
@@ -24,15 +38,47 @@ const ComponentTableCategory = () => {
             <tr>
               <th className="w-12 px-4 py-3 font-medium">ردیف</th>
               <th className="w-32 px-4 py-3 font-medium"> دسته بندی </th>
-              <th className="w-56 px-4 py-3 font-medium">لینک</th>
+              <th className="w-56 px-4 py-3 font-medium">توضیحات</th>
+              <th className="w-56 px-4 py-3 font-medium">آپدیت</th>
+              <th className="w-56 px-4 py-3 font-medium">حذف</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            <tr className="hover:bg-gray-300 transition-colors">
-              <td className="px-4 py-3">1</td>
-              <td className="px-4 py-3">دسته بندی 1</td>
-              <td className="px-4 py-3 text-blue-400 font-medium">/carr </td>
-            </tr>
+            {getcat.map((cat, index) => (
+              <tr key={cat.id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-4 py-3">{index + 1}</td>
+                <td className="px-4 py-3 text-green-500">{cat.name}</td>
+                <td className="inline-block bg-gray-200 m-2  text-gray-700 text-xs px-2 py-1 rounded m-0.5">
+                  {cat.description}
+                </td>
+                <td>
+                  {
+                    <FaPencilAlt
+                      size={20}
+                      color="blue"
+                      opacity={0.5}
+                      className="cursor-pointer"
+                      onClick={() => {
+                        handleDeleatCategory;
+                      }}
+                    />
+                  }
+                </td>
+                <td>
+                  {
+                    <RiDeleteBinLine
+                      size={20}
+                      color="red"
+                      opacity={0.8}
+                      className="cursor-pointer"
+                      onClick={() => {
+                        handleupdatCategory;
+                      }}
+                    />
+                  }
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
