@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FaPencilAlt } from "react-icons/fa";
 import axiosClient from "../../services/axiosClient";
+import ComponentPaginat from "../../ComponentPublic/ComponentPaginat";
 type CategoryType = {
   id: string;
   name: string;
@@ -10,13 +11,18 @@ type CategoryType = {
 
 const ComponentTableCategory = (): React.ReactElement => {
   const [getcat, setGetcat] = useState<CategoryType[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(5);
   const GetAllCategory = async () => {
     try {
       const resCat = await axiosClient.get(
-        `/categories?page=1&limit=10&order=desc`,
+        `/categories?page=${page}&limit=5&order=desc`,
       );
       const Allcat = resCat.data.response.data.categories;
+      const count = resCat.data.response.data.count;
 
+      const tota = Math.ceil(count / 5);
+      setTotalPage(tota);
       console.log("response to grt all category :", Allcat);
       setGetcat(Allcat);
     } catch (err) {
@@ -82,6 +88,11 @@ const ComponentTableCategory = (): React.ReactElement => {
           </tbody>
         </table>
       </div>
+      <ComponentPaginat
+        currentPage={page}
+        totalPages={totalPage}
+        onPageChange={setPage}
+      />
     </div>
   );
 };
