@@ -15,10 +15,8 @@ const RolesPage = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(5);
-  //success Modal
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  //Warning Modal
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
 
