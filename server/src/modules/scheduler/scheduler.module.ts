@@ -1,7 +1,7 @@
 import {Module} from '@nestjs/common';
-import {TokenCleanerService} from "./jobs/token-cleaner.jobs";
+import {CleanerJobs} from "./jobs/cleaner.jobs";
 
 @Module({
-  providers: [TokenCleanerService],
+  providers: [CleanerJobs],
 })
 export class SchedulerModule {}
