@@ -51,6 +51,25 @@ import * as CommentDecorator from "./decorators/comment.decorator";
 @ApiBearerAuth("accessToken")
 export class CommentController {
 
+  /**
+   * Creates a new comment or reply on a car review.
+   *
+   * @param req - Authenticated user (requires `user.self` permission)
+   * @param data - Validated comment data
+   * @returns Confirmation message
+   *
+   * @requestBody
+   * - `content`: string, 2-500 chars
+   * - `rate`: number 1-5, optional, defaults to 5
+   * - `car_id`: valid UUID of target car
+   * - `parent_id`: UUID or null, optional, defaults to null (top-level comment)
+   *
+   * @permission `user.self`
+   *
+   * @example
+   * POST /comments
+   * { "content": "Great car!", "rate": 5, "car_id": "550e...", "parent_id": null }
+   */
   @Post()
   @CommentDecorator.CreateCommentDecorator()
   create(
