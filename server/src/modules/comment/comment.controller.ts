@@ -4,6 +4,7 @@ import type {AccessRequest} from "@/types";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {Body, Controller, Post, Req} from "@nestjs/common";
 import * as CommentDecorator from "./decorators/comment.decorator";
+import {CommentService} from "@/modules/comment/comment.service";
 
 /**
  * Comment management endpoints for car reviews and feedback.
@@ -50,6 +51,7 @@ import * as CommentDecorator from "./decorators/comment.decorator";
 @Controller('comments')
 @ApiBearerAuth("accessToken")
 export class CommentController {
+  constructor(private readonly commentService: CommentService) {}
 
   /**
    * Creates a new comment or reply on a car review.
@@ -75,9 +77,7 @@ export class CommentController {
   create(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(CommentDto.CreateCommentValidator)) data: CommentDto.CreateCommentType
-  ): string {
-    console.log(data);
-    console.log(req.user);
-    return 'create comment';
+  ) {
+    return this.commentService.create(req.user.userId, data);
   }
 }
