@@ -1,5 +1,4 @@
 import ComponentTableCategory from "../Components/ComponentTableCategory";
-import locationadd from "../../../assets/location-add.png";
 import { Link } from "react-router-dom";
 const CategoryPage = () => {
   return (
@@ -11,18 +10,11 @@ const CategoryPage = () => {
               دسته بندی
             </p>
           </div>
-          <div className="flex items-center justify-center sm:justify-end gap-2 w-full sm:w-auto cursor-pointer bg-blue-50 sm:bg-transparent p-2 sm:p-0 rounded-lg">
-            <img
-              src={locationadd}
-              alt="locationadd"
-              className="w-4 h-4 md:w-5 md:h-5"
-            />
-            <Link to="/panel/category/CreatCategory">
-              <p className="text-[#194BF0] text-[14px] md:text-[16px] font-medium whitespace-nowrap">
-                اضافه کردن دسته بندی
-              </p>
-            </Link>
-          </div>
+          <Link to="/panel/category/CreatCategory">
+            <p className="text-[#194BF0] hover:bg-blue-200 bg-blue-100 p-2 rounded-xl text-[14px] md:text-[16px] font-medium whitespace-nowrap">
+             + ساختن دسته بندی جدید
+            </p>
+          </Link>
         </div>
         <div className="flex flex-col gap-4 ">
           <ComponentTableCategory />
