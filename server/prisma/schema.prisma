@@ -262,14 +262,14 @@ model Comment {
   rate         Int     @default(5) @db.SmallInt
 
   parent_id String?   @db.Uuid
-  parent    Comment?  @relation("CommentToComment", fields: [parent_id], references: [id])
+  parent    Comment?  @relation("CommentToComment", fields: [parent_id], references: [id], onDelete: Cascade)
   replies   Comment[] @relation("CommentToComment")
 
   user_id String @db.Uuid
-  user    User   @relation(name: "UserCommnet", fields: [user_id], references: [id])
+  user    User   @relation(name: "UserCommnet", fields: [user_id], references: [id], onDelete: Cascade)
 
   car_id String @db.Uuid
-  car    Car    @relation(name: "CarComment", fields: [car_id], references: [id])
+  car    Car    @relation(name: "CarComment", fields: [car_id], references: [id], onDelete: Cascade)
 
   @@index([is_confirmed, created_at])
   @@index([car_id, parent_id, is_confirmed])
