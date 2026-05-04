@@ -42,7 +42,9 @@ const ComponentTableCategory = (): React.ReactElement => {
         <table className="min-w-full  text-right text-sm text-gray-700">
           <thead className="bg-gray-100 text-gray-700 ">
             <tr>
-              <th className="w-12 px-4 py-3 font-medium">ردیف</th>
+              <th className="w-12 px-4 py-3 font-medium hidden sm:table-cell ">
+                ردیف
+              </th>
               <th className="w-32 px-4 py-3 font-medium"> دسته بندی </th>
               <th className="w-56 px-4 py-3 font-medium">توضیحات</th>
               <th className="w-56 px-4 py-3 font-medium">آپدیت</th>
@@ -52,7 +54,7 @@ const ComponentTableCategory = (): React.ReactElement => {
           <tbody className="divide-y divide-gray-100">
             {getcat.map((cat, index) => (
               <tr key={cat.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-4 py-3">{index + 1}</td>
+                <td className="px-4 py-3 hidden sm:table-cell">{index + 1}</td>
                 <td className="px-4 py-3 text-green-500">{cat.name}</td>
                 <td className="inline-block font-medium m-2  text-gray-700 text-xs px-2 py-1 rounded m-0.5">
                   {cat.description}
