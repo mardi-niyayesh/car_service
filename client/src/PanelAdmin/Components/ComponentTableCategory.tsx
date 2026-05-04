@@ -54,7 +54,7 @@ const ComponentTableCategory = (): React.ReactElement => {
               <tr key={cat.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-4 py-3">{index + 1}</td>
                 <td className="px-4 py-3 text-green-500">{cat.name}</td>
-                <td className="inline-block bg-gray-200 m-2  text-gray-700 text-xs px-2 py-1 rounded m-0.5">
+                <td className="inline-block font-medium m-2  text-gray-700 text-xs px-2 py-1 rounded m-0.5">
                   {cat.description}
                 </td>
                 <td>
