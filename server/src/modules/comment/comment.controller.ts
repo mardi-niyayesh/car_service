@@ -3,6 +3,7 @@ import * as CommentDto from "./dto";
 import type {AccessRequest} from "@/types";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {Body, Controller, Post, Req} from "@nestjs/common";
+import * as CommentDecorator from "./decorators/comment.decorator";
 
 /**
  * Comment management endpoints for car reviews and feedback.
@@ -51,6 +52,7 @@ import {Body, Controller, Post, Req} from "@nestjs/common";
 export class CommentController {
 
   @Post()
+  @CommentDecorator.CreateCommentDecorator()
   create(
     @Req() req: AccessRequest,
     @Body(new ZodPipe(CommentDto.CreateCommentValidator)) data: CommentDto.CreateCommentType
