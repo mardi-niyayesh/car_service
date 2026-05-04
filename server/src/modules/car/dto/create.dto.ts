@@ -100,7 +100,8 @@ export const exampleCarRecord: CarResponse['car'] = {
   category_id: "ef85d0db-e822-4ec9-8009-da7925c965bd",
   creator_id: "c9e2d14b-c0ff-4d91-8cf5-999eded02757",
   description: "a test car",
-  category: categoryExampleRes
+  category: categoryExampleRes,
+  rate: 5,
 };
 
 /** create car ok example response */
