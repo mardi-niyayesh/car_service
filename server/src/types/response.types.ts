@@ -20,6 +20,9 @@ export interface BaseApiResponseData<T> extends BaseApiResponse {
 /** Base API Responses */
 export type ApiResponse<T> = T extends void ? BaseApiResponse : BaseApiResponseData<T>;
 
+/** Simple Type for Promise services Response */
+export type AppResponse<T = void> = Promise<ApiResponse<T>>;
+
 /** schema response when request is ok */
 export interface InterceptorResponse<T> extends BaseResponse {
   response: BaseApiResponseData<T> | BaseApiResponse;
