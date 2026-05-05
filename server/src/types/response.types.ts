@@ -18,10 +18,12 @@ export interface BaseApiResponseData<T> extends BaseApiResponse {
 }
 
 /** Base API Responses */
-export type ApiResponse<T> = T extends void ? BaseApiResponse : BaseApiResponseData<T>;
+export type ApiResponse<T = void> = T extends void ? BaseApiResponse : BaseApiResponseData<T>;
 
-/** Simple Type for Promise services Response */
-export type AppResponse<T = void> = Promise<ApiResponse<T>>;
+/** return a list of data with count */
+export type ListWithCount<T> = T & {
+  count: number;
+};
 
 /** schema response when request is ok */
 export interface InterceptorResponse<T> extends BaseResponse {
@@ -48,11 +50,7 @@ export interface ZodException {
 
 /** base exception response */
 export type ZodExceptionRes = & BaseResponse & ZodException;
+
 export type BaseExceptionRes = & BaseResponse & BaseException & {
   [key: string]: unknown;
-};
-
-/** return a list of data with count */
-export type ListWithCount<T> = T & {
-  count: number;
 };

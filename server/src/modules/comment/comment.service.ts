@@ -2,7 +2,7 @@ import * as CommentDto from "./dto";
 import {checkPrismaError} from "@/lib";
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import type {AppResponse, BaseException, CreateCommentResponse} from "@/types";
+import type {BaseException, CreateCommentResponse, ApiResponse} from "@/types";
 
 @Injectable()
 export class CommentService {
@@ -16,7 +16,7 @@ export class CommentService {
    * @returns Confirmation message
    *
    */
-  async create(user_id: string, data: CommentDto.CreateCommentType): AppResponse<CreateCommentResponse> {
+  async create(user_id: string, data: CommentDto.CreateCommentType): Promise<ApiResponse<CreateCommentResponse>> {
     if (data.parent_id) {
       const parentComment = await this.prisma.comment.findUnique({
         where: {
