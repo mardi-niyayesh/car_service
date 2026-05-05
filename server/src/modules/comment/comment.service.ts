@@ -1,15 +1,14 @@
-import {ApiResponse, BaseException} from "@/types";
 import * as CommentDto from "./dto";
-import {Injectable, NotFoundException} from "@nestjs/common";
-import {Comment} from "@/modules/prisma/generated/client";
-import {PrismaService} from "@/modules/prisma/prisma.service";
 import {checkPrismaError} from "@/lib";
+import {Injectable, NotFoundException} from "@nestjs/common";
+import {PrismaService} from "@/modules/prisma/prisma.service";
+import type {ApiResponse, BaseException, CreateCommentResponse} from "@/types";
 
 @Injectable()
 export class CommentService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(user_id: string, data: CommentDto.CreateCommentType): Promise<ApiResponse<{ comment: Comment }>> {
+  async create(user_id: string, data: CommentDto.CreateCommentType): Promise<ApiResponse<CreateCommentResponse>> {
     if (data.parent_id) {
       const parentComment = await this.prisma.comment.findUnique({
         where: {
@@ -18,7 +17,7 @@ export class CommentService {
       });
 
       if (!parentComment) throw new NotFoundException({
-        message: 'parent_id of comment not found in database, please try again and sure parent_id is exist',
+        message: 'parent comment not found in database, please try again and sure parent_id is exist',
         error: 'parent comment not found'
       } as BaseException);
     }
