@@ -8,6 +8,14 @@ import type {AppResponse, BaseException, CreateCommentResponse} from "@/types";
 export class CommentService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * **Creates a new comment or reply on a car review.**
+   *
+   * @param user_id
+   * @param data - Validated comment data
+   * @returns Confirmation message
+   *
+   */
   async create(user_id: string, data: CommentDto.CreateCommentType): AppResponse<CreateCommentResponse> {
     if (data.parent_id) {
       const parentComment = await this.prisma.comment.findUnique({
