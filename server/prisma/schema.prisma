@@ -265,8 +265,8 @@ model Comment {
   parent    Comment?  @relation("CommentToComment", fields: [parent_id], references: [id], onDelete: Cascade)
   replies   Comment[] @relation("CommentToComment")
 
-  user_id String @db.Uuid
-  user    User   @relation(name: "UserCommnet", fields: [user_id], references: [id], onDelete: Cascade)
+  creator_id String @db.Uuid
+  user       User   @relation(name: "UserCommnet", fields: [creator_id], references: [id], onDelete: Cascade)
 
   car_id String @db.Uuid
   car    Car    @relation(name: "CarComment", fields: [car_id], references: [id], onDelete: Cascade)
