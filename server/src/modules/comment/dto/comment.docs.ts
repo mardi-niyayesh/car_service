@@ -6,5 +6,24 @@ export const createCommentOperation: ApiOperationOptions = {
   operationId: "create_comment",
   description: `
   - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_SELF}\`\n
-  Create a Comment for a car record only roles with permission (user.self) can accessibility to this route`
+  | Property | Description |
+  |----------|-------------|
+  | **content** | Text of the comment (2-500 characters) |
+  | **rate** | Optional rating from 1 to 5 (defaults to 5) |
+  | **car_id** | UUID of the target car |
+  | **parent_id** | UUID of parent comment (null for top-level) |
+
+  > **📌 Workflow:** Comments start as \`is_confirmed = false\` and require admin approval before public visibility. Nested replies automatically link to the same car as their parent.`
+};
+
+export const confirmCommentOperation: ApiOperationOptions = {
+  summary: "Confirm exist Comment",
+  operationId: "confirm_comment",
+  description: `
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.COMMENT_CONFIRM}\`\n
+  | Property | Description |
+  |----------|-------------|
+  | **id** | UUID of the target comment (path parameter) |
+
+  > **📌 Workflow:** After confirmation, the comment becomes publicly visible. This operation is **irreversible** — confirmed comments must be soft-deleted (not reverted to pending). Only users with the \`comment.confirm\` permission can execute this endpoint.`
 };
