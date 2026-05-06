@@ -57,8 +57,8 @@ const BlogPage = () => {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               </div>
-              <p className="text-gray-300 p-4 text-sm leading-6 group-hover:text-white transition-colors duration-300">
-                {blog.des}
+              <p className="text-gray-300 p-4 text-xl font-medium leading-6 group-hover:text-white transition-colors duration-300">
+                {blog.title}
               </p>
             </div>
           ))}
