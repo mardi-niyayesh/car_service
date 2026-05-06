@@ -7,6 +7,7 @@ type CategoryType = {
   id: string;
   name: string;
   description: string;
+  slug: string;
 };
 
 const ComponentTableCategory = (): React.ReactElement => {
@@ -46,9 +47,12 @@ const ComponentTableCategory = (): React.ReactElement => {
                 ردیف
               </th>
               <th className="w-32 px-4 py-3 font-medium"> دسته بندی </th>
-              <th className="w-56 px-4 py-3 font-medium">توضیحات</th>
+              <th className="w-56 px-4 py-3 font-medium hidden sm:table-cell">
+                توضیحات
+              </th>
               <th className="w-56 px-4 py-3 font-medium">آپدیت</th>
               <th className="w-56 px-4 py-3 font-medium">حذف</th>
+              <th className="w-56 px-4 py-3 font-medium">لینک</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -56,9 +60,10 @@ const ComponentTableCategory = (): React.ReactElement => {
               <tr key={cat.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-4 py-3 hidden sm:table-cell">{index + 1}</td>
                 <td className="px-4 py-3 text-green-500">{cat.name}</td>
-                <td className="inline-block font-medium m-2  text-gray-700 text-xs px-2 py-1 rounded m-0.5">
+                <td className="px-4 py-3 font-medium hidden sm:table-cell">
                   {cat.description}
                 </td>
+
                 <td>
                   {
                     <FaPencilAlt
@@ -66,9 +71,7 @@ const ComponentTableCategory = (): React.ReactElement => {
                       color="blue"
                       opacity={0.5}
                       className="cursor-pointer"
-                      onClick={() => {
-                        handleDeleatCategory;
-                      }}
+                      onClick={handleDeleatCategory}
                     />
                   }
                 </td>
@@ -79,11 +82,12 @@ const ComponentTableCategory = (): React.ReactElement => {
                       color="red"
                       opacity={0.8}
                       className="cursor-pointer"
-                      onClick={() => {
-                        handleupdatCategory;
-                      }}
+                      onClick={handleupdatCategory}
                     />
                   }
+                </td>
+                <td className="inline-block font-medium m-2  text-gray-700 text-xs px-2 py-1 rounded m-0.5">
+                  {cat.slug}
                 </td>
               </tr>
             ))}
