@@ -22,6 +22,7 @@ import MashhadPage from "./components/ReserveCar.tsx/Pages/MashhadPage";
 import Nayshaboor from "./components/ReserveCar.tsx/Pages/Nayshaboor";
 import YazdPage from "./components/ReserveCar.tsx/Pages/YazdPage";
 import ProductDetailsPage from "./components/ReserveCar.tsx/Pages/ProductDetailsPage";
+import BlogDetail from "./components/Main/Blog/BlogDetail";
 import BlogPage from "./pages/BlogPage";
 //authorization pages
 import RegisterPage from "./pages/RegisterPage";
@@ -59,6 +60,7 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:id" element={<BlogDetail />} />
             <Route path="/roles" element={<RolsPage />} />
             <Route path="/questionPage" element={<QuestionPage />} />
             <Route path="/reserve/qeshm" element={<ComponentQeshm />} />
