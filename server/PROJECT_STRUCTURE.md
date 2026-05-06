@@ -264,8 +264,7 @@ server-root/
 │   ├── 📄 prisma-sync.ts
 │   ├── 📄 prisma-truncate.ts
 │   ├── 📄 seed-owner.ts
-│   ├── 📄 seed-roles.ts
-│   └── 📄 truncate-tables.sql
+│   └── 📄 seed-roles.ts
 │
 ├── 📁 test/
 │   └── 📄 vitest.setup.ts
