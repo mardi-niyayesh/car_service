@@ -3,13 +3,13 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import "tsconfig-paths/register";
+import {ROLES} from "@/common";
+import {hashSecret} from "@/lib";
 import {NestFactory} from "@nestjs/core";
 import {CliModule} from "@/modules/cli/cli.module";
 import {INestApplicationContext} from "@nestjs/common";
 import {User} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {hashSecret} from "@/lib";
-import {ROLES} from "@/common";
 
 type CreateUser = Omit<User, 'id' | 'created_at' | 'updated_at'>;
 
