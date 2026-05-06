@@ -1,50 +1,92 @@
 import axiosClient from "../../services/axiosClient";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import SuccessModal from "../../components/common/SuccessModal";
 import WarningModal from "../../components/common/WarningModal ";
+import { useNavigate } from "react-router-dom";
+
 const ComponentAddCategory = () => {
-  const [checkOwnership, setCheckOwnership] = useState(false);
-  const [categoryName, setCategoryName] = useState("");
-  const [categoryDescription, setCategoryDescription] = useState("");
-  const [categorySlug, setCategorySlug] = useState("");
+  const navigate = useNavigate();
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [isWarningOpen, setIsWarningOpen] = useState(false);
-  const [WarningMessage, setWarningMessage] = useState("");
+  const [warningMessage, setWarningMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  type CategoryType = {
+    name: string;
+    description: string;
+    slug: string;
+    ownership: boolean;
+  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+    watch,
+  } = useForm({
+    defaultValues: {
+      name: "",
+      description: "",
+      slug: "",
+      ownership: false,
+    },
+  });
 
-  const CreateCategory = async () => {
+  const watchSlug = watch("slug");
+
+  const handleSlugChange = (e) => {
+    let value = e.target.value;
+    value = value.toLowerCase();
+    value = value.replace(/\s+/g, "-");
+    value = value.replace(/[^a-z0-9\-]/g, "");
+    setValue("slug", value, { shouldValidate: true });
+  };
+
+  const onSubmit = async (data: CategoryType) => {
+    setIsLoading(true);
     try {
-      const response = await axiosClient.post(`/categories`, {
-        name: categoryName,
-        description: categoryDescription,
-        slug: categorySlug,
-        ownership: checkOwnership,
+      const response = await axiosClient.post("/categories", {
+        name: String(data.name).trim(),
+        description: String(data.description || "").trim(),
+        slug: String(data.slug).trim(),
+        ownership: Boolean(data.ownership),
       });
-      console.log("responst to creat category :", response.data);
+      console.log("response to create category:", response.data);
       setSuccessMessage("دسته بندی جدید با موفقیت ساخته شد");
-      setCategoryName("");
-      setCategoryDescription("");
-      setCategorySlug("");
-      setCheckOwnership(false);
+      setIsSuccessOpen(true);
+      setTimeout(() => {
+        navigate("/panel/category");
+      }, 3000);
+
+      reset();
     } catch (err) {
-      console.log("Error in creat new category :", err);
-      setWarningMessage("لطفا مجدد تلاش کنید");
+      console.log("Error in create new category:", err);
+      if (err.response?.status === 403) {
+        setIsWarningOpen(true);
+        setWarningMessage(
+          "شما دسترسی لازم برای ایجاد دسته بندی جدید رو ندارید .( باید حدالقل دسترسی categort.creat را داشته باشید)",
+        );
+      } else if (err.response?.status === 409) {
+        setIsWarningOpen(true);
+        setWarningMessage(
+          "این دسته بندی قبلا ثبت شده است . از نام دیگری استفاده کنید",
+        );
+      }
+
+      setWarningMessage("خطا در ایجاد دسته بندی. لطفا مجدد تلاش کنید");
+      setIsWarningOpen(true);
+    } finally {
+      setIsLoading(false);
     }
   };
-  const handleOwnerShip = (e) => {
-    setCheckOwnership(e.target.checked);
-    console.log("ownership : ", e.target.checked);
-  };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setSuccessMessage("");
-    setWarningMessage("");
-  };
+
   return (
     <>
       <form
         className="border border-[#EDEDED] rounded-xl bg-white shadow-sm"
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <div className="p-6 bg-white">
           <p className="text-[#4b33b5] text-[20px] sm:text-[20px] md:text-[20px] font-bold mb-4">
@@ -56,23 +98,30 @@ const ComponentAddCategory = () => {
                 نام دسته بندی <span className="text-red-500">*</span>
               </label>
               <input
-                onChange={(e) => setCategoryName(e.target.value)}
                 type="text"
-                placeholder=" نام..."
-                className="w-full px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
+                placeholder="نام..."
+                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ${
+                  errors.name ? "border-red-500" : "border-gray-300"
+                }`}
+                {...register("name", { required: "نام دسته بندی الزامی است" })}
               />
+              {errors.name && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 توضیحات دسته بندی
-                <span className="text-gray-400 text-xs">(اختیاری)</span>
+                <span className="text-gray-400 text-xs"> (اختیاری)</span>
               </label>
               <input
-                onChange={(e) => setCategoryDescription(e.target.value)}
                 type="text"
-                placeholder="توضیحات... "
+                placeholder="توضیحات..."
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
+                {...register("description")}
               />
             </div>
 
@@ -83,8 +132,27 @@ const ComponentAddCategory = () => {
               <input
                 type="text"
                 placeholder="لینک..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
+                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ${
+                  errors.slug ? "border-red-500" : "border-gray-300"
+                }`}
+                value={watchSlug}
+                onChange={handleSlugChange}
               />
+              <input
+                type="hidden"
+                {...register("slug", {
+                  required: "لینک دسته بندی الزامی است",
+                  pattern: {
+                    value: /^[a-z0-9\-]+$/,
+                    message: "فقط حروف کوچک انگلیسی، اعداد و خط تیره مجاز است",
+                  },
+                })}
+              />
+              {errors.slug && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.slug.message}
+                </p>
+              )}
               <p className="text-xs text-gray-400 mt-1">
                 فقط حروف کوچک انگلیسی، اعداد و خط تیره
               </p>
@@ -92,32 +160,45 @@ const ComponentAddCategory = () => {
 
             <div className="flex gap-2 items-center justify-start">
               <div className="flex items-center">
-                <input type="checkbox" onClick={handleOwnerShip} />
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  {...register("ownership")}
+                />
               </div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700">
                 مالکیت (Ownership)
               </label>
             </div>
           </div>
           <button
             type="submit"
-            className=" py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300"
+            disabled={isLoading}
+            className={`py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ${
+              isLoading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
-            اضافه کردن دسته بندی
+            {isLoading ? "در حال ارسال..." : "اضافه کردن دسته بندی"}
           </button>
         </div>
       </form>
 
       <SuccessModal
         isOpen={isSuccessOpen}
-        onClose={() => setIsSuccessOpen(false)}
+        onClose={() => {
+          setIsSuccessOpen(false);
+          setSuccessMessage("");
+        }}
         message={successMessage}
       />
 
       <WarningModal
         isOpen={isWarningOpen}
-        onClose={() => setIsWarningOpen(false)}
-        message={WarningMessage}
+        onClose={() => {
+          setIsWarningOpen(false);
+          setWarningMessage("");
+        }}
+        message={warningMessage}
       />
     </>
   );

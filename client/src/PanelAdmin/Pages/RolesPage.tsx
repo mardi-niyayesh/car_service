@@ -69,7 +69,7 @@ const RolesPage = () => {
         }
       } else if (err.request) {
         setIsWarningOpen(true);
-        setWarningMessage(" مشکلی در ارتباط با سرور وجود دارد.");
+        setWarningMessage(" خطا در ارتباط با سرور  .");
       }
     }
   };
