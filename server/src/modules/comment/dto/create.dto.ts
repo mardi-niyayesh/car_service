@@ -1,8 +1,8 @@
 import z from "zod";
-import {createZodDto} from "nestjs-zod";
-import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
-import {CreateCommentResponse} from "@/types";
 import {exampleDate} from "@/lib";
+import {createZodDto} from "nestjs-zod";
+import type {CreateCommentResponse} from "@/types";
+import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
 
 /** Create Comment Validator */
 export const CreateCommentValidator = z.object({
@@ -29,7 +29,7 @@ export const exampleComment: CreateCommentResponse['comment'] = {
   is_confirmed: false,
   rate: 5,
   parent_id: null,
-  user_id: "303e820e-0779-4e4f-9304-c209634d163d",
+  creator_id: "303e820e-0779-4e4f-9304-c209634d163d",
   car_id: "05d9a623-640a-4969-bb89-5f5edf31115a"
 };
 

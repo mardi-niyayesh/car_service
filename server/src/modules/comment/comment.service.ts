@@ -34,7 +34,7 @@ export class CommentService {
       const comment = await this.prisma.comment.create({
         data: {
           ...data,
-          user_id
+          creator_id: user_id,
         }
       });
 

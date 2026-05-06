@@ -1,9 +1,9 @@
-import {UUIDv4Validator, ZodPipe} from "@/common";
 import * as CommentDto from "./dto";
+import {UUIDv4Validator, ZodPipe} from "@/common";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
-import {Body, Controller, Param, Patch, Post, Req} from "@nestjs/common";
 import {CommentService} from "@/modules/comment/comment.service";
 import * as CommentDecorator from "./decorators/comment.decorator";
+import {Body, Controller, Param, Patch, Post, Req} from "@nestjs/common";
 import type {AccessRequest, ApiResponse, CreateCommentResponse} from "@/types";
 
 /**
