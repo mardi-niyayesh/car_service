@@ -1,5 +1,6 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
+import {getNormalErrorResponse, getZodErrorBody} from "@/common";
 
 /** Create Comment Validator */
 export const CreateCommentValidator = z.object({
@@ -17,3 +18,26 @@ export type CreateCommentType = z.infer<typeof CreateCommentValidator>;
 
 /** Create Comment schema swagger */
 export class CreateCommentDto extends createZodDto(CreateCommentValidator) {}
+
+/** example bad request */
+export class CreateCommentBadReq extends getZodErrorBody({
+  path: "comments",
+  errors: [
+    {
+      field: "content",
+      error: "Invalid input: expected string, received number"
+    },
+    {
+      field: "rate",
+      error: "Invalid input: expected number, received string"
+    },
+    {
+      field: "car_id",
+      error: "Invalid input: expected string, received number"
+    },
+    {
+      field: "parent_id",
+      error: "Invalid UUID"
+    }
+  ]
+}) {}
