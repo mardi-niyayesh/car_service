@@ -1,6 +1,8 @@
 import z from "zod";
 import {createZodDto} from "nestjs-zod";
-import {getNormalErrorResponse, getZodErrorBody} from "@/common";
+import {getBaseOkResponseSchema, getNormalErrorResponse, getZodErrorBody} from "@/common";
+import {CreateCommentResponse} from "@/types";
+import {exampleDate} from "@/lib";
 
 /** Create Comment Validator */
 export const CreateCommentValidator = z.object({
@@ -18,6 +20,30 @@ export type CreateCommentType = z.infer<typeof CreateCommentValidator>;
 
 /** Create Comment schema swagger */
 export class CreateCommentDto extends createZodDto(CreateCommentValidator) {}
+
+export const exampleComment: CreateCommentResponse['comment'] = {
+  id: "a84f3f67-f724-47a0-a01c-8becd85d050e",
+  created_at: exampleDate,
+  updated_at: exampleDate,
+  content: "string",
+  is_confirmed: false,
+  rate: 5,
+  parent_id: null,
+  user_id: "303e820e-0779-4e4f-9304-c209634d163d",
+  car_id: "05d9a623-640a-4969-bb89-5f5edf31115a"
+};
+
+/** example success response */
+export class CreateCommentOk extends getBaseOkResponseSchema<CreateCommentResponse>({
+  create: true,
+  path: "comments",
+  response: {
+    message: "comment created successfully.",
+    data: {
+      comment: exampleComment
+    }
+  }
+}) {}
 
 /** example bad request response */
 export class CreateCommentBadReq extends getZodErrorBody({
