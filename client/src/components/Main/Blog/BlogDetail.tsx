@@ -1,4 +1,3 @@
-// مسیر: src/pages/BlogDetail.jsx
 import { useParams, useNavigate } from "react-router-dom";
 import { allBlogs } from "./DataBlog";
 import ComponentDetail from "./ComponentDetail";
