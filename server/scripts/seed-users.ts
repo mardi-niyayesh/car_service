@@ -44,7 +44,8 @@ async function bootstrap(): Promise<void> {
 
   const prisma: PrismaService = app.get(PrismaService);
 
-  const password: string = await hashSecret("123qwe");
+  const rawPassword = "123qwe".trim();
+  const password: string = await hashSecret(rawPassword);
 
   const users: CreateUser[] = usersData.map(({display_name, age}) => ({
     age,
@@ -82,6 +83,7 @@ async function bootstrap(): Promise<void> {
   });
 
   console.log(`✅ ${users_id.length} users seeded with 'self' role.`);
+  console.log("all users password is: ", rawPassword);
   await app.close();
   process.exit(0);
 }
