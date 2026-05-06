@@ -81,7 +81,18 @@ export class CommentController {
     return this.commentService.create(req.user.userId, data);
   }
 
+  /**
+   * Confirms (approves) a pending comment by admin.
+   *
+   * @permission `comment.confirm`
+   * @param id - Valid UUID of the comment to confirm
+   * @returns Success message after confirmation
+   *
+   * @example
+   * PATCH /comments/550e8400-e29b-41d4-a716-446655440000/confirm
+   */
   @Patch(':id/confirm')
+  @CommentDecorator.ConfirmCommentDecorator()
   confirm(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
   ) {
