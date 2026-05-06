@@ -61,7 +61,9 @@ async function bootstrap(): Promise<void> {
   });
 
   if (!selfRole) {
-    console.error("❌ Role 'self' not found. Run seed-roles.ts first.");
+    console.error("❌ Role 'self' not found in database.");
+    console.error("👉 Please run: npm run seed:roles");
+    console.error("👉 Then run this script again.");
     await app.close();
     process.exit(1);
   }
