@@ -1,7 +1,7 @@
-import {ZodPipe} from "@/common";
+import {UUIDv4Validator, ZodPipe} from "@/common";
 import * as CommentDto from "./dto";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
-import {Body, Controller, Post, Req} from "@nestjs/common";
+import {Body, Controller, Param, Patch, Post, Req} from "@nestjs/common";
 import {CommentService} from "@/modules/comment/comment.service";
 import * as CommentDecorator from "./decorators/comment.decorator";
 import type {AccessRequest, ApiResponse, CreateCommentResponse} from "@/types";
@@ -79,5 +79,13 @@ export class CommentController {
     @Body(new ZodPipe(CommentDto.CreateCommentValidator)) data: CommentDto.CreateCommentType
   ): Promise<ApiResponse<CreateCommentResponse>> {
     return this.commentService.create(req.user.userId, data);
+  }
+
+  @Patch(':id/confirm')
+  confirm(
+    @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
+  ) {
+    console.log(id);
+    return 'confirmed';
   }
 }
