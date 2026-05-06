@@ -1,12 +1,13 @@
 import * as CommentDto from "../dto";
 import {applyDecorators} from "@nestjs/common";
-import {Permission, PERMISSIONS} from "@/common";
-import {ApiBody, ApiOperation} from "@nestjs/swagger";
+import {getUnauthorizedResponse, Permission, PERMISSIONS} from "@/common";
+import {ApiBody, ApiOperation, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 export const CreateCommentDecorator = () => applyDecorators(
   Permission({
     permissions: [PERMISSIONS.USER_SELF]
   }),
   ApiBody({type: CommentDto.CreateCommentDto}),
-  ApiOperation(CommentDto.createCommentOperation)
+  ApiOperation(CommentDto.createCommentOperation),
+  ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments")})
 );
