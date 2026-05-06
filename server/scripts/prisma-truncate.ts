@@ -16,6 +16,12 @@ async function bootstrap(): Promise<void> {
   try {
     console.log("🔄 Connecting to Prisma and Running TRUNCATE script...");
 
+    if (process.env.NODE_ENV === 'production') {
+      console.error("❌ This script cannot run in production!");
+      await app.close();
+      process.exit(1);
+    }
+
     await prisma.$executeRawUnsafe(
       `
     DO $$ DECLARE
