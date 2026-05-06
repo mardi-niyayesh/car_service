@@ -73,8 +73,13 @@ async function bootstrap(): Promise<void> {
     data: users_id.map(({id}) => ({
       user_id: id,
       role_id: selfRole.id
-    }))
+    })),
+    skipDuplicates: true,
   });
+
+  console.log(`✅ ${users_id.length} users seeded with 'self' role.`);
+  await app.close();
+  process.exit(0);
 }
 
 bootstrap()

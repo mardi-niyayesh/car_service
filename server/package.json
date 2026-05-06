@@ -21,6 +21,7 @@
     "create-database": "npx ts-node scripts/create-database.ts",
     "prisma:truncate": "npm run build && node dist/scripts/prisma-truncate.js",
     "seed:roles": "npm run build && node dist/scripts/seed-roles.js",
+    "seed:users": "npm run build && node dist/scripts/seed-users.js",
     "prisma:truncate-seed:roles": "npm run build && node dist/scripts/prisma-truncate.js && node dist/scripts/seed-roles.js",
     "db:setup": "npm run create-database && prisma migrate deploy && prisma generate && npm run build && node dist/scripts/seed-roles.js",
     "seed": "npm run build && node dist/scripts/seed-roles.js && node dist/scripts/seed-owner.js",
