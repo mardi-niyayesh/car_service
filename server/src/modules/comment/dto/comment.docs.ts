@@ -13,7 +13,7 @@ export const createCommentOperation: ApiOperationOptions = {
   | **car_id** | UUID of the target car |
   | **parent_id** | UUID of parent comment (null for top-level) |
 
-  > **📌 Workflow:** Comments start as 'is_confirmed = false' and require admin approval before public visibility. Nested replies automatically link to the same car as their parent.`
+  > **📌 Workflow:** Comments start as "**is_confirmed = false**" and require admin approval before public visibility. Nested replies automatically link to the same car as their parent.`
 };
 
 export const confirmCommentOperation: ApiOperationOptions = {
@@ -25,5 +25,5 @@ export const confirmCommentOperation: ApiOperationOptions = {
   |----------|-------------|
   | **id** | UUID of the target comment (path parameter) |
 
-  > **📌 Workflow:** After confirmation, the comment becomes publicly visible. This operation is **irreversible** — confirmed comments must be soft-deleted (not reverted to pending). Only users with the 'comment.confirm' permission can execute this endpoint.`
+  > **📌 Workflow:** After confirmation, the comment becomes publicly visible. This operation is **irreversible** — confirmed comments must be soft-deleted (not reverted to pending). Only users with the "**comment.confirm**" permission can execute this endpoint.`
 };

@@ -19,6 +19,6 @@ export const ConfirmCommentDecorator = () => applyDecorators(
   Permission({
     permissions: [PERMISSIONS.COMMENT_CONFIRM]
   }),
-  ApiParam(UUID4Dto),
+  ApiParam(UUID4Dto('id')),
   ApiOperation(CommentDto.confirmCommentOperation)
 );
