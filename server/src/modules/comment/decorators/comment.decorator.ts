@@ -9,6 +9,6 @@ export const CreateCommentDecorator = () => applyDecorators(
   }),
   ApiBody({type: CommentDto.CreateCommentDto}),
   ApiOperation(CommentDto.createCommentOperation),
+  ApiBadRequestResponse({type: CommentDto.CreateCommentBadReq}),
   ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments")}),
-  ApiBadRequestResponse({type: CommentDto.CreateCommentBadReq})
 );

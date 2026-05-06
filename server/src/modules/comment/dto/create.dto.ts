@@ -19,7 +19,7 @@ export type CreateCommentType = z.infer<typeof CreateCommentValidator>;
 /** Create Comment schema swagger */
 export class CreateCommentDto extends createZodDto(CreateCommentValidator) {}
 
-/** example bad request */
+/** example bad request response */
 export class CreateCommentBadReq extends getZodErrorBody({
   path: "comments",
   errors: [
@@ -40,4 +40,12 @@ export class CreateCommentBadReq extends getZodErrorBody({
       error: "Invalid UUID"
     }
   ]
+}) {}
+
+/** example not found response */
+export class CreateCommentNotFound extends getNormalErrorResponse({
+  statusCode: 404,
+  path: "comments",
+  message: "car not exist exists in database, please change car_id",
+  error: "car not exists"
 }) {}
