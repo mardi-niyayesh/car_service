@@ -32,7 +32,7 @@ const ComponentTableCategory = (): React.ReactElement => {
   };
   useEffect(() => {
     GetAllCategory();
-  }, []);
+  }, [page]);
 
   const handleDeleatCategory = () => {};
   const handleupdatCategory = () => {};
