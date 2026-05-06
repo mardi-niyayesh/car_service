@@ -4,7 +4,6 @@ import {
   FaPhone,
   FaInfoCircle,
   FaBlog,
-  FaHandsHelping,
   FaRegCalendarAlt,
   FaHome,
 } from "react-icons/fa";
@@ -27,12 +26,7 @@ const menuItems = [
       { id: 11, label: "رزرو خودرو در یزد", path: "/reserve/yazd" },
     ],
   },
-  {
-    id: 3,
-    label: "خدمات ما",
-    path: "/services",
-    icon: <FaHandsHelping size={20} />,
-  },
+
   { id: 4, label: "بلاگ", path: "/blog", icon: <FaBlog size={20} /> },
   {
     id: 5,
@@ -79,7 +73,7 @@ const MenuHeader = () => {
                       {item.dropdownItems.map((optionItem) => (
                         <Link to="optionItem.path">
                           <option
-                            key={optionItem.id||item.label}
+                            key={optionItem.id || item.label}
                             value={optionItem.path}
                             disabled={optionItem.disabled || false}
                           >
@@ -93,7 +87,7 @@ const MenuHeader = () => {
               } else {
                 return (
                   <li
-                    key={item.path||item.id}
+                    key={item.path || item.id}
                     className="text-gray-500 flex items-center"
                   >
                     <Link
@@ -119,7 +113,7 @@ const MenuHeader = () => {
           if (item.dropdownItems) {
             return (
               <div
-                key={item.id||item.label}
+                key={item.id || item.label}
                 className="relative flex flex-col items-center justify-center group w-1/5 text-center"
               >
                 <div className="flex flex-col items-center justify-center text-gray-700 group-hover:text-blue-600 transition duration-300 ease-in-out">
@@ -136,7 +130,7 @@ const MenuHeader = () => {
                 >
                   {item.dropdownItems.map((optionItem) => (
                     <option
-                      key={optionItem.id||optionItem.label}
+                      key={optionItem.id || optionItem.label}
                       value={optionItem.path}
                       disabled={optionItem.disabled || false}
                     >
