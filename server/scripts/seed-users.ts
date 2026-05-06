@@ -13,14 +13,16 @@ import {ROLES} from "@/common";
 
 type CreateUser = Omit<User, 'id' | 'created_at' | 'updated_at'>;
 
-const usersName: {
-  display_name: string;
-  age: number;
-}[] = [
+const usersData: Pick<User, 'display_name' | 'age'>[] = [
   {display_name: "homow", age: 25},
   {display_name: "reza", age: 32},
   {display_name: "ali", age: 19},
   {display_name: "sara", age: 24},
+  {display_name: "hoda", age: 20},
+  {display_name: "mahsa", age: 22},
+  {display_name: "sasan", age: 30},
+  {display_name: "mahtab", age: 21},
+  {display_name: "amir", age: 20},
   {display_name: "mozhdeh", age: 28},
   {display_name: "yas", age: 22},
   {display_name: "fati", age: 21},
@@ -33,6 +35,8 @@ const usersName: {
   {display_name: "openai", age: 33},
   {display_name: "microsoft", age: 45},
   {display_name: "google", age: 42},
+  {display_name: "nvidia", age: 42},
+  {display_name: "aws", age: 42},
 ];
 
 async function bootstrap(): Promise<void> {
@@ -42,7 +46,7 @@ async function bootstrap(): Promise<void> {
 
   const password: string = await hashSecret("123qwe");
 
-  const users: CreateUser[] = usersName.map(({display_name, age}) => ({
+  const users: CreateUser[] = usersData.map(({display_name, age}) => ({
     age,
     password,
     display_name,
