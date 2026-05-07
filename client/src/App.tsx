@@ -107,7 +107,7 @@ function App() {
           <Route path="/panel" element={<PanelAdminLayout />}>
             <Route path="users" element={<UsersPage />} />
             <Route
-              path="category/update"
+              path="category/update/:Id"
               element={<ComponentCategoryUpdate />}
             />
             <Route
