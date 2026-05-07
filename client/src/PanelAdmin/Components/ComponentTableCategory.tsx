@@ -34,7 +34,16 @@ const ComponentTableCategory = (): React.ReactElement => {
     GetAllCategory();
   }, [page]);
 
-  const handleDeleatCategory = () => {};
+  const handleDeleatCategory = async (CategoryId: string) => {
+    if (!window.confirm("آیا از حذف این دسته‌بندی مطمئن هستید؟")) return;
+    try {
+      const response = await axiosClient.delete(`/categories/${CategoryId}`);
+      console.log("response to deleat category : ", response);
+      GetAllCategory();
+    } catch (err) {
+      console.log("error in deleat category :", err);
+    }
+  };
   const handleupdatCategory = () => {};
 
   return (
@@ -50,8 +59,8 @@ const ComponentTableCategory = (): React.ReactElement => {
               <th className="w-56 px-4 py-3 font-medium hidden sm:table-cell">
                 توضیحات
               </th>
-              <th className="w-56 px-4 py-3 font-medium">آپدیت</th>
               <th className="w-56 px-4 py-3 font-medium">حذف</th>
+              <th className="w-56 px-4 py-3 font-medium">آپدیت</th>
               <th className="w-56 px-4 py-3 font-medium">لینک</th>
             </tr>
           </thead>
@@ -66,21 +75,21 @@ const ComponentTableCategory = (): React.ReactElement => {
 
                 <td>
                   {
-                    <FaPencilAlt
+                    <RiDeleteBinLine
                       size={20}
-                      color="blue"
-                      opacity={0.5}
+                      color="red"
+                      opacity={0.8}
                       className="cursor-pointer"
-                      onClick={handleDeleatCategory}
+                      onClick={() => handleDeleatCategory(cat.id)}
                     />
                   }
                 </td>
                 <td>
                   {
-                    <RiDeleteBinLine
+                    <FaPencilAlt
                       size={20}
-                      color="red"
-                      opacity={0.8}
+                      color="blue"
+                      opacity={0.5}
                       className="cursor-pointer"
                       onClick={handleupdatCategory}
                     />
