@@ -1,5 +1,71 @@
-const UpdateCategory = () => {
-  return <div></div>;
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axiosClient from "../../../../services/axiosClient";
+import CategoryForm, { type CategoryFormData } from "../CategoryForm";
+import SuccessModal from "../../../../components/common/SuccessModal";
+import WarningModal from "../../../../components/common/WarningModal ";
+
+const CreateCategory = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isWarningOpen, setIsWarningOpen] = useState(false);
+  const [warningMessage, setWarningMessage] = useState("");
+
+  const onSubmit = async (data: CategoryFormData) => {
+    setIsLoading(true);
+    try {
+      const response = await axiosClient.post("/categories", {
+        name: String(data.name).trim(),
+        slug: String(data.slug).trim(),
+        description: String(data.description || "").trim(),
+        ownership: Boolean(data.ownership),
+      });
+      console.log("response create:", response.data);
+      setSuccessMessage("دسته بندی جدید با موفقیت ساخته شد");
+      setIsSuccessOpen(true);
+      setTimeout(() => {
+        navigate("/panel/category");
+      }, 3000);
+    } catch (err: any) {
+      console.error("Error create:", err.message);
+      if (err.response?.status === 403) {
+        setWarningMessage(
+          "شما دسترسی لازم برای ایجاد دسته بندی جدید را ندارید.",
+        );
+      } else if (err.response?.status === 409) {
+        setWarningMessage(
+          "این دسته بندی قبلا ثبت شده است. از نام دیگری استفاده کنید",
+        );
+      } else {
+        setWarningMessage("خطا در ایجاد دسته بندی. لطفا مجدد تلاش کنید");
+      }
+      setIsWarningOpen(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <CategoryForm
+        onSubmit={onSubmit}
+        isLoading={isLoading}
+        submitButtonText="ایجاد دسته بندی"
+      />
+      <SuccessModal
+        isOpen={isSuccessOpen}
+        onClose={() => setIsSuccessOpen(false)}
+        message={successMessage}
+      />
+      <WarningModal
+        isOpen={isWarningOpen}
+        onClose={() => setIsWarningOpen(false)}
+        message={warningMessage}
+      />
+    </>
+  );
 };
 
-export default UpdateCategory;
+export default CreateCategory;
