@@ -3,6 +3,8 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { FaPencilAlt } from "react-icons/fa";
 import axiosClient from "../../services/axiosClient";
 import ComponentPaginat from "../../ComponentPublic/ComponentPaginat";
+import SuccessModal from "../../components/common/SuccessModal";
+import WarningModal from "../../components/common/WarningModal ";
 type CategoryType = {
   id: string;
   name: string;
@@ -14,6 +16,10 @@ const ComponentTableCategory = (): React.ReactElement => {
   const [getcat, setGetcat] = useState<CategoryType[]>([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(5);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isWarningOpen, setIsWarningOpen] = useState(false);
+  const [warningMessage, setWarningMessage] = useState("");
   const GetAllCategory = async () => {
     try {
       const resCat = await axiosClient.get(
@@ -39,9 +45,25 @@ const ComponentTableCategory = (): React.ReactElement => {
     try {
       const response = await axiosClient.delete(`/categories/${CategoryId}`);
       console.log("response to deleat category : ", response);
+      setIsSuccessOpen(true);
+      setSuccessMessage("دسته بندی با موفقیت حذف شد");
       GetAllCategory();
     } catch (err) {
       console.log("error in deleat category :", err);
+      if (err.response?.status === 403) {
+        setIsWarningOpen(true);
+        setWarningMessage(
+          "شما مجوز لازم برای حذف دسته بندی را ندارید فقط سازنده دسته بندی یا owner قابلیت حذف دسته بندی را دارند",
+        );
+      } else if (err.response?.status === 404) {
+        setIsWarningOpen(true);
+        setWarningMessage(
+          "این دسته‌بندی قبلاً حذف شده است لطفا صفحه رو رفرش کنید",
+        );
+      } else {
+        setIsWarningOpen(true);
+        setWarningMessage("خطا در حذف دسته بندی مجدد تلاش کنید");
+      }
     }
   };
   const handleupdatCategory = () => {};
@@ -107,6 +129,17 @@ const ComponentTableCategory = (): React.ReactElement => {
         currentPage={page}
         totalPages={totalPage}
         onPageChange={setPage}
+      />
+      <SuccessModal
+        isOpen={isSuccessOpen}
+        onClose={() => setIsSuccessOpen(false)}
+        message={successMessage}
+      />
+
+      <WarningModal
+        isOpen={isWarningOpen}
+        onClose={() => setIsWarningOpen(false)}
+        message={warningMessage}
       />
     </div>
   );
