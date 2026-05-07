@@ -37,10 +37,11 @@ const ComponentAddCategory = () => {
   const watchSlug = watch("slug");
 
   const handleSlugChange = (e) => {
-    let value = e.target.value;
+    let value = String(e.target.value);
     value = value.toLowerCase();
-    value = value.replace(/\s+/g, "-");
-    value = value.replace(/[^a-z0-9\-]/g, "");
+    value = value.replace(/[^a-z0-9-]/g, "");
+    value = value.replace(/-+/g, "-");
+    value = value.replace(/^-|-$/g, "");
     setValue("slug", value, { shouldValidate: true });
   };
 
@@ -49,8 +50,8 @@ const ComponentAddCategory = () => {
     try {
       const response = await axiosClient.post("/categories", {
         name: String(data.name).trim(),
-        description: String(data.description || "").trim(),
         slug: String(data.slug).trim(),
+        description: String(data.description || "").trim(),
         ownership: Boolean(data.ownership),
       });
       console.log("response to create category:", response.data);
@@ -62,7 +63,7 @@ const ComponentAddCategory = () => {
 
       reset();
     } catch (err) {
-      console.log("Error in create new category:", err);
+      console.log("Error in create new category:", err.message);
       if (err.response?.status === 403) {
         setIsWarningOpen(true);
         setWarningMessage(
@@ -73,10 +74,10 @@ const ComponentAddCategory = () => {
         setWarningMessage(
           "این دسته بندی قبلا ثبت شده است . از نام دیگری استفاده کنید",
         );
+      } else {
+        setWarningMessage("خطا در ایجاد دسته بندی. لطفا مجدد تلاش کنید");
+        setIsWarningOpen(true);
       }
-
-      setWarningMessage("خطا در ایجاد دسته بندی. لطفا مجدد تلاش کنید");
-      setIsWarningOpen(true);
     } finally {
       setIsLoading(false);
     }
@@ -103,7 +104,17 @@ const ComponentAddCategory = () => {
                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ${
                   errors.name ? "border-red-500" : "border-gray-300"
                 }`}
-                {...register("name", { required: "نام دسته بندی الزامی است" })}
+                {...register("name", {
+                  required: "نام دسته بندی الزامی است",
+                  minLength: {
+                    value: 2,
+                    message: "نام دسته بندی حداقل باید ۲ کاراکتر باشد",
+                  },
+                  maxLength: {
+                    value: 100,
+                    message: "نام دسته بندی حداکثر ۱۰۰ کاراکتر می‌تواند باشد",
+                  },
+                })}
               />
               {errors.name && (
                 <p className="text-red-500 text-xs mt-1">
@@ -121,8 +132,24 @@ const ComponentAddCategory = () => {
                 type="text"
                 placeholder="توضیحات..."
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
-                {...register("description")}
+                {...register("description", {
+                  validate: (value) => {
+                    if (!value || value.trim() === "") {
+                      return true;
+                    }
+                    if (value.trim().length < 10)
+                      return "توضیحات حداقل باید ۱۰ کاراکتر باشد";
+                    if (value.trim().length > 500)
+                      return "توضیحات حداکثر ۵۰۰ کاراکتر  باشد";
+                    return true;
+                  },
+                })}
               />
+              {errors.description && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.description.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -132,8 +159,7 @@ const ComponentAddCategory = () => {
               <input
                 type="text"
                 placeholder="لینک..."
-                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ${
-                  errors.slug ? "border-red-500" : "border-gray-300"
+                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 
                 }`}
                 value={watchSlug}
                 onChange={handleSlugChange}
@@ -143,8 +169,9 @@ const ComponentAddCategory = () => {
                 {...register("slug", {
                   required: "لینک دسته بندی الزامی است",
                   pattern: {
-                    value: /^[a-z0-9\-]+$/,
-                    message: "فقط حروف کوچک انگلیسی، اعداد و خط تیره مجاز است",
+                    value: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+                    message:
+                      "فقط حروف کوچک انگلیسی، اعداد و خط تیره بین کلمات مجاز است ",
                   },
                 })}
               />
@@ -154,21 +181,24 @@ const ComponentAddCategory = () => {
                 </p>
               )}
               <p className="text-xs text-gray-400 mt-1">
-                فقط حروف کوچک انگلیسی، اعداد و خط تیره
+                فقط حروف کوچک انگلیسی، اعداد و خط تیره بین کلمات مجاز است
               </p>
             </div>
 
-            <div className="flex gap-2 items-center justify-start">
+            <div className="flex-col gap-2">
               <div className="flex items-center">
                 <input
                   type="checkbox"
                   className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   {...register("ownership")}
                 />
+                <label className="block text-sm font-medium text-gray-700">
+                  مالکیت (Ownership)
+                </label>
               </div>
-              <label className="block text-sm font-medium text-gray-700">
-                مالکیت (Ownership)
-              </label>
+              <p className="text-xs text-gray-400 mt-1">
+                مالکیت اختیاری است و به صورت پیش فرض false است
+              </p>
             </div>
           </div>
           <button
