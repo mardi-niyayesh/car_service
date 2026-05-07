@@ -48,7 +48,8 @@ import DescriptionRolePage from "./PanelAdmin/Pages/DescriptionRolePage";
 import CreatCustomRolePage from "./PanelAdmin/Pages/CreatCustomRolePage";
 import RolesPage from "./PanelAdmin/Pages/RolesPage";
 import { GaurdRoute } from "./Routes/GaurdRoute";
-import ComponentAddCategory from "./PanelAdmin/Components/ComponentAddCategory";
+import CreateCategory from "./PanelAdmin/Components/CategoryForm/Pages/CreateCategory";
+import ComponentCategoryUpdate from "./PanelAdmin/Components/ComponentCategoryUpdate";
 function App() {
   return (
     <>
@@ -106,6 +107,10 @@ function App() {
           <Route path="/panel" element={<PanelAdminLayout />}>
             <Route path="users" element={<UsersPage />} />
             <Route
+              path="category/update"
+              element={<ComponentCategoryUpdate />}
+            />
+            <Route
               path="users/detail/:userId"
               element={
                 <GaurdRoute requiredPermission="user.view">
@@ -131,7 +136,7 @@ function App() {
               path="category/CreatCategory"
               element={
                 <GaurdRoute requiredPermission="category.create">
-                  <ComponentAddCategory />
+                  <CreateCategory />
                 </GaurdRoute>
               }
             />
