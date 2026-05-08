@@ -22,6 +22,8 @@ const EditCategory = () => {
 
   useEffect(() => {
   
+
+    
     const fetchCategory = async () => {
       try {
         const response = await axiosClient.get(`/categories/${id}`);
