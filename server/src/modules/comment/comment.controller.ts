@@ -96,7 +96,7 @@ export class CommentController {
   confirm(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
   ) {
-    console.log(id);
+    this.commentService.moderateComment(id, 'confirm');
     return 'confirmed';
   }
 }

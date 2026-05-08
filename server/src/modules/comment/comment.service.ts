@@ -54,4 +54,19 @@ export class CommentService {
       });
     }
   }
+
+  /**
+   * Moderation action on existing comment.
+   *
+   * @param comment_id - Target comment UUID
+   * @param action    - Moderation action: 'confirm' (approve) or 'reject' (decline)
+   * @returns Success message after moderation
+   *
+   * @example
+   * commentService.moderateComment('uuid-1234', 'confirm');
+   * commentService.moderateComment('uuid-5678', 'reject');
+   */
+  moderateComment(comment_id: string, action: 'reject' | 'confirm') {
+    console.log(comment_id, action);
+  }
 }
