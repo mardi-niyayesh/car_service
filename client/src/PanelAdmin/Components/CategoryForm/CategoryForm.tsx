@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useEffect, useRef } from "react";
 
 export type CategoryFormData = {
   name: string;
@@ -8,6 +9,7 @@ export type CategoryFormData = {
 };
 
 type CategoryFormProps = {
+  mode: "create" | "update";
   defaultValues?: Partial<CategoryFormData>;
   onSubmit: (data: CategoryFormData) => Promise<void>;
   isLoading: boolean;
@@ -15,6 +17,7 @@ type CategoryFormProps = {
 };
 
 const CategoryForm = ({
+  mode,
   defaultValues = {
     name: "",
     description: "",
@@ -31,6 +34,7 @@ const CategoryForm = ({
     formState: { errors },
     setValue,
     watch,
+    reset,
   } = useForm<CategoryFormData>({
     defaultValues: defaultValues as CategoryFormData,
   });
@@ -45,6 +49,17 @@ const CategoryForm = ({
     value = value.replace(/^-|-$/g, "");
     setValue("slug", value, { shouldValidate: true });
   };
+
+  const prevDefaultValuesRef = useRef<string>();
+
+  useEffect(() => {
+    if (!defaultValues) return;
+    const current = JSON.stringify(defaultValues);
+    if (prevDefaultValuesRef.current !== current) {
+      prevDefaultValuesRef.current = current;
+      reset(defaultValues as CategoryFormData);
+    }
+  }, [defaultValues, reset]);
 
   return (
     <form
@@ -61,7 +76,8 @@ const CategoryForm = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-8">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              نام دسته بندی <span className="text-red-500">*</span>
+              نام دسته بندی
+              {mode === "create" && <span className="text-red-500"> *</span>}
             </label>
             <input
               type="text"
@@ -70,14 +86,21 @@ const CategoryForm = ({
                 errors.name ? "border-red-500" : "border-gray-300"
               }`}
               {...register("name", {
-                required: "نام دسته بندی الزامی است",
-                minLength: {
-                  value: 2,
-                  message: "نام دسته بندی حداقل باید ۲ کاراکتر باشد",
-                },
-                maxLength: {
-                  value: 100,
-                  message: "نام دسته بندی حداکثر ۱۰۰ کاراکتر می‌تواند باشد",
+                required:
+                  mode === "create" ? "نام دسته بندی الزامی است" : false,
+                validate: (value) => {
+                  // در حالت update اگر مقدار خالی باشد، هیچ خطایی نده (اختیاری)
+                  if (mode === "update" && (!value || value.trim() === "")) {
+                    return true;
+                  }
+                  // اعتبارسنجی اصلی برای هر دو حالت (اگر مقدار وجود داشته باشد)
+                  if (value && value.trim().length < 2) {
+                    return "نام دسته بندی حداقل باید ۲ کاراکتر باشد";
+                  }
+                  if (value && value.trim().length > 100) {
+                    return "نام دسته بندی حداکثر ۱۰۰ کاراکتر می‌تواند باشد";
+                  }
+                  return true;
                 },
               })}
             />
@@ -115,7 +138,8 @@ const CategoryForm = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              لینک دسته بندی <span className="text-red-500">*</span>
+              لینک دسته بندی
+              {mode === "create" && <span className="text-red-500"> *</span>}
             </label>
             <input
               type="text"
@@ -127,11 +151,16 @@ const CategoryForm = ({
             <input
               type="hidden"
               {...register("slug", {
-                required: "لینک دسته بندی الزامی است",
-                pattern: {
-                  value: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-                  message:
-                    "فقط حروف کوچک انگلیسی، اعداد و خط تیره بین کلمات مجاز است",
+                required:
+                  mode === "create" ? "لینک دسته بندی الزامی است" : false,
+                validate: (value) => {
+                  if (mode === "update" && (!value || value.trim() === "")) {
+                    return true;
+                  }
+                  if (value && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value)) {
+                    return "فقط حروف کوچک انگلیسی، اعداد و خط تیره بین کلمات مجاز است";
+                  }
+                  return true;
                 },
               })}
             />
