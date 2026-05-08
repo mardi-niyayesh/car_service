@@ -1,4 +1,4 @@
-import ComponentTableCategory from "../Components/ComponentTableCategory";
+import ComponentTableCategory from "../Components/CategoryForm/ComponentTableCategory";
 import { Link } from "react-router-dom";
 const CategoryPage = () => {
   return (
