@@ -187,6 +187,7 @@ model Car {
 
   tags        String[] @db.VarChar(50)
   description String?  @db.VarChar(500)
+  rate        Int      @default(5) @db.SmallInt
 
   in_rent  Boolean @default(false) @db.Boolean
   can_rent Boolean @default(true) @db.Boolean
@@ -245,7 +246,7 @@ model CarRent {
 
   @@unique([car_id, start_date, end_date])
   @@index([cart_id])
-  @@index([status])
+  @@index([status, created_at])
   @@map("car_rents")
 }
 
@@ -258,19 +259,19 @@ model Comment {
 
   content      String  @db.VarChar(500)
   is_confirmed Boolean @default(false) @db.Boolean
-  rate         Int     @default(5) @db.Integer
+  rate         Int     @default(5) @db.SmallInt
 
   parent_id String?   @db.Uuid
-  parent    Comment?  @relation("CommentToComment", fields: [parent_id], references: [id])
+  parent    Comment?  @relation("CommentToComment", fields: [parent_id], references: [id], onDelete: Cascade)
   replies   Comment[] @relation("CommentToComment")
 
-  user_id String @db.Uuid
-  user    User   @relation(name: "UserCommnet", fields: [user_id], references: [id])
+  creator_id String @db.Uuid
+  user       User   @relation(name: "UserCommnet", fields: [creator_id], references: [id], onDelete: Cascade)
 
   car_id String @db.Uuid
-  car    Car    @relation(name: "CarComment", fields: [car_id], references: [id])
+  car    Car    @relation(name: "CarComment", fields: [car_id], references: [id], onDelete: Cascade)
 
-  @@index([car_id, parent_id])
   @@index([is_confirmed, created_at])
+  @@index([car_id, parent_id, is_confirmed])
   @@map("comments")
 }

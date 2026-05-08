@@ -88,12 +88,24 @@ const PRODUCT_PERMISSIONS = {
   },
 } as const satisfies PermissionStructure;
 
+const COMMENT_PERMISSIONS = {
+  COMMENT_CONFIRM: {
+    name: 'comment.confirm',
+    permission_type: PermissionType.STANDARD
+  },
+  COMMENT_REJECT: {
+    name: 'comment.reject',
+    permission_type: PermissionType.STANDARD
+  }
+} as const satisfies PermissionStructure;
+
 export const RAW_PERMISSIONS_OBJECT = {
   ...BASE_PERMISSIONS,
   ...USER_PERMISSIONS,
   ...ROLE_PERMISSIONS,
   ...CATEGORY_PERMISSIONS,
   ...PRODUCT_PERMISSIONS,
+  ...COMMENT_PERMISSIONS,
 } as const satisfies PermissionStructure;
 
 type ReturnPermissionObject = Readonly<{

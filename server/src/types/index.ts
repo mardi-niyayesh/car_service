@@ -5,6 +5,7 @@ export * from "./cart.types";
 export * from "./role.types";
 export * from "./user.types";
 export * from "./request.types";
+export * from "./comment.types";
 export * from "./category.types";
 export * from "./response.types";
 export * from "./permission.types";
