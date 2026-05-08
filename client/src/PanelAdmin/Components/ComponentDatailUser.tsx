@@ -302,6 +302,7 @@ const ComponentDatailUser = () => {
           </p>
         </div>
       )}
+
       <SuccessModal
         isOpen={isSuccessOpen}
         onClose={() => setIsSuccessOpen(false)}
