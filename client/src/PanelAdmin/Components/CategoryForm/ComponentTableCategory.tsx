@@ -96,7 +96,7 @@ const ComponentTableCategory = (): React.ReactElement => {
                 <td className="px-4 py-3 hidden sm:table-cell">{index + 1}</td>
                 <td className="px-4 py-3 text-green-500">{cat.name}</td>
                 <td className="px-4 py-3 font-medium hidden sm:table-cell">
-                  {cat.description}
+                  {cat.description?cat.description:"____"}
                 </td>
 
                 <td>
