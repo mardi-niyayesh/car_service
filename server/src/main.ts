@@ -9,8 +9,9 @@ import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {NestExpressApplication} from "@nestjs/platform-express";
 import {ResponseInterceptors, ResponseException, UPLOAD_PATH, UPLOAD_PATH_PREFIX} from "./common";
 
-const PORT: string = process.env.PORT ?? "3000";
+const HOST: string = process.env.HOST || '0.0.0.0';
 const BASE_URL: string = process.env.BASE_URL ?? "api/v1";
+const PORT: number = parseInt(process.env.PORT ?? '3000', 10);
 
 /** run application */
 async function bootstrap(): Promise<void> {
@@ -69,7 +70,7 @@ async function bootstrap(): Promise<void> {
   }
 
   // listen app on default port
-  await app.listen(PORT ?? 3000);
+  await app.listen(PORT, HOST);
 }
 
 const colors = {
