@@ -1,6 +1,6 @@
-import ComponentCategoryProduct from "../Components/ComponentCategoryProduct";
-import ComponentTableProduct from "../Components/ComponentTableProduct";
-import ComponentFormAddProduct from "../Components/ComponentFormAddProduct";
+import ComponentCategoryProduct from "../Components/ProductForm/ComponentCategoryProduct";
+import ComponentTableProduct from "../Components/ProductForm/ComponentTableProduct";
+import ComponentFormAddProduct from "../Components/ProductForm/ComponentFormAddProduct";
 const ProductPage = () => {
   return (
     <div className="flex flex-col md:flex-row  md:gap-4 p-3 md:p-4 min-h-screen">
