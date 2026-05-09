@@ -1,4 +1,4 @@
-import ComponentTableUser from "../Components/ComponentTableUser";
+import ComponentTableUser from "../Components/UserForm/ComponentTableUser";
 
 const UsersPage = () => {
   return (
