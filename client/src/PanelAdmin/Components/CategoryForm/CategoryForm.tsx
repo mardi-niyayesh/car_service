@@ -68,9 +68,7 @@ const CategoryForm = ({
     >
       <div className="p-6 bg-white">
         <p className="text-[#4b33b5] text-[20px] sm:text-[20px] md:text-[20px] font-bold mb-4">
-          {submitButtonText === "ایجاد"
-            ? "فرم اضافه کردن دسته بندی"
-            : "ویرایش دسته بندی"}
+          {mode === "create" ? "ایجاد دسته بندی " : "ویرایش دسته بندی"}
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-8">
