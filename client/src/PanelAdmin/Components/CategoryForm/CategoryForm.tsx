@@ -89,11 +89,10 @@ const CategoryForm = ({
                 required:
                   mode === "create" ? "نام دسته بندی الزامی است" : false,
                 validate: (value) => {
-                  // در حالت update اگر مقدار خالی باشد، هیچ خطایی نده (اختیاری)
                   if (mode === "update" && (!value || value.trim() === "")) {
                     return true;
                   }
-                  // اعتبارسنجی اصلی برای هر دو حالت (اگر مقدار وجود داشته باشد)
+
                   if (value && value.trim().length < 2) {
                     return "نام دسته بندی حداقل باید ۲ کاراکتر باشد";
                   }
