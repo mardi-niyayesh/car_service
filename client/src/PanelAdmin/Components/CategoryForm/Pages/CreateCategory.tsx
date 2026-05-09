@@ -16,12 +16,15 @@ const CreateCategory = () => {
   const onSubmit = async (data: CategoryFormData) => {
     setIsLoading(true);
     try {
-      const response = await axiosClient.post("/categories", {
+      const payload: any = {
         name: String(data.name).trim(),
         slug: String(data.slug).trim(),
-        description: String(data.description || "").trim(),
-        ownership: Boolean(data.ownership),
-      });
+        ownership: Boolean(data.ownership??false)
+      };
+      if (data.description && data.description.trim() !== "") {
+        payload.description = String(data.description).trim();
+      }
+      const response = await axiosClient.post("/categories",  payload );
       console.log("response create:", response.data);
       setSuccessMessage("دسته بندی جدید با موفقیت ساخته شد");
       setIsSuccessOpen(true);
@@ -50,6 +53,7 @@ const CreateCategory = () => {
   return (
     <>
       <CategoryForm
+        mode="create"
         onSubmit={onSubmit}
         isLoading={isLoading}
         submitButtonText="ایجاد دسته بندی"
