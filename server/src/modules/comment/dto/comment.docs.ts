@@ -18,7 +18,7 @@ export const createCommentOperation: ApiOperationOptions = {
 
 export const findAllUnconfirmedCommentsOperation: ApiOperationOptions = {
   summary: "Get unconfirmed comments",
-  operationId: "get_unconfirmed_comments",
+  operationId: "get_all_unconfirmed_comments",
   description: `
   - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.COMMENT_VIEW}\`\n
   | Query Parameter | Type | Description |

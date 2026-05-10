@@ -81,6 +81,23 @@ export class CommentController {
     return this.commentService.create(req.user.userId, data);
   }
 
+  /**
+   * Retrieves a paginated list of unconfirmed comments (requires `comment.view` permission).
+   *
+   * @param pagination - Pagination params (page, limit, sort order)
+   *
+   * @queryParams
+   * - `page`: number, default 1, min 1 (current page)
+   * - `limit`: number, default 10, min 1, max 100 (items per page)
+   * - `order`: "asc" | "desc", default "desc" (sort by created_at)
+   *
+   * @permission `comment.view`
+   *
+   * @example
+   * GET /comments/unconfirmed?page=1&limit=10&order=desc
+   *
+   * @returns Paginated list of unconfirmed comments (pending moderation)
+   */
   @Get("unconfirmed")
   @CommentDecorator.FindAllUnconfirmedCommentDecorator()
   findAllUnconfirmed(
