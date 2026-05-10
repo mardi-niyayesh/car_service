@@ -2,7 +2,7 @@ import * as CommentDto from "./dto";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {CommentService} from "@/modules/comment/comment.service";
 import * as CommentDecorator from "./decorators/comment.decorator";
-import type {AccessRequest, ApiResponse, CreateCommentResponse} from "@/types";
+import type {AccessRequest, ApiResponse, CommentNUserNCarList, CreateCommentResponse} from "@/types";
 import {Body, Controller, Get, Param, Patch, Post, Query, Req} from "@nestjs/common";
 import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
 
@@ -100,11 +100,10 @@ export class CommentController {
    */
   @Get("unconfirmed")
   @CommentDecorator.FindAllUnconfirmedCommentDecorator()
-  async findAllUnconfirmed(
+  findAllUnconfirmed(
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType,
-  ) {
-    await this.commentService.findAllUnconfirmed(pagination);
-    return 'comment: []';
+  ): Promise<ApiResponse<CommentNUserNCarList>> {
+    return this.commentService.findAllUnconfirmed(pagination);
   }
 
   /**

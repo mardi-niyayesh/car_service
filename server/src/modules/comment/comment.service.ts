@@ -4,7 +4,7 @@ import {PaginationValidatorType} from "@/common";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import type {BaseException, CreateCommentResponse, ApiResponse} from "@/types";
+import {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList} from "@/types";
 
 @Injectable()
 export class CommentService {
@@ -57,7 +57,7 @@ export class CommentService {
     }
   }
 
-  async findAllUnconfirmed(pagination: PaginationValidatorType) {
+  async findAllUnconfirmed(pagination: PaginationValidatorType): Promise<ApiResponse<CommentNUserNCarList>> {
     const {offset, limit, orderByLower} = pagination;
 
     const where: Prisma.CommentWhereInput = {
@@ -71,14 +71,27 @@ export class CommentService {
       },
       skip: offset,
       take: limit,
+      include: {
+        user: {
+          omit: {
+            password: true
+          }
+        },
+        car: true
+      }
     });
 
     const count: number = await this.prisma.comment.count({
       where
     });
 
-    console.log(count);
-    console.log(comments);
+    return {
+      message: 'unconfirmed comments successfully find.',
+      data: {
+        comments,
+        count
+      }
+    };
   }
 
   /**
