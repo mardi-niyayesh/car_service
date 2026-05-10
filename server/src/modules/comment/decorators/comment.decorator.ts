@@ -20,5 +20,6 @@ export const ConfirmCommentDecorator = () => applyDecorators(
     permissions: [PERMISSIONS.COMMENT_CONFIRM]
   }),
   ApiParam(UUID4Dto('id')),
-  ApiOperation(CommentDto.confirmCommentOperation)
+  ApiOperation(CommentDto.confirmCommentOperation),
+  ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/id/confirm")}),
 );
