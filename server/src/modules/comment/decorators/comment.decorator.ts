@@ -1,7 +1,17 @@
+import {
+  ApiBody,
+  ApiParam,
+  ApiOperation,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiForbiddenResponse,
+  ApiBadRequestResponse,
+  ApiUnauthorizedResponse,
+} from "@nestjs/swagger";
+
 import * as CommentDto from "../dto";
 import {applyDecorators} from "@nestjs/common";
-import {getUnauthorizedResponse, Permission, PERMISSIONS, UUID4Dto} from "@/common";
-import {ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOperation, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, UUID4Dto} from "@/common";
 
 export const CreateCommentDecorator = () => applyDecorators(
   Permission({
@@ -22,4 +32,12 @@ export const ConfirmCommentDecorator = () => applyDecorators(
   ApiParam(UUID4Dto('id')),
   ApiOperation(CommentDto.confirmCommentOperation),
   ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/id/confirm")}),
+  ApiForbiddenResponse({
+    type: getForbiddenResponse("comments/id/confirm", {
+      resource: 'comment',
+      required_mode: 'ALL',
+      required_permissions: [PERMISSIONS.COMMENT_CONFIRM],
+      missing_permissions: [PERMISSIONS.COMMENT_CONFIRM],
+    })
+  }),
 );
