@@ -1,12 +1,10 @@
 import axiosClient from "../../../services/axiosClient";
-//icon
 import { FaUser } from "react-icons/fa";
-//hooks
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "../../../hooks/useUser";
-//Modal
+
 import SuccessModal from "../../../components/common/SuccessModal";
 import WarningModal from "../../../components/common/WarningModal ";
 
@@ -25,14 +23,14 @@ type Role = {
 };
 
 const ComponentDatailUser = () => {
-  const { hasRole, hasPermission } = useUser();
+  const { hasRole, hasPermission, user } = useUser();
   const { userId } = useParams<{ userId: string }>();
   // console.log("userId:", userId);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
-  const [user, setUser] = useState<User | null>(null);
+  const [alluser, setAllUser] = useState<User | null>(null);
   const [roles, setRoles] = useState<Role[]>([]);
   //get select rolesId
   const [selectedRoleId, setSelectedRoleId] = useState<string[]>([]);
@@ -40,26 +38,21 @@ const ComponentDatailUser = () => {
   //for get initial Role
   const [initialRoles, setInitialRoles] = useState<string[]>([]);
   // console.log("initialRoles:", initialRoles);
-  const Manege =
+  const hasRoleAssignOrRoleRevoked =
     hasPermission("role.assign") ||
     hasPermission("role.revoke") ||
     hasRole("user_manager");
 
-  if (!hasPermission("user.view")) {
-    return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
-        <h2 className="text-xl font-bold text-red-600 mb-2">دسترسی غیرمجاز</h2>
-        <p className="text-red-500">
-          شما مجوز مشاهده جزئیات کاربران را ندارید.
-        </p>
-      </div>
-    );
-  }
+  const isOwner = user?.roles.includes("owner");
+  console.log("isOwner :", isOwner);
+
+  const hasPermessionView =
+    hasPermission("permission.view") || hasRole("user_manager");
 
   const fetchUser = useCallback(async () => {
     if (!userId) {
       console.log("userId missing.");
-      setUser(null);
+      setAllUser(null);
       setRoles([]);
       setSelectedRoleId([]);
       setInitialRoles([]);
@@ -74,11 +67,10 @@ const ComponentDatailUser = () => {
       const userRole = response.data.response.data.roles;
       setRoles(userRole);
 
-      // Fetch user data
       const userResponse = await axiosClient.get(`/users/find?id=${userId}`);
 
       const userData = userResponse.data.response.data.user;
-      setUser(userData);
+      setAllUser(userData);
       console.log("User data roles:", userData.roles);
 
       const userRoleNames = Array.isArray(userData.roles) ? userData.roles : [];
@@ -96,7 +88,7 @@ const ComponentDatailUser = () => {
     } catch (err) {
       console.log("Error in get users :", err);
 
-      setUser(null);
+      setAllUser(null);
       setRoles([]);
       setSelectedRoleId([]);
       setInitialRoles([]);
@@ -107,7 +99,6 @@ const ComponentDatailUser = () => {
     fetchUser();
   }, [fetchUser]);
 
-  //roleId = role.id
   const handleRoleChange = useCallback((roleId: string) => {
     setSelectedRoleId((prev) => {
       if (prev.includes(roleId)) {
@@ -117,7 +108,7 @@ const ComponentDatailUser = () => {
       }
     });
   }, []);
-  //roleName = role.name
+
   const isRoleDisabled = useCallback((roleName: string) => {
     if (["owner", "self"].includes(roleName)) {
       return true;
@@ -204,7 +195,7 @@ const ComponentDatailUser = () => {
 
   return (
     <>
-      {!user ? (
+      {!alluser ? (
         <p className="text-center py-8 text-gray-500">
           در حال گرفتن اطلاعات کاربر...
         </p>
@@ -215,69 +206,81 @@ const ComponentDatailUser = () => {
               <FaUser size={24} />
             </div>
             <h2 className="text-2xl font-bold text-gray-800">
-              {user.display_name}
+              {alluser.display_name}
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-gray-500 font-medium">ایمیل:</p>
-              <p className="text-base text-gray-700">{user.email}</p>
+              <p className="text-base text-gray-700">{alluser.email}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500 font-medium">اسم:</p>
               <p className="text-base text-gray-600 font-medium">
-                {user.display_name}
+                {alluser.display_name}
               </p>
             </div>
             <div>
               <p className="text-sm text-gray-500 font-medium">سن :</p>
-              <p className="text-base text-gray-700">{user.age}</p>
+              <p className="text-base text-gray-700">{alluser.age}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500 font-medium">
                 نقش های فعلی :
               </p>
               <p className="text-base text-green-600 font-medium">
-                {Array.isArray(user.roles) ? user.roles.join(", ") : user.roles}
+                {Array.isArray(alluser.roles)
+                  ? alluser.roles.join(", ")
+                  : alluser.roles}
               </p>
             </div>
           </div>
         </div>
       )}
-      {Manege && (
+      {hasRoleAssignOrRoleRevoked && (
         <div className="mt-6 bg-white p-4 rounded-lg shadow border border-gray-200">
           <h3 className="font-bold mb-4 text-lg">نقش‌های قابل اختصاص:</h3>
           <div className="space-y-2">
-            {roles.map((role) => {
-              const isChecked = isRoleChecked(role.id);
-              const isDisabled = isRoleDisabled(role.name);
-              return (
-                <label
-                  key={role.id}
-                  className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
-                    isDisabled
-                      ? "opacity-50 cursor-not-allowed bg-gray-100"
-                      : "hover:bg-gray-50"
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={isChecked}
-                    disabled={isDisabled}
-                    onChange={() => handleRoleChange(role.id)}
-                    className="w-5 h-5 text-blue-600"
-                  />
-                  <span className="flex items-center gap-2">
-                    <span className="font-medium">{role.name}</span>
-                    {isDisabled && (
-                      <span className="text-xs bg-gray-200 px-2 py-1 rounded">
-                        غیرقابل اختصاص
-                      </span>
-                    )}
-                  </span>
-                </label>
-              );
-            })}
+            {roles
+              .filter((role) => {
+                if (isOwner) return true;
+                if (
+                  role.name === "role_manager" ||
+                  role.name === "user_manager"
+                )
+                  return false;
+                return true;
+              })
+              .map((role) => {
+                const isChecked = isRoleChecked(role.id);
+                const isDisabled = isRoleDisabled(role.name);
+                return (
+                  <label
+                    key={role.id}
+                    className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
+                      isDisabled
+                        ? "opacity-50 cursor-not-allowed bg-gray-100"
+                        : "hover:bg-gray-50"
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      disabled={isDisabled}
+                      onChange={() => handleRoleChange(role.id)}
+                      className="w-5 h-5 text-blue-600"
+                    />
+                    <span className="flex items-center gap-2">
+                      <span className="font-medium">{role.name}</span>
+                      {isDisabled && (
+                        <span className="text-xs bg-gray-200 px-2 py-1 rounded">
+                          غیرقابل اختصاص
+                        </span>
+                      )}
+                    </span>
+                  </label>
+                );
+              })}
           </div>
 
           <button
@@ -287,15 +290,17 @@ const ComponentDatailUser = () => {
             ثبت تغییرات
           </button>
 
-          <Link to="description">
-            <div className="hover:text-blue-600 mt-2">
-              برای خواندن توضیحات هر نقش کلیک کنید
-            </div>
-          </Link>
+          {hasPermessionView && (
+            <Link to="description">
+              <div className="hover:text-blue-600 mt-2">
+                برای خواندن توضیحات هر نقش کلیک کنید
+              </div>
+            </Link>
+          )}
         </div>
       )}
 
-      {!Manege && (
+      {!hasRoleAssignOrRoleRevoked && (
         <div className="mt-6 bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
           <p className="text-gray-500">
             شما دسترسی مشاهده و مدیریت نقش‌ها را ندارید.
