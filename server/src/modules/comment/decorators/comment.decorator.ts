@@ -25,6 +25,12 @@ export const CreateCommentDecorator = () => applyDecorators(
   ApiNotFoundResponse({type: CommentDto.CreateCommentNotFound})
 );
 
+export const FindAllNotConfirmedCommentDecorator = () => applyDecorators(
+  Permission({
+    permissions: [PERMISSIONS.COMMENT_VIEW]
+  })
+);
+
 export const ConfirmCommentDecorator = () => applyDecorators(
   Permission({
     permissions: [PERMISSIONS.COMMENT_CONFIRM]
