@@ -1,10 +1,10 @@
 import * as CommentDto from "./dto";
-import {UUIDv4Validator, ZodPipe} from "@/common";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {CommentService} from "@/modules/comment/comment.service";
 import * as CommentDecorator from "./decorators/comment.decorator";
-import {Body, Controller, Get, Param, Patch, Post, Req} from "@nestjs/common";
 import type {AccessRequest, ApiResponse, CreateCommentResponse} from "@/types";
+import {Body, Controller, Get, Param, Patch, Post, Query, Req} from "@nestjs/common";
+import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
 
 /**
  * Comment management endpoints for car reviews and feedback.
@@ -81,10 +81,12 @@ export class CommentController {
     return this.commentService.create(req.user.userId, data);
   }
 
-  @Get()
+  @Get("not-confirmed")
   @CommentDecorator.FindAllNotConfirmedCommentDecorator()
-  findAllNotConfirmed() {
-    console.log("FindAllNotConfirmedCommentDecorator");
+  findAllNotConfirmed(
+    @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType,
+  ) {
+    console.log(pagination);
     return 'comment: []';
   }
 
