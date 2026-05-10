@@ -22,6 +22,8 @@ import MashhadPage from "./components/ReserveCar.tsx/Pages/MashhadPage";
 import Nayshaboor from "./components/ReserveCar.tsx/Pages/Nayshaboor";
 import YazdPage from "./components/ReserveCar.tsx/Pages/YazdPage";
 import ProductDetailsPage from "./components/ReserveCar.tsx/Pages/ProductDetailsPage";
+import BlogDetail from "./components/Main/Blog/BlogDetail";
+import BlogPage from "./pages/BlogPage";
 //authorization pages
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
@@ -46,6 +48,8 @@ import DescriptionRolePage from "./PanelAdmin/Pages/DescriptionRolePage";
 import CreatCustomRolePage from "./PanelAdmin/Pages/CreatCustomRolePage";
 import RolesPage from "./PanelAdmin/Pages/RolesPage";
 import { GaurdRoute } from "./Routes/GaurdRoute";
+import CreateCategory from "./PanelAdmin/Components/CategoryForm/Pages/CreateCategory";
+import UpdateCategory from "./PanelAdmin/Components/CategoryForm/Pages/UpdateCategory";
 function App() {
   return (
     <>
@@ -56,6 +60,8 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:id" element={<BlogDetail />} />
             <Route path="/roles" element={<RolsPage />} />
             <Route path="/questionPage" element={<QuestionPage />} />
             <Route path="/reserve/qeshm" element={<ComponentQeshm />} />
@@ -101,6 +107,14 @@ function App() {
           <Route path="/panel" element={<PanelAdminLayout />}>
             <Route path="users" element={<UsersPage />} />
             <Route
+              path="category/update/:id"
+              element={
+                <GaurdRoute requiredPermission="category.update">
+                  <UpdateCategory />
+                </GaurdRoute>
+              }
+            />
+            <Route
               path="users/detail/:userId"
               element={
                 <GaurdRoute requiredPermission="user.view">
@@ -122,6 +136,14 @@ function App() {
             <Route path="roles" element={<RolesPage />} />
             <Route path="logout" element={<LogoutPage />} />
             <Route path="Profile" element={<Profile />} />
+            <Route
+              path="category/CreatCategory"
+              element={
+                <GaurdRoute requiredPermission="category.create">
+                  <CreateCategory />
+                </GaurdRoute>
+              }
+            />
             <Route
               path="Profile/updateUser"
               element={<ComponentFormUpdateUser />}

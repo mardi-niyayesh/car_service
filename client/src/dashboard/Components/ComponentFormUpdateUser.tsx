@@ -1,10 +1,9 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
 import { useUpdateUser } from "../Api/ApiUpdatUser";
-//Modal
 import SuccessModal from "../../components/common/SuccessModal";
 import WarningModal from "../../components/common/WarningModal ";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type FormData = {
   display_name: string;
@@ -12,11 +11,10 @@ type FormData = {
 };
 
 const ComponentFormUpdateUser = () => {
+  const navigate = useNavigate();
   const FetchUpdateUser = useUpdateUser();
-  //success Modal
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  //Warning Modal
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
 
@@ -28,14 +26,30 @@ const ComponentFormUpdateUser = () => {
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
+    const payload: { display_name?: string; age?: number } = {};
+
+    if (data.display_name && data.display_name.trim() !== "") {
+      payload.display_name = data.display_name.trim();
+    }
+    if (data.age !== "" && data.age !== undefined && !isNaN(Number(data.age))) {
+      payload.age = Number(data.age);
+    }
+    if (Object.keys(payload).length === 0) {
+      setWarningMessage(
+        " حدالقل یک فیلد را باید تغییر دهید نام یا اسم یا هر دو",
+      );
+      setIsWarningOpen(true);
+      return;
+    }
+    console.log("Sending payload:", payload);
     try {
-      const result = await FetchUpdateUser({
-        display_name: data.display_name,
-        age: Number(data.age),
-      });
+      const result = await FetchUpdateUser(payload);
       if (result.ok) {
         console.log("success in updat information user:", result);
         setSuccessMessage(result.message);
+        // setInterval(() => {
+        //   navigate("/panel/profile");
+        // }, 5000);
         setIsSuccessOpen(true);
         reset();
       } else {
@@ -46,6 +60,9 @@ const ComponentFormUpdateUser = () => {
       reset();
     } catch (err) {
       console.log("Error in update information user :", err);
+      console.log("Full error response:", err.response?.data);
+      setWarningMessage(err.response?.data?.message);
+      setIsWarningOpen(true);
     }
   };
 
@@ -56,19 +73,18 @@ const ComponentFormUpdateUser = () => {
         className="border border-[#EDEDED] rounded-xl bg-white shadow-sm"
       >
         <div className="p-6 bg-white">
-          <span className="text-gray-800 text-[20px] font-medium mb-4">
+          <span className="text-blue-800 text-[20px] font-medium mb-4">
             فرم ویرایش کاربر
           </span>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 mb-8">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mt-4 mb-3">
                 نام کامل
               </label>
               <input
                 type="text"
                 {...register("display_name", {
-                  required: "نام الزامی است",
                   minLength: {
                     value: 3,
                     message: "نام باید حداقل ۳ حرف داشته باشد",
@@ -89,13 +105,12 @@ const ComponentFormUpdateUser = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mt-4 mb-3">
                 سن کاربر
               </label>
               <input
-                type="tel"
+                type="number"
                 {...register("age", {
-                  required: "سن الزامی است",
                   min: {
                     value: 0,
                     message: "سن نباید منفی باشد",
@@ -103,10 +118,6 @@ const ComponentFormUpdateUser = () => {
                   max: {
                     value: 120,
                     message: "سن نباید بیشتر از 120 باشد",
-                  },
-                  pattern: {
-                    value: /^[0-9]+$/,
-                    message: "سن باید عدد باشد",
                   },
                 })}
                 placeholder="سن کاربر"
@@ -119,7 +130,9 @@ const ComponentFormUpdateUser = () => {
               )}
             </div>
           </div>
-
+          <p className="text-gray-400 text-[15px] mb-4">
+            توجه : شما می توانید اسم یا سن یا هر دو را تغییر دهید{" "}
+          </p>
           <button
             type="submit"
             className="py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 w-full md:w-auto"

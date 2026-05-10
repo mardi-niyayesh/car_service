@@ -157,7 +157,6 @@ const CreateCustomRolePage = () => {
         }
       }
       //request for creat custom role
-      //request for creat custom role
       const customroles = await axiosClient.post("/roles", {
         name: formData.name,
         description: formData.description,

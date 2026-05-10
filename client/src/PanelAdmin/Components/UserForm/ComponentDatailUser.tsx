@@ -1,14 +1,14 @@
-import axiosClient from "../../services/axiosClient";
+import axiosClient from "../../../services/axiosClient";
 //icon
 import { FaUser } from "react-icons/fa";
 //hooks
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { useUser } from "../../hooks/useUser";
+import { useUser } from "../../../hooks/useUser";
 //Modal
-import SuccessModal from "../../components/common/SuccessModal";
-import WarningModal from "../../components/common/WarningModal ";
+import SuccessModal from "../../../components/common/SuccessModal";
+import WarningModal from "../../../components/common/WarningModal ";
 
 type User = {
   id: number;
@@ -28,15 +28,11 @@ const ComponentDatailUser = () => {
   const { hasRole, hasPermission } = useUser();
   const { userId } = useParams<{ userId: string }>();
   // console.log("userId:", userId);
-  //success Modal
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  //Warning Modal
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
-  //get information user
   const [user, setUser] = useState<User | null>(null);
-  //get all roles
   const [roles, setRoles] = useState<Role[]>([]);
   //get select rolesId
   const [selectedRoleId, setSelectedRoleId] = useState<string[]>([]);
@@ -306,6 +302,7 @@ const ComponentDatailUser = () => {
           </p>
         </div>
       )}
+
       <SuccessModal
         isOpen={isSuccessOpen}
         onClose={() => setIsSuccessOpen(false)}

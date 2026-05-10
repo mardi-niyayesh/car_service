@@ -32,8 +32,6 @@ const Menu = [
     to: "category",
     label: "دسته‌بندی",
     icon: <FaListUl style={{ opacity: 0.6 }} />,
-    permission: "category.update",
-    role: "category_manager",
   },
   {
     to: "product",

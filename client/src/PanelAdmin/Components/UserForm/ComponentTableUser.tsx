@@ -1,8 +1,7 @@
-import axiosClient from "../../services/axiosClient";
-//hooks
+import axiosClient from "../../../services/axiosClient";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import ComponentPaginat from "../../../ComponentPublic/ComponentPaginat";
 import { useCallback } from "react";
 
 type User = {
@@ -46,58 +45,9 @@ const ComponentTableUser = () => {
     }
   }, [page]);
 
-  const handlePageClick = (selectedPage: number) => {
-    setPage(selectedPage);
-  };
-
   useEffect(() => {
     fetchUsers();
-  }, [page,fetchUsers]);
-
-  const renderPagination = () => {
-    const pageButtons = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pageButtons.push(
-        <button
-          key={i}
-          onClick={() => handlePageClick(i)}
-          disabled={page === i}
-          className={`
-            px-3 py-1 border rounded font-medium transition-colors
-            ${
-              page === i
-                ? "bg-blue-500 text-white cursor-not-allowed"
-                : "hover:bg-gray-100 hover:text-blue-600"
-            }
-          `}
-        >
-          {i}
-        </button>,
-      );
-    }
-
-    return (
-      <div className="flex gap-2 items-center justify-center mt-6">
-        <button
-          onClick={() => handlePageClick(page - 1)}
-          disabled={page === 1}
-          className="px-3 py-1 border rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-        >
-          قبلی
-        </button>
-
-        {pageButtons}
-
-        <button
-          onClick={() => handlePageClick(page + 1)}
-          disabled={page === totalPages}
-          className="px-3 py-1 border rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-        >
-          بعدی
-        </button>
-      </div>
-    );
-  };
+  }, [page, fetchUsers]);
 
   return (
     <div className="rounded-lg shadow-sm border border-gray-200 bg-white p-4">
@@ -152,10 +102,13 @@ const ComponentTableUser = () => {
               )}
             </tbody>
           </table>
-
-          {renderPagination()}
         </>
       )}
+      <ComponentPaginat
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </div>
   );
 };
