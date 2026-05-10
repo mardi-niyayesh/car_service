@@ -1,10 +1,10 @@
 import * as CommentDto from "./dto";
 import {checkPrismaError} from "@/lib";
+import {PaginationValidatorType} from "@/common";
+import {Prisma} from "@/modules/prisma/generated/client";
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {BaseException, CreateCommentResponse, ApiResponse} from "@/types";
-import {PaginationValidatorType} from "@/common";
-import {Prisma} from "@/modules/prisma/generated/client";
 
 @Injectable()
 export class CommentService {
