@@ -100,10 +100,10 @@ export class CommentController {
    */
   @Get("unconfirmed")
   @CommentDecorator.FindAllUnconfirmedCommentDecorator()
-  findAllUnconfirmed(
+  async findAllUnconfirmed(
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType,
   ) {
-    console.log(pagination);
+    await this.commentService.findAllUnconfirmed(pagination);
     return 'comment: []';
   }
 

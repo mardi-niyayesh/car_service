@@ -3,6 +3,8 @@ import {checkPrismaError} from "@/lib";
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {BaseException, CreateCommentResponse, ApiResponse} from "@/types";
+import {PaginationValidatorType} from "@/common";
+import {Prisma} from "@/modules/prisma/generated/client";
 
 @Injectable()
 export class CommentService {
@@ -55,6 +57,30 @@ export class CommentService {
     }
   }
 
+  async findAllUnconfirmed(pagination: PaginationValidatorType) {
+    const {offset, limit, orderByLower} = pagination;
+
+    const where: Prisma.CommentWhereInput = {
+      is_confirmed: false,
+    };
+
+    const comments = await this.prisma.comment.findMany({
+      where,
+      orderBy: {
+        created_at: orderByLower
+      },
+      skip: offset,
+      take: limit,
+    });
+
+    const count: number = await this.prisma.comment.count({
+      where
+    });
+
+    console.log(count);
+    console.log(comments);
+  }
+
   /**
    * Moderation action on existing comment.
    *
@@ -66,7 +92,7 @@ export class CommentService {
    * commentService.moderateComment('uuid-1234', 'confirm');
    * commentService.moderateComment('uuid-5678', 'reject');
    */
-  async moderateComment(comment_id: string, action: 'reject' | 'confirm'):Promise<ApiResponse<CreateCommentResponse>> {
+  async moderateComment(comment_id: string, action: 'reject' | 'confirm'): Promise<ApiResponse<CreateCommentResponse>> {
     const notFoundMessage: BaseException = {
       message: 'comment not found in database, or already is confirmed',
       error: 'comment not found'
