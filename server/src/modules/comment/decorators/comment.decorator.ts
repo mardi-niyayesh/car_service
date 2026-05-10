@@ -11,7 +11,7 @@ import {
 
 import * as CommentDto from "../dto";
 import {applyDecorators} from "@nestjs/common";
-import {getForbiddenResponse, getUnauthorizedResponse, Permission, PERMISSIONS, UUID4Dto} from "@/common";
+import {getForbiddenResponse, getNormalErrorResponse, getUnauthorizedResponse, Permission, PERMISSIONS, UUID4Dto} from "@/common";
 
 export const CreateCommentDecorator = () => applyDecorators(
   Permission({
@@ -40,4 +40,12 @@ export const ConfirmCommentDecorator = () => applyDecorators(
       missing_permissions: [PERMISSIONS.COMMENT_CONFIRM],
     })
   }),
+  ApiNotFoundResponse({
+    type: getNormalErrorResponse({
+      path: "comment/id/confirm",
+      statusCode: 404,
+      message: 'comment not found in database, or already is confirmed',
+      error: 'comment not found'
+    })
+  })
 );
