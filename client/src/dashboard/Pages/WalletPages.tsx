@@ -1,4 +1,3 @@
-//components
 import WalletComponents from "../Components/WalletComponents";
 const WalletPages = () => {
   return (

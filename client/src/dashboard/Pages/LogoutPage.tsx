@@ -28,16 +28,13 @@ const LogoutPage = () => {
   const handleLogout = async () => {
     setIsLoading(true);
 
-    // start=>close modal
     setIsModalOpen(false);
     setIsErrorModalOpen(false);
 
     try {
       const result = await LogoutUser();
-      // console.log("نتیجه خروج", result);
 
       if (!result) {
-        // console.log("ریزالت نداره");
         setErrorMessage("پاسخی از سرور دریافت نشد");
         setIsErrorModalOpen(true);
         setIsLoading(false);
@@ -52,9 +49,7 @@ const LogoutPage = () => {
         setTimeout(() => {
           navigate("/login");
         }, 3000);
-      }
-      // error 401
-      else if (result.statusCode === 401) {
+      } else if (result.statusCode === 401) {
         setWarningMessage(
           `نشست شما به پایان رسیده است . لطفا برای ادامه کار مجدد وارد حساب کاربری خود شوید`,
         );
@@ -62,9 +57,7 @@ const LogoutPage = () => {
         setTimeout(() => {
           navigate("/login");
         }, 3000);
-      }
-      //error 403
-      else if (result.statusCode === 403) {
+      } else if (result.statusCode === 403) {
         setWarningMessage(
           ` نشست شما در دستگاه دیگری پایان یافته است.
         اگر خودتان وارد سیستم شده‌اید، لطفاً مجدداً وارد شوید.
@@ -74,9 +67,7 @@ const LogoutPage = () => {
         setTimeout(() => {
           navigate("/login");
         }, 3000);
-      }
-      //error 500
-      else if (result.statusCode === 500) {
+      } else if (result.statusCode === 500) {
         setErrorMessage("خطای سرور. لطفاً بعداً دوباره تلاش کنید.");
         setIsErrorModalOpen(true);
       }
@@ -95,7 +86,6 @@ const LogoutPage = () => {
       dir="rtl"
     >
       <div className="flex-1 p-4 sm:p-6 md:p-8">
-        {/* title Pages*/}
         <div className="mb-6 md:mb-8">
           <p className="text-[#212121] text-xl sm:text-2xl md:text-3xl font-bold pb-3 inline-block">
             خروج
@@ -103,19 +93,17 @@ const LogoutPage = () => {
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 max-w-md mx-auto md:mx-0">
-          {/* Approval Question*/}
           <div className="text-[#212121] sm:text-lg md:text-xl font-medium text-center mb-8">
             برای خروج از حساب کاربری خود اطمینان دارید؟
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {/* Cancel Button*/}
             <Link to="/dashboard">
               <button className="text-[#DB1D27] border-2 border-[#DB1D27] px-6 sm:px-8 py-3 rounded-xl hover:text-white hover:bg-[#DB1D27] transition-all duration-300 font-medium text-sm sm:text-base w-full sm:w-auto">
                 انصراف
               </button>
             </Link>
-            {/* logout Button*/}
+
             <button
               onClick={handleLogout}
               disabled={isLoading}
@@ -129,7 +117,6 @@ const LogoutPage = () => {
         </div>
       </div>
 
-      {/* Success Modal */}
       {isModalOpen && (
         <SuccessModal
           isOpen={isModalOpen}
@@ -141,7 +128,6 @@ const LogoutPage = () => {
         />
       )}
 
-      {/* Error Modal */}
       {isErrorModalOpen && (
         <ErrorModal
           isOpen={isErrorModalOpen}

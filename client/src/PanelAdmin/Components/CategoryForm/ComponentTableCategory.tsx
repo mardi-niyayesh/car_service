@@ -28,6 +28,7 @@ const ComponentTableCategory = (): React.ReactElement => {
 const hasDeletePermission = hasPermission("category.delete") || hasRole("category_manager");
 const hasUpdatePermission = hasPermission("category.update") || hasRole("category_manager");
 
+
   const GetAllCategory = async () => {
     try {
       const resCat = await axiosClient.get(
