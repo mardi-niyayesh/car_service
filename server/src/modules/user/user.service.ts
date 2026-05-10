@@ -107,8 +107,8 @@ export class UserService {
    * Update Current Password.
    * - **Requires authentication and "user.self" permission.**
    */
-  updatePassword(id: string, {oldPassword, newPassword}: UserDto.UpdatePasswordType): Promise<ApiResponse<void>> {
-    return this.prisma.$transaction(async (tx): Promise<ApiResponse<void>> => {
+  updatePassword(id: string, {oldPassword, newPassword}: UserDto.UpdatePasswordType): Promise<ApiResponse> {
+    return this.prisma.$transaction(async (tx): Promise<ApiResponse> => {
       const user = await tx.user.findUnique({
         where: {id}
       });
