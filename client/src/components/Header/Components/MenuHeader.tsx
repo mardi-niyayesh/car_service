@@ -45,7 +45,7 @@ const MenuHeader = () => {
     if (selectedPath) {
       navigate(selectedPath);
 
-      event.target.value = "";
+      
     }
   };
   return (
@@ -71,15 +71,13 @@ const MenuHeader = () => {
                       value=""
                     >
                       {item.dropdownItems.map((optionItem) => (
-                        <Link to="optionItem.path">
-                          <option
-                            key={optionItem.id || item.label}
-                            value={optionItem.path}
-                            disabled={optionItem.disabled || false}
-                          >
-                            {optionItem.label}
-                          </option>
-                        </Link>
+                        <option
+                          key={optionItem.id || optionItem.label}
+                          value={optionItem.path ?? optionItem.value ?? ""}
+                          disabled={optionItem.disabled || false}
+                        >
+                          {optionItem.label}
+                        </option>
                       ))}
                     </select>
                   </li>
@@ -126,7 +124,7 @@ const MenuHeader = () => {
                 <select
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer appearance-none bg-transparent"
                   onChange={handleSelectChange}
-                  value=""
+                  
                 >
                   {item.dropdownItems.map((optionItem) => (
                     <option
