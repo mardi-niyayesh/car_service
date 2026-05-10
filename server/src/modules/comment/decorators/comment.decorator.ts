@@ -37,10 +37,11 @@ export const CreateCommentDecorator = () => applyDecorators(
   ApiNotFoundResponse({type: CommentDto.CreateCommentNotFound})
 );
 
-export const FindAllNotConfirmedCommentDecorator = () => applyDecorators(
+export const FindAllUnconfirmedCommentDecorator = () => applyDecorators(
   Permission({
     permissions: [PERMISSIONS.COMMENT_VIEW]
   }),
+  ApiOperation(CommentDto.findAllUnconfirmedCommentsOperation),
   ApiQuery(pagePaginationDto),
   ApiQuery(limitPaginationDto),
   ApiQuery(orderByPaginationDto),

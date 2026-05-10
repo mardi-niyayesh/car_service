@@ -16,6 +16,20 @@ export const createCommentOperation: ApiOperationOptions = {
   > **📌 Workflow:** Comments start as "**is_confirmed = false**" and require admin approval before public visibility. Nested replies automatically link to the same car as their parent.`
 };
 
+export const findAllUnconfirmedCommentsOperation: ApiOperationOptions = {
+  summary: "Get unconfirmed comments",
+  operationId: "get_unconfirmed_comments",
+  description: `
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.COMMENT_VIEW}\`\n
+  | Query Parameter | Type | Description |
+  |----------------|------|-------------|
+  | **page** | number | Current page (default: 1, min: 1) |
+  | **limit** | number | Items per page (default: 10, min: 1, max: 100) |
+  | **order** | enum | Sort by created_at: "asc" or "desc" (default: "desc") |
+
+  > **📌 Workflow:** This endpoint returns only comments that are **not confirmed yet** (is_confirmed = false). Only users with the "${PERMISSIONS.COMMENT_VIEW}" permission can access this endpoint. Results are paginated and can be sorted by creation date.`
+};
+
 export const confirmCommentOperation: ApiOperationOptions = {
   summary: "Confirm exist Comment",
   operationId: "confirm_comment",

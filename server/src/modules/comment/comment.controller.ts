@@ -81,9 +81,9 @@ export class CommentController {
     return this.commentService.create(req.user.userId, data);
   }
 
-  @Get("not-confirmed")
-  @CommentDecorator.FindAllNotConfirmedCommentDecorator()
-  findAllNotConfirmed(
+  @Get("unconfirmed")
+  @CommentDecorator.FindAllUnconfirmedCommentDecorator()
+  findAllUnconfirmed(
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType,
   ) {
     console.log(pagination);
