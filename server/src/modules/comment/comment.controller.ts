@@ -3,7 +3,7 @@ import {UUIDv4Validator, ZodPipe} from "@/common";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {CommentService} from "@/modules/comment/comment.service";
 import * as CommentDecorator from "./decorators/comment.decorator";
-import {Body, Controller, Param, Patch, Post, Req} from "@nestjs/common";
+import {Body, Controller, Get, Param, Patch, Post, Req} from "@nestjs/common";
 import type {AccessRequest, ApiResponse, CreateCommentResponse} from "@/types";
 
 /**
@@ -79,6 +79,13 @@ export class CommentController {
     @Body(new ZodPipe(CommentDto.CreateCommentValidator)) data: CommentDto.CreateCommentType
   ): Promise<ApiResponse<CreateCommentResponse>> {
     return this.commentService.create(req.user.userId, data);
+  }
+
+  @Get()
+  @CommentDecorator.FindAllNotConfirmedCommentDecorator()
+  findAllNotConfirmed() {
+    console.log("FindAllNotConfirmedCommentDecorator");
+    return 'comment: []';
   }
 
   /**
