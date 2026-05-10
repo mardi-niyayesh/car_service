@@ -57,6 +57,23 @@ export class CommentService {
     }
   }
 
+  /**
+   * Retrieves a paginated list of unconfirmed comments.
+   * Only accessible by users with `comment.view` permission.
+   *
+   * @param pagination - Pagination parameters (page, limit, sort order)
+   * @returns List of unconfirmed comments with associated user (excl. password) and car data
+   *
+   * @queryParams
+   * - `page`: number, default 1, min 1
+   * - `limit`: number, default 10, min 1, max 100
+   * - `order`: "asc" | "desc", default "desc" (sort by created_at)
+   *
+   * @permission `comment.view`
+   *
+   * @example
+   * GET /comments/unconfirmed?page=2&limit=20&order=asc
+   */
   async findAllUnconfirmed(pagination: PaginationValidatorType): Promise<ApiResponse<CommentNUserNCarList>> {
     const {offset, limit, orderByLower} = pagination;
 
@@ -88,8 +105,8 @@ export class CommentService {
     return {
       message: 'unconfirmed comments successfully find.',
       data: {
+        count,
         comments,
-        count
       }
     };
   }
