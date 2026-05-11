@@ -15,20 +15,19 @@ import WarningModal from "../components/common/WarningModal ";
 
 function RegisterPage() {
   const navigate = useNavigate();
-  //SuccessModal
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  //ErrorModal
+
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  //WarningModal
+
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
 
   const mutation = useMutation({
     mutationFn: registerUser,
     onSuccess: (data) => {
-      //error 400
       if (data.statusCode === 400) {
         setWarningMessage(`اطلاعات شما با قوانین ثبت‌نام همخوانی ندارد.
       لطفاً مطمئن شوید:
@@ -37,24 +36,16 @@ function RegisterPage() {
       • نام کاربری حداقل ۳ کاراکتر
       • سن بین ۰ تا ۱۲۰ سال`);
         setIsWarningModalOpen(true);
-      }
-      //error 409
-      else if (data.statusCode === 409) {
+      } else if (data.statusCode === 409) {
         setWarningMessage("کاربری با این مشخصات قبلا ثبت نام کرده است");
         setIsWarningModalOpen(true);
-      }
-      //error 500
-      else if (data.statusCode === 500) {
+      } else if (data.statusCode === 500) {
         setErrorMessage("خطای سرور. لطفاً بعداً دوباره تلاش کنید.");
         setIsErrorModalOpen(true);
-      }
-       //error 429
-       else if (data.statusCode === 429) {
+      } else if (data.statusCode === 429) {
         setErrorMessage("لطفا 5 دقیقه دیگر مجدد تلاش کنید");
         setIsErrorModalOpen(true);
-      }
-      //success
-      else {
+      } else {
         setModalMessage(
           "ثبت‌نام شما با موفقیت انجام شد! به خانواده کارسرویس خوش آمدید.",
         );
@@ -71,16 +62,16 @@ function RegisterPage() {
   const handleRegister = (data: RegisterFormData) => {
     mutation.mutate(data);
   };
-  //SuccessModal
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     navigate("/login");
   };
-  //SuccessModal
+
   const handleCloseErrorModal = () => {
     setIsErrorModalOpen(false);
   };
-  // WarningModal
+
   const handleCloseWarningModal = () => {
     setIsWarningModalOpen(false);
   };

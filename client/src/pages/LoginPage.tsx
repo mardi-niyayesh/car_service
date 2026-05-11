@@ -19,13 +19,13 @@ function LoginPage() {
   const navigate = useNavigate();
   //use az context for send infomation user to context
   const { setUser, setToken } = useUser();
-  //SuccessModal
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  //ErrorModal
+
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  //WarningModal
+
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
 

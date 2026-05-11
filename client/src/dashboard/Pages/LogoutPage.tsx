@@ -1,10 +1,7 @@
-//hooks
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-//api
 import { LogoutUser } from "../Api/ApiLogoutUser";
-//Modal
 import SuccessModal from "../../components/common/SuccessModal";
 import ErrorModal from "../../components/common/ErrorModal";
 import WarningModal from "../../components/common/WarningModal ";
@@ -13,16 +10,16 @@ import { useUser } from "../../hooks/useUser";
 const LogoutPage = () => {
   const navigate = useNavigate();
   const { logout } = useUser();
-  //SuccessModal
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  //ErrorModal
+
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  //WarningModal
+
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
   const [warningMessage, setWarningMessage] = useState("");
-  //state loading
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogout = async () => {
@@ -41,7 +38,6 @@ const LogoutPage = () => {
         return;
       }
 
-      // success logout
       if (result.success === true) {
         setModalMessage("شما با موفقیت از حساب کاربری خود خارج شدید");
         logout();
