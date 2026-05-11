@@ -120,8 +120,7 @@ export class CommentController {
   @CommentDecorator.ConfirmCommentDecorator()
   async confirm(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
-  ) {
-    await this.commentService.moderateComment(id, 'confirm');
-    return 'confirmed';
+  ): Promise<ApiResponse<CreateCommentResponse>> {
+    return this.commentService.moderateComment(id, 'confirm');
   }
 }
