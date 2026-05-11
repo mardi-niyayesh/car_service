@@ -46,6 +46,7 @@ const ComponentDatailUser = () => {
   const isOwner = user?.roles.includes("owner");
   console.log("isOwner :", isOwner);
 
+  const isMyProfile = user?.id === userId;
   const hasPermessionView =
     hasPermission("permission.view") || hasRole("user_manager");
 
@@ -241,54 +242,63 @@ const ComponentDatailUser = () => {
         <div className="mt-6 bg-white p-4 rounded-lg shadow border border-gray-200">
           <h3 className="font-bold mb-4 text-lg">نقش‌های قابل اختصاص:</h3>
           <div className="space-y-2">
-            {roles
-              .filter((role) => {
-                if (isOwner) return true;
-                if (
-                  role.name === "role_manager" ||
-                  role.name === "user_manager"
-                )
-                  return false;
-                return true;
-              })
-              .map((role) => {
-                const isChecked = isRoleChecked(role.id);
-                const isDisabled = isRoleDisabled(role.name);
-                return (
-                  <label
-                    key={role.id}
-                    className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
-                      isDisabled
-                        ? "opacity-50 cursor-not-allowed bg-gray-100"
-                        : "hover:bg-gray-50"
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      disabled={isDisabled}
-                      onChange={() => handleRoleChange(role.id)}
-                      className="w-5 h-5 text-blue-600"
-                    />
-                    <span className="flex items-center gap-2">
-                      <span className="font-medium">{role.name}</span>
-                      {isDisabled && (
-                        <span className="text-xs bg-gray-200 px-2 py-1 rounded">
-                          غیرقابل اختصاص
-                        </span>
-                      )}
-                    </span>
-                  </label>
-                );
-              })}
+            {isMyProfile ? (
+              <p className="text-sm text-gray-600 mt-30 mb-8 rounded-[10px] bg-yellow-100 inline p-2">
+               توجه : شما نمی توانید نقش خودتان را تغییر دهید.
+              </p>
+            ) : (
+             
+              roles
+                .filter((role) => {
+                  if (isOwner) return true;
+                  if (
+                    role.name === "role_manager" ||
+                    role.name === "user_manager"
+                  )
+                    return false;
+                  return true;
+                })
+                .map((role) => {
+                  const isChecked = isRoleChecked(role.id);
+                  const isDisabled = isRoleDisabled(role.name);
+                  return (
+                    <label
+                      key={role.id}
+                      className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
+                        isDisabled
+                          ? "opacity-50 cursor-not-allowed bg-gray-100"
+                          : "hover:bg-gray-50"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        disabled={isDisabled}
+                        onChange={() => handleRoleChange(role.id)}
+                        className="w-5 h-5 text-blue-600"
+                      />
+                      <span className="flex items-center gap-2">
+                        <span className="font-medium">{role.name}</span>
+                        {isDisabled && (
+                          <span className="text-xs bg-gray-200 px-2 py-1 rounded">
+                            غیرقابل اختصاص
+                          </span>
+                        )}
+                      </span>
+                    </label>
+                  );
+                })
+            )}
           </div>
 
-          <button
-            onClick={handleSaveChanges}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
-            ثبت تغییرات
-          </button>
+          {!isMyProfile && (
+            <button
+              onClick={handleSaveChanges}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              ثبت تغییرات
+            </button>
+          )}
 
           {hasPermessionView && (
             <Link to="description">
