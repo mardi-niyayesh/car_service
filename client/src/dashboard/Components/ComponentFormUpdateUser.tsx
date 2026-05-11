@@ -47,9 +47,9 @@ const ComponentFormUpdateUser = () => {
       if (result.ok) {
         console.log("success in updat information user:", result);
         setSuccessMessage(result.message);
-        // setInterval(() => {
-        //   navigate("/panel/profile");
-        // }, 5000);
+        setInterval(() => {
+          navigate("/panel/profile");
+        }, 5000);
         setIsSuccessOpen(true);
         reset();
       } else {

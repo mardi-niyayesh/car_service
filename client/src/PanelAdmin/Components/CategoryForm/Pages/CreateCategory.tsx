@@ -30,7 +30,7 @@ const CreateCategory = () => {
       setIsSuccessOpen(true);
       setTimeout(() => {
         navigate("/panel/category");
-      }, 3000);
+      }, 2000);
     } catch (err: any) {
       console.error("Error create:", err.message);
       if (err.response?.status === 403) {

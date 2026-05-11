@@ -1,11 +1,7 @@
 import axiosClient from "../../services/axiosClient";
-//hooks
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-//icons to react-icon
 import { FiKey, FiCheckSquare } from "react-icons/fi";
-
-//Modal
 import SuccessModal from "../../components/common/SuccessModal";
 import WarningModal from "../../components/common/WarningModal ";
 
@@ -23,7 +19,7 @@ type RoleType = {
 const CreateCustomRolePage = () => {
   //state for get all permesssions
   const [permissions, setPermissions] = useState<Permission[]>([]);
-  //state for loadig
+
   const [loading, setloading] = useState(false);
   //state for get all roles
   const [allroles, setAllRoles] = useState<RoleType[]>([]);
@@ -38,10 +34,10 @@ const CreateCustomRolePage = () => {
   });
 
   const navigate = useNavigate();
-  //success Modal
+
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  //Warning Modal
+
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
 
