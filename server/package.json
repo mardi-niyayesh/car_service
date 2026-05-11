@@ -74,6 +74,7 @@
     "@nestjs/testing": "^11.0.1",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
     "@types/cron": "^2.0.1",
     "@types/express": "^5.0.0",
     "@types/geoip-lite": "^1.4.4",

@@ -54,4 +54,63 @@ export class CommentService {
       });
     }
   }
+
+  /**
+   * Moderation action on existing comment.
+   *
+   * @param comment_id - Target comment UUID
+   * @param action    - Moderation action: 'confirm' (approve) or 'reject' (decline)
+   * @returns Success message after moderation
+   *
+   * @example
+   * commentService.moderateComment('uuid-1234', 'confirm');
+   * commentService.moderateComment('uuid-5678', 'reject');
+   */
+  async moderateComment(comment_id: string, action: 'reject' | 'confirm'):Promise<ApiResponse<CreateCommentResponse>> {
+    const notFoundMessage: BaseException = {
+      message: 'comment not found in database, or already is confirmed',
+      error: 'comment not found'
+    };
+
+    if (action === 'confirm') {
+      try {
+        const comment = await this.prisma.comment.update({
+          where: {
+            id: comment_id,
+            is_confirmed: false
+          },
+          data: {
+            is_confirmed: true
+          },
+        });
+
+        return {
+          message: 'comment successfully confirmed.',
+          data: {
+            comment
+          }
+        };
+      } catch (_) {
+        throw new NotFoundException(notFoundMessage);
+      }
+    }
+
+    try {
+      const comment = await this.prisma.comment.delete({
+        where: {
+          id: comment_id,
+          is_confirmed: false
+        }
+      });
+
+      return {
+        message: 'comment successfully deleted.',
+        data: {
+          comment
+        }
+      };
+    } catch (_) {
+      throw new NotFoundException(notFoundMessage);
+    }
+  }
 }

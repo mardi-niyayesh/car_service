@@ -93,10 +93,10 @@ export class CommentController {
    */
   @Patch(':id/confirm')
   @CommentDecorator.ConfirmCommentDecorator()
-  confirm(
+  async confirm(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
   ) {
-    console.log(id);
+    await this.commentService.moderateComment(id, 'confirm');
     return 'confirmed';
   }
 }
