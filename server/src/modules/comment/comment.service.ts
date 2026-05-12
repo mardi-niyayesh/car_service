@@ -1,8 +1,9 @@
 import * as CommentDto from "./dto";
 import {checkPrismaError} from "@/lib";
 import {Prisma} from "@/modules/prisma/generated/client";
-import {Injectable, NotFoundException} from "@nestjs/common";
+import {RedisService} from "@/modules/redis/redis.service";
 import {EventEmitter2, OnEvent} from "@nestjs/event-emitter";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {eventsEmitter, PaginationValidatorType} from "@/common";
 import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList, UpdateCarRateEvent} from "@/types";
@@ -10,8 +11,9 @@ import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCar
 @Injectable()
 export class CommentService {
   constructor(
+    private readonly redis: RedisService,
     private readonly prisma: PrismaService,
-    private readonly eventEmitter: EventEmitter2
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   /**
@@ -204,5 +206,7 @@ export class CommentService {
       },
       data: {rate}
     });
+
+    await this.redis.deletePrefix("*car:list*");
   }
 }
