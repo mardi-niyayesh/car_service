@@ -90,6 +90,7 @@ export const RejectCommentDecorator = () => applyDecorators(
   }),
   ApiParam(UUID4Dto('id')),
   ApiOperation(CommentDto.rejectCommentOperation),
+  ApiOkResponse({type: CommentDto.RejectCommentOk}),
   ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/id/reject")}),
   ApiForbiddenResponse({
     type: getForbiddenResponse("comments/id/confirm", {

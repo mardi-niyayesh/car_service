@@ -24,3 +24,10 @@ export class ConfirmedCommentOk extends getBaseOkResponseSchema<CreateCommentRes
     }
   }
 }) {}
+
+export class RejectCommentOk extends getBaseOkResponseSchema<void>({
+  path: "comments/id/reject",
+  response: {
+    message: "comment successfully deleted.",
+  }
+}) {}
