@@ -1,4 +1,4 @@
-import ComponentTableProduct from "../Components/ProductForm/ComponentTableProduct";
+import ComponentTableProduct from "../../components/PanelAdmin/ProductForm/ComponentTableProduct";
 import { Link } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
 const ProductPage = () => {
