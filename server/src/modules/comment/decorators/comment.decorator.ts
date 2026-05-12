@@ -47,6 +47,7 @@ export const FindAllUnconfirmedCommentDecorator = () => applyDecorators(
   ApiQuery(limitPaginationDto),
   ApiQuery(orderByPaginationDto),
   ApiOkResponse({type: CommentDto.FindAllUnconfirmedOk}),
+  ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/id/confirm")}),
   ApiForbiddenResponse({
     type: getForbiddenResponse("comments/id/confirm", {
       resource: 'comment',
