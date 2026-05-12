@@ -131,6 +131,7 @@ function App() {
                 </GaurdRoute>
               }
             />
+            <Route path="customrole/description" element={<DescriptionRolePage />} />
             <Route path="customrole" element={<CreatCustomRolePage />} />
             <Route path="product" element={<ProductPage />} />
             <Route path="product/creatproduct" element={<ComponentFormAddProduct />} />
