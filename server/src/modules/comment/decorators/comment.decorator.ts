@@ -91,4 +91,12 @@ export const RejectCommentDecorator = () => applyDecorators(
   ApiParam(UUID4Dto('id')),
   ApiOperation(CommentDto.rejectCommentOperation),
   ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/id/confirm")}),
+  ApiForbiddenResponse({
+    type: getForbiddenResponse("comments/id/confirm", {
+      resource: 'comment',
+      required_mode: 'ALL',
+      required_permissions: [PERMISSIONS.COMMENT_CONFIRM],
+      missing_permissions: [PERMISSIONS.COMMENT_CONFIRM],
+    })
+  }),
 );
