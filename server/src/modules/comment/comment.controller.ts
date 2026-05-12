@@ -123,4 +123,11 @@ export class CommentController {
   ): Promise<ApiResponse<CreateCommentResponse>> {
     return this.commentService.moderateComment(id, 'confirm');
   }
+
+  @Patch(':id/reject')
+  async reject(
+    @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
+  ) {
+    return this.commentService.moderateComment(id, 'reject');
+  }
 }
