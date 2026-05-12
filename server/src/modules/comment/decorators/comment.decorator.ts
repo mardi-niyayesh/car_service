@@ -7,7 +7,7 @@ import {
   ApiNotFoundResponse,
   ApiForbiddenResponse,
   ApiBadRequestResponse,
-  ApiUnauthorizedResponse,
+  ApiUnauthorizedResponse, ApiOkResponse,
 } from "@nestjs/swagger";
 
 import {
@@ -53,6 +53,7 @@ export const ConfirmCommentDecorator = () => applyDecorators(
   }),
   ApiParam(UUID4Dto('id')),
   ApiOperation(CommentDto.confirmCommentOperation),
+  ApiOkResponse({type: CommentDto.ConfirmedCommentOk}),
   ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/id/confirm")}),
   ApiForbiddenResponse({
     type: getForbiddenResponse("comments/id/confirm", {
