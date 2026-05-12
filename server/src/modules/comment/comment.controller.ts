@@ -120,7 +120,7 @@ export class CommentController {
   @CommentDecorator.ConfirmCommentDecorator()
   async confirm(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
-  ): Promise<ApiResponse<CreateCommentResponse>> {
+  ): Promise<ApiResponse<CreateCommentResponse | void>> {
     return this.commentService.moderateComment(id, 'confirm');
   }
 
@@ -138,7 +138,7 @@ export class CommentController {
   @CommentDecorator.RejectCommentDecorator()
   async reject(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
-  ) {
+  ): Promise<ApiResponse<CreateCommentResponse | void>> {
     return this.commentService.moderateComment(id, 'reject');
   }
 }
