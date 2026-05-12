@@ -223,6 +223,22 @@ const RolesPage = () => {
         onClose={() => setIsWarningOpen(false)}
         message={WarningMessage}
       />
+      <div className="bg-gray-50 border border-gray-200 rounded-md p-4 mb-6 mt-6">
+        <h2 className="font-medium text-blue-800 mb-2">
+          نکاتی در مورد حذف نقش :
+        </h2>
+        <ul className="list-disc pr-5 space-y-1 text-sm text-gray-700 ">
+          <li>حتی مالک سیستم نمی‌تواند نقش‌های پایه‌ای سیستم را حذف کند.</li>
+          <li>
+            حتی با مجوز role.delete هم نمی‌توانید نقش‌های حساس (شروع با user. یا
+            role.) را حذف کنید.
+          </li>
+          <li>
+            فقط مالک سیستم می‌تواند نقش‌های CUSTOM دارای مجوزهای user/role را
+            حذف کند.
+          </li>
+        </ul>
+      </div>
     </>
   );
 };
