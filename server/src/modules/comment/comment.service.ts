@@ -4,7 +4,7 @@ import {PaginationValidatorType} from "@/common";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList} from "@/types";
+import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList} from "@/types";
 
 @Injectable()
 export class CommentService {
