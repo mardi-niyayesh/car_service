@@ -87,5 +87,6 @@ export const ConfirmCommentDecorator = () => applyDecorators(
 export const RejectCommentDecorator = () => applyDecorators(
   Permission({
     permissions: [PERMISSIONS.COMMENT_REJECT],
-  })
+  }),
+  ApiParam(UUID4Dto('id')),
 );
