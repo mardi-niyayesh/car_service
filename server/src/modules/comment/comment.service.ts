@@ -178,6 +178,12 @@ export class CommentService {
     }
   }
 
+  /**
+   * Updates a car's average rating based on all confirmed comments.
+   *
+   * @event UPDATE_CAR_RATE
+   * @param car_id - ID of the car to update
+   */
   @OnEvent(eventsEmitter.UPDATE_CAR_RATE)
   async updateCarRateEvent({car_id}: UpdateCarRateEvent) {
     const rates = await this.prisma.comment.aggregate({
