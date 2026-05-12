@@ -1,4 +1,4 @@
-import ComponentTableUser from "../Components/UserForm/ComponentTableUser";
+import ComponentTableUser from "../../components/PanelAdmin/UserForm/ComponentTableUser";
 
 const UsersPage = () => {
   return (
