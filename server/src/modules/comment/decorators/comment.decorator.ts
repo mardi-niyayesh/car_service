@@ -90,4 +90,5 @@ export const RejectCommentDecorator = () => applyDecorators(
   }),
   ApiParam(UUID4Dto('id')),
   ApiOperation(CommentDto.rejectCommentOperation),
+  ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/id/confirm")}),
 );
