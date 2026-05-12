@@ -33,7 +33,10 @@ export class CarService {
     return {
       message: "car successfully found.",
       data: {
-        car
+        car: {
+          ...car,
+          rate: parseFloat(car.rate.toFixed(1))
+        }
       }
     };
   }
@@ -237,7 +240,7 @@ export class CarService {
   /** delete a car record with id and ownership permission
    * - **only roles with permission (owner.all or product.delete or product.update) can accessibility to this route**
    */
-  async delete(id: string, car: Car): Promise<ApiResponse<void>> {
+  async delete(id: string, car: Car): Promise<ApiResponse> {
     try {
       await this.prisma.car.delete({
         where: {id}

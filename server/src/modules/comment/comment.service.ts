@@ -11,9 +11,9 @@ import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCar
 @Injectable()
 export class CommentService {
   constructor(
-    private readonly redis: RedisService,
     private readonly prisma: PrismaService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly redis: RedisService,
   ) {}
 
   /**
