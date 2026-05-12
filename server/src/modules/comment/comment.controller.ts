@@ -124,6 +124,16 @@ export class CommentController {
     return this.commentService.moderateComment(id, 'confirm');
   }
 
+  /**
+   * Reject (delete) a pending comment by admin.
+   *
+   * @permission `comment.reject`
+   * @param id - Valid UUID of the comment to confirm
+   * @returns Success message after rejection
+   *
+   * @example
+   * PATCH /comments/550e8400-e29b-41d4-a716-446655440000/reject
+   */
   @Patch(':id/reject')
   async reject(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
