@@ -90,7 +90,7 @@ export const RejectCommentDecorator = () => applyDecorators(
   }),
   ApiParam(UUID4Dto('id')),
   ApiOperation(CommentDto.rejectCommentOperation),
-  ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/id/confirm")}),
+  ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/id/reject")}),
   ApiForbiddenResponse({
     type: getForbiddenResponse("comments/id/confirm", {
       resource: 'comment',
@@ -99,4 +99,12 @@ export const RejectCommentDecorator = () => applyDecorators(
       missing_permissions: [PERMISSIONS.COMMENT_CONFIRM],
     })
   }),
+  ApiNotFoundResponse({
+    type: getNormalErrorResponse({
+      path: "comment/id/reject",
+      statusCode: 404,
+      message: 'comment not found in database, or already is confirmed',
+      error: 'comment not found'
+    })
+  })
 );
