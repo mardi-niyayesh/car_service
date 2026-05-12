@@ -128,7 +128,7 @@ export class CommentService {
    * commentService.moderateComment('uuid-1234', 'confirm');
    * commentService.moderateComment('uuid-5678', 'reject');
    */
-  async moderateComment(comment_id: string, action: 'reject' | 'confirm'): Promise<ApiResponse<CreateCommentResponse>> {
+  async moderateComment(comment_id: string, action: 'reject' | 'confirm'): Promise<ApiResponse<CreateCommentResponse | void>> {
     const notFoundMessage: BaseException = {
       message: 'comment not found in database, or already is confirmed',
       error: 'comment not found'
@@ -162,7 +162,7 @@ export class CommentService {
     }
 
     try {
-      const comment = await this.prisma.comment.delete({
+      await this.prisma.comment.delete({
         where: {
           id: comment_id,
           is_confirmed: false
@@ -170,10 +170,7 @@ export class CommentService {
       });
 
       return {
-        message: 'comment successfully deleted.',
-        data: {
-          comment
-        }
+        message: 'comment successfully deleted.'
       };
     } catch (_) {
       throw new NotFoundException(notFoundMessage);
