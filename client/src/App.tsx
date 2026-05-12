@@ -50,6 +50,7 @@ import RolesPage from "./PanelAdmin/Pages/RolesPage";
 import { GaurdRoute } from "./Routes/GaurdRoute";
 import CreateCategory from "./PanelAdmin/Components/CategoryForm/Pages/CreateCategory";
 import UpdateCategory from "./PanelAdmin/Components/CategoryForm/Pages/UpdateCategory";
+import ComponentFormAddProduct from "./PanelAdmin/Components/ProductForm/ComponentFormAddProduct";
 function App() {
   return (
     <>
@@ -132,6 +133,7 @@ function App() {
             />
             <Route path="customrole" element={<CreatCustomRolePage />} />
             <Route path="product" element={<ProductPage />} />
+            <Route path="product/creatproduct" element={<ComponentFormAddProduct />} />
             <Route path="category" element={<CategoryPage />} />
             <Route path="roles" element={<RolesPage />} />
             <Route path="logout" element={<LogoutPage />} />
