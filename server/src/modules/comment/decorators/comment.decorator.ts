@@ -89,4 +89,5 @@ export const RejectCommentDecorator = () => applyDecorators(
     permissions: [PERMISSIONS.COMMENT_REJECT],
   }),
   ApiParam(UUID4Dto('id')),
+  ApiOperation(CommentDto.rejectCommentOperation),
 );

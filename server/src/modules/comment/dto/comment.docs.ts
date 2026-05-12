@@ -41,3 +41,15 @@ export const confirmCommentOperation: ApiOperationOptions = {
 
   > **📌 Workflow:** After confirmation, the comment becomes publicly visible. This operation is **irreversible** — confirmed comments must be soft-deleted (not reverted to pending). Only users with the "**comment.confirm**" permission can execute this endpoint.`
 };
+
+export const rejectCommentOperation: ApiOperationOptions = {
+  summary: "Reject exist Comment",
+  operationId: "reject_comment",
+  description: `
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.COMMENT_REJECT}\`\n
+  | Property | Description |
+  |----------|-------------|
+  | **id** | UUID of the target comment (path parameter) |
+
+  > **📌 Workflow:** After rejection, the comment is immediately deleted from the database. This operation is **irreversible**. Only users with the "**comment.reject**" permission can execute this endpoint.`
+};
