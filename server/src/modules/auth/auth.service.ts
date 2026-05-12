@@ -237,7 +237,7 @@ export class AuthService {
   };
 
   /** revoked refresh token and logout */
-  async logout(refreshPayload: RefreshTokenPayload): Promise<ApiResponse<void>> {
+  async logout(refreshPayload: RefreshTokenPayload): Promise<ApiResponse> {
     await this.prisma.refreshToken.update({
       where: {
         id: refreshPayload.refreshRecord.id
@@ -320,7 +320,7 @@ export class AuthService {
   }
 
   /** Reset password with token */
-  async resetPassword(token: string, password: string, clientInfo: NormalizedClientInfo): Promise<ApiResponse<void>> {
+  async resetPassword(token: string, password: string, clientInfo: NormalizedClientInfo): Promise<ApiResponse> {
     const result = await this.prisma.$transaction(async tx => {
       const hashedToken: string = hashSecretToken(token);
 

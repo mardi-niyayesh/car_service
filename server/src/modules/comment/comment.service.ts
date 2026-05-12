@@ -1,14 +1,18 @@
 import * as CommentDto from "./dto";
 import {checkPrismaError} from "@/lib";
-import {PaginationValidatorType} from "@/common";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {Injectable, NotFoundException} from "@nestjs/common";
+import {EventEmitter2, OnEvent} from "@nestjs/event-emitter";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList} from "@/types";
+import {eventsEmitter, PaginationValidatorType} from "@/common";
+import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList, UpdateCarRateEvent} from "@/types";
 
 @Injectable()
 export class CommentService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly eventEmitter: EventEmitter2
+  ) {}
 
   /**
    * **Creates a new comment or reply on a car review.**
@@ -140,6 +144,10 @@ export class CommentService {
           },
         });
 
+        this.eventEmitter.emit(eventsEmitter.UPDATE_CAR_RATE, {
+          car_id: comment.car_id
+        } as UpdateCarRateEvent);
+
         return {
           message: 'comment successfully confirmed.',
           data: {
@@ -168,5 +176,27 @@ export class CommentService {
     } catch (_) {
       throw new NotFoundException(notFoundMessage);
     }
+  }
+
+  @OnEvent(eventsEmitter.UPDATE_CAR_RATE)
+  async updateCarRateEvent({car_id}: UpdateCarRateEvent) {
+    const rates = await this.prisma.comment.aggregate({
+      where: {
+        car_id,
+        is_confirmed: true
+      },
+      _avg: {
+        rate: true
+      }
+    });
+
+    const rate: number = rates._avg.rate ?? 0.0;
+
+    await this.prisma.car.update({
+      where: {
+        id: car_id,
+      },
+      data: {rate}
+    });
   }
 }

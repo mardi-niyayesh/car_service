@@ -17,3 +17,7 @@ export type CommentNUserNCarList = ListWithCount<{
 export interface CreateCommentResponse {
   comment: Comment;
 }
+
+export interface UpdateCarRateEvent {
+  car_id: string;
+}
