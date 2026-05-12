@@ -46,6 +46,7 @@ export const FindAllUnconfirmedCommentDecorator = () => applyDecorators(
   ApiQuery(pagePaginationDto),
   ApiQuery(limitPaginationDto),
   ApiQuery(orderByPaginationDto),
+  ApiOkResponse({type: CommentDto.FindAllUnconfirmedOk}),
 );
 
 export const ConfirmCommentDecorator = () => applyDecorators(
