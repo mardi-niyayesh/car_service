@@ -24,9 +24,10 @@ import {
 } from "@/common";
 
 import * as CommentDto from "../dto";
-import {applyDecorators} from "@nestjs/common";
+import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 
 export const CreateCommentDecorator = () => applyDecorators(
+  HttpCode(HttpStatus.CREATED),
   Permission({
     permissions: [PERMISSIONS.USER_SELF]
   }),
@@ -39,6 +40,7 @@ export const CreateCommentDecorator = () => applyDecorators(
 );
 
 export const FindAllUnconfirmedCommentDecorator = () => applyDecorators(
+  HttpCode(HttpStatus.OK),
   Permission({
     permissions: [PERMISSIONS.COMMENT_VIEW]
   }),
@@ -59,6 +61,7 @@ export const FindAllUnconfirmedCommentDecorator = () => applyDecorators(
 );
 
 export const ConfirmCommentDecorator = () => applyDecorators(
+  HttpCode(HttpStatus.OK),
   Permission({
     permissions: [PERMISSIONS.COMMENT_CONFIRM]
   }),
@@ -85,6 +88,7 @@ export const ConfirmCommentDecorator = () => applyDecorators(
 );
 
 export const RejectCommentDecorator = () => applyDecorators(
+  HttpCode(HttpStatus.OK),
   Permission({
     permissions: [PERMISSIONS.COMMENT_REJECT],
   }),
