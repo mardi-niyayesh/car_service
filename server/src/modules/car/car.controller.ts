@@ -4,7 +4,7 @@ import {CarService} from "./car.service";
 import * as CarDecorator from "./decorators";
 import {Car} from "@/modules/prisma/generated/client";
 import {Put, Get, Req, Body, Post, Param, Query, Delete, Controller, UploadedFile, BadRequestException} from '@nestjs/common';
-import {ZodPipe, PREFIX_PUBLIC_PATH, CAR_IMAGE_UPLOAD_PATH, PaginationValidator, type PaginationValidatorType} from "@/common";
+import {ZodPipe, PREFIX_PUBLIC_PATH, CAR_IMAGE_UPLOAD_PATH, PaginationValidator, type PaginationValidatorType, UUID4Dto, UUIDv4Validator} from "@/common";
 import type {AccessRequest, ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, OwnershipRequest, SafeCarNCategory} from "@/types";
 
 /**
@@ -123,9 +123,9 @@ export class CarController {
   }
 
   /**
-   * Retrieves all comments for a specific car identified by its slug.
+   * Retrieves all comments for a specific car identified by its id.
    *
-   * @param slug - Unique car identifier from route parameter
+   * @param id - Unique car identifier from route parameter
    * @param pagination
    * @returns Paginated list of comments associated with the car
    *
@@ -133,13 +133,13 @@ export class CarController {
    *
    * @example GET /cars/car/comments?page=1&limit=10&order=desc
    */
-  @Get(':slug/comments')
+  @Get(':id/comments')
   @CarDecorator.FindAllCommentsDecorator()
   findCarComments(
-    @Param("slug", new ZodPipe(CarDto.CarSlugValidator)) slug: string,
+    @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
   ) {
-    console.log(slug);
+    console.log(id);
     console.log(pagination);
     return 'car comments';
   }

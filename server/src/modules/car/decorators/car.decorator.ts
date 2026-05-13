@@ -28,7 +28,7 @@ import {
   ApiForbiddenResponse,
   ApiNoContentResponse,
   ApiBadRequestResponse,
-  ApiUnauthorizedResponse, ApiParamOptions,
+  ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 
 import z from "zod";
@@ -39,20 +39,6 @@ import {FileInterceptor} from "@nestjs/platform-express";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {applyDecorators, HttpCode, HttpStatus, UseInterceptors} from "@nestjs/common";
 
-const apiParamSlug: ApiParamOptions = {
-  name: 'slug',
-  type: 'string',
-  required: true,
-  description: 'car slug',
-  example: 'car',
-  schema: {
-    type: 'string',
-    required: ['slug'],
-    description: 'car slug',
-    example: 'car',
-  }
-};
-
 export const FindOneDecorators = () => {
   return applyDecorators(
     Public(),
@@ -61,7 +47,19 @@ export const FindOneDecorators = () => {
       paramsKey: ['slug'],
       ttl: ONE_HOUR_MS,
     }),
-    ApiParam(apiParamSlug),
+    ApiParam({
+      name: 'slug',
+      type: 'string',
+      required: true,
+      description: 'car slug',
+      example: 'car',
+      schema: {
+        type: 'string',
+        required: ['slug'],
+        description: 'car slug',
+        example: 'car',
+      }
+    }),
     HttpCode(HttpStatus.OK),
     ApiOperation(CarDto.findOneCarOperation),
     ApiOkResponse({type: CarDto.FindOneCarOkRes}),
@@ -231,7 +229,7 @@ export const FindAllCommentsDecorator = () => applyDecorators(
   HttpCode(HttpStatus.OK),
   Public(),
   ApiOperation(CarDto.findAllCommentsOperation),
-  ApiParam(apiParamSlug),
+  ApiParam(UUID4Dto),
   ApiQuery(pagePaginationDto),
   ApiQuery(limitPaginationDto),
   ApiQuery(orderByPaginationDto),
