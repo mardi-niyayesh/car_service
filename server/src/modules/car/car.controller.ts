@@ -121,4 +121,9 @@ export class CarController {
   ) {
     return this.carService.delete(id, req.ownershipData);
   }
+
+  @Get(':slug/comments')
+  findCarComments() {
+    return 'car comments';
+  }
 }
