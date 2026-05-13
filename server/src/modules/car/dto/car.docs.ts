@@ -102,3 +102,19 @@ export const deleteCarOperation: ApiOperationOptions = {
   - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.PRODUCT_UPDATE}\`\n
   Delete a exist car with id and ownership permission (owner.all or product.delete) can accessibility to this route`
 };
+
+export const findAllCommentsOperation: ApiOperationOptions = {
+  operationId: 'find_car_comments',
+  summary: "Retrieve all comments for a specific car by slug",
+  description: `
+  - ## Accessible to all users (public endpoint)
+  - # **🔓 PUBLIC ENDPOINT** (No authentication required)\n
+  | Parameter | Type | Description |
+  |-----------|------|-------------|
+  | **slug** | path | Unique car identifier |
+  | **page** | query | Page number (default: 1) |
+  | **limit** | query | Items per page (default: 10, max: 100) |
+  | **order** | query | Sort direction: asc or desc (default: desc) |
+
+  > **📌 Note:** Returns paginated comments with user details and rating. Comments are ordered by creation date.`
+};

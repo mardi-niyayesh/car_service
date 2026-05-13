@@ -233,6 +233,7 @@ export const FindAllCommentsDecorator = () => applyDecorators(
   Public({
     makePublicPermissionGuard: true
   }),
+  ApiOperation(CarDto.findAllCommentsOperation),
   ApiParam(apiParamSlug),
   ApiQuery(pagePaginationDto),
   ApiQuery(limitPaginationDto),
