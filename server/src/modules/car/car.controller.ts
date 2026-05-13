@@ -122,8 +122,21 @@ export class CarController {
     return this.carService.delete(id, req.ownershipData);
   }
 
+  /**
+   * Retrieves all comments for a specific car identified by its slug.
+   *
+   * @param slug - Unique car identifier from route parameter
+   * @returns Paginated list of comments associated with the car
+   *
+   * @public - No authentication required
+   *
+   * @example GET /cars/toyota-camry/comments?page=1&limit=10
+   */
   @Get(':slug/comments')
-  findCarComments() {
+  @CarDecorator.FindAllCommentsDecorator()
+  findCarComments(
+    @Param("slug") slug: string,
+  ) {
     return 'car comments';
   }
 }

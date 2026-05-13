@@ -211,3 +211,10 @@ export const DeleteDecorator = () => {
     }),
   );
 };
+
+export const FindAllCommentsDecorator = () => applyDecorators(
+  ApiBearerAuth("accessToken"),
+  Public({
+    makePublicPermissionGuard: true
+  }),
+);
