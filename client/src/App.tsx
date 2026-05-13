@@ -36,9 +36,10 @@ import ReservePages from "./dashboard/Pages/ReservePages";
 import WalletPages from "./dashboard/Pages/WalletPages";
 import CardPages from "./dashboard/Pages/CardPages";
 import LogoutPage from "./dashboard/Pages/LogoutPage";
-import ComponentFormUpdateUser from "./dashboard/Components/ComponentFormUpdateUser";
-import ComponnetUpdetePassword from "./dashboard/Components/ComponnetUpdetePassword";
-import Profile from "./dashboard/Components/Profile";
+import ComponentFormUpdateUser from "./components/Dashboard/ComponnetUpdetePassword";
+import ComponnetUpdetePassword from "./components/Dashboard/ComponnetUpdetePassword";
+
+import Profile from "./pages/Profile";
 //pages for panelAdmin
 import DetalisUserPage from "./pages/DetalisUserPage";
 import ProductPage from "./pages/ProductPage";
