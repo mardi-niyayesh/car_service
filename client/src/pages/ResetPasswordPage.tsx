@@ -1,14 +1,10 @@
-//components
 import AuthForm from "../components/common/AuthForm";
-//Modal
-import SuccessModal from "../components/common/SuccessModal";
-import ErrorModal from "../components/common/ErrorModal";
-import WarningModal from "../components/common/WarningModal ";
-//hooks
+import SuccessModal from "../Modal/SuccessModal";
+import ErrorModal from "../Modal/ErrorModal";
+import WarningModal from "../Modal/WarningModal ";
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-//api
 import { resetPassword } from "../services/api";
 
 const ResetPasswordPage = () => {

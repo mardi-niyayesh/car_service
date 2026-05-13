@@ -2,7 +2,7 @@
 import ReserveComponent from "../ReserveComponent";
 import CarComponent from "../CarComponent";
 import DesCar from "../DesCar";
-import Comment from "../../../ComponentPublic/Comment";
+import Comment from "../../../Commens/Comment";
 //img mashhad
 import Maddhad from "../../../../assets/mashhad-2.png";
 import car1 from "../../../../assets/206.png";
@@ -18,8 +18,8 @@ const ItemCar = [
     price: "۲٫۴۰۰٫۰۰۰",
     duration: "3 تا 6 روز",
   },
-   {
-    id:4,
+  {
+    id: 4,
     img: sari4,
     ttile: "هیوﻧﺪا اﻟﻨﺘﺮا ۲۰۱۷",
     price: "۶٫۳۰۰٫۰۰۰",
@@ -56,7 +56,7 @@ const MashhadPage = () => {
           {ItemCar.map((car) => (
             <CarComponent
               key={car.id}
-               id={car.id}
+              id={car.id}
               img={car.img}
               title={car.title}
               price={car.price}
@@ -66,7 +66,7 @@ const MashhadPage = () => {
         </div>
       </div>
       <DesCar />
-      <Comment/>
+      <Comment />
     </div>
   );
 };

@@ -1,10 +1,14 @@
 import Modal from "react-modal";
 import { type WarningModalProps } from "../types/auth.types";
 
-
 Modal.setAppElement("#root");
 
-const WarningModal = ({ isOpen, onClose, message, title = "توجه" }: WarningModalProps) => {
+const WarningModal = ({
+  isOpen,
+  onClose,
+  message,
+  title = "توجه",
+}: WarningModalProps) => {
   const customStyles = {
     content: {
       top: "50%",

@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogoutUser } from "../Api/ApiLogoutUser";
-import SuccessModal from "../../components/common/SuccessModal";
-import ErrorModal from "../../components/common/ErrorModal";
-import WarningModal from "../../components/common/WarningModal ";
+import SuccessModal from "../../Modal/SuccessModal";
+import ErrorModal from "../../Modal/ErrorModal";
+import WarningModal from "../../Modal/WarningModal ";
 import { useUser } from "../../hooks/useUser";
 
 const LogoutPage = () => {

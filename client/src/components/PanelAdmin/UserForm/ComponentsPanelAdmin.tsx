@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import ArrowLeft from "../../../assets/Arrowleft.png";
 import { FaUser } from "react-icons/fa";
 import { FaListUl } from "react-icons/fa";
 import { FaBoxOpen } from "react-icons/fa";
@@ -134,11 +133,6 @@ const MenuItems = ({ items }: { items: typeof Menu }) => {
                 {item.label}
               </p>
             </div>
-            <img
-              src={ArrowLeft}
-              alt="ArrowLeft"
-              className="w-4 h-4 md:w-5 :h-5 opacity-60 group-hover:invert transition-all duration-300"
-            />
           </div>
         </Link>
       ))}

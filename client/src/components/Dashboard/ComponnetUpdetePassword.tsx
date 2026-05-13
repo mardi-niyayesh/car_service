@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useUpdatePassword } from "../../dashboard/Api/ApiUpdatPassword";
-import SuccessModal from "../../components/common/SuccessModal";
-import WarningModal from "../../components/common/WarningModal ";
+import SuccessModal from "../../Modal/SuccessModal";
+import WarningModal from "../../Modal/WarningModal ";
 import { useState } from "react";
 
 type FormData = {

@@ -1,7 +1,7 @@
 import axiosClient from "../../../services/axiosClient";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import ComponentPaginat from "../../../ComponentPublic/ComponentPaginat";
+import ComponentPaginat from "../../../Paginate/ComponentPaginat";
 import { useCallback } from "react";
 
 type User = {

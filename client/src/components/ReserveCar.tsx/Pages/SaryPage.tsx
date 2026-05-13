@@ -2,7 +2,7 @@
 import ReserveComponent from "../ReserveComponent";
 import DesCar from "../DesCar";
 import CarComponent from "../CarComponent";
-import Comment from "../../../ComponentPublic/Comment";
+import Comment from "../../../Commens/Comment";
 //img
 import saryimg from "../../../../assets/sari.png";
 import sari1 from "../../../../assets/sari1.png";
@@ -12,28 +12,28 @@ import sari4 from "../../../../assets/sari4.png";
 
 const ItemCar = [
   {
-    id:1,
+    id: 1,
     img: sari1,
     ttile: " پژو ۲۰۷ دنده‌ای",
     price: "۳٫۷۰۰٫۰۰۰",
     duration: "3 تا 6 روز",
   },
   {
-    id:2,
+    id: 2,
     img: sari2,
     ttile: " پژو ۲۰۶",
     price: "۲٫۴۰۰٫۰۰۰",
     duration: "2 تا 5 روز",
   },
   {
-    id:3,
+    id: 3,
     img: sari3,
     ttile: " ﻫﺎﯾﻤﺎ S8 TURBO",
     price: "۷٫۱۰۰٫۰۰۰",
     duration: "3 تا 6 روز",
   },
   {
-    id:4,
+    id: 4,
     img: sari4,
     ttile: "هیوﻧﺪا اﻟﻨﺘﺮا ۲۰۱۷",
     price: "۶٫۳۰۰٫۰۰۰",
@@ -69,7 +69,7 @@ const SaryPage = () => {
         </div>
       </div>
       <DesCar />
-      <Comment/>
+      <Comment />
     </>
   );
 };

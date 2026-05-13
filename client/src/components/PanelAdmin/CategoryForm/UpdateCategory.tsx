@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosClient from "../../../services/axiosClient";
-import CategoryForm, { type CategoryFormData } from "../CategoryForm";
+import CategoryForm, { type CategoryFormData } from "./CategoryForm";
 import SuccessModal from "../../../components/common/SuccessModal";
 import WarningModal from "../../../components/common/WarningModal ";
 
-const EditCategory = () => {
+const UpdateCategory = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -85,7 +85,7 @@ const EditCategory = () => {
           "شما دسترسی لازم برای اپدیت این دسته بندی رو ندارید (owner / category.update / سازنده اون دسته بندی) میتونن اپدیت کنن",
         );
       } else if (err.response?.status === 409) {
-        const message = err.response?.data?.message ;
+        const message = err.response?.data?.message;
         if (
           message.includes("Category already exists") ||
           message.includes("please change slug")
@@ -138,4 +138,4 @@ const EditCategory = () => {
   );
 };
 
-export default EditCategory;
+export default UpdateCategory;

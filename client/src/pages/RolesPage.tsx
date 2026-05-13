@@ -3,7 +3,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { useState, useEffect } from "react";
 import SuccessModal from "../components/common/SuccessModal";
 import WarningModal from "../components/common/WarningModal ";
-import ComponentPaginat from "../ComponentPublic/ComponentPaginat";
+import ComponentPaginat from "../Paginate/ComponentPaginat";
 import { useUser } from "../hooks/useUser";
 type RoleType = {
   id: string;

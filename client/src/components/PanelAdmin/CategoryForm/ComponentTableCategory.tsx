@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FaPencilAlt } from "react-icons/fa";
 import axiosClient from "../../../services/axiosClient";
-import ComponentPaginat from "../../../ComponentPublic/ComponentPaginat";
+import ComponentPaginat from "../../../Paginate/ComponentPaginat";
 import SuccessModal from "../../common/SuccessModal";
 import WarningModal from "../../common/WarningModal ";
 import { useUser } from "../../../hooks/useUser";

@@ -11,9 +11,9 @@ import { loginUser } from "../services/api";
 //types
 import { type LoginFormData } from "../types/auth.types";
 //Modal
-import SuccessModal from "../components/common/SuccessModal";
-import ErrorModal from "../components/common/ErrorModal";
-import WarningModal from "../components/common/WarningModal ";
+import SuccessModal from "../Modal/SuccessModal";
+import ErrorModal from "../Modal/ErrorModal";
+import WarningModal from "../Modal/WarningModal ";
 
 function LoginPage() {
   const navigate = useNavigate();
