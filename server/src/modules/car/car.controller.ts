@@ -130,7 +130,7 @@ export class CarController {
    *
    * @public - No authentication required
    *
-   * @example GET /cars/toyota-camry/comments?page=1&limit=10
+   * @example GET /cars/car/comments?page=1&limit=10&order=desc
    */
   @Get(':slug/comments')
   @CarDecorator.FindAllCommentsDecorator()
