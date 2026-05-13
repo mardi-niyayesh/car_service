@@ -8,10 +8,20 @@ export type CommentNUserNCar = Comment & {
   user: SafeUser;
 };
 
+/** Comment with user safe */
+type CommentAndUser = Comment & {
+  user: Pick<SafeUser, "id" | 'display_name'>;
+}
+
 /** comment with car and user include in list with count */
 export type CommentNUserNCarList = ListWithCount<{
   comments: CommentNUserNCar[];
-}>
+}>;
+
+/** Comment list and safe user with count */
+export type CommentListAndUser = ListWithCount<{
+  comments: CommentAndUser[];
+}>;
 
 /** create comment response */
 export interface CreateCommentResponse {
