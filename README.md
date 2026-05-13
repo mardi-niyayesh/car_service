@@ -18,11 +18,28 @@ Designed for long‑term maintainability, clean architecture, and production‑r
 ```
 car_service/
 │
-├── backend/        # Car Service – Server‑Side API (NestJS)
+├── backend/        # Car Service – Server‑Side API (NestJS + Redis + PosrgresQL)
 │   └── server/
 │
 └── frontend/       # Client application (React + Vite)
     └── client/
+```
+
+# 📟 How to Work?
+
+```mermaid
+graph TB
+    A["🌐 End User"] -->|HTTP Request|B["⚛️ React.js Client"]
+B -->|API Call|C["🟢 NestJS Server"]
+
+C -->|Cache Hit/Miss|D["📡 Redis Cache"]
+D -->|Cached Data|C
+
+C -->|CRUD Operation|E["🐘 PostgreSQL DB"]
+E -->|Raw Data|C
+
+C -->|HTTP Response| B
+B -->|UI Update|A
 ```
 
 ---
