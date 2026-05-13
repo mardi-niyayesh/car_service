@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axiosClient from "../../../../services/axiosClient";
+import axiosClient from "../../../services/axiosClient";
 import CategoryForm, { type CategoryFormData } from "../CategoryForm";
-import SuccessModal from "../../../../components/common/SuccessModal";
-import WarningModal from "../../../../components/common/WarningModal ";
+import SuccessModal from "../../../components/common/SuccessModal";
+import WarningModal from "../../../components/common/WarningModal ";
 
 const EditCategory = () => {
   const { id } = useParams<{ id: string }>();

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import ComponentDatailUser from "../Components/UserForm/ComponentDatailUser";
+import ComponentDatailUser from "../components/PanelAdmin/UserForm/ComponentDatailUser";
 const DetalisUserPage = () => {
   return (
     <div className="flex flex-col md:flex-row  md:gap-4 p-3 md:p-4 min-h-screen">

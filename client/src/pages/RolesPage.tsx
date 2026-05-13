@@ -1,15 +1,19 @@
-import axiosClient from "../../services/axiosClient";
+import axiosClient from "../services/axiosClient";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { useState, useEffect } from "react";
-import SuccessModal from "../../components/common/SuccessModal";
-import WarningModal from "../../components/common/WarningModal ";
-import ComponentPaginat from "../../ComponentPublic/ComponentPaginat";
+import SuccessModal from "../components/common/SuccessModal";
+import WarningModal from "../components/common/WarningModal ";
+import ComponentPaginat from "../ComponentPublic/ComponentPaginat";
+import { useUser } from "../hooks/useUser";
 type RoleType = {
   id: string;
   name: string;
   permissions: Permissions[] | null;
+  role_type: string;
 };
+
 const RolesPage = () => {
+  const { user } = useUser();
   const [Roles, setRoles] = useState<RoleType[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -18,6 +22,8 @@ const RolesPage = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
+
+  const hasRoleOwnerUser = user?.roles.includes("owner");
 
   const fetchGetRoles = async () => {
     setLoading(true);
@@ -28,8 +34,6 @@ const RolesPage = () => {
       console.log("response to request :", response);
       const getAllRoles = response.data.response.data.roles;
       console.log("response get alll roles :", getAllRoles);
-
-      console.log("permessions role :", getAllRoles.name);
 
       const getCount = response.data.response.data.count;
       console.log("get count all roles :", getCount);
@@ -136,19 +140,60 @@ const RolesPage = () => {
                             )}
                           </td>
                           <td>
-                            <RiDeleteBinLine
-                              size={20}
-                              color="red"
-                              className="cursor-pointer"
-                              onClick={() => {
-                                const confirmDelete = window.confirm(
-                                  `آیا مطمئن هستید که می‌خواهید نقش "${rol.name}" را حذف کنید؟`,
-                                );
-                                if (confirmDelete) {
-                                  handelDleatRole(rol.id);
+                            {(() => {
+                              if (hasRoleOwnerUser) {
+                                if (rol.role_type === "CUSTOM") {
+                                  return (
+                                    <RiDeleteBinLine
+                                      size={20}
+                                      color="red"
+                                      className="cursor-pointer"
+                                      onClick={() => {
+                                        if (
+                                          window.confirm(
+                                            `آیا مطمئن هستید که می‌خواهید نقش "${rol.name}" را حذف کنید؟`,
+                                          )
+                                        ) {
+                                          handelDleatRole(rol.id);
+                                        }
+                                      }}
+                                    />
+                                  );
                                 }
-                              }}
-                            />
+                                return null;
+                              }
+
+                              if (
+                                rol.role_type !== "BASE" &&
+                                rol.role_type !== "SYSTEM" &&
+                                !rol.permissions?.some((p) =>
+                                  [
+                                    "role.delete",
+                                    "role.assign",
+                                    "role.revoke",
+                                    "user.delete",
+                                  ].includes(p.name),
+                                )
+                              ) {
+                                return (
+                                  <RiDeleteBinLine
+                                    size={20}
+                                    color="red"
+                                    className="cursor-pointer"
+                                    onClick={() => {
+                                      if (
+                                        window.confirm(
+                                          `آیا مطمئن هستید که می‌خواهید نقش "${rol.name}" را حذف کنید؟`,
+                                        )
+                                      ) {
+                                        handelDleatRole(rol.id);
+                                      }
+                                    }}
+                                  />
+                                );
+                              }
+                              return null;
+                            })()}
                           </td>
                         </tr>
                       );
@@ -178,6 +223,22 @@ const RolesPage = () => {
         onClose={() => setIsWarningOpen(false)}
         message={WarningMessage}
       />
+      <div className="bg-gray-50 border border-gray-200 rounded-md p-4 mb-6 mt-6">
+        <h2 className="font-medium text-blue-800 mb-2">
+          نکاتی در مورد حذف نقش :
+        </h2>
+        <ul className="list-disc pr-5 space-y-1 text-sm text-gray-700 ">
+          <li>حتی مالک سیستم نمی‌تواند نقش‌های پایه‌ای سیستم را حذف کند.</li>
+          <li>
+            حتی با مجوز role.delete هم نمی‌توانید نقش‌های حساس (شروع با user. یا
+            role.) را حذف کنید.
+          </li>
+          <li>
+            فقط مالک سیستم می‌تواند نقش‌های CUSTOM دارای مجوزهای user/role را
+            حذف کند.
+          </li>
+        </ul>
+      </div>
     </>
   );
 };

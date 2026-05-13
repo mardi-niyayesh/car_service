@@ -1,6 +1,6 @@
-import axiosClient from "../../services/axiosClient";
+import axiosClient from "../services/axiosClient";
 import { useState, useEffect } from "react";
-import ComponentPaginat from "../../ComponentPublic/ComponentPaginat";
+import ComponentPaginat from "../ComponentPublic/ComponentPaginat";
 
 type PermissionType  = {
   id: string;
@@ -8,7 +8,7 @@ type PermissionType  = {
   description: string;
 };
 
-const DescriptionRole = () => {
+const DescriptionRolePage = () => {
   const [roles, setRoles] = useState<PermissionType []>([]);
   //now page
   const [page, setPage] = useState(1);
@@ -104,4 +104,4 @@ const DescriptionRole = () => {
   );
 };
 
-export default DescriptionRole;
+export default DescriptionRolePage;

@@ -4,8 +4,8 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { FaPencilAlt } from "react-icons/fa";
 import axiosClient from "../../../services/axiosClient";
 import ComponentPaginat from "../../../ComponentPublic/ComponentPaginat";
-import SuccessModal from "../../../components/common/SuccessModal";
-import WarningModal from "../../../components/common/WarningModal ";
+import SuccessModal from "../../common/SuccessModal";
+import WarningModal from "../../common/WarningModal ";
 import { useUser } from "../../../hooks/useUser";
 type CategoryType = {
   id: string;
@@ -25,8 +25,10 @@ const ComponentTableCategory = (): React.ReactElement => {
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [warningMessage, setWarningMessage] = useState("");
 
-const hasDeletePermission = hasPermission("category.delete") || hasRole("category_manager");
-const hasUpdatePermission = hasPermission("category.update") || hasRole("category_manager");
+  const hasDeletePermission =
+    hasPermission("category.delete") || hasRole("category_manager");
+  const hasUpdatePermission =
+    hasPermission("category.update") || hasRole("category_manager");
 
   const GetAllCategory = async () => {
     try {
@@ -91,6 +93,7 @@ const hasUpdatePermission = hasPermission("category.update") || hasRole("categor
               <th className="w-56 px-4 py-3 font-medium hidden sm:table-cell">
                 توضیحات
               </th>
+              <th className="w-56 px-4 py-3 font-medium">ایدی</th>
               {hasDeletePermission && (
                 <th className="w-56 px-4 py-3 font-medium">حذف</th>
               )}
@@ -109,6 +112,7 @@ const hasUpdatePermission = hasPermission("category.update") || hasRole("categor
                 <td className="px-4 py-3 font-medium hidden sm:table-cell">
                   {cat.description ? cat.description : "____"}
                 </td>
+                <td className="px-4 py-3 text-blue-700 text-xs">{cat.id}</td>
                 {hasDeletePermission && (
                   <td>
                     {
@@ -136,9 +140,7 @@ const hasUpdatePermission = hasPermission("category.update") || hasRole("categor
                   </td>
                 )}
 
-                <td className="inline-block font-medium m-2  text-gray-700 text-xs px-2 py-1 rounded m-0.5">
-                  {cat.slug}
-                </td>
+                <td className="px-4 py-3 text-gray-700 text-xs">{cat.slug}</td>
               </tr>
             ))}
           </tbody>

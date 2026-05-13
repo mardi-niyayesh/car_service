@@ -40,16 +40,17 @@ import ComponentFormUpdateUser from "./dashboard/Components/ComponentFormUpdateU
 import ComponnetUpdetePassword from "./dashboard/Components/ComponnetUpdetePassword";
 import Profile from "./dashboard/Components/Profile";
 //pages for panelAdmin
-import DetalisUserPage from "./PanelAdmin/Pages/DetalisUserPage";
-import ProductPage from "./PanelAdmin/Pages/ProductPage";
-import CategoryPage from "./PanelAdmin/Pages/CategoryPage";
-import UsersPage from "./PanelAdmin/Pages/UsersPage";
-import DescriptionRolePage from "./PanelAdmin/Pages/DescriptionRolePage";
-import CreatCustomRolePage from "./PanelAdmin/Pages/CreatCustomRolePage";
-import RolesPage from "./PanelAdmin/Pages/RolesPage";
+import DetalisUserPage from "./pages/DetalisUserPage";
+import ProductPage from "./pages/ProductPage";
+import CategoryPage from "./pages/CategoryPage";
+import UsersPage from "./pages/UsersPage";
+import DescriptionRolePage from "./pages/DescriptionRolePage";
+import CreatCustomRolePage from "./pages/CreatCustomRolePage";
+import RolesPage from "./pages/RolesPage";
 import { GaurdRoute } from "./Routes/GaurdRoute";
-import CreateCategory from "./PanelAdmin/Components/CategoryForm/Pages/CreateCategory";
-import UpdateCategory from "./PanelAdmin/Components/CategoryForm/Pages/UpdateCategory";
+import CreateCategory from "./components/PanelAdmin/CategoryForm/CreateCategory";
+import UpdateCategory from "./components/PanelAdmin/CategoryForm/UpdateCategory";
+import ComponentFormAddProduct from "./components/PanelAdmin/ProductForm/ComponentFormAddProduct";
 function App() {
   return (
     <>
@@ -130,8 +131,16 @@ function App() {
                 </GaurdRoute>
               }
             />
+            <Route
+              path="customrole/description"
+              element={<DescriptionRolePage />}
+            />
             <Route path="customrole" element={<CreatCustomRolePage />} />
             <Route path="product" element={<ProductPage />} />
+            <Route
+              path="product/creatproduct"
+              element={<ComponentFormAddProduct />}
+            />
             <Route path="category" element={<CategoryPage />} />
             <Route path="roles" element={<RolesPage />} />
             <Route path="logout" element={<LogoutPage />} />

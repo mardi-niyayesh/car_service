@@ -1,7 +1,5 @@
 import { useForm } from "react-hook-form";
 import { useUpdatePassword } from "../Api/ApiUpdatPassword";
-import { Link } from "react-router-dom";
-//Modal
 import SuccessModal from "../../components/common/SuccessModal";
 import WarningModal from "../../components/common/WarningModal ";
 import { useState } from "react";
@@ -12,10 +10,8 @@ type FormData = {
 };
 
 const ComponentFormUpdateUser = () => {
-  //success Modal
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  //Warning Modal
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
   const FetchUpdatePassword = useUpdatePassword();

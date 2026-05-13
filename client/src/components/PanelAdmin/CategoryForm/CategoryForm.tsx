@@ -75,7 +75,11 @@ const CategoryForm = ({
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               نام دسته بندی
-              {mode === "create" && <span className="text-red-500"> *</span>}
+              {mode === "create" ? (
+                <span className="text-red-500"> *</span>
+              ) : (
+                <span className="text-gray-400 text-xs">(اختیاری)</span>
+              )}
             </label>
             <input
               type="text"
@@ -136,7 +140,11 @@ const CategoryForm = ({
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               لینک دسته بندی
-              {mode === "create" && <span className="text-red-500"> *</span>}
+              {mode === "create" ? (
+                <span className="text-red-500"> *</span>
+              ) : (
+                <span className="text-gray-400 text-xs">(اختیاری)</span>
+              )}
             </label>
             <input
               type="text"

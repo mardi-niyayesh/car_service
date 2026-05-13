@@ -1,12 +1,8 @@
-//img
 import profilUser from "../../../assets/Ellipse 114.png";
 import logout from "../../../assets/logout.png";
-//custom hook for use context
 import { useUser } from "../../hooks/useUser";
-//icon
 import { FaUser } from "react-icons/fa";
 import { HiOutlineHome } from "react-icons/hi";
-//hooks
 import { Link } from "react-router-dom";
 
 const HeaderDashbord = () => {

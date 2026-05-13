@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosClient from "../../../../services/axiosClient";
-import CategoryForm, { type CategoryFormData } from "../CategoryForm";
-import SuccessModal from "../../../../components/common/SuccessModal";
-import WarningModal from "../../../../components/common/WarningModal ";
+import axiosClient from "../../../services/axiosClient";
+import CategoryForm, { type CategoryFormData } from "./CategoryForm";
+import SuccessModal from "../../../components/common/SuccessModal";
+import WarningModal from "../../../components/common/WarningModal ";
 
 const CreateCategory = () => {
   const navigate = useNavigate();
@@ -19,18 +19,18 @@ const CreateCategory = () => {
       const payload: any = {
         name: String(data.name).trim(),
         slug: String(data.slug).trim(),
-        ownership: Boolean(data.ownership??false)
+        ownership: Boolean(data.ownership ?? false),
       };
       if (data.description && data.description.trim() !== "") {
         payload.description = String(data.description).trim();
       }
-      const response = await axiosClient.post("/categories",  payload );
+      const response = await axiosClient.post("/categories", payload);
       console.log("response create:", response.data);
       setSuccessMessage("دسته بندی جدید با موفقیت ساخته شد");
       setIsSuccessOpen(true);
       setTimeout(() => {
         navigate("/panel/category");
-      }, 3000);
+      }, 2000);
     } catch (err: any) {
       console.error("Error create:", err.message);
       if (err.response?.status === 403) {
