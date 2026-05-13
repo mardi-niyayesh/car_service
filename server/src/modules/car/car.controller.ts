@@ -135,8 +135,9 @@ export class CarController {
   @Get(':slug/comments')
   @CarDecorator.FindAllCommentsDecorator()
   findCarComments(
-    @Param("slug") slug: string,
+    @Param("slug", new ZodPipe(CarDto.CarSlugValidator)) slug: string,
   ) {
+    console.log(slug);
     return 'car comments';
   }
 }
