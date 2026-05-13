@@ -4,8 +4,8 @@ import {CarService} from "./car.service";
 import * as CarDecorator from "./decorators";
 import {Car} from "@/modules/prisma/generated/client";
 import {Put, Get, Req, Body, Post, Param, Query, Delete, Controller, UploadedFile, BadRequestException} from '@nestjs/common';
-import {ZodPipe, PREFIX_PUBLIC_PATH, CAR_IMAGE_UPLOAD_PATH, PaginationValidator, type PaginationValidatorType, UUID4Dto, UUIDv4Validator} from "@/common";
-import type {AccessRequest, ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, OwnershipRequest, SafeCarNCategory} from "@/types";
+import {ZodPipe, PREFIX_PUBLIC_PATH, CAR_IMAGE_UPLOAD_PATH, PaginationValidator, type PaginationValidatorType, UUIDv4Validator} from "@/common";
+import type {AccessRequest, ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, CommentListAndUser, OwnershipRequest, SafeCarNCategory} from "@/types";
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -138,9 +138,7 @@ export class CarController {
   findCarComments(
     @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
-  ) {
-    console.log(id);
-    console.log(pagination);
-    return 'car comments';
+  ): Promise<ApiResponse<CommentListAndUser>> {
+    return this.carService.findAllComments(id, pagination);
   }
 }

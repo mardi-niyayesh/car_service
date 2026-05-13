@@ -1,10 +1,11 @@
 import * as CarDto from "./dto";
-import {PaginationValidatorType, PREFIX_PUBLIC_PATH} from "@/common";
-import {Car, Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {type Car, Prisma} from "@/modules/prisma/generated/client";
+import {PaginationValidatorType, PREFIX_PUBLIC_PATH} from "@/common";
 import {checkConflictRecord, checkPrismaError, deleteOneFile} from "@/lib";
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
-import type {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, SafeCarNCategory} from "@/types";
+import type {CommentWhereInput} from "@/modules/prisma/generated/models/Comment";
+import type {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, CommentListAndUser, SafeCarNCategory} from "@/types";
 
 @Injectable()
 export class CarService {
@@ -268,12 +269,38 @@ export class CarService {
    * Find all comment with pagination by its unique id car.
    * - **Accessible to all users (public endpoint)**
    */
-  async findAllComments(car_id: string, pagination: PaginationValidatorType) {
+  async findAllComments(car_id: string, {limit, offset, orderByLower}: PaginationValidatorType): Promise<ApiResponse<CommentListAndUser>> {
+    const where: CommentWhereInput = {
+      car_id,
+      parent_id: null,
+      is_confirmed: true,
+    };
+
+    const count: number = await this.prisma.comment.count({where});
+
     const comments = await this.prisma.comment.findMany({
-      where: {
-        car_id,
-        is_confirmed: true,
+      where,
+      take: limit,
+      skip: offset,
+      orderBy: {
+        created_at: orderByLower
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            display_name: true,
+          }
+        }
       }
     });
+
+    return {
+      message: 'comments find successfully.',
+      data: {
+        count,
+        comments,
+      }
+    };
   }
 }
