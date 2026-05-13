@@ -4,8 +4,8 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { FaPencilAlt } from "react-icons/fa";
 import axiosClient from "../../../services/axiosClient";
 import ComponentPaginat from "../../../Paginate/ComponentPaginat";
-import SuccessModal from "../../common/SuccessModal";
-import WarningModal from "../../common/WarningModal ";
+import SuccessModal from "../../../Modal/SuccessModal";
+import WarningModal from "../../../Modal/WarningModal ";
 import { useUser } from "../../../hooks/useUser";
 type CategoryType = {
   id: string;

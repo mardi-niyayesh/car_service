@@ -1,8 +1,8 @@
 import axiosClient from "../services/axiosClient";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { useState, useEffect } from "react";
-import SuccessModal from "../components/common/SuccessModal";
-import WarningModal from "../components/common/WarningModal ";
+import SuccessModal from "../Modal/SuccessModal";
+import WarningModal from "../Modal/WarningModal ";
 import ComponentPaginat from "../Paginate/ComponentPaginat";
 import { useUser } from "../hooks/useUser";
 type RoleType = {
