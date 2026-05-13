@@ -17,11 +17,28 @@
 ```
 car_service/
 │
-├── backend/        # Car Service – Server‑Side API (NestJS)
+├── backend/        # Car Service – Server‑Side API (NestJS + Redis + PosrgresQL)
 │   └── server/
 │
 └── frontend/       # Client application (React + Vite)
     └── client/
+```
+
+# 📟 چطوری کار میکنه؟
+
+```mermaid
+graph TB
+    A["🌐 کاربر"] -->|HTTP Request|B["⚛️ کلاینت"]
+B -->|API Call|C["🟢 سرور"]
+
+C -->|Cache Hit/Miss|D["📡 ردیس"]
+D -->|Cached Data|C
+
+C -->|CRUD Operation|E["🐘 دیتابیس"]
+E -->|Raw Data|C
+
+C -->|HTTP Response| B
+B -->|UI Update|A
 ```
 
 ---
