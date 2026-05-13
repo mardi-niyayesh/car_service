@@ -229,8 +229,12 @@ export const DeleteDecorator = () => {
 
 export const FindAllCommentsDecorator = () => applyDecorators(
   ApiBearerAuth("accessToken"),
+  HttpCode(HttpStatus.OK),
   Public({
     makePublicPermissionGuard: true
   }),
   ApiParam(apiParamSlug),
+  ApiQuery(pagePaginationDto),
+  ApiQuery(limitPaginationDto),
+  ApiQuery(orderByPaginationDto),
 );
