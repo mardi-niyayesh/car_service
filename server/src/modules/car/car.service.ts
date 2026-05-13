@@ -1,5 +1,5 @@
 import * as CarDto from "./dto";
-import {PREFIX_PUBLIC_PATH} from "@/common";
+import {PaginationValidatorType, PREFIX_PUBLIC_PATH} from "@/common";
 import {Car, Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {checkConflictRecord, checkPrismaError, deleteOneFile} from "@/lib";
@@ -262,5 +262,18 @@ export class CarService {
         notFoundResource: 'Car',
       });
     }
+  }
+
+  /**
+   * Find all comment with pagination by its unique id car.
+   * - **Accessible to all users (public endpoint)**
+   */
+  async findAllComments(car_id: string, pagination: PaginationValidatorType) {
+    const comments = await this.prisma.comment.findMany({
+      where: {
+        car_id,
+        is_confirmed: true,
+      }
+    });
   }
 }
