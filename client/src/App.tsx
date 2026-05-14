@@ -5,8 +5,8 @@ import { Routes, Route } from "react-router-dom";
 //layout components
 import MainLayout from "./Layouts/MainLayout";
 import AuthLayout from "./Layouts/AuthLayout";
-import DashboardLayout from "./dashboard/Components/DashboardLayout";
-import PanelAdminLayout from "./PanelAdmin/Components/PanelAdminLayout";
+import DashboardLayout from "./Layouts/DashboardLayout";
+import PanelAdminLayout from "./Layouts/PanelAdminLayout";
 //public pages
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
@@ -30,12 +30,12 @@ import LoginPage from "./pages/LoginPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 //pages for panelUser
-import AddressPages from "./dashboard/Pages/AddressPages";
-import CommentPages from "./dashboard/Pages/CommentPages";
-import ReservePages from "./dashboard/Pages/ReservePages";
-import WalletPages from "./dashboard/Pages/WalletPages";
-import CardPages from "./dashboard/Pages/CardPages";
-import LogoutPage from "./dashboard/Pages/LogoutPage";
+import AddressPages from "./pages/AddressPages";
+import CommentPages from "./pages/CommentPages";
+import ReservePages from "./pages/ReservePages";
+import WalletPages from "./pages/WalletPages";
+import CardPages from "./pages/CardPages";
+import LogoutPage from "./pages/LogoutPage";
 import ComponentFormUpdateUser from "./components/Dashboard/ComponnetUpdetePassword";
 import ComponnetUpdetePassword from "./components/Dashboard/ComponnetUpdetePassword";
 
