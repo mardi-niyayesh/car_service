@@ -164,15 +164,11 @@ const RolesPage = () => {
                               }
 
                               if (
-                                rol.role_type !== "BASE" &&
-                                rol.role_type !== "SYSTEM" &&
-                                !rol.permissions?.some((p) =>
-                                  [
-                                    "role.delete",
-                                    "role.assign",
-                                    "role.revoke",
-                                    "user.delete",
-                                  ].includes(p.name),
+                                rol.role_type === "CUSTOM" &&
+                                !rol.permissions?.some(
+                                  (p) =>
+                                    p.name.startsWith("user") ||
+                                    p.name.startsWith("role"),
                                 )
                               ) {
                                 return (
