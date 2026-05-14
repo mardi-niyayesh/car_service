@@ -1,4 +1,4 @@
-import { useUser } from "../../hooks/useUser";
+import { useUser } from "../hooks/useUser";
 import { Link } from "react-router-dom";
 const Profile = () => {
   const { user } = useUser();
@@ -55,7 +55,7 @@ const Profile = () => {
             </label>
             <input
               type="text"
-              value={user?.roles }
+              value={user?.roles}
               readOnly
               className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             />

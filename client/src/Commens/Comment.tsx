@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Comment = () => {
   return (
     <div className="container mx-auto p-4 sm:p-6 lg:p-8  mt-10">
@@ -7,10 +5,15 @@ const Comment = () => {
         دیدگاهتان را بنویسید
       </h1>
       <form className="bg-white p-4 sm:p-6 lg:p-8 rounded-lg shadow-md">
-        <p className="text-gray-600 mb-4 text-sm sm:text-base">نشانی ایمیل شما منتشر نخواهد شد</p>
+        <p className="text-gray-600 mb-4 text-sm sm:text-base">
+          نشانی ایمیل شما منتشر نخواهد شد
+        </p>
 
         <div className="mb-4">
-          <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            htmlFor="comment"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
             دیدگاه
           </label>
           <textarea
@@ -24,7 +27,10 @@ const Comment = () => {
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="mb-4 sm:mb-0">
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               نام
             </label>
             <input
@@ -37,7 +43,10 @@ const Comment = () => {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               ایمیل
             </label>
             <input

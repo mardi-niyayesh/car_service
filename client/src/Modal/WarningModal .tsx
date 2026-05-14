@@ -1,10 +1,14 @@
 import Modal from "react-modal";
-import { type SuccessModalProps } from "../../types/auth.types";
-
-
+import { type WarningModalProps } from "../types/auth.types";
 
 Modal.setAppElement("#root");
-const SuccessModal = ({ isOpen, onClose, message }: SuccessModalProps) => {
+
+const WarningModal = ({
+  isOpen,
+  onClose,
+  message,
+  title = "توجه",
+}: WarningModalProps) => {
   const customStyles = {
     content: {
       top: "50%",
@@ -31,11 +35,11 @@ const SuccessModal = ({ isOpen, onClose, message }: SuccessModalProps) => {
       isOpen={isOpen}
       onRequestClose={onClose}
       style={customStyles}
-      contentLabel="پیام موفقیت"
+      contentLabel="پیام هشدار"
       closeTimeoutMS={300}
     >
       <div className="text-center">
-        <div className="mb-4 text-green-500">
+        <div className="mb-4 text-yellow-500">
           <svg
             className="w-16 h-16 mx-auto"
             fill="none"
@@ -46,17 +50,17 @@ const SuccessModal = ({ isOpen, onClose, message }: SuccessModalProps) => {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
             />
           </svg>
         </div>
 
-        <h2 className="text-2xl font-bold mb-4">موفقیت!</h2>
+        <h2 className="text-2xl font-bold mb-4">{title}</h2>
         <p className="text-gray-600 mb-6">{message}</p>
 
         <button
           onClick={onClose}
-          className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors"
+          className="bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600 transition-colors"
         >
           متوجه شدم
         </button>
@@ -65,4 +69,4 @@ const SuccessModal = ({ isOpen, onClose, message }: SuccessModalProps) => {
   );
 };
 
-export default SuccessModal;
+export default WarningModal;

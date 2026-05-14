@@ -1,5 +1,5 @@
 import logowallet from "../../../assets/logowallet.png";
-import { type walletType } from "../Types/Dashboard.type";
+import { type walletType } from "../../dashboard/Types/Dashboard.type";
 
 const WalletComponents = (props: walletType) => {
   return (

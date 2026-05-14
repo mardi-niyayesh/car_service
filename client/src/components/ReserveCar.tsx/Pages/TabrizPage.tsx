@@ -2,39 +2,39 @@
 import DesCar from "../DesCar";
 import ReserveComponent from "../ReserveComponent";
 import CarComponent from "../CarComponent";
-import Comment from "../../../ComponentPublic/Comment";
+import Comment from "../../../Commens/Comment";
 //img tabriz
 import Tabrizimg from "../../../../assets/TABRIZ-2.png";
 
 import car1 from "../../../../assets/206.png";
-import sari3 from "../../../../assets/sari3.png"
+import sari3 from "../../../../assets/sari3.png";
 import car3 from "../../../../assets/rana.png";
 import car4 from "../../../../assets/PERSIA.png";
 
 const ItemCar = [
   {
-    id:2,
+    id: 2,
     img: car1,
     ttile: "پژو ۲۰۶ ",
     price: "۲٫۴۰۰٫۰۰۰",
     duration: "3 تا 6 روز",
   },
- {
-    id:3,
+  {
+    id: 3,
     img: sari3,
     ttile: " ﻫﺎﯾﻤﺎ S8 TURBO",
     price: "۷٫۱۰۰٫۰۰۰",
     duration: "3 تا 6 روز",
   },
   {
-    id:6,
+    id: 6,
     img: car4,
     ttile: " پژو پرﺷﯿﺎ TU5",
     price: "۲٫۸۰۰٫۰۰۰",
     duration: "3 تا 6 روز",
   },
   {
-    id:5,
+    id: 5,
     img: car3,
     ttile: "  راﻧﺎ پلاس",
     price: "۲٫۴۰۰٫۰۰۰",
@@ -69,7 +69,7 @@ const TabrizPage = () => {
         </div>
       </div>
       <DesCar />
-      <Comment/>
+      <Comment />
     </div>
   );
 };

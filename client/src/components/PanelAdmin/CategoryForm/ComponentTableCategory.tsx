@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FaPencilAlt } from "react-icons/fa";
 import axiosClient from "../../../services/axiosClient";
-import ComponentPaginat from "../../../ComponentPublic/ComponentPaginat";
-import SuccessModal from "../../common/SuccessModal";
-import WarningModal from "../../common/WarningModal ";
+import ComponentPaginat from "../../../Paginate/ComponentPaginat";
+import SuccessModal from "../../../Modal/SuccessModal";
+import WarningModal from "../../../Modal/WarningModal ";
 import { useUser } from "../../../hooks/useUser";
 type CategoryType = {
   id: string;

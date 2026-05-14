@@ -2,8 +2,8 @@ import axiosClient from "../services/axiosClient";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiKey, FiCheckSquare } from "react-icons/fi";
-import SuccessModal from "../components/common/SuccessModal";
-import WarningModal from "../components/common/WarningModal ";
+import SuccessModal from "../Modal/SuccessModal";
+import WarningModal from "../Modal/WarningModal ";
 import { useUser } from "../hooks/useUser";
 import { Link } from "react-router-dom";
 

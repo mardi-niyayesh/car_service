@@ -93,3 +93,9 @@ export type RefreshResponse = {
   accessToken: string;
   user: User;
 };
+export type WarningModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  message: string;
+  title?: string;
+};

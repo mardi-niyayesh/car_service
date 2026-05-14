@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
-import { useUpdatePassword } from "../Api/ApiUpdatPassword";
-import SuccessModal from "../../components/common/SuccessModal";
-import WarningModal from "../../components/common/WarningModal ";
+import { useUpdatePassword } from "../../dashboard/Api/ApiUpdatPassword";
+import SuccessModal from "../../Modal/SuccessModal";
+import WarningModal from "../../Modal/WarningModal ";
 import { useState } from "react";
 
 type FormData = {
@@ -9,7 +9,7 @@ type FormData = {
   newPassword: string;
 };
 
-const ComponentFormUpdateUser = () => {
+const ComponnetUpdetePassword = () => {
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [isWarningOpen, setIsWarningOpen] = useState(false);
@@ -127,4 +127,4 @@ const ComponentFormUpdateUser = () => {
   );
 };
 
-export default ComponentFormUpdateUser;
+export default ComponnetUpdetePassword;

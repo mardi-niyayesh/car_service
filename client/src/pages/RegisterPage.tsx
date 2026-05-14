@@ -1,17 +1,12 @@
-//hooks
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-//components
 import AuthForm from "../components/common/AuthForm";
-// types
 import { type RegisterFormData } from "../types/auth.types";
-//api
 import { registerUser } from "../services/api";
-//Modals
-import SuccessModal from "../components/common/SuccessModal";
-import ErrorModal from "../components/common/ErrorModal";
-import WarningModal from "../components/common/WarningModal ";
+import SuccessModal from "../Modal/SuccessModal";
+import ErrorModal from "../Modal/ErrorModal";
+import WarningModal from "../Modal/WarningModal ";
 
 function RegisterPage() {
   const navigate = useNavigate();

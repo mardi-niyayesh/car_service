@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../../../services/axiosClient";
 import CategoryForm, { type CategoryFormData } from "./CategoryForm";
-import SuccessModal from "../../../components/common/SuccessModal";
-import WarningModal from "../../../components/common/WarningModal ";
+import SuccessModal from "../../../Modal/SuccessModal";
+import WarningModal from "../../../Modal/WarningModal ";
 
 const CreateCategory = () => {
   const navigate = useNavigate();

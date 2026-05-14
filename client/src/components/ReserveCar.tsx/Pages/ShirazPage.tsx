@@ -2,7 +2,7 @@
 import DesCar from "../DesCar";
 import ReserveComponent from "../ReserveComponent";
 import CarComponent from "../CarComponent";
-import Comment from "../../../ComponentPublic/Comment";
+import Comment from "../../../Commens/Comment";
 //img shiraz
 import shirazimg from "../../../../assets/shiraz-2.png";
 //img car
@@ -13,28 +13,28 @@ import car4 from "../../../../assets/pngegg-1.png";
 
 const ItemCar = [
   {
-    id:10,
+    id: 10,
     img: car1,
     ttile: "ﺗﺎرا اﺗﻮﻣﺎت",
     price: "۳٫۷۰۰٫۰۰۰",
     duration: "3 تا 6 روز",
   },
   {
-    id:2,
+    id: 2,
     img: car2,
     ttile: "هیوندای ون H1",
     price: "۷٫۶۰۰٫۰۰۰",
     duration: "2 تا 5 روز",
   },
   {
-    id:12,
+    id: 12,
     img: car3,
     ttile: "هیوﻧﺪای ﺳﺎﻧﺘﺎﻓﻪ",
     price: "۶٫۳۰۰٫۰۰۰",
     duration: "3 تا 6 روز",
   },
   {
-    id:11,
+    id: 11,
     img: car4,
     ttile: "کیا اسپورتیج ۲۰۱۸",
     price: "۶٫۳۰۰٫۰۰۰",
@@ -67,7 +67,7 @@ const ShirazPage = () => {
         </div>
       </div>
       <DesCar />
-      <Comment/>
+      <Comment />
     </div>
   );
 };

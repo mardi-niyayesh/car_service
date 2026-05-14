@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useUpdateUser } from "../Api/ApiUpdatUser";
+import { useUpdateUser } from "../../dashboard/Api/ApiUpdatUser";
 import SuccessModal from "../../components/common/SuccessModal";
 import WarningModal from "../../components/common/WarningModal ";
 import { useState } from "react";
