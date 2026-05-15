@@ -52,7 +52,7 @@ const ComponentTableUser = () => {
   return (
     <div className="rounded-lg shadow-sm border border-gray-200 bg-white p-4">
       {loading ? (
-        <p className="text-center text-gray-500 py-8">در حال بارگذاری...</p>
+        <p className="text-center text-gray-500 py-8">در حال گرفتن همه کاربران ...</p>
       ) : (
         <>
           <table className="min-w-full text-right text-sm text-gray-700">
