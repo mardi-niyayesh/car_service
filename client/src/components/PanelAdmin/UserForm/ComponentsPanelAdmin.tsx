@@ -36,8 +36,6 @@ const Menu = [
     to: "product",
     label: "محصولات",
     icon: <FaBoxOpen style={{ opacity: 0.6 }} />,
-    permission: "product.update",
-    role: "product_manager",
   },
 ];
 
