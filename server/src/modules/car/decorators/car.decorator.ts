@@ -35,8 +35,8 @@ import z from "zod";
 import * as CarDto from "../dto";
 import {getPath, ONE_HOUR_MS} from "@/lib";
 import * as CarConfig from "@/modules/car/configs";
-import {FileInterceptor} from "@nestjs/platform-express";
 import {Prisma} from "@/modules/prisma/generated/client";
+import {FileInterceptor} from "@nestjs/platform-express";
 import {applyDecorators, HttpCode, HttpStatus, UseInterceptors} from "@nestjs/common";
 
 export const FindOneDecorators = () => {
