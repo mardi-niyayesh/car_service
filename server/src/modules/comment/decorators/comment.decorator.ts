@@ -12,6 +12,7 @@ import {
 } from "@nestjs/swagger";
 
 import {
+  Public,
   UUID4Dto,
   Permission,
   PERMISSIONS,
@@ -27,6 +28,7 @@ import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 
 export const FindOneCommentDecorator = () => applyDecorators(
   HttpCode(HttpStatus.OK),
+  Public()
 );
 
 export const CreateCommentDecorator = () => applyDecorators(
