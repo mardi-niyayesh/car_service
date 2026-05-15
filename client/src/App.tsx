@@ -38,7 +38,6 @@ import CardPages from "./pages/CardPages";
 import LogoutPage from "./pages/LogoutPage";
 import ComponentFormUpdateUser from "./components/Dashboard/ComponnetUpdetePassword";
 import ComponnetUpdetePassword from "./components/Dashboard/ComponnetUpdetePassword";
-
 import Profile from "./pages/Profile";
 //pages for panelAdmin
 import DetalisUserPage from "./pages/DetalisUserPage";

@@ -1,9 +1,6 @@
-//hooks
 import { useState } from "react";
-//packeges
 import DatePicker from "react-datepicker-jalali";
 import "react-datepicker/dist/react-datepicker.css";
-//icon for react-ico
 import { MdLocationOn } from "react-icons/md";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
