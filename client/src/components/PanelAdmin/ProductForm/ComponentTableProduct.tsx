@@ -8,9 +8,11 @@ import { useCallback } from "react";
 import SuccessModal from "../../../Modal/SuccessModal";
 import WarningModal from "../../../Modal/WarningModal ";
 import ErrorModal from "../../../Modal/ErrorModal";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type ProductType = {
-  id: number;
+  id: string;
   name: string;
   price_per_day: number;
   description: string;
@@ -21,6 +23,7 @@ type ProductType = {
 };
 
 const ComponentTableProduct = () => {
+  const navogate=useNavigate()
   const [allProduct, setAllProduct] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -67,7 +70,7 @@ const ComponentTableProduct = () => {
     fetchAllProduct();
   }, [page, fetchAllProduct]);
 
-  const handleDeleatProduct = async (id: number) => {
+  const handleDeleatProduct = async (id: string) => {
     try {
       const response = await axiosClient.delete(`/cars/${id}`);
       if (response.status === 200) {
@@ -93,8 +96,8 @@ const ComponentTableProduct = () => {
       }
     }
   };
-  const handleupdatProduct = () => {
-    console.log("uuup");
+  const handleupdatProduct = async (id: string) => {
+   navogate(`updateproduct/${id}`)
   };
 
   return (
