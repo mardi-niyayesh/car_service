@@ -57,14 +57,21 @@ const ComponentTableProduct = () => {
     fetchAllProduct();
   }, [page, fetchAllProduct]);
 
+  const handleDeleatProduct = () => {
+    console.log("deeeeee");
+  };
+  const handleupdatProduct = () => {
+    console.log("uuup");
+  };
+
   return (
-    <div>
-      {loading ? (
-        <p className="text-center text-gray-500 py-8">
-          در حال گرفتن همه محصولات ...
-        </p>
-      ) : (
-        <div className="overflow-x-auto rounded-lg shadow-sm border border-gray-200 bg-white">
+    <>
+      <div className="overflow-x-auto rounded-lg shadow-sm border border-gray-200 bg-white">
+        {loading ? (
+          <p className="text-center text-gray-500 py-8">
+            در حال گرفتن همه محصولات ...
+          </p>
+        ) : (
           <table className="min-w-full  text-right text-sm text-gray-700">
             <thead className="bg-gray-100 text-gray-700 ">
               <tr>
@@ -79,8 +86,12 @@ const ComponentTableProduct = () => {
                 <th className="w-20 px-4 py-3 font-medium hidden sm:table-cell">
                   لینک
                 </th>
-                <th className="w-20 px-4 py-3 font-medium"> حذف</th>
-                <th className="w-20 px-4 py-3 font-medium"> اپدیت</th>
+                {hasDeleteProduct && (
+                  <th className="w-20 px-4 py-3 font-medium"> حذف</th>
+                )}
+                {hasUpdateProduct && (
+                  <th className="w-20 px-4 py-3 font-medium"> اپدیت</th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -110,7 +121,7 @@ const ComponentTableProduct = () => {
                             color="red"
                             opacity={0.8}
                             className="cursor-pointer"
-                            // onClick={() => handleDeleatProduct(product.id)}
+                            onClick={() => handleDeleatProduct(product.id)}
                           />
                         }
                       </td>
@@ -123,7 +134,7 @@ const ComponentTableProduct = () => {
                             color="blue"
                             opacity={0.5}
                             className="cursor-pointer"
-                            // onClick={() => handleupdatProduct(product.id)}
+                            onClick={() => handleupdatProduct(product.id)}
                           />
                         }
                       </td>
@@ -133,14 +144,14 @@ const ComponentTableProduct = () => {
               })}
             </tbody>
           </table>
-        </div>
-      )}
+        )}
+      </div>
       <ComponentPaginat
         currentPage={page}
         totalPages={totalPage}
         onPageChange={setPage}
       />
-    </div>
+    </>
   );
 };
 
