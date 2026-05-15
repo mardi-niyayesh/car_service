@@ -1,7 +1,7 @@
 import {exampleDate} from "@/lib";
 import {CreateCommentResponse} from "@/types";
-import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 import {Comment} from "@/modules/prisma/generated/client";
+import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 export const confirmedCommentExample: Comment = {
   id: "6d813935-0fbb-4ebd-943d-25c1dc572efb",
