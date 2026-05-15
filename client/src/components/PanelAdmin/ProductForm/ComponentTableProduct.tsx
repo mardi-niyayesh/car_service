@@ -5,6 +5,9 @@ import axiosClient from "../../../services/axiosClient";
 import { useEffect, useState } from "react";
 import ComponentPaginat from "../../../Paginate/ComponentPaginat";
 import { useCallback } from "react";
+import SuccessModal from "../../../Modal/SuccessModal";
+import WarningModal from "../../../Modal/WarningModal ";
+import ErrorModal from "../../../Modal/ErrorModal";
 
 type ProductType = {
   id: number;
@@ -23,6 +26,13 @@ const ComponentTableProduct = () => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(5);
   const { hasRole, hasPermission } = useUser();
+
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isWarningOpen, setIsWarningOpen] = useState(false);
+  const [WarningMessage, setWarningMessage] = useState("");
+  const [isErroOpen, setIsErroOpen] = useState(false);
+  const [ErroMessage, setErroMessage] = useState("");
 
   const hasDeleteProduct =
     hasPermission("product.delete") || hasRole("product_manager");
@@ -57,8 +67,31 @@ const ComponentTableProduct = () => {
     fetchAllProduct();
   }, [page, fetchAllProduct]);
 
-  const handleDeleatProduct = () => {
-    console.log("deeeeee");
+  const handleDeleatProduct = async (id: number) => {
+    try {
+      const response = await axiosClient.delete(`/cars/${id}`);
+      if (response.status === 200) {
+        setIsSuccessOpen(true);
+        setSuccessMessage("محصول مورد نظر با موفقیت حذف شد .");
+        fetchAllProduct();
+      }
+    } catch (err) {
+      console.log("Error in deleat Product : ", err);
+      if (err.response?.status === 403) {
+        setIsWarningOpen(true);
+        setWarningMessage(
+          "شما مجوز لازم ( یا owner or product.delel) باید داشته باشید",
+        );
+      } else if (err.response?.status === 400) {
+        setIsWarningOpen(true);
+        setWarningMessage(
+          "محصولی که قصد حذف کردنش را دارید در دیتابیس وجود ندارد",
+        );
+      } else {
+        setIsErroOpen(true);
+        setErroMessage(" متاسفیم! خطایی در سرور رخ داده است");
+      }
+    }
   };
   const handleupdatProduct = () => {
     console.log("uuup");
@@ -150,6 +183,22 @@ const ComponentTableProduct = () => {
         currentPage={page}
         totalPages={totalPage}
         onPageChange={setPage}
+      />
+      <SuccessModal
+        isOpen={isSuccessOpen}
+        onClose={() => setIsSuccessOpen(false)}
+        message={successMessage}
+      />
+
+      <WarningModal
+        isOpen={isWarningOpen}
+        onClose={() => setIsWarningOpen(false)}
+        message={WarningMessage}
+      />
+      <ErrorModal
+        isOpen={isErroOpen}
+        onClose={() => setIsErroOpen(false)}
+        message={ErroMessage}
       />
     </>
   );
