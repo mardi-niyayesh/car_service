@@ -229,7 +229,7 @@ export const FindAllCommentsDecorator = () => applyDecorators(
   HttpCode(HttpStatus.OK),
   Public(),
   ApiOperation(CarDto.findAllCommentsOperation),
-  ApiParam(UUID4Dto),
+  ApiParam(UUID4Dto('id')),
   ApiQuery(pagePaginationDto),
   ApiQuery(limitPaginationDto),
   ApiQuery(orderByPaginationDto),
