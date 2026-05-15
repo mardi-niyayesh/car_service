@@ -58,8 +58,8 @@ export const findOneCommentOperation: ApiOperationOptions = {
   operationId: 'find_one_comment',
   summary: "Retrieve a single comment by its ID",
   description: `
-  - ## Accessible to authenticated users only
-  - # **🔐 AUTHENTICATED ENDPOINT** (Bearer token required)\n
+  - ## Accessible to all users (public endpoint)
+  - # **🔓 PUBLIC ENDPOINT** (No authentication required)\n
   | Parameter | Type | Description |
   |-----------|------|-------------|
   | **id** | path | Valid UUID of the comment to retrieve |
