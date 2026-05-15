@@ -9,7 +9,7 @@ export type CommentNUserNCar = Comment & {
 };
 
 /** Comment with user safe */
-type CommentAndUser = Comment & {
+export type CommentAndUser = Comment & {
   user: Pick<SafeUser, "id" | 'display_name'>;
 }
 

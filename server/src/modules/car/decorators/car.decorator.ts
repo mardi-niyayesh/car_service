@@ -233,4 +233,5 @@ export const FindAllCommentsDecorator = () => applyDecorators(
   ApiQuery(pagePaginationDto),
   ApiQuery(limitPaginationDto),
   ApiQuery(orderByPaginationDto),
+  ApiOkResponse({type: CarDto.FindAllCommentsOk})
 );
