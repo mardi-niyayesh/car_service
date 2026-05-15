@@ -9,8 +9,8 @@ export function UUID4Dto(name: string): ApiParamOptions {
   return {
     name: "id",
     type: String,
+    required: true,
     description: `${name} UUID version 4`,
     example: "d228cc19-b8c9-41c4-8c70-c2c6effb05ca",
-    required: true,
   };
 }
