@@ -53,6 +53,21 @@ import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodP
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
+  /**
+   * Retrieves a single comment by its unique identifier.
+   *
+   * @param id - The UUID of the comment to retrieve
+   * @returns Comment with user info and reply counts
+   *
+   * @remarks
+   * - Includes author information (name, avatar)
+   * - Includes count of direct replies
+   * - Does NOT include nested replies (use separate endpoint)
+   * - Returns 404 if comment doesn't exist or is not confirmed
+   *
+   * @example
+   * GET /comments/550e8400-e29b-41d4-a716-446655440000
+   */
   @Get(':id')
   findOne(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string
