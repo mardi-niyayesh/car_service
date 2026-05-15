@@ -1,13 +1,16 @@
 import {getBaseOkResponseSchema} from "@/common";
 import {exampleComment} from "@/modules/comment/dto";
-import {CommentAndUser, CommentListAndUser} from "@/types";
+import {CommentListAndUser, CommentListAndUserWithChildCount} from "@/types";
 
-const commentConfirmedExample: CommentAndUser = {
+const commentConfirmedExample: CommentListAndUserWithChildCount = {
   ...exampleComment,
   is_confirmed: true,
   user: {
     id: "user_id",
     display_name: "user name"
+  },
+  _count: {
+    replies: 2
   }
 };
 
