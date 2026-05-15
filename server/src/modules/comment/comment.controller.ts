@@ -53,6 +53,13 @@ import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodP
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
+  @Get(':id')
+  findOne(
+    @Param('id', new ZodPipe(UUIDv4Validator)) id: string
+  ) {
+    return id;
+  }
+
   /**
    * Creates a new comment or reply on a car review.
    *
