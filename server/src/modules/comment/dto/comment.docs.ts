@@ -53,3 +53,16 @@ export const rejectCommentOperation: ApiOperationOptions = {
 
   > **📌 Workflow:** After rejection, the comment is immediately deleted from the database. This operation is **irreversible**. Only users with the "**comment.reject**" permission can execute this endpoint.`
 };
+
+export const findOneCommentOperation: ApiOperationOptions = {
+  operationId: 'find_one_comment',
+  summary: "Retrieve a single comment by its ID",
+  description: `
+  - ## Accessible to authenticated users only
+  - # **🔐 AUTHENTICATED ENDPOINT** (Bearer token required)\n
+  | Parameter | Type | Description |
+  |-----------|------|-------------|
+  | **id** | path | Valid UUID of the comment to retrieve |
+
+  > **📌 Note:** Returns comment with user details, car info, and reply count. Only confirmed comments are accessible.`
+};
