@@ -19,7 +19,6 @@ import {
   limitPaginationDto,
   orderByPaginationDto,
   getForbiddenResponse,
-  getNormalErrorResponse,
   getUnauthorizedResponse,
 } from "@/common";
 
@@ -49,9 +48,9 @@ export const FindAllUnconfirmedCommentDecorator = () => applyDecorators(
   ApiQuery(limitPaginationDto),
   ApiQuery(orderByPaginationDto),
   ApiOkResponse({type: CommentDto.FindAllUnconfirmedOk}),
-  ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/id/confirm")}),
+  ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/unconfirmed")}),
   ApiForbiddenResponse({
-    type: getForbiddenResponse("comments/id/confirm", {
+    type: getForbiddenResponse("comments/unconfirmed", {
       resource: 'comment',
       required_mode: 'ALL',
       required_permissions: [PERMISSIONS.COMMENT_VIEW],
@@ -77,14 +76,7 @@ export const ConfirmCommentDecorator = () => applyDecorators(
       missing_permissions: [PERMISSIONS.COMMENT_CONFIRM],
     })
   }),
-  ApiNotFoundResponse({
-    type: getNormalErrorResponse({
-      path: "comment/id/confirm",
-      statusCode: 404,
-      message: 'comment not found in database, or already is confirmed',
-      error: 'comment not found'
-    })
-  })
+  ApiNotFoundResponse({type: CommentDto.ConfirmCommentNotFound})
 );
 
 export const RejectCommentDecorator = () => applyDecorators(
@@ -97,19 +89,12 @@ export const RejectCommentDecorator = () => applyDecorators(
   ApiOkResponse({type: CommentDto.RejectCommentOk}),
   ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/id/reject")}),
   ApiForbiddenResponse({
-    type: getForbiddenResponse("comments/id/confirm", {
+    type: getForbiddenResponse("comments/id/reject", {
       resource: 'comment',
-      required_mode: 'ALL',
-      required_permissions: [PERMISSIONS.COMMENT_CONFIRM],
-      missing_permissions: [PERMISSIONS.COMMENT_CONFIRM],
+      required_mode: 'ANY',
+      required_permissions: [PERMISSIONS.COMMENT_REJECT],
+      missing_permissions: [PERMISSIONS.COMMENT_REJECT],
     })
   }),
-  ApiNotFoundResponse({
-    type: getNormalErrorResponse({
-      path: "comment/id/reject",
-      statusCode: 404,
-      message: 'comment not found in database, or already is confirmed',
-      error: 'comment not found'
-    })
-  })
+  ApiNotFoundResponse({type: CommentDto.RejectCommentNotFound})
 );

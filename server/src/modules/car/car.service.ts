@@ -290,10 +290,19 @@ export class CarService {
           select: {
             id: true,
             display_name: true,
+          },
+        },
+        _count: {
+          select: {
+            replies: {
+              where: {is_confirmed: true}
+            }
           }
         }
       }
     });
+
+    console.log(comments);
 
     return {
       message: 'comments find successfully.',
