@@ -25,6 +25,10 @@ import {
 import * as CommentDto from "../dto";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 
+export const FindOneCommentDecorator = () => applyDecorators(
+  HttpCode(HttpStatus.OK),
+);
+
 export const CreateCommentDecorator = () => applyDecorators(
   HttpCode(HttpStatus.CREATED),
   Permission({

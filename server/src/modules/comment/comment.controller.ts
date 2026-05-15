@@ -69,6 +69,7 @@ export class CommentController {
    * GET /comments/550e8400-e29b-41d4-a716-446655440000
    */
   @Get(':id')
+  @CommentDecorator.FindOneCommentDecorator()
   findOne(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string
   ) {
