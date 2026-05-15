@@ -28,7 +28,8 @@ import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 
 export const FindOneCommentDecorator = () => applyDecorators(
   HttpCode(HttpStatus.OK),
-  Public()
+  Public(),
+  ApiParam(UUID4Dto('id')),
 );
 
 export const CreateCommentDecorator = () => applyDecorators(
