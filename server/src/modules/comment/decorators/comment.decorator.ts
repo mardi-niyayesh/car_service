@@ -1,6 +1,5 @@
 import {
   ApiBody,
-  ApiQuery,
   ApiParam,
   ApiOperation,
   ApiOkResponse,
@@ -17,11 +16,8 @@ import {
   Permission,
   CacheEvict,
   PERMISSIONS,
-  pagePaginationDto,
-  limitPaginationDto,
-  orderByPaginationDto,
   getForbiddenResponse,
-  getUnauthorizedResponse,
+  getUnauthorizedResponse, PaginationDecoratorQueries,
 } from "@/common";
 
 import * as CommentDto from "../dto";
@@ -33,9 +29,7 @@ export const FindCommentRepliesDecorator = () => applyDecorators(
   ApiOperation(CommentDto.findCommentRepliesOperation),
   Public(),
   ApiParam(UUID4Dto('id')),
-  ApiQuery(pagePaginationDto),
-  ApiQuery(limitPaginationDto),
-  ApiQuery(orderByPaginationDto),
+  PaginationDecoratorQueries(),
   ApiOkResponse({type: CommentDto.FindRepliesOk}),
 );
 
@@ -66,9 +60,7 @@ export const FindAllUnconfirmedCommentDecorator = () => applyDecorators(
     permissions: [PERMISSIONS.COMMENT_VIEW]
   }),
   ApiOperation(CommentDto.findAllUnconfirmedCommentsOperation),
-  ApiQuery(pagePaginationDto),
-  ApiQuery(limitPaginationDto),
-  ApiQuery(orderByPaginationDto),
+  PaginationDecoratorQueries(),
   ApiOkResponse({type: CommentDto.FindAllUnconfirmedOk}),
   ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/unconfirmed")}),
   ApiForbiddenResponse({

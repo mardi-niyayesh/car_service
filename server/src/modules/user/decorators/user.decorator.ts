@@ -1,7 +1,7 @@
 import {
-  ApiParam,
-  ApiQuery,
   ApiBody,
+  ApiQuery,
+  ApiParam,
   ApiOperation,
   ApiOkResponse,
   ApiConflictResponse,
@@ -17,11 +17,8 @@ import {
   CacheEvict,
   Permission,
   PERMISSIONS,
-  pagePaginationDto,
-  limitPaginationDto,
-  orderByPaginationDto,
   getForbiddenResponse,
-  getUnauthorizedResponse,
+  getUnauthorizedResponse, PaginationDecoratorQueries,
 } from "@/common";
 
 import * as UserDto from "../dto";
@@ -124,9 +121,7 @@ export const FindAllDecorators = () => {
       ttl: ONE_MINUTE_MS * 30
     }),
     ApiOperation(UserDto.userFindAllOperation),
-    ApiQuery(pagePaginationDto),
-    ApiQuery(limitPaginationDto),
-    ApiQuery(orderByPaginationDto),
+    PaginationDecoratorQueries(),
     ApiOkResponse({type: UserDto.FindAllUsersOKRes}),
     ApiUnauthorizedResponse({
       type: getUnauthorizedResponse("users"),

@@ -2,12 +2,9 @@ import {
   UUID4Dto,
   Cacheable,
   PERMISSIONS,
-  pagePaginationDto,
-  limitPaginationDto,
-  orderByPaginationDto,
   getForbiddenResponse,
   getBadRequestUUIDParams,
-  getUnauthorizedResponse,
+  getUnauthorizedResponse, PaginationDecoratorQueries,
 } from "@/common";
 
 import {ONE_MINUTE_MS} from "@/lib";
@@ -57,9 +54,7 @@ export const FindAllDecorators = () => {
   get permission list with pagination **Access restricted to users with permission: (owner.all or permission.view) only.**`,
       operationId: 'find_all_permission',
     }),
-    ApiQuery(pagePaginationDto),
-    ApiQuery(limitPaginationDto),
-    ApiQuery(orderByPaginationDto),
+    PaginationDecoratorQueries(),
     ApiOkResponse({type: PermissionDto.FindAllPermissionsOkRes}),
     ApiUnauthorizedResponse({type: getUnauthorizedResponse('permissions')}),
     ApiForbiddenResponse({type: getForbiddenResponse('permissions')}),

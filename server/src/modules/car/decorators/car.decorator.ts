@@ -6,13 +6,11 @@ import {
   Permission,
   PERMISSIONS,
   UUIDv4Validator,
-  pagePaginationDto,
-  limitPaginationDto,
-  orderByPaginationDto,
   getForbiddenResponse,
   CAR_IMAGE_UPLOAD_PATH,
   getUnauthorizedResponse,
   getBaseOkResponseSchema,
+  PaginationDecoratorQueries,
 } from "@/common";
 
 import {
@@ -80,9 +78,7 @@ export const FindAllDecorators = () => {
     HttpCode(HttpStatus.OK),
     ApiOperation(CarDto.findAllCarOperation),
     ApiOkResponse({type: CarDto.FindAllCarOkRes}),
-    ApiQuery(pagePaginationDto),
-    ApiQuery(limitPaginationDto),
-    ApiQuery(orderByPaginationDto),
+    PaginationDecoratorQueries(),
     ApiQuery(CarDto.orderByFieldFindAllCarQuery),
     ApiQuery(CarDto.categoryFindAllCarQuery),
     ApiQuery(CarDto.inRentFindAllCarQuery),
@@ -239,8 +235,6 @@ export const FindAllCommentsDecorator = () => applyDecorators(
   Public(),
   ApiOperation(CarDto.findAllCommentsOperation),
   ApiParam(UUID4Dto('id')),
-  ApiQuery(pagePaginationDto),
-  ApiQuery(limitPaginationDto),
-  ApiQuery(orderByPaginationDto),
+  PaginationDecoratorQueries(),
   ApiOkResponse({type: CarDto.FindAllCommentsOk})
 );
