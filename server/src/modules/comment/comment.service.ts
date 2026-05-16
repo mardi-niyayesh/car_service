@@ -1,5 +1,5 @@
 import * as CommentDto from "./dto";
-import {checkPrismaError} from "@/lib";
+import {checkPrismaError, getNestLogger} from "@/lib";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {RedisService} from "@/modules/redis/redis.service";
 import {EventEmitter2, OnEvent} from "@nestjs/event-emitter";
@@ -7,21 +7,28 @@ import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {eventsEmitter, PaginationValidatorType} from "@/common";
 import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList, UpdateCarRateEvent} from "@/types";
+import {CommentWhereInput} from "@/modules/prisma/generated/models/Comment";
 
 @Injectable()
 export class CommentService {
+  private readonly logger = getNestLogger('CommentService');
+
   constructor(
-    private readonly prisma: PrismaService,
-    private readonly eventEmitter: EventEmitter2,
     private readonly redis: RedisService,
+    private readonly prisma: PrismaService,
+    private readonly eventEmitter: EventEmitter2
   ) {}
 
   async findCommentReplies(id: string, pagination: PaginationValidatorType) {
+    const where: CommentWhereInput = {
+      parent_id: id,
+      is_confirmed: true,
+    };
+
+    const count: number = await this.prisma.comment.count({where});
+
     const commentReplies = await this.prisma.comment.findMany({
-      where: {
-        parent_id: id,
-        is_confirmed: true
-      },
+      where,
       include: {
         _count: {
           select: {
@@ -32,6 +39,11 @@ export class CommentService {
         }
       }
     });
+
+    console.log(count);
+    this.logger.verbose(commentReplies);
+
+    return commentReplies;
   }
 
   /**
