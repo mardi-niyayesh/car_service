@@ -70,12 +70,13 @@ export class CommentService {
   /**
    * **Creates a new comment or reply on a car review.**
    *
-   * @param user_id
+   * @param car_id - car uuid
+   * @param user_id - user uuid
    * @param data - Validated comment data
    * @returns Confirmation message
    *
    */
-  async create(user_id: string, data: CommentDto.CreateCommentType): Promise<ApiResponse<CreateCommentResponse>> {
+  async create(car_id: string, user_id: string, data: CommentDto.CreateCommentType): Promise<ApiResponse<CreateCommentResponse>> {
     if (data.parent_id) {
       const parentComment = await this.prisma.comment.findUnique({
         where: {
@@ -94,6 +95,7 @@ export class CommentService {
         data: {
           ...data,
           creator_id: user_id,
+          car_id
         }
       });
 

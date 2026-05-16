@@ -83,6 +83,7 @@ export class CommentController {
   /**
    * Creates a new comment or reply on a car review.
    *
+   * @param id - car uuid
    * @param req - Authenticated user (requires `user.self` permission)
    * @param data - Validated comment data
    * @returns Confirmation message
@@ -99,9 +100,10 @@ export class CommentController {
    * POST /comments
    * { "content": "Great car!", "rate": 5, "car_id": "550e...", "parent_id": null }
    */
-  @Post()
+  @Post(":id")
   @CommentDecorator.CreateCommentDecorator()
   create(
+    @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
     @Req() req: AccessRequest,
     @Body(new ZodPipe(CommentDto.CreateCommentValidator)) data: CommentDto.CreateCommentType
   ): Promise<ApiResponse<CreateCommentResponse>> {
