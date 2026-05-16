@@ -16,6 +16,24 @@ export class CommentService {
     private readonly redis: RedisService,
   ) {}
 
+  async findOne(id: string) {
+    const commentChildes = await this.prisma.comment.findMany({
+      where: {
+        parent_id: id,
+        is_confirmed: true
+      },
+      include: {
+        _count: {
+          select: {
+            replies: {
+              where: {is_confirmed: true}
+            }
+          }
+        }
+      }
+    });
+  }
+
   /**
    * **Creates a new comment or reply on a car review.**
    *

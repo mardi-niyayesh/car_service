@@ -1,6 +1,6 @@
 import {exampleDate} from "@/lib";
 import {getBaseOkResponseSchema} from "@/common";
-import {confirmedCommentExample} from "./confirm-comment.dto";
+import {confirmedCommentExample} from "./confirm.dto";
 import type {CommentNUserNCar, CommentNUserNCarList} from "@/types";
 
 export const unconfirmedComment: CommentNUserNCar = {

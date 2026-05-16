@@ -26,7 +26,7 @@ import {
 import * as CommentDto from "../dto";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 
-export const FindOneCommentDecorator = () => applyDecorators(
+export const FindCommentRepliesDecorator = () => applyDecorators(
   HttpCode(HttpStatus.OK),
   ApiOperation(CommentDto.findOneCommentOperation),
   Public(),
