@@ -50,7 +50,7 @@ import RolesPage from "./pages/RolesPage";
 import { GaurdRoute } from "./Routes/GaurdRoute";
 import CreateCategory from "./components/PanelAdmin/CategoryForm/CreateCategory";
 import UpdateCategory from "./components/PanelAdmin/CategoryForm/UpdateCategory";
-import ComponentFormAddProduct from "./components/PanelAdmin/ProductForm/ComponentFormAddProduct";
+import ComponentCreatpoduct from "./components/PanelAdmin/ProductForm/ComponentCreatpoduct";
 import ComponentUpdateProduct from "./components/PanelAdmin/ProductForm/ComponentUpdateProduct";
 function App() {
   return (
@@ -140,13 +140,16 @@ function App() {
             <Route path="product" element={<ProductPage />} />
             <Route
               path="product/creatproduct"
-              element={<ComponentFormAddProduct />}
+              element={<ComponentCreatpoduct />}
             />
             <Route path="category" element={<CategoryPage />} />
             <Route path="roles" element={<RolesPage />} />
             <Route path="logout" element={<LogoutPage />} />
             <Route path="Profile" element={<Profile />} />
-             <Route path="product/updateproduct/:id" element={<ComponentUpdateProduct />} />
+            <Route
+              path="product/updateproduct/:id"
+              element={<ComponentUpdateProduct />}
+            />
             <Route
               path="category/CreatCategory"
               element={
