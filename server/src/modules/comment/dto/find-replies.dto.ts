@@ -8,9 +8,9 @@ const exampleComments: CommentListAndUserWithChildCount = {
 };
 
 export class FindRepliesOk extends getBaseOkResponseSchema<CommentListAndUser>({
-  path: 'comments/id',
+  path: 'comments/id/replies',
   response: {
-    message: '',
+    message: 'replies comment successfully found.',
     data: {
       count: 5,
       comments: Array.from({length: 5}, () => exampleComments)
