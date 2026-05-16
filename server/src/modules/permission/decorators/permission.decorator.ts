@@ -4,13 +4,14 @@ import {
   PERMISSIONS,
   getForbiddenResponse,
   getBadRequestUUIDParams,
-  getUnauthorizedResponse, PaginationDecoratorQueries,
+  getUnauthorizedResponse,
+  PaginationDecoratorQueries,
 } from "@/common";
 
 import {ONE_MINUTE_MS} from "@/lib";
 import * as PermissionDto from "../dto";
 import {applyDecorators, Get, HttpCode, HttpStatus} from "@nestjs/common";
-import {ApiBadRequestResponse, ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {ApiBadRequestResponse, ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 export const FindOneDecorators = () => {
   return applyDecorators(
