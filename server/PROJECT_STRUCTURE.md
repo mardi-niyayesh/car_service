@@ -56,13 +56,9 @@ server-root/
 │   │   │   └── 📄 throttler.config.ts
 │   │   ├── 📄 index.ts
 │   │   └── 📁 utils/
-│   │       ├── 📄 build-email-html.ts
-│   │       ├── 📄 common.ts
 │   │       ├── 📄 crypto.ts
 │   │       ├── 📄 date.ts
-│   │       ├── 📄 fs.ts
 │   │       ├── 📄 index.ts
-│   │       ├── 📄 normalize-client-info.ts
 │   │       ├── 📄 prisma-error.ts
 │   │       ├── 📄 redis.ts
 │   │       ├── 📄 response.ts
@@ -78,14 +74,9 @@ server-root/
 │   │   │   │   ├── 📄 auth.decorator.ts
 │   │   │   │   └── 📄 index.ts
 │   │   │   ├── 📁 dto/
-│   │   │   │   ├── 📄 auth.docs.ts
-│   │   │   │   ├── 📄 forgot-password.dto.ts
 │   │   │   │   ├── 📄 index.ts
-│   │   │   │   ├── 📄 login.dto.ts
-│   │   │   │   ├── 📄 logout.dto.ts
-│   │   │   │   ├── 📄 refresh.dto.ts
-│   │   │   │   ├── 📄 register.dto.ts
-│   │   │   │   └── 📄 reset-password.dto.ts
+│   │   │   │   ├── 📄 auth.docs.ts
+│   │   │   │   └── 📄 auth.dto.ts
 │   │   │   ├── 📄 index.ts
 │   │   │   └── 📁 strategy/
 │   │   │       └── 📄 access.strategy.ts
@@ -102,12 +93,8 @@ server-root/
 │   │   │   │   └── 📄 index.ts
 │   │   │   ├── 📁 dto/
 │   │   │   │   ├── 📄 car.docs.ts
-│   │   │   │   ├── 📄 create.dto.ts
-│   │   │   │   ├── 📄 find-all.dto.ts
-│   │   │   │   ├── 📄 find-one.dto.ts
-│   │   │   │   ├── 📄 index.ts
-│   │   │   │   ├── 📄 update.dto.ts
-│   │   │   │   └── 📄 upload-image.dto.ts
+│   │   │   │   ├── 📄 cat.dto.ts
+│   │   │   │   └── 📄 index.ts
 │   │   │   └── 📄 index.ts
 │   │   │
 │   │   ├── 📁 cart/
@@ -118,11 +105,9 @@ server-root/
 │   │   │   │   ├── 📄 cart.decorator.ts
 │   │   │   │   └── 📄 index.ts
 │   │   │   ├── 📁 dto/
-│   │   │   │   ├── 📄 add-to-cart.dto.ts
-│   │   │   │   ├── 📄 cart.docs.ts
-│   │   │   │   ├── 📄 get-cart.dto.ts
 │   │   │   │   ├── 📄 index.ts
-│   │   │   │   └── 📄 remove-from-cart.dto.ts
+│   │   │   │   ├── 📄 cart.docs.ts
+│   │   │   │   └── 📄 cart.dto.ts
 │   │   │   └── 📄 index.ts
 │   │   │
 │   │   ├── 📁 category/
@@ -133,13 +118,9 @@ server-root/
 │   │   │   │   ├── 📄 category.decorator.ts
 │   │   │   │   └── 📄 index.ts
 │   │   │   ├── 📁 dto/
-│   │   │   │   ├── 📄 category.docs.ts
-│   │   │   │   ├── 📄 create.dto.ts
-│   │   │   │   ├── 📄 delete.dto.ts
-│   │   │   │   ├── 📄 find-all.dto.ts
-│   │   │   │   ├── 📄 find-one.dto.ts
 │   │   │   │   ├── 📄 index.ts
-│   │   │   │   └── 📄 update.dto.ts
+│   │   │   │   ├── 📄 category.docs.ts
+│   │   │   │   └── 📄 category.dto.ts
 │   │   │   └── 📄 index.ts
 │   │   │
 │   │   ├── 📁 cli/
@@ -147,6 +128,10 @@ server-root/
 │   │   │   └── 📄 index.ts
 │   │   │
 │   │   ├── 📁 comment/
+│   │   │   ├── 📁 dto/
+│   │   │   │   ├── 📄 index.ts
+│   │   │   │   ├── 📄 comment.docs.ts
+│   │   │   │   └── 📄 comment.dto.ts
 │   │   │   ├── 📄 comment.controller.ts
 │   │   │   ├── 📄 comment.module.ts
 │   │   │   ├── 📄 comment.service.ts
@@ -165,8 +150,7 @@ server-root/
 │   │   │   │   └── 📄 permission.decorator.ts
 │   │   │   ├── 📁 dto/
 │   │   │   │   ├── 📄 index.ts
-│   │   │   │   ├── 📄 permission.find-all.ts
-│   │   │   │   └── 📄 permission.find.ts
+│   │   │   │   └── 📄 permission.dto.ts
 │   │   │   ├── 📄 index.ts
 │   │   │   ├── 📄 permission.controller.ts
 │   │   │   ├── 📄 permission.module.ts
@@ -189,13 +173,9 @@ server-root/
 │   │   │   │   ├── 📄 index.ts
 │   │   │   │   └── 📄 role.decorator.ts
 │   │   │   ├── 📁 dto/
-│   │   │   │   ├── 📄 create.dto.ts
-│   │   │   │   ├── 📄 delete.dto.ts
-│   │   │   │   ├── 📄 find-all.dto.ts
-│   │   │   │   ├── 📄 find.dto.ts
 │   │   │   │   ├── 📄 index.ts
 │   │   │   │   ├── 📄 role.docs.ts
-│   │   │   │   └── 📄 update.dto.ts
+│   │   │   │   └── 📄 role.dto.ts
 │   │   │   ├── 📄 index.ts
 │   │   │   ├── 📄 role.controller.ts
 │   │   │   ├── 📄 role.module.ts
@@ -212,15 +192,9 @@ server-root/
 │   │       │   ├── 📄 index.ts
 │   │       │   └── 📄 user.decorator.ts
 │   │       ├── 📁 dto/
-│   │       │   ├── 📄 find-all.dto.ts
-│   │       │   ├── 📄 find.dto.ts
 │   │       │   ├── 📄 index.ts
-│   │       │   ├── 📄 role-assigned.dto.ts
-│   │       │   ├── 📄 role-revoked.dto.ts
-│   │       │   ├── 📄 update-password.dto.ts
-│   │       │   ├── 📄 update-profile.dto.ts
 │   │       │   ├── 📄 user.docs.ts
-│   │       │   └── 📄 validators.dto.ts
+│   │       │   └── 📄 user.dto.ts
 │   │       ├── 📄 index.ts
 │   │       ├── 📄 user.controller.ts
 │   │       ├── 📄 user.module.ts
@@ -228,17 +202,8 @@ server-root/
 │   │       └── 📄 user.service.ts
 │   │
 │   ├── 📁 types/
-│   │   ├── 📄 auth.types.ts
-│   │   ├── 📄 car.types.ts
-│   │   ├── 📄 cart.types.ts
-│   │   ├── 📄 category.types.ts
-│   │   ├── 📄 express.d.ts
 │   │   ├── 📄 index.ts
-│   │   ├── 📄 permission.types.ts
-│   │   ├── 📄 request.types.ts
-│   │   ├── 📄 response.types.ts
-│   │   ├── 📄 role.types.ts
-│   │   └── 📄 user.types.ts
+│   │   └── 📄 types.ts
 │   │
 │   ├── 📄 app.module.ts
 │   └── 📄 main.ts
@@ -250,21 +215,15 @@ server-root/
 │
 ├── 📁 public/
 │   ├── 📁 html/
-│   │   ├── 📄 email.html
-│   │   ├── 📄 forgot-password.html
-│   │   └── 📄 welcome.html
+│   │   └── 📄 files.html
 │   ├── 📁 styles/
-│   │   └── 📄 swagger.css
+│   │   └── 📄 styles.css
 │   └── 📁 uploads/
 │       └── 📁 car/
 │           └── 🖼️ car-upload-images
 │
 ├── 📁 scripts/
-│   ├── 📄 create-database.ts
-│   ├── 📄 prisma-sync.ts
-│   ├── 📄 prisma-truncate.ts
-│   ├── 📄 seed-owner.ts
-│   └── 📄 seed-roles.ts
+│   └── 📄 sripts.ts
 │
 ├── 📁 test/
 │   └── 📄 vitest.setup.ts
