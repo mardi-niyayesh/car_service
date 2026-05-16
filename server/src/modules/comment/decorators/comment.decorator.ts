@@ -34,6 +34,7 @@ export const FindCommentRepliesDecorator = () => applyDecorators(
   ApiQuery(pagePaginationDto),
   ApiQuery(limitPaginationDto),
   ApiQuery(orderByPaginationDto),
+  ApiOkResponse({type: CommentDto.FindRepliesOk}),
 );
 
 export const CreateCommentDecorator = () => applyDecorators(
