@@ -1,25 +1,23 @@
 import * as CommentDto from "./dto";
-import {checkPrismaError, getNestLogger} from "@/lib";
+import {checkPrismaError} from "@/lib";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {RedisService} from "@/modules/redis/redis.service";
 import {EventEmitter2, OnEvent} from "@nestjs/event-emitter";
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {eventsEmitter, PaginationValidatorType} from "@/common";
-import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList, UpdateCarRateEvent} from "@/types";
-import {CommentWhereInput} from "@/modules/prisma/generated/models/Comment";
+import type {CommentWhereInput} from "@/modules/prisma/generated/models/Comment";
+import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList, UpdateCarRateEvent, CommentListAndUser} from "@/types";
 
 @Injectable()
 export class CommentService {
-  private readonly logger = getNestLogger('CommentService');
-
   constructor(
     private readonly redis: RedisService,
     private readonly prisma: PrismaService,
     private readonly eventEmitter: EventEmitter2
   ) {}
 
-  async findCommentReplies(id: string, pagination: PaginationValidatorType) {
+  async findCommentReplies(id: string, pagination: PaginationValidatorType): Promise<ApiResponse<CommentListAndUser>> {
     const where: CommentWhereInput = {
       parent_id: id,
       is_confirmed: true,
@@ -29,9 +27,15 @@ export class CommentService {
 
     const {offset, limit, orderByLower} = pagination;
 
-    const commentReplies = await this.prisma.comment.findMany({
+    const comments = await this.prisma.comment.findMany({
       where,
       include: {
+        user: {
+          select: {
+            id: true,
+            display_name: true,
+          }
+        },
         _count: {
           select: {
             replies: {
@@ -44,13 +48,16 @@ export class CommentService {
       skip: offset,
       orderBy: {
         created_at: orderByLower
-      }
+      },
     });
 
-    console.log(count);
-    this.logger.verbose(commentReplies);
-
-    return commentReplies;
+    return {
+      message: 'replies comment successfully found.',
+      data: {
+        count,
+        comments
+      }
+    };
   }
 
   /**
