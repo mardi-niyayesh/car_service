@@ -8,7 +8,6 @@ import { useCallback } from "react";
 import SuccessModal from "../../../Modal/SuccessModal";
 import WarningModal from "../../../Modal/WarningModal ";
 import ErrorModal from "../../../Modal/ErrorModal";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 type ProductType = {
