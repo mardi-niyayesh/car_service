@@ -99,7 +99,7 @@ export const deleteCarOperation: ApiOperationOptions = {
   operationId: 'delete_car',
   summary: "Delete a exist car with id and ownership permission",
   description: `
-  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.PRODUCT_UPDATE}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.PRODUCT_DELETE}\`\n
   Delete a exist car with id and ownership permission (owner.all or product.delete) can accessibility to this route`
 };
 
