@@ -57,6 +57,7 @@ export class CommentController {
    * Retrieves all replies for a specific comment by its ID.
    *
    * @param id - The UUID of the parent comment to get replies for
+   * @param pagination
    * @returns List of direct replies with pagination (page, limit, total)
    *
    * @remarks
@@ -74,8 +75,9 @@ export class CommentController {
   @CommentDecorator.FindCommentRepliesDecorator()
   findCommentReplies(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
+    @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType,
   ) {
-    return id;
+    return this.commentService.findCommentReplies(id, pagination);
   }
 
   /**

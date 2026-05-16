@@ -16,8 +16,8 @@ export class CommentService {
     private readonly redis: RedisService,
   ) {}
 
-  async findOne(id: string) {
-    const commentChildes = await this.prisma.comment.findMany({
+  async findCommentReplies(id: string, pagination: PaginationValidatorType) {
+    const commentReplies = await this.prisma.comment.findMany({
       where: {
         parent_id: id,
         is_confirmed: true
