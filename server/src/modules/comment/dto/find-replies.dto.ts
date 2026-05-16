@@ -15,8 +15,6 @@ const exampleComments: CommentListAndUserWithChildCount = {
   parent_id: "parent_uuid"
 };
 
-console.log(exampleComments);
-
 export class FindRepliesOk extends getBaseOkResponseSchema<CommentListAndUser>({
   path: 'comments/id/replies',
   response: {
