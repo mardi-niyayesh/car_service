@@ -1,11 +1,21 @@
 import {getBaseOkResponseSchema} from "@/common";
-import {commentConfirmedExample} from "@/modules/car/dto";
+import {exampleComment} from "@/modules/comment/dto/create.dto";
 import type {CommentListAndUser, CommentListAndUserWithChildCount} from "@/types";
 
 const exampleComments: CommentListAndUserWithChildCount = {
-  ...commentConfirmedExample,
+  ...exampleComment,
+  is_confirmed: true,
+  user: {
+    id: "user_id",
+    display_name: "user name"
+  },
+  _count: {
+    replies: 2
+  },
   parent_id: "parent_uuid"
 };
+
+console.log(exampleComments);
 
 export class FindRepliesOk extends getBaseOkResponseSchema<CommentListAndUser>({
   path: 'comments/id/replies',

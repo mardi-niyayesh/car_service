@@ -2,7 +2,7 @@ import {getBaseOkResponseSchema} from "@/common";
 import {exampleComment} from "@/modules/comment/dto";
 import {CommentListAndUser, CommentListAndUserWithChildCount} from "@/types";
 
-export const commentConfirmedExample: CommentListAndUserWithChildCount = {
+const commentConfirmedExample: CommentListAndUserWithChildCount = {
   ...exampleComment,
   is_confirmed: true,
   user: {
