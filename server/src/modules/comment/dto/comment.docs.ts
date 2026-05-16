@@ -54,15 +54,18 @@ export const rejectCommentOperation: ApiOperationOptions = {
   > **📌 Workflow:** After rejection, the comment is immediately deleted from the database. This operation is **irreversible**. Only users with the "**comment.reject**" permission can execute this endpoint.`
 };
 
-export const findOneCommentOperation: ApiOperationOptions = {
-  operationId: 'find_one_comment',
-  summary: "Retrieve a single comment by its ID",
+export const findCommentRepliesOperation: ApiOperationOptions = {
+  operationId: 'find_comment_replies',
+  summary: "Retrieve all replies for a specific comment by its ID",
   description: `
   - ## Accessible to all users (public endpoint)
   - # **🔓 PUBLIC ENDPOINT** (No authentication required)\n
   | Parameter | Type | Description |
   |-----------|------|-------------|
-  | **id** | path | Valid UUID of the comment to retrieve |
+  | **id** | path | Valid UUID of the parent comment |
+  | **page** | query | Page number (default: 1, min: 1) |
+  | **limit** | query | Items per page (default: 10, min: 1, max: 100) |
+  | **order** | query | Sort direction by created_at: asc or desc (default: desc) |
 
-  > **📌 Note:** Returns comment with user details, car info, and reply count. Only confirmed comments are accessible.`
+  > **📌 Note:** Returns paginated list of direct replies for the specified comment. Includes author information (name, avatar, role). Only confirmed comments are accessible. Returns 404 if parent comment does not exist.`
 };

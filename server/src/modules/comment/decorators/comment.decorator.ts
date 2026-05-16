@@ -28,9 +28,12 @@ import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 
 export const FindCommentRepliesDecorator = () => applyDecorators(
   HttpCode(HttpStatus.OK),
-  ApiOperation(CommentDto.findOneCommentOperation),
+  ApiOperation(CommentDto.findCommentRepliesOperation),
   Public(),
   ApiParam(UUID4Dto('id')),
+  ApiQuery(pagePaginationDto),
+  ApiQuery(limitPaginationDto),
+  ApiQuery(orderByPaginationDto),
 );
 
 export const CreateCommentDecorator = () => applyDecorators(
