@@ -64,6 +64,7 @@ async function bootstrap(): Promise<void> {
       swaggerOptions: {
         withCredentials: true,
         persistAuthorization: true,
+        defaultModelsExpandDepth: -1,
       },
       customCssUrl: "/static/styles/swagger.css"
     });
