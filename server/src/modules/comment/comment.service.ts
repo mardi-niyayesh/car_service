@@ -27,6 +27,8 @@ export class CommentService {
 
     const count: number = await this.prisma.comment.count({where});
 
+    const {offset, limit, orderByLower} = pagination;
+
     const commentReplies = await this.prisma.comment.findMany({
       where,
       include: {
@@ -37,6 +39,11 @@ export class CommentService {
             }
           }
         }
+      },
+      take: limit,
+      skip: offset,
+      orderBy: {
+        created_at: orderByLower
       }
     });
 
