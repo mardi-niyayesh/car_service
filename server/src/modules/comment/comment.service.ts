@@ -17,6 +17,13 @@ export class CommentService {
     private readonly eventEmitter: EventEmitter2
   ) {}
 
+  /**
+   * **find all replies parent comment with pagination.**
+   *
+   * @param id - parent comment uuid
+   * @param pagination - pagination queries
+   * @returns CommentListAndUser
+   */
   async findCommentReplies(id: string, pagination: PaginationValidatorType): Promise<ApiResponse<CommentListAndUser>> {
     const where: CommentWhereInput = {
       parent_id: id,
