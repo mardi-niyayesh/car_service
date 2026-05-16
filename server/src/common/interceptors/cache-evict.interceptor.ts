@@ -71,13 +71,20 @@ export class CacheEvictInterceptor implements NestInterceptor {
 
         if ('findPrefix' in cacheParams) {
           const req = ctx.switchToHttp().getRequest<Request>();
-          const rawReqPrefix = req.params[cacheParams.findPrefix.param];
-          const reqPrefix: string = Array.isArray(rawReqPrefix) ? rawReqPrefix[0] : rawReqPrefix;
-
-          await this.redisService.deletePrefix(`*${reqPrefix}*`);
+          const keyParam: string = cacheParams.findPrefix.param;
+          const rawParam: string | string[] = req.params[keyParam];
+          const paramValue: string = Array.isArray(rawParam) ? rawParam[0] : rawParam;
 
           if ('resource' in cacheParams) {
-            await this.redisService.deletePrefix(`*${cacheParams.resource}:list*`);
+            if (cacheParams.findPrefix.extraKeys?.length) {
+              const extraKeys: string = cacheParams.findPrefix.extraKeys.join(":");
+              console.log(`*${cacheParams.resource}:${extraKeys}:${keyParam}=${paramValue}:list*`);
+              await this.redisService.deletePrefix(`*${cacheParams.resource}:${extraKeys}:${keyParam}=${paramValue}:list*`);
+            } else {
+              await this.redisService.deletePrefix(`*${cacheParams.resource}:${paramValue}:list*`);
+            }
+          } else {
+            await this.redisService.deletePrefix(`*${paramValue}*`);
           }
         }
 
