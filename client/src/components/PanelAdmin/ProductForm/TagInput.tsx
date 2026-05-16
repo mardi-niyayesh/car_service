@@ -27,11 +27,7 @@ export default function TagInput({
   const removeTag = (tagToRemove) => {
     const newTags = value.filter((tag) => tag !== tagToRemove);
     onChange(newTags);
-    if (newTags.length === 0) {
-      setError("حداقل یک تگ باید وارد شود");
-    } else {
-      setError("");
-    }
+    setError(""); 
   };
 
   const handleKeyDown = (e) => {
@@ -43,9 +39,7 @@ export default function TagInput({
 
   return (
     <div className="w-full">
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        تگ‌ها <span className="text-red-500">*</span>
-      </label>
+    
       <div
         className="border border-gray-300 rounded-md p-2 bg-white focus-within:ring-2 focus-within:ring-blue-500"
         dir="rtl"
@@ -77,10 +71,12 @@ export default function TagInput({
           className="w-full outline-none text-sm"
         />
       </div>
+     
       {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+
       {!error && value.length === 0 && (
         <p className="text-gray-400 text-xs mt-1">
-          حداقل یک تگ وارد کنید (Enter یا کاما بزنید)
+          برای افزودن تگ، بنویسید و Enter یا کاما بزنید
         </p>
       )}
     </div>
