@@ -225,7 +225,7 @@ export const DeleteDecorator = () => {
   );
 };
 
-export const findAllCommentCacheableExtraKeys: string[] = ['confirmed-comments'];
+export const findAllCommentCacheableExtraKeys: string[] = ['confirmed-car-comments'];
 
 export const FindAllCommentsDecorator = () => applyDecorators(
   Cacheable({
