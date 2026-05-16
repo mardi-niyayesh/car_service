@@ -225,13 +225,15 @@ export const DeleteDecorator = () => {
   );
 };
 
+export const findAllCommentCacheableExtraKeys: string[] = ['confirmed-comments'];
+
 export const FindAllCommentsDecorator = () => applyDecorators(
   Cacheable({
     resource: 'comment',
     pagination: true,
     ttl: ONE_HOUR_MS,
     paramsKey: ['id'],
-    extraKeys: ['confirmed-comments'],
+    extraKeys: findAllCommentCacheableExtraKeys,
   }),
   HttpCode(HttpStatus.OK),
   Public(),

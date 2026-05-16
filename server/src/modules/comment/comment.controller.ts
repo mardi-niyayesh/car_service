@@ -107,7 +107,7 @@ export class CommentController {
     @Req() req: AccessRequest,
     @Body(new ZodPipe(CommentDto.CreateCommentValidator)) data: CommentDto.CreateCommentType
   ): Promise<ApiResponse<CreateCommentResponse>> {
-    return this.commentService.create(req.user.userId, data);
+    return this.commentService.create(id, req.user.userId, data);
   }
 
   /**
