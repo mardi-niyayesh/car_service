@@ -1,83 +1,65 @@
-// import {JwtService} from "@nestjs/jwt";
-// import type {PrismaMock} from "@/types";
-// import {ConfigService} from "@nestjs/config";
-// import {EventEmitter2} from "@nestjs/event-emitter";
-// import {afterEach, beforeEach, describe} from "vitest";
-// import {AuthService} from "@/modules/auth/auth.service";
-// import {EmailService} from "@/modules/email/email.service";
-// import {PrismaService} from "@/modules/prisma/prisma.service";
-// import {DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
-//
-// describe("AuthService", (): void => {
-//   let service: AuthService;
-//   let prisma: PrismaMock;
-//   let config: DeepMockProxy<ConfigService>;
-//   let jwtService: DeepMockProxy<JwtService>;
-//   let emailService: DeepMockProxy<EmailService>;
-//   let eventEmitter: DeepMockProxy<EventEmitter2>;
-//
-//   // Start All Services
-//   beforeEach((): void => {
-//     prisma = mockDeep<PrismaService>();
-//     config = mockDeep<ConfigService>();
-//     jwtService = mockDeep<JwtService>();
-//     emailService = mockDeep<EmailService>();
-//     eventEmitter = mockDeep<EventEmitter2>();
-//
-//     service = new AuthService(
-//       config,
-//       prisma,
-//       jwtService,
-//       emailService,
-//       eventEmitter
-//     );
-//   });
-//
-//   afterEach((): void => {
-//     mockReset(prisma);
-//   });
-// });
-
-import {beforeEach, describe} from "vitest";
-import {AuthService} from "@/modules/auth/auth.service";
 import {Test} from "@nestjs/testing";
-import {PrismaService} from "@/modules/prisma/prisma.service";
-import {mockDeep} from "vitest-mock-extended";
-import {ConfigService} from "@nestjs/config";
 import {JwtService} from "@nestjs/jwt";
-import {EmailService} from "@/modules/email/email.service";
+import {ConfigService} from "@nestjs/config";
+import {ConfigMock, PrismaMock} from "@/types";
 import {EventEmitter2} from "@nestjs/event-emitter";
+import {afterEach, beforeEach, describe} from "vitest";
+import {AuthService} from "@/modules/auth/auth.service";
+import {EmailService} from "@/modules/email/email.service";
+import {PrismaService} from "@/modules/prisma/prisma.service";
+import {DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
 
 describe("AuthService", (): void => {
   let service: AuthService;
+  let prisma: PrismaMock;
+  let config: ConfigMock;
+  let jwt: DeepMockProxy<JwtService>;
+  let email: DeepMockProxy<EmailService>;
+  let event: DeepMockProxy<EventEmitter2>;
 
+  // Start Services
   beforeEach(async () => {
+    prisma = mockDeep<PrismaService>();
+    config = mockDeep<ConfigService>();
+    jwt = mockDeep<JwtService>();
+    email = mockDeep<EmailService>();
+    event = mockDeep<EventEmitter2>();
+
     const module = await Test.createTestingModule({
       providers: [
         AuthService,
         {
           provide: PrismaService,
-          useValue: mockDeep<PrismaService>()
+          useValue: prisma
         },
         {
           provide: ConfigService,
-          useValue: mockDeep<ConfigService>()
+          useValue: config
         },
         {
           provide: JwtService,
-          useValue: mockDeep<JwtService>()
+          useValue: jwt
         },
         {
           provide: EmailService,
-          useValue: mockDeep<EmailService>()
+          useValue: email
         },
         {
           provide: EventEmitter2,
-          useValue: mockDeep<EventEmitter2>()
+          useValue: event
         }
       ],
     }).compile();
 
     service = module.get(AuthService);
+  });
+
+  // Reset Services
+  afterEach((): void => {
+    mockReset(prisma);
+    mockReset(config);
+    mockReset(email);
+    mockReset(jwt);
+    mockReset(event);
   });
 });
