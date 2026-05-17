@@ -1,15 +1,39 @@
+import {exampleDate} from "@/lib";
 import {JwtService} from "@nestjs/jwt";
 import {PERMISSIONS, ROLES} from "@/common";
 import {ConfigService} from "@nestjs/config";
 import {EventEmitter2} from "@nestjs/event-emitter";
-import {Permission, PermissionType, Role, RolePermission, RoleType, User} from "@/modules/prisma/generated/client";
 import {AuthService} from "@/modules/auth/auth.service";
 import {EmailService} from "@/modules/email/email.service";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {afterEach, beforeEach, describe, expect, it} from "vitest";
 import {ConfigMock, NormalizedClientInfo, PrismaMock} from "@/types";
 import {DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
-import {exampleDate} from "@/lib";
+import {PermissionType, Role, RoleType, User, UserRole} from "@/modules/prisma/generated/client";
+
+const fakeAuthUser = {
+  id: "new_user_uuid",
+  email: "new_user@example.com",
+  display_name: "new_user",
+  age: 18,
+  password: "hashed_password",
+  created_at: exampleDate,
+  updated_at: exampleDate,
+  userRoles: [
+    {
+      role: {
+        name: ROLES.SELF,
+        rolePermissions: [
+          {
+            permission: {
+              name: PERMISSIONS.USER_SELF
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as User;
 
 describe(AuthService.name, (): void => {
   let service: AuthService;
@@ -52,18 +76,11 @@ describe(AuthService.name, (): void => {
   // ======================================================
   describe("register", () => {
     it('should successfully create a new user', async () => {
-      const newUser = {
-        age: 18,
-        display_name: "new_user",
-        password: "new_password",
-        email: "new_user@example.com",
-      };
-
       const mockCreatedUser = {
         id: "new_user_uuid",
-        email: newUser.email,
-        display_name: newUser.display_name,
-        age: newUser.age,
+        email: fakeAuthUser.email,
+        display_name: fakeAuthUser.display_name,
+        age: fakeAuthUser.age,
         password: "hashed_password",
         created_at: new Date(),
         updated_at: new Date(),
@@ -89,27 +106,8 @@ describe(AuthService.name, (): void => {
         description: "description",
       };
 
-      const mockSelfPermission: Permission = {
-        id: "self_permission_uuid",
-        name: PERMISSIONS.USER_SELF,
-        updated_at: exampleDate,
-        created_at: exampleDate,
-        description: "description",
-        permission_type: PermissionType.CORE,
-      };
-
-      const selfRolePermission: RolePermission = {
-        role_id: mockSelfRole.id,
-        permission_id: mockSelfPermission.id,
-        updated_at: exampleDate,
-        created_at: exampleDate,
-        id: "role_permission_uuid",
-      };
-
       prisma.user.findUnique.mockResolvedValue(null);
       prisma.role.findUnique.mockResolvedValue(mockSelfRole);
-      prisma.permission.findUnique.mockResolvedValue(mockSelfPermission);
-      prisma.rolePermission.findUnique.mockResolvedValue(selfRolePermission);
       prisma.user.create.mockResolvedValue(mockCreatedUser);
       prisma.userRole.create.mockResolvedValue({
         id: "new_user_role_uuid",
@@ -117,9 +115,40 @@ describe(AuthService.name, (): void => {
         role_id: mockSelfRole.id,
         created_at: new Date(),
         updated_at: new Date(),
-      });
+        role: {
+          id: mockSelfRole.id,
+          name: ROLES.SELF,
+          created_at: exampleDate,
+          updated_at: exampleDate,
+          role_type: RoleType.BASE,
+          creator_id: null,
+          description: "description",
+          rolePermissions: [
+            {
+              id: "rp_uuid",
+              role_id: mockSelfRole.id,
+              permission_id: "perm_uuid",
+              created_at: exampleDate,
+              updated_at: exampleDate,
+              permission: {
+                id: "perm_uuid",
+                name: PERMISSIONS.USER_SELF,
+                created_at: exampleDate,
+                updated_at: exampleDate,
+                description: "self permission",
+                permission_type: PermissionType.CORE,
+              }
+            }
+          ]
+        }
+      } as unknown as UserRole);
 
-      const result = await service.register(newUser, clientInfo);
+      const result = await service.register({
+        email: fakeAuthUser.email,
+        password: fakeAuthUser.password,
+        age: fakeAuthUser.age as number,
+        display_name: fakeAuthUser.display_name as string,
+      }, clientInfo);
 
       expect(result.data.user.permissions).toEqual([PERMISSIONS.USER_SELF]);
       expect(result.data.user.roles).toEqual([ROLES.SELF]);
