@@ -75,6 +75,16 @@ describe(AuthService.name, (): void => {
   // Signup
   // ======================================================
   describe("register", () => {
+    const clientInfo: NormalizedClientInfo = {
+      browser: "firefox",
+      city: "city",
+      country: "country",
+      device: "gigabyte",
+      os: "linux",
+      lang: "en",
+      ip: "188.124.23.122",
+    };
+
     it('should successfully create a new user', async () => {
       const mockCreatedUser = {
         id: "new_user_uuid",
@@ -84,16 +94,6 @@ describe(AuthService.name, (): void => {
         password: "hashed_password",
         created_at: new Date(),
         updated_at: new Date(),
-      };
-
-      const clientInfo: NormalizedClientInfo = {
-        browser: "firefox",
-        city: "city",
-        country: "country",
-        device: "gigabyte",
-        os: "linux",
-        lang: "en",
-        ip: "188.124.23.122",
       };
 
       const mockSelfRole: Role = {
