@@ -93,17 +93,12 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     console.log(" logout to successfully ");
   }, []);
 
-  const hasPermission = useCallback(
-    (perm: string) => {
-      //reade All permessions user
-      const permissions = user?.permissions || [];
-
-      if (permissions.includes("owner.all")) return true;
-
-      return permissions.includes(perm);
-    },
-    [user],
-  );
+ const hasPermission = (permission: string | string[]): boolean => {
+  if (Array.isArray(permission)) {
+    return permission.some(p => permission.includes(p));
+  }
+  return permission.includes(permission);
+};
 
   const hasRole = useCallback(
     (roleName: string) => {
