@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useUpdateUser } from "../../dashboard/Api/ApiUpdatUser";
-import SuccessModal from "../../components/common/SuccessModal";
-import WarningModal from "../../components/common/WarningModal ";
+import SuccessModal from "../../Modal/SuccessModal";
+import WarningModal from "../../Modal/WarningModal ";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -80,7 +80,7 @@ const ComponentFormUpdateUser = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 mb-8">
             <div>
               <label className="block text-sm font-medium text-gray-700 mt-4 mb-3">
-                نام کامل
+                نام کامل<span className="text-gray-400">(اختیاری)</span>
               </label>
               <input
                 type="text"
@@ -106,7 +106,7 @@ const ComponentFormUpdateUser = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mt-4 mb-3">
-                سن کاربر
+                سن کاربر <span className="text-gray-400">(اختیاری)</span>
               </label>
               <input
                 type="number"
