@@ -302,16 +302,6 @@ const ProductFormComponent = ({
             )}
           </div>
 
-          {/* <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              آپلود عکس ماشین
-            </label>
-            <input
-              type="file"
-              className="w-full border border-gray-300 rounded-lg text-sm text-blue-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm"
-            />
-          </div> */}
-
           <div className="flex items-center gap-2">
             <input
               type="checkbox"
