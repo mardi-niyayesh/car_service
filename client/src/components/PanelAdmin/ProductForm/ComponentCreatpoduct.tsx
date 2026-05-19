@@ -44,9 +44,9 @@ const ComponentCreatpoduct = () => {
       if (response.status === 201) {
         setIsSuccessOpen(true);
         setSuccessMessage("محصول شما با موفقیت ساخته شد ");
-        setInterval(() => {
-          navigate("panel/product");
-        }, 300);
+        setTimeout(() => {
+          navigate("/panel/product");
+        }, 5000);
       }
     } catch (err: any) {
       console.log("Error in creat new Produvt :", err);
@@ -55,7 +55,7 @@ const ComponentCreatpoduct = () => {
         setWarningMessage("شما مجوز لازم (owner or product.create) را ندارید");
       } else if (err.response?.status === 409) {
         setIsWarningOpen(true);
-        setSuccessMessage(
+        setWarningMessage(
           "محصول با لینک مشابه در دیتابیس وجود دارد لطفا یک لینک دیگر انتخاب نمایید .",
         );
       }
