@@ -52,6 +52,7 @@ import CreateCategory from "./components/PanelAdmin/CategoryForm/CreateCategory"
 import UpdateCategory from "./components/PanelAdmin/CategoryForm/UpdateCategory";
 import ComponentCreatpoduct from "./components/PanelAdmin/ProductForm/ComponentCreatpoduct";
 import ComponentUpdateProduct from "./components/PanelAdmin/ProductForm/ComponentUpdateProduct";
+import ComponentImgProduct from "./components/PanelAdmin/ProductForm/ComponentImgProduct";
 function App() {
   return (
     <>
@@ -150,6 +151,10 @@ function App() {
             <Route
               path="product/updateproduct/:id"
               element={<ComponentUpdateProduct />}
+            />
+            <Route
+              path="product/updateImg/:id"
+              element={<ComponentImgProduct />}
             />
             <Route
               path="category/CreatCategory"
