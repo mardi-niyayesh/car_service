@@ -8,7 +8,8 @@ import { useCallback } from "react";
 import SuccessModal from "../../../Modal/SuccessModal";
 import WarningModal from "../../../Modal/WarningModal ";
 import ErrorModal from "../../../Modal/ErrorModal";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import { FaImage } from "react-icons/fa";
 
 type ProductType = {
   id: string;
@@ -22,7 +23,7 @@ type ProductType = {
 };
 
 const ComponentTableProduct = () => {
-  const navogate=useNavigate()
+  const navigate = useNavigate();
   const [allProduct, setAllProduct] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -41,6 +42,10 @@ const ComponentTableProduct = () => {
 
   const hasUpdateProduct =
     hasPermission("product.update") || hasRole("product_manager");
+
+  const hasUpdateProfile =
+    hasPermission("product.update" || "product.create") ||
+    hasRole("product_manager");
 
   const fetchAllProduct = useCallback(async () => {
     setLoading(true);
@@ -96,7 +101,11 @@ const ComponentTableProduct = () => {
     }
   };
   const handleupdatProduct = async (id: string) => {
-   navogate(`updateproduct/${id}`)
+    navigate(`updateproduct/${id}`);
+  };
+
+  const handleupdatProfile = async (id: string) => {
+    navigate(`updateImg/${id}`);
   };
 
   return (
@@ -127,6 +136,9 @@ const ComponentTableProduct = () => {
                 {hasUpdateProduct && (
                   <th className="w-20 px-4 py-3 font-medium"> اپدیت</th>
                 )}
+                {hasUpdateProfile && (
+                  <th className="w-20 px-4 py-3 font-medium"> عکس</th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -152,7 +164,7 @@ const ComponentTableProduct = () => {
                       <td>
                         {
                           <RiDeleteBinLine
-                            size={20}
+                            size={18}
                             color="red"
                             opacity={0.8}
                             className="cursor-pointer"
@@ -165,11 +177,25 @@ const ComponentTableProduct = () => {
                       <td>
                         {
                           <FaPencilAlt
-                            size={20}
+                            size={18}
                             color="blue"
                             opacity={0.5}
                             className="cursor-pointer"
                             onClick={() => handleupdatProduct(product.id)}
+                          />
+                        }
+                      </td>
+                    )}
+
+                    {hasUpdateProfile && (
+                      <td>
+                        {
+                          <FaImage
+                            size={18}
+                            color="green"
+                            opacity={0.5}
+                            className="cursor-pointer"
+                            onClick={() => handleupdatProfile(product.id)}
                           />
                         }
                       </td>
