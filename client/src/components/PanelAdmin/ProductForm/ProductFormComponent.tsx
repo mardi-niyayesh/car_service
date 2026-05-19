@@ -1,5 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import TagInput from "./TagInput";
+import { Link } from "react-router-dom";
 
 export type ProductFormType = {
   name: string;
@@ -29,7 +30,6 @@ const ProductFormComponent = ({
   isLoading = false,
 }: ProductFormProps) => {
   const {
-   
     register,
     control,
     handleSubmit,
@@ -56,7 +56,7 @@ const ProductFormComponent = ({
     >
       <div className="p-6 bg-white">
         <p className="text-[#4b33b5] text-[20px] font-bold mb-4">
-          {mode==="create"?"ساختن ماشین جدید ":"ویرایش ماشین"}
+          {mode === "create" ? "ساختن ماشین جدید " : "ویرایش ماشین"}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-8">
           <div>
@@ -344,6 +344,11 @@ const ProductFormComponent = ({
           {isLoading ? "در حال ارسال..." : submitButtonText}
         </button>
       </div>
+      <Link to="/panel/category">
+        <p className="text-blue-600 mb-3 hover:text-blue-800 font-medium">
+          برای دیدن ایدی دسته بندی ها کلیک کنید
+        </p>
+      </Link>
     </form>
   );
 };
