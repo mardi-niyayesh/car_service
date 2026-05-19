@@ -75,6 +75,16 @@ describe(AuthService.name, (): void => {
   // Signup
   // ======================================================
   describe("register", () => {
+    const mockSelfRole: Role = {
+      id: "self_role_uuid",
+      name: ROLES.SELF,
+      updated_at: exampleDate,
+      created_at: exampleDate,
+      role_type: RoleType.BASE,
+      creator_id: null,
+      description: "description",
+    };
+
     const clientInfo: NormalizedClientInfo = {
       browser: "firefox",
       city: "city",
@@ -94,16 +104,6 @@ describe(AuthService.name, (): void => {
         password: "hashed_password",
         created_at: new Date(),
         updated_at: new Date(),
-      };
-
-      const mockSelfRole: Role = {
-        id: "self_role_uuid",
-        name: ROLES.SELF,
-        updated_at: exampleDate,
-        created_at: exampleDate,
-        role_type: RoleType.BASE,
-        creator_id: null,
-        description: "description",
       };
 
       prisma.user.findUnique.mockResolvedValue(null);
