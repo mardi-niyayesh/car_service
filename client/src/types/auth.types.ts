@@ -85,7 +85,7 @@ export type UserContextType = {
   setToken: (newToken: string | null) => void;
   logout: () => void;
   isLoading?: boolean;
-  hasPermission?: (perm: string) => boolean;
+   hasPermission: (perm: string | string[]) => boolean;
   hasRole: (roleName: string) => boolean;
 };
 
