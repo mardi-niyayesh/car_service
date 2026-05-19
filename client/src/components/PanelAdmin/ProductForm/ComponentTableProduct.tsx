@@ -8,7 +8,7 @@ import { useCallback } from "react";
 import SuccessModal from "../../../Modal/SuccessModal";
 import WarningModal from "../../../Modal/WarningModal ";
 import ErrorModal from "../../../Modal/ErrorModal";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaImage } from "react-icons/fa";
 
 type ProductType = {
@@ -44,7 +44,7 @@ const ComponentTableProduct = () => {
     hasPermission("product.update") || hasRole("product_manager");
 
   const hasUpdateProfile =
-    hasPermission("product.update" || "product.create") ||
+    hasPermission(["product.update", "product.create"]) ||
     hasRole("product_manager");
 
   const fetchAllProduct = useCallback(async () => {
