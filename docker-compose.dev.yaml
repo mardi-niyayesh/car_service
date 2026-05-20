@@ -47,8 +47,12 @@ services:
       context: .
       dockerfile: ./server/Dockerfile-dev
     depends_on:
-      - postgres-db
-      - redis-cache
+      postgres-db:
+        required: true
+        condition: service_healthy
+      redis-cache:
+        required: true
+        condition: service_healthy
 
     image: node:24-bookworm
     container_name: auto_rent_nest_server
