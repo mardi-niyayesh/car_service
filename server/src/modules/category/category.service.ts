@@ -104,9 +104,9 @@ export class CategoryService {
         }
       };
     } catch (_) {
-      throw new NotFoundException({
-        message: 'Category not found in database',
-        error: 'category does not exist'
+      throw new ConflictException({
+        message: 'Failed, Cannot delete category because it has associated cars. Please delete or reassign the cars first.',
+        error: 'Failed to delete category'
       } as BaseException);
     }
   }
