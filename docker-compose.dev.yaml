@@ -1,5 +1,4 @@
 services:
-  # PostgresQL Main DataBase
   postgres-db:
     image: postgres:16-alpine
     container_name: auto_rent_postgres_db
@@ -23,7 +22,6 @@ services:
       retries: 5
       start_period: 5s
 
-  # Redis - Server Caching
   redis-cache:
     image: redis:8-alpine
     container_name: auto_rent_redis_cache
@@ -41,19 +39,15 @@ services:
       retries: 5
       start_period: 5s
 
-  # NestJS Server Application
   nest-server:
     build:
       context: .
       dockerfile: ./server/Dockerfile-dev
     depends_on:
       postgres-db:
-        required: true
         condition: service_healthy
       redis-cache:
-        required: true
         condition: service_healthy
-
     container_name: auto_rent_nest_server
     networks:
       - AutoRentNetwork
@@ -86,7 +80,6 @@ services:
       - /app/node_modules
     restart: always
 
-  # React Client Application
   react-client:
     build:
       context: .
@@ -103,14 +96,12 @@ services:
       - /app/node_modules
     restart: always
 
-# Volumes Data
 volumes:
   auto_rent_postgres_db:
     name: auto_rent_postgres_db
   auto_rent_redis_cache:
     name: auto_rent_redis_cache
 
-# Network App
 networks:
   AutoRentNetwork:
     name: AutoRentNetwork
