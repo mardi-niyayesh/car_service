@@ -1,4 +1,5 @@
 services:
+  # PostgresQL Main DataBase
   postgres-db:
     image: postgres:16-alpine
     container_name: auto_rent_postgres_db
@@ -8,24 +9,46 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_DB: ${DB_NAME}
-
+    ports:
+      - "5433:5432"
+    volumes:
+      - auto_rent_postgres_db:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - AutoRentNetwork
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 5s
-    ports:
-      - "5433:5432"
+
+  # Redis - Server Caching
+  redis-cache:
+    image: redis:8-alpine
+    container_name: auto_rent_redis_cache
     volumes:
-      - auto_rent_db:/var/lib/postgresql/data
+      - auto_rent_redis_cache:/data
     restart: always
+    ports:
+      - "6380:6379"
     networks:
-      AutoRentNetwork
+      - AutoRentNetwork
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
 
+# Volumes Data
 volumes:
-  auto_rent_db:
+  auto_rent_postgres_db:
+    name: auto_rent_postgres_db
+  auto_rent_redis_cache:
+    name: auto_rent_redis_cache
 
+# Network App
 networks:
   AutoRentNetwork:
     name: AutoRentNetwork
