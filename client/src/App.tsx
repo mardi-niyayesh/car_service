@@ -5,8 +5,8 @@ import { Routes, Route } from "react-router-dom";
 //layout components
 import MainLayout from "./Layouts/MainLayout";
 import AuthLayout from "./Layouts/AuthLayout";
-import DashboardLayout from "./dashboard/Components/DashboardLayout";
-import PanelAdminLayout from "./PanelAdmin/Components/PanelAdminLayout";
+import DashboardLayout from "./Layouts/DashboardLayout";
+import PanelAdminLayout from "./Layouts/PanelAdminLayout";
 //public pages
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
@@ -30,15 +30,14 @@ import LoginPage from "./pages/LoginPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 //pages for panelUser
-import AddressPages from "./dashboard/Pages/AddressPages";
-import CommentPages from "./dashboard/Pages/CommentPages";
-import ReservePages from "./dashboard/Pages/ReservePages";
-import WalletPages from "./dashboard/Pages/WalletPages";
-import CardPages from "./dashboard/Pages/CardPages";
-import LogoutPage from "./dashboard/Pages/LogoutPage";
-import ComponentFormUpdateUser from "./components/Dashboard/ComponnetUpdetePassword";
+import AddressPages from "./pages/AddressPages";
+import CommentPages from "./pages/CommentPages";
+import ReservePages from "./pages/ReservePages";
+import WalletPages from "./pages/WalletPages";
+import CardPages from "./pages/CardPages";
+import LogoutPage from "./pages/LogoutPage";
+import ComponentFormUpdateUser from "./components/Dashboard/ComponentFormUpdateUser";
 import ComponnetUpdetePassword from "./components/Dashboard/ComponnetUpdetePassword";
-
 import Profile from "./pages/Profile";
 //pages for panelAdmin
 import DetalisUserPage from "./pages/DetalisUserPage";
@@ -51,7 +50,9 @@ import RolesPage from "./pages/RolesPage";
 import { GaurdRoute } from "./Routes/GaurdRoute";
 import CreateCategory from "./components/PanelAdmin/CategoryForm/CreateCategory";
 import UpdateCategory from "./components/PanelAdmin/CategoryForm/UpdateCategory";
-import ComponentFormAddProduct from "./components/PanelAdmin/ProductForm/ComponentFormAddProduct";
+import ComponentCreatpoduct from "./components/PanelAdmin/ProductForm/ComponentCreatpoduct";
+import ComponentUpdateProduct from "./components/PanelAdmin/ProductForm/ComponentUpdateProduct";
+import ComponentImgProduct from "./components/PanelAdmin/ProductForm/ComponentImgProduct";
 function App() {
   return (
     <>
@@ -95,14 +96,15 @@ function App() {
             <Route path="wallet" element={<WalletPages />} />
             <Route path="card" element={<CardPages />} />
             <Route path="logout" element={<LogoutPage />} />
-            <Route
-              path="Profile/updateUser"
-              element={<ComponentFormUpdateUser />}
-            />
+
             <Route path="Profile" element={<Profile />} />
             <Route
               path="Profile/updatePassword"
               element={<ComponnetUpdetePassword />}
+            />
+            <Route
+              path="Profile/updateUser"
+              element={<ComponentFormUpdateUser />}
             />
           </Route>
           {/* ------- Panel Admin Layout ------- */}
@@ -140,12 +142,20 @@ function App() {
             <Route path="product" element={<ProductPage />} />
             <Route
               path="product/creatproduct"
-              element={<ComponentFormAddProduct />}
+              element={<ComponentCreatpoduct />}
             />
             <Route path="category" element={<CategoryPage />} />
             <Route path="roles" element={<RolesPage />} />
             <Route path="logout" element={<LogoutPage />} />
             <Route path="Profile" element={<Profile />} />
+            <Route
+              path="product/updateproduct/:id"
+              element={<ComponentUpdateProduct />}
+            />
+            <Route
+              path="product/updateImg/:id"
+              element={<ComponentImgProduct />}
+            />
             <Route
               path="category/CreatCategory"
               element={

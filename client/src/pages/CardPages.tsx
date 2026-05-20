@@ -1,4 +1,4 @@
-import carimg from "../../../assets/pic.png";
+import carimg from "../../assets/pic.png";
 
 const CardPages = () => {
   return (

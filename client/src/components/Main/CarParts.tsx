@@ -1,4 +1,3 @@
-//img
 import BMW from "../../../assets/BMW.png";
 import Honda from "../../../assets/Honda.png";
 import Hyundai from "../../../assets/Hyundai.png";

@@ -164,15 +164,11 @@ const RolesPage = () => {
                               }
 
                               if (
-                                rol.role_type !== "BASE" &&
-                                rol.role_type !== "SYSTEM" &&
-                                !rol.permissions?.some((p) =>
-                                  [
-                                    "role.delete",
-                                    "role.assign",
-                                    "role.revoke",
-                                    "user.delete",
-                                  ].includes(p.name),
+                                rol.role_type === "CUSTOM" &&
+                                !rol.permissions?.some(
+                                  (p) =>
+                                    p.name.startsWith("user") ||
+                                    p.name.startsWith("role"),
                                 )
                               ) {
                                 return (
@@ -236,6 +232,11 @@ const RolesPage = () => {
           <li>
             فقط مالک سیستم می‌تواند نقش‌های CUSTOM دارای مجوزهای user/role را
             حذف کند.
+          </li>
+          <li>
+            حتی اگر یکی از مجوز های نقش حساس باشد ( با user/role) شروع شده باشد
+            و با داشتن مجوز role.deleat نمیتوانید حذفش کنید فقط owner قادر به
+            حذف نقش های کاستوم حساس می باشد
           </li>
         </ul>
       </div>

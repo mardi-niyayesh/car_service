@@ -1,4 +1,4 @@
-import locationadd from "../../../assets/location-add.png";
+import locationadd from "../../assets/location-add.png";
 
 const AddressPages = () => {
   return (

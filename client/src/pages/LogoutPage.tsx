@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LogoutUser } from "../Api/ApiLogoutUser";
-import SuccessModal from "../../Modal/SuccessModal";
-import ErrorModal from "../../Modal/ErrorModal";
-import WarningModal from "../../Modal/WarningModal ";
-import { useUser } from "../../hooks/useUser";
+import { LogoutUser } from "../dashboard/Api/ApiLogoutUser";
+import WarningModal from "../Modal/WarningModal ";
+import SuccessModal from "../Modal/SuccessModal";
+import ErrorModal from "../Modal/ErrorModal";
+import { useUser } from "../hooks/useUser";
 
 const LogoutPage = () => {
   const navigate = useNavigate();

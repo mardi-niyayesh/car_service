@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import ComponentsPanelAdmin from "../../components/PanelAdmin/UserForm/ComponentsPanelAdmin";
-import HeaderDashbord from "../../components/Dashboard/HeaderDashbord";
+import ComponentsPanelAdmin from "../components/PanelAdmin/ComponentsPanelAdmin";
+import HeaderDashbord from "../components/Dashboard/HeaderDashbord";
 
 const PanelAdminLayout = () => {
   return (

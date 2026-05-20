@@ -1,4 +1,3 @@
-//components
 import CarParts from "./CarParts";
 import WhyAutoRent from "./WhyAutoRent";
 import ArticleCar from "./Article/ArticleCar";

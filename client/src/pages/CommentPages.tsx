@@ -1,5 +1,5 @@
-import ticcircle from "../../../assets/tick-circle.png";
-import timer from "../../../assets/timer.png";
+import ticcircle from "../../assets/tick-circle.png";
+import timer from "../../assets/timer.png";
 
 const CommentPages = () => {
   return (

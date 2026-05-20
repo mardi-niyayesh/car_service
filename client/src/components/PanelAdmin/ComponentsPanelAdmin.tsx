@@ -3,7 +3,7 @@ import { FaUser } from "react-icons/fa";
 import { FaListUl } from "react-icons/fa";
 import { FaBoxOpen } from "react-icons/fa";
 import { FiFilePlus } from "react-icons/fi";
-import { useUser } from "../../../hooks/useUser";
+import { useUser } from "../../hooks/useUser";
 
 const Menu = [
   {
@@ -36,8 +36,6 @@ const Menu = [
     to: "product",
     label: "محصولات",
     icon: <FaBoxOpen style={{ opacity: 0.6 }} />,
-    permission: "product.update",
-    role: "product_manager",
   },
 ];
 

@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import DashboardSidebar from "../../components/Dashboard/DashboardSidebar";
-import HeaderDashbord from "../../components/Dashboard/HeaderDashbord";
+import DashboardSidebar from "../components/Dashboard/DashboardSidebar";
+import HeaderDashbord from "../components/Dashboard/HeaderDashbord";
 const DashboardLayout = () => {
   return (
     <div className="flex bg-[#F6F6F6] min-h-screen">

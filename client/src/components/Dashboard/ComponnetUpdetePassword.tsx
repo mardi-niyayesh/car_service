@@ -57,7 +57,7 @@ const ComponnetUpdetePassword = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 mb-8">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                رمز عبور فعلی
+                رمز عبور فعلی<span className="text-red-500">*</span>
               </label>
               <input
                 type="password"
@@ -83,7 +83,7 @@ const ComponnetUpdetePassword = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                رمز عبور جدید
+                رمز عبور جدید <span className="text-red-500">*</span>
               </label>
               <input
                 type="password"

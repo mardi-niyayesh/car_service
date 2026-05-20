@@ -1,6 +1,4 @@
-//components
 import BoxComponentQuestion from "./BoxComponentQuestion";
-
 const ItemComponentQuestion = [
   {
     id: 1,
@@ -48,7 +46,6 @@ const ComponentQuestion = () => {
     <>
       <div className="container mx-auto flex items-center m-8 justify-center ">
         <span className="font-bold text-blue-800 text-3xl my-5 mb-2 ">
-         
           سوالات متدوال <br />
           اجاره ی خودرو
         </span>

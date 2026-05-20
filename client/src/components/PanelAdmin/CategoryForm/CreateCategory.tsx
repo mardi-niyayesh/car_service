@@ -26,11 +26,13 @@ const CreateCategory = () => {
       }
       const response = await axiosClient.post("/categories", payload);
       console.log("response create:", response.data);
-      setSuccessMessage("دسته بندی جدید با موفقیت ساخته شد");
-      setIsSuccessOpen(true);
-      setTimeout(() => {
-        navigate("/panel/category");
-      }, 2000);
+      if (response.status === 201) {
+        setSuccessMessage("دسته بندی جدید با موفقیت ساخته شد");
+        setIsSuccessOpen(true);
+        setTimeout(() => {
+          navigate("/panel/category");
+        }, 2000);
+      }
     } catch (err: any) {
       console.error("Error create:", err.message);
       if (err.response?.status === 403) {

@@ -1,4 +1,4 @@
-import WalletComponents from "../../components/Dashboard/WalletComponents";
+import WalletComponents from "../components/Dashboard/WalletComponents";
 const WalletPages = () => {
   return (
     <>
