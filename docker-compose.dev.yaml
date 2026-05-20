@@ -1,0 +1,7 @@
+services:
+  postgres-db:
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isredy -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
