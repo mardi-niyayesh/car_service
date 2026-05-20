@@ -3,6 +3,7 @@ import ProductFormComponent from "./ProductFormComponent";
 import { useNavigate } from "react-router-dom";
 import SuccessModal from "../../../Modal/SuccessModal";
 import WarningModal from "../../../Modal/WarningModal ";
+import ErrorModal from "../../../Modal/ErrorModal";
 import { useState } from "react";
 
 type payloadType = {
@@ -23,6 +24,9 @@ const ComponentCreatpoduct = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [warningMessage, setWarningMessage] = useState("");
+  const [isErrorOpen, setIsErrorOpen] = useState(false);
+  const [ErrorMessage, setErrorMessage] = useState("");
+
   const handleAddProduct = async (data) => {
     try {
       const payload: payloadType = {
@@ -58,6 +62,11 @@ const ComponentCreatpoduct = () => {
         setWarningMessage(
           "محصول با لینک مشابه در دیتابیس وجود دارد لطفا یک لینک دیگر انتخاب نمایید .",
         );
+      } else {
+        setIsErrorOpen(true);
+        setErrorMessage(
+          "خطایی در سرور رخ داده است لطفا لحاظاتی دیگر مجدد تلاش کنید.",
+        );
       }
     }
   };
@@ -77,6 +86,11 @@ const ComponentCreatpoduct = () => {
         isOpen={isWarningOpen}
         onClose={() => setIsWarningOpen(false)}
         message={warningMessage}
+      />
+      <ErrorModal
+        isOpen={isErrorOpen}
+        onClose={() => setIsErrorOpen(false)}
+        message={ErrorMessage}
       />
     </div>
   );
