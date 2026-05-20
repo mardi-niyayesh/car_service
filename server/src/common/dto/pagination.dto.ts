@@ -1,5 +1,6 @@
 import z from "zod";
-import {ApiQueryOptions} from "@nestjs/swagger";
+import {applyDecorators} from "@nestjs/common";
+import {ApiQuery, ApiQueryOptions} from "@nestjs/swagger";
 
 const maxLimit = 100;
 const minLimit = 1;
@@ -113,3 +114,9 @@ export const orderByPaginationDto: ApiQueryOptions = {
     description: "order by created_at",
   }
 };
+
+export const PaginationDecoratorQueries = () => applyDecorators(
+  ApiQuery(pagePaginationDto),
+  ApiQuery(limitPaginationDto),
+  ApiQuery(orderByPaginationDto),
+);

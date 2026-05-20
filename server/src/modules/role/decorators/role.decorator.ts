@@ -18,12 +18,9 @@ import {
   Permission,
   PERMISSIONS,
   UUIDv4Validator,
-  pagePaginationDto,
-  limitPaginationDto,
   getForbiddenResponse,
-  orderByPaginationDto,
   getUnauthorizedResponse,
-  getBadRequestUUIDParams,
+  getBadRequestUUIDParams, PaginationDecoratorQueries,
 } from "@/common";
 
 import z from "zod";
@@ -67,9 +64,7 @@ export const FindAllDecorators = () => {
     }),
     HttpCode(HttpStatus.OK),
     ApiOperation(RolesDto.findAllRoleOperation),
-    ApiQuery(pagePaginationDto),
-    ApiQuery(limitPaginationDto),
-    ApiQuery(orderByPaginationDto),
+    PaginationDecoratorQueries(),
     ApiOkResponse({type: RolesDto.FindAllRolesOkRes}),
     ApiUnauthorizedResponse({type: getUnauthorizedResponse('roles')}),
     ApiForbiddenResponse({type: getForbiddenResponse('roles')}),

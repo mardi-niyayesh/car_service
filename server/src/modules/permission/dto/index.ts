@@ -1,2 +1,2 @@
-export * from "./permission.find-all";
-export * from "./permission.find";
+export * from "./find.dto";
+export * from "./find-all.dto";

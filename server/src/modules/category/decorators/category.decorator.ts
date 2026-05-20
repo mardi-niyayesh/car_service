@@ -1,7 +1,6 @@
 import {
   ApiBody,
   ApiParam,
-  ApiQuery,
   ApiOperation,
   ApiBearerAuth,
   ApiOkResponse,
@@ -20,11 +19,8 @@ import {
   Permission,
   PERMISSIONS,
   UUIDv4Validator,
-  pagePaginationDto,
-  limitPaginationDto,
-  orderByPaginationDto,
   getForbiddenResponse,
-  getUnauthorizedResponse,
+  getUnauthorizedResponse, PaginationDecoratorQueries,
 } from "@/common";
 
 import {ONE_MINUTE_MS} from "@/lib";
@@ -58,9 +54,7 @@ export const FindAllDecorators = () => {
     }),
     HttpCode(HttpStatus.OK),
     ApiOperation(CategoryDto.categoryFindAllOperation),
-    ApiQuery(pagePaginationDto),
-    ApiQuery(limitPaginationDto),
-    ApiQuery(orderByPaginationDto),
+    PaginationDecoratorQueries(),
     ApiOkResponse({type: CategoryDto.FindAllCategoriesRes}),
   );
 };

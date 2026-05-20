@@ -8,8 +8,7 @@ import type {CommentWhereInput} from "@/modules/prisma/generated/models/Comment"
 import type {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, CommentListAndUser, SafeCarNCategory} from "@/types";
 
 @Injectable()
-export class CarService {
-  constructor(private readonly prisma: PrismaService) {}
+export class CarService {constructor(private readonly prisma: PrismaService) {}
 
   /**
    * Find a single car by its unique slug.
@@ -290,6 +289,13 @@ export class CarService {
           select: {
             id: true,
             display_name: true,
+          },
+        },
+        _count: {
+          select: {
+            replies: {
+              where: {is_confirmed: true}
+            }
           }
         }
       }

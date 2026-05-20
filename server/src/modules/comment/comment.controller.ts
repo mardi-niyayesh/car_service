@@ -2,8 +2,8 @@ import * as CommentDto from "./dto";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {CommentService} from "@/modules/comment/comment.service";
 import * as CommentDecorator from "./decorators/comment.decorator";
-import type {AccessRequest, ApiResponse, CommentNUserNCarList, CreateCommentResponse} from "@/types";
 import {Body, Controller, Get, Param, Patch, Post, Query, Req} from "@nestjs/common";
+import type {AccessRequest, ApiResponse, CommentListAndUser, CommentNUserNCarList, CreateCommentResponse} from "@/types";
 import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
 
 /**
@@ -54,8 +54,36 @@ export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   /**
+   * Retrieves all replies for a specific comment by its ID.
+   *
+   * @param id - The UUID of the parent comment to get replies for
+   * @param pagination
+   * @returns List of direct replies with pagination (page, limit, total)
+   *
+   * @remarks
+   * - Only returns replies (comments with parent_id = given id)
+   * - Includes author information (name, avatar, role)
+   * - Paginated: page=1, limit=10 by default
+   * - Sort by created_at desc (newest first)
+   * - Returns empty array if comment has no replies
+   * - Returns 404 if parent comment doesn't exist
+   *
+   * @example
+   * GET /comments/550e8400-e29b-41d4-a716-446655440000/replies?page=1&limit=10
+   */
+  @Get(':id/replies')
+  @CommentDecorator.FindCommentRepliesDecorator()
+  findCommentReplies(
+    @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
+    @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType,
+  ): Promise<ApiResponse<CommentListAndUser>> {
+    return this.commentService.findCommentReplies(id, pagination);
+  }
+
+  /**
    * Creates a new comment or reply on a car review.
    *
+   * @param id - car uuid
    * @param req - Authenticated user (requires `user.self` permission)
    * @param data - Validated comment data
    * @returns Confirmation message
@@ -72,13 +100,14 @@ export class CommentController {
    * POST /comments
    * { "content": "Great car!", "rate": 5, "car_id": "550e...", "parent_id": null }
    */
-  @Post()
+  @Post(":id")
   @CommentDecorator.CreateCommentDecorator()
   create(
+    @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
     @Req() req: AccessRequest,
     @Body(new ZodPipe(CommentDto.CreateCommentValidator)) data: CommentDto.CreateCommentType
   ): Promise<ApiResponse<CreateCommentResponse>> {
-    return this.commentService.create(req.user.userId, data);
+    return this.commentService.create(id, req.user.userId, data);
   }
 
   /**

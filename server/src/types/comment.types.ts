@@ -9,18 +9,24 @@ export type CommentNUserNCar = Comment & {
 };
 
 /** Comment with user safe */
-type CommentAndUser = Comment & {
+export type CommentAndUser = Comment & {
   user: Pick<SafeUser, "id" | 'display_name'>;
-}
+};
 
 /** comment with car and user include in list with count */
 export type CommentNUserNCarList = ListWithCount<{
   comments: CommentNUserNCar[];
 }>;
 
+export type CommentListAndUserWithChildCount = CommentAndUser & {
+  _count: {
+    replies: number;
+  };
+};
+
 /** Comment list and safe user with count */
 export type CommentListAndUser = ListWithCount<{
-  comments: CommentAndUser[];
+  comments: CommentListAndUserWithChildCount[];
 }>;
 
 /** create comment response */

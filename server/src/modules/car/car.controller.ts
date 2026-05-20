@@ -131,7 +131,7 @@ export class CarController {
    *
    * @public - No authentication required
    *
-   * @example GET /cars/car/comments?page=1&limit=10&order=desc
+   * @example GET /cars/car-id/comments?page=1&limit=10&order=desc
    */
   @Get(':id/comments')
   @CarDecorator.FindAllCommentsDecorator()

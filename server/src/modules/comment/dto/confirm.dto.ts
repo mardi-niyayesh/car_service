@@ -1,7 +1,7 @@
 import {exampleDate} from "@/lib";
 import {CreateCommentResponse} from "@/types";
-import {getBaseOkResponseSchema} from "@/common";
 import {Comment} from "@/modules/prisma/generated/client";
+import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 export const confirmedCommentExample: Comment = {
   id: "6d813935-0fbb-4ebd-943d-25c1dc572efb",
@@ -25,9 +25,9 @@ export class ConfirmedCommentOk extends getBaseOkResponseSchema<CreateCommentRes
   }
 }) {}
 
-export class RejectCommentOk extends getBaseOkResponseSchema<void>({
-  path: "comments/id/reject",
-  response: {
-    message: "comment successfully deleted.",
-  }
+export class ConfirmCommentNotFound extends getNormalErrorResponse({
+  path: "comment/id/confirm",
+  statusCode: 404,
+  message: 'comment not found in database, or already is confirmed',
+  error: 'comment not found'
 }) {}

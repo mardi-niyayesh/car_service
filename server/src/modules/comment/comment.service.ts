@@ -6,25 +6,77 @@ import {EventEmitter2, OnEvent} from "@nestjs/event-emitter";
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {eventsEmitter, PaginationValidatorType} from "@/common";
-import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList, UpdateCarRateEvent} from "@/types";
+import type {CommentWhereInput} from "@/modules/prisma/generated/models/Comment";
+import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList, UpdateCarRateEvent, CommentListAndUser} from "@/types";
 
 @Injectable()
 export class CommentService {
   constructor(
-    private readonly prisma: PrismaService,
-    private readonly eventEmitter: EventEmitter2,
     private readonly redis: RedisService,
+    private readonly prisma: PrismaService,
+    private readonly eventEmitter: EventEmitter2
   ) {}
+
+  /**
+   * **find all replies parent comment with pagination.**
+   *
+   * @param id - parent comment uuid
+   * @param pagination - pagination queries
+   * @returns CommentListAndUser
+   */
+  async findCommentReplies(id: string, pagination: PaginationValidatorType): Promise<ApiResponse<CommentListAndUser>> {
+    const where: CommentWhereInput = {
+      parent_id: id,
+      is_confirmed: true,
+    };
+
+    const count: number = await this.prisma.comment.count({where});
+
+    const {offset, limit, orderByLower} = pagination;
+
+    const comments = await this.prisma.comment.findMany({
+      where,
+      include: {
+        user: {
+          select: {
+            id: true,
+            display_name: true,
+          }
+        },
+        _count: {
+          select: {
+            replies: {
+              where: {is_confirmed: true}
+            }
+          }
+        }
+      },
+      take: limit,
+      skip: offset,
+      orderBy: {
+        created_at: orderByLower
+      },
+    });
+
+    return {
+      message: 'replies comment successfully found.',
+      data: {
+        count,
+        comments
+      }
+    };
+  }
 
   /**
    * **Creates a new comment or reply on a car review.**
    *
-   * @param user_id
+   * @param car_id - car uuid
+   * @param user_id - user uuid
    * @param data - Validated comment data
    * @returns Confirmation message
    *
    */
-  async create(user_id: string, data: CommentDto.CreateCommentType): Promise<ApiResponse<CreateCommentResponse>> {
+  async create(car_id: string, user_id: string, data: CommentDto.CreateCommentType): Promise<ApiResponse<CreateCommentResponse>> {
     if (data.parent_id) {
       const parentComment = await this.prisma.comment.findUnique({
         where: {
@@ -43,6 +95,7 @@ export class CommentService {
         data: {
           ...data,
           creator_id: user_id,
+          car_id
         }
       });
 
