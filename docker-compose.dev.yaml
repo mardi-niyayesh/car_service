@@ -28,6 +28,8 @@ services:
     volumes:
       - auto_rent_redis_cache:/data
     restart: always
+    env_file:
+      - .env
     ports:
       - "6380:6379"
     networks:
@@ -49,6 +51,8 @@ services:
       redis-cache:
         condition: service_healthy
     container_name: auto_rent_nest_server
+    env_file:
+      - .env
     networks:
       - AutoRentNetwork
     ports:
