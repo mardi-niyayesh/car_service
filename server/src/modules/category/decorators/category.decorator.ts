@@ -20,7 +20,8 @@ import {
   PERMISSIONS,
   UUIDv4Validator,
   getForbiddenResponse,
-  getUnauthorizedResponse, PaginationDecoratorQueries,
+  getUnauthorizedResponse,
+  PaginationDecoratorQueries,
 } from "@/common";
 
 import {ONE_MINUTE_MS} from "@/lib";
