@@ -1,7 +1,32 @@
 services:
   postgres-db:
+    image: postgres:16-alpine
+    container_name: auto_rent_postgres_db
+    env_file:
+      - .env
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+
     healthcheck:
-      test: ["CMD-SHELL", "pg_isredy -U ${DB_USER}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 5s
+    ports:
+      - "5433:5432"
+    volumes:
+      - auto_rent_db:/var/lib/postgresql/data
+    restart: always
+    networks:
+      AutoRentNetwork
+
+volumes:
+  auto_rent_db:
+
+networks:
+  AutoRentNetwork:
+    name: AutoRentNetwork
+    driver: bridge
