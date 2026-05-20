@@ -1,5 +1,12 @@
-FROM node:24-slim
+FROM node:24-bookworm
 
 WORKDIR /app
+
 # Copy package files
-COPY server/package*.json ./
+COPY server/package*.json .
+RUN npm install
+
+# Copy and run server after start container
+COPY --chmod=755 server/entrypoint.sh .
+
+ENTRYPOINT ["./entrypoint.sh"]
