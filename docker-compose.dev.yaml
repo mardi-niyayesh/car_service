@@ -54,7 +54,6 @@ services:
         required: true
         condition: service_healthy
 
-    image: node:24-bookworm
     container_name: auto_rent_nest_server
     networks:
       - AutoRentNetwork
