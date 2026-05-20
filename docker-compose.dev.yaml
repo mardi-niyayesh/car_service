@@ -41,6 +41,48 @@ services:
       retries: 5
       start_period: 5s
 
+  # NestJS Server Application
+  nest-server:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile-dev
+    depends_on:
+      - postgres-db
+      - redis-cache
+
+    image: node:24-bookworm
+    container_name: auto_rent_nest_server
+    networks:
+      - AutoRentNetwork
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://${DB_NAME}:${DB_PASSWORD}@postgres-db:5432/${DB_NAME}?pool_timeout=10&connect_timeout=15
+      NODE_ENV: development
+      REDIS_URL: redis://redis-cache:6379
+      REDIS_HOST: redis-cache
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      BASE_URL: ${BASE_URL}
+      PORT: ${PORT}
+      REDIS_KEY_PREFIX: ${REDIS_KEY_PREFIX}
+      CLIENT_NAME: "Auto Rent"
+      CLIENT_ADDRESS: http://localhost:5173/
+      CLIENT_DASHBOARD: http://localhost:5173/dashboard
+      CLIENT_RESET_PASSWORD: http://localhost:5173/reset-password
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES: ${JWT_EXPIRES}
+      EMAIL_SERVICE: ${EMAIL_SERVICE}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASS: ${EMAIL_PASS}
+      EMAIL_FROM: ${EMAIL_FROM}
+      EMAIL_REPLAY: ${EMAIL_REPLAY}
+      EMAIL_HOST: ${EMAIL_HOST}
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    restart: always
+
 # Volumes Data
 volumes:
   auto_rent_postgres_db:
