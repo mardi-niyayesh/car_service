@@ -28,8 +28,6 @@ services:
     volumes:
       - auto_rent_redis_cache:/data
     restart: always
-    env_file:
-      - .env
     ports:
       - "6380:6379"
     networks:
