@@ -83,6 +83,23 @@ services:
       - /app/node_modules
     restart: always
 
+  # React Client Application
+  react-client:
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile-dev
+    container_name: auto_rent_react_client
+    depends_on:
+      - nest-server
+    ports:
+      - "5173:5173"
+    networks:
+      - AutoRentNetwork
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    restart: always
+
 # Volumes Data
 volumes:
   auto_rent_postgres_db:
