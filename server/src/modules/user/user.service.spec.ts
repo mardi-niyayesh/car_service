@@ -1,14 +1,13 @@
 import {exampleDate} from "@/lib";
+import type {PrismaMock} from "@/types";
 import {UserService} from "./user.service";
 import {PERMISSIONS, ROLES} from "@/common";
+import {mockDeep, mockReset} from "vitest-mock-extended";
 import {hashSecret, compareSecret} from "@/lib/utils/crypto";
 import {Role, User} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
 import {it, expect, describe, afterEach, beforeEach, vi, type Mock} from "vitest";
 import {BadRequestException, ConflictException, ForbiddenException, NotFoundException, UnauthorizedException} from "@nestjs/common";
-
-type PrismaMock = DeepMockProxy<PrismaService>;
 
 const fakeUser = {
   id: "2a55bda6-e1fc-4047-9725-aeec8fcc9ec4",
