@@ -152,7 +152,7 @@ function App() {
             <Route path="logout" element={<LogoutPage />} />
             <Route path="Profile" element={<Profile />} />
             <Route
-              path="product/updateproduct/:id"
+              path="product/updateproduct/:slug"
               element={<ComponentUpdateProduct />}
             />
             <Route
