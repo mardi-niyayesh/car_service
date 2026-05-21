@@ -16,20 +16,20 @@ type payloadType = {
   company: string;
   price_per_day: number;
   category_id: string;
-  tags: any;
+  tags: string[];
   can_rent: any;
   ownership: any;
   description?: string;
 };
 
 const ComponentUpdateProduct = () => {
-  const { id } = useParams<{ id: string }>();
-  console.log("Id for a car :", id);
+  const { slug} = useParams();
+  console.log("Id for a car :", slug);
   const navigate = useNavigate();
-
-  const [defaultValues, setDefaultValues] = useState<ProductFormType | null>(
-    null,
-  );
+  const [carId, setCarId] = useState<string | null>(null);
+  const [defaultValues, setDefaultValues] = useState<
+    ProductFormType | undefined
+  >(undefined);
   const [oldlData, setOldData] = useState<ProductFormType | null>(null);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -43,8 +43,12 @@ const ComponentUpdateProduct = () => {
     const fetchProduct = async () => {
       setIsLoading(true);
       try {
-        const response = await axiosClient.put(`cars/${id}`);
+        const response = await axiosClient.get(`cars/${slug}`);
+
         const data = response.data.response.data.car;
+        console.log("enformation car :", data);
+        setCarId(data.id)
+
         const initial = {
           name: data.name,
           slug: data.slug,
@@ -54,7 +58,9 @@ const ComponentUpdateProduct = () => {
           can_rent: data.can_rent,
           ownership: data.ownership,
           description: data.description,
+          tags: data.tags,
         };
+
         setDefaultValues(initial);
         setOldData(initial);
       } catch (err: any) {
@@ -72,7 +78,7 @@ const ComponentUpdateProduct = () => {
       }
     };
     fetchProduct();
-  }, [id, navigate]);
+  }, [slug, navigate]);
 
   const handleUpdateProduct = async (data: ProductFormType) => {
     setIsLoading(true);
@@ -80,21 +86,32 @@ const ComponentUpdateProduct = () => {
     const payload: Partial<payloadType> = {};
 
     if (data.name !== oldlData?.name) payload.name = String(data.name.trim());
-    if (data.slug !== oldlData?.slug) payload.slug == String(data.slug.teim());
+    if (data.slug !== oldlData?.slug) payload.slug = String(data.slug);
+    if (data.description !== oldlData?.description)
+      payload.description = String(data.description.trim());
+    if (data.company !== oldlData?.company)
+      payload.company = String(data.company);
+    if (data.category_id !== oldlData?.category_id)
+      payload.category_id = String(data.category_id);
+    if (data.ownership !== oldlData?.ownership)
+      payload.ownership = false
+
+    if (Object.keys(payload).length === 0) {
+      setIsWarningOpen(true);
+      setWarningMessage(
+        "هیچ تغییری در فیلد های مربوطه اعمال نشد حدالقل باید یک فیلد را تغییر بدهید.",
+      );
+      setIsLoading(false);
+      return;
+    }
     try {
-      const response = await axiosClient.put(`cars/${id}`, payload);
+      await axiosClient.put(`cars/${carId}`, payload);
 
-      const data = response.data.response.data.car;
-      console.log("initial data to car :", data);
-      setDefaultValues(data);
-
-      if (response.status === 200) {
-        setIsSuccessOpen(true);
-        setSuccessMessage("اپدیت محصول شما با موفقیت انجام شد ");
-        setTimeout(() => {
-          navigate("panel/product");
-        }, 3000);
-      }
+      setIsSuccessOpen(true);
+      setSuccessMessage("اپدیت محصول شما با موفقیت انجام شد ");
+      setTimeout(() => {
+        navigate("/panel/product");
+      }, 3000);
     } catch (err: any) {
       console.log("Error in updating product :", err);
       if (err.response?.status === 403) {
@@ -146,7 +163,7 @@ const ComponentUpdateProduct = () => {
     <>
       <ProductFormComponent
         mode="update"
-        // defaultValues={defaultValues}
+        defaultValues={defaultValues ?? undefined}
         onSubmit={handleUpdateProduct}
         submitButtonText="ویرایش ماشین"
       />
