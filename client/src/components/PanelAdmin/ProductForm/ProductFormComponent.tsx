@@ -1,6 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import TagInput from "./TagInput";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 export type ProductFormType = {
   name: string;
@@ -31,6 +32,7 @@ const ProductFormComponent = ({
 }: ProductFormProps) => {
   const {
     register,
+    reset,
     control,
     handleSubmit,
     formState: { errors },
@@ -48,7 +50,11 @@ const ProductFormComponent = ({
       ...defaultValues,
     },
   });
-
+  useEffect(() => {
+    if (defaultValues) {
+      reset(defaultValues);
+    }
+  }, [defaultValues, reset]);
   return (
     <>
       <form
