@@ -103,8 +103,8 @@ const ComponentTableProduct = () => {
     navigate(`updateproduct/${id}`);
   };
 
-  const handleupdatProfile = async (id: string) => {
-    navigate(`updateImg/${id}`);
+  const handleupdatProfile = async (slug: string) => {
+    navigate(`updateImg/${slug}`);
   };
   const handleShowComment = async (id: string) => {
     navigate(`showComment/${id}`);
@@ -185,7 +185,7 @@ const ComponentTableProduct = () => {
                             color="blue"
                             opacity={0.5}
                             className="cursor-pointer"
-                            onClick={() => handleupdatProduct(product.id)}
+                            onClick={() => handleupdatProduct(product.slug)}
                           />
                         }
                       </td>
