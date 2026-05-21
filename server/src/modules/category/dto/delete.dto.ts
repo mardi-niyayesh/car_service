@@ -28,3 +28,11 @@ export class DeleteCategoryNotFound extends getNormalErrorResponse({
   path: 'categories/:id',
   statusCode: 404
 }) {}
+
+/** Conflict example response */
+export class DeleteCategoryConflict extends getNormalErrorResponse({
+  message: "Failed, Cannot delete category because it has associated cars. Please delete or reassign the cars first.",
+  error: "Failed to delete category",
+  path: 'categories/:id',
+  statusCode: 409
+}) {}

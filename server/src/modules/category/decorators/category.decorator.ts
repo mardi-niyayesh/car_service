@@ -99,6 +99,7 @@ export const DeleteDecorators = () => {
     ApiUnauthorizedResponse({type: getUnauthorizedResponse('categories/id')}),
     ApiForbiddenResponse({type: CategoryDto.DeleteForbiddenResponse}),
     ApiNotFoundResponse({type: CategoryDto.DeleteCategoryNotFound}),
+    ApiConflictResponse({type: CategoryDto.DeleteCategoryConflict}),
   );
 };
 
