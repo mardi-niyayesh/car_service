@@ -1,13 +1,10 @@
-# 📁 Project Structure - Car Service (React.js and Vite.js)
+# 📁 Project Structure - AutoRent Client (React + TypeScript + Vite)
 
 ```
 client-root/
 ├── 📁 src/
-│   ├── 📁 ComponentPublic/
-│   │   └── 📄 Comment.tsx
-│   │
 │   ├── 📁 components/
-│   │   ├── 📁 common/
+│   │   ├── 📁 common/                 # Shared/reusable components
 │   │   │   ├── 📄 AuthForm.tsx
 │   │   │   ├── 📄 ErrorModal.tsx
 │   │   │   ├── 📄 FormInput.tsx
@@ -22,14 +19,14 @@ client-root/
 │   │   │   ├── 📄 ContainerHeader.tsx
 │   │   │   ├── 📄 ContainerMenuHeader.tsx
 │   │   │   ├── 📄 HeaderSite.tsx
-│   │   │   └── 📁 Components/
+│   │   │   └── 📁 components/         # Header sub-components
 │   │   │       ├── 📄 AuthButton.tsx
 │   │   │       ├── 📄 Basket.tsx
 │   │   │       ├── 📄 Logo.tsx
 │   │   │       ├── 📄 MenuHeader.tsx
 │   │   │       └── 📄 SearchButton.tsx
 │   │   │
-│   │   ├── 📁 Main/
+│   │   ├── 📁 Main/                    # Landing page components
 │   │   │   ├── 📄 CarParts.tsx
 │   │   │   ├── 📄 ComponentReservAutorent.tsx
 │   │   │   ├── 📄 Desctiption.tsx
@@ -39,16 +36,17 @@ client-root/
 │   │   │   ├── 📄 MainSite.tsx
 │   │   │   ├── 📄 Modal.tsx
 │   │   │   ├── 📄 WhyAutoRent.tsx
-│   │   │   └── 📁 Article/
+│   │   │   ├── 📁 Article/
 │   │   │   │   ├── 📄 ArticleCar.tsx
 │   │   │   │   └── 📄 ComponentArticleCar.tsx
 │   │   │   └── 📁 Question/
 │   │   │       ├── 📄 BoxComponentQuestion.tsx
 │   │   │       └── 📄 ComponentQuestion.tsx
 │   │   │
-│   │   ├── 📄 Product.tsx
+│   │   ├── 📁 Product/                 # Product listing & cards
+│   │   │   └── 📄 Product.tsx
 │   │   │
-│   │   └── 📁 ReserveCar/
+│   │   └── 📁 ReserveCar/              # Car reservation flow
 │   │       ├── 📄 CarComponent.tsx
 │   │       ├── 📄 DesCar.tsx
 │   │       ├── 📄 IconDetailCar.tsx
@@ -57,7 +55,7 @@ client-root/
 │   │       │   ├── 📄 DetailCarComponent.tsx
 │   │       │   ├── 📄 GaleryCarComponent.tsx
 │   │       │   └── 📄 PriceComponent.tsx
-│   │       └── 📁 Pages/
+│   │       └── 📁 Pages/               # City-specific pages
 │   │           ├── 📄 MashhadPage.tsx
 │   │           ├── 📄 Nayshaboor.tsx
 │   │           ├── 📄 ProductDetailsPage.tsx
@@ -67,11 +65,14 @@ client-root/
 │   │           ├── 📄 TabrizPage.tsx
 │   │           └── 📄 YazdPage.tsx
 │   │
-│   ├── 📁 Context/
+│   ├── 📁 ComponentPublic/             # Public shared components
+│   │   └── 📄 Comment.tsx
+│   │
+│   ├── 📁 Context/                     # React Context providers
 │   │   ├── 📄 UserContext.tsx
 │   │   └── 📄 UserProvider.tsx
 │   │
-│   ├── 📁 dashboard/
+│   ├── 📁 dashboard/                   # User dashboard module
 │   │   ├── 📁 Api/
 │   │   │   ├── 📄 ApiLogoutUser.tsx
 │   │   │   ├── 📄 ApiUpdatPassword.tsx
@@ -94,14 +95,14 @@ client-root/
 │   │   └── 📁 Types/
 │   │       └── 📄 Dashboard.type.ts
 │   │
-│   ├── 📁 hooks/
+│   ├── 📁 hooks/                       # Custom React hooks
 │   │   └── 📄 useUser.ts
 │   │
-│   ├── 📁 Layouts/
+│   ├── 📁 Layouts/                     # Layout wrappers
 │   │   ├── 📄 AuthLayout.tsx
 │   │   └── 📄 MainLayout.tsx
 │   │
-│   ├── 📁 pages/
+│   ├── 📁 pages/                       # Public pages (routed)
 │   │   ├── 📄 AboutPage.tsx
 │   │   ├── 📄 ContactPage.tsx
 │   │   ├── 📄 ForgotPasswordPage.tsx
@@ -113,7 +114,7 @@ client-root/
 │   │   ├── 📄 ResetPasswordPage.tsx
 │   │   └── 📄 RolsPage.tsx
 │   │
-│   ├── 📁 PanelAdmin/
+│   ├── 📁 PanelAdmin/                  # Admin panel module
 │   │   ├── 📁 Api/
 │   │   │   └── 📄 UserService.tsx
 │   │   ├── 📁 Components/
@@ -134,15 +135,15 @@ client-root/
 │   │       ├── 📄 RolesPage.tsx
 │   │       └── 📄 UsersPage.tsx
 │   │
-│   ├── 📁 Routes/
+│   ├── 📁 Routes/                      # Route guards & configuration
 │   │   └── 📄 GaurdRoute.tsx
 │   │
-│   ├── 📁 services/
+│   ├── 📁 services/                    # API service layer
 │   │   ├── 📄 api.tsx
 │   │   ├── 📄 authService.ts
 │   │   └── 📄 axiosClient.ts
 │   │
-│   ├── 📁 types/
+│   ├── 📁 types/                       # Global TypeScript types
 │   │   └── 📄 auth.types.ts
 │   │
 │   ├── 📄 App.tsx
