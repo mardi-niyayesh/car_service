@@ -20,7 +20,8 @@ import {
   PERMISSIONS,
   UUIDv4Validator,
   getForbiddenResponse,
-  getUnauthorizedResponse, PaginationDecoratorQueries,
+  getUnauthorizedResponse,
+  PaginationDecoratorQueries,
 } from "@/common";
 
 import {ONE_MINUTE_MS} from "@/lib";
@@ -98,6 +99,7 @@ export const DeleteDecorators = () => {
     ApiUnauthorizedResponse({type: getUnauthorizedResponse('categories/id')}),
     ApiForbiddenResponse({type: CategoryDto.DeleteForbiddenResponse}),
     ApiNotFoundResponse({type: CategoryDto.DeleteCategoryNotFound}),
+    ApiConflictResponse({type: CategoryDto.DeleteCategoryConflict}),
   );
 };
 
