@@ -2,9 +2,11 @@ import type {CategoryResponse} from "@/types";
 import {categoryExampleRes} from "./create.dto";
 import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
+const path = 'categories/id';
+
 /** ok example response */
 export class DeleteCategoryOkRes extends getBaseOkResponseSchema<CategoryResponse>({
-  path: 'categories/id',
+  path,
   response: {
     message: "category deleted successfully",
     data: {
@@ -17,7 +19,7 @@ export class DeleteCategoryOkRes extends getBaseOkResponseSchema<CategoryRespons
 export class DeleteForbiddenResponse extends getNormalErrorResponse({
   message: "Access denied. Only the creator of this resource is allowed to perform this action.",
   error: "Ownership Verification Failed",
-  path: 'categories/:id',
+  path,
   statusCode: 403
 }) {}
 
@@ -25,7 +27,7 @@ export class DeleteForbiddenResponse extends getNormalErrorResponse({
 export class DeleteCategoryNotFound extends getNormalErrorResponse({
   message: 'Category not found in database',
   error: 'category does not exist',
-  path: 'categories/:id',
+  path,
   statusCode: 404
 }) {}
 
@@ -33,6 +35,6 @@ export class DeleteCategoryNotFound extends getNormalErrorResponse({
 export class DeleteCategoryConflict extends getNormalErrorResponse({
   message: "Failed, Cannot delete category because it has associated cars. Please delete or reassign the cars first.",
   error: "Failed to delete category",
-  path: 'categories/:id',
+  path,
   statusCode: 409
 }) {}
