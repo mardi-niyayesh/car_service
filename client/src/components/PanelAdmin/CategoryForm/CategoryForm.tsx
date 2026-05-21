@@ -176,19 +176,17 @@ const CategoryForm = ({
               فقط حروف کوچک انگلیسی، اعداد و خط تیره بین کلمات مجاز است
             </p>
           </div>
-
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-              {...register("ownership")}
-            />
-            <label className="block text-sm font-medium text-gray-700">
-              مالکیت (Ownership)
-            </label>
-          </div>
         </div>
-
+        <div className="flex items-center gap-2 mb-3">
+          <input
+            type="checkbox"
+            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            {...register("ownership")}
+          />
+          <label className="block text-sm font-medium text-gray-700">
+            مالکیت (Ownership)
+          </label>
+        </div>
         <button
           type="submit"
           disabled={isLoading}
