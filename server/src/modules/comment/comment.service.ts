@@ -241,7 +241,8 @@ export class CommentService {
     const rates = await this.prisma.comment.aggregate({
       where: {
         car_id,
-        is_confirmed: true
+        is_confirmed: true,
+        parent_id: null,
       },
       _avg: {
         rate: true
