@@ -7,7 +7,7 @@ import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {eventsEmitter, PaginationValidatorType} from "@/common";
 import type {CommentWhereInput} from "@/modules/prisma/generated/models/Comment";
-import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList, UpdateCarRateEvent, CommentListAndUser} from "@/types";
+import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList, UpdateCarRateEvent, ReplyCommentListAndUser} from "@/types";
 
 @Injectable()
 export class CommentService {
@@ -24,7 +24,7 @@ export class CommentService {
    * @param pagination - pagination queries
    * @returns CommentListAndUser
    */
-  async findCommentReplies(id: string, pagination: PaginationValidatorType): Promise<ApiResponse<CommentListAndUser>> {
+  async findCommentReplies(id: string, pagination: PaginationValidatorType): Promise<ApiResponse<ReplyCommentListAndUser>> {
     const where: CommentWhereInput = {
       parent_id: id,
       is_confirmed: true,
@@ -36,6 +36,9 @@ export class CommentService {
 
     const comments = await this.prisma.comment.findMany({
       where,
+      omit: {
+        rate: true
+      },
       include: {
         user: {
           select: {
