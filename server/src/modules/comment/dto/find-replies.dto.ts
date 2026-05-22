@@ -1,9 +1,13 @@
 import {getBaseOkResponseSchema} from "@/common";
 import {exampleComment} from "@/modules/comment/dto/create.dto";
-import type {CommentListAndUser, CommentListAndUserWithChildCount} from "@/types";
+import {ReplyCommentListAndUser, ReplyCommentListAndUserWithChildCount} from "@/types";
 
-const exampleComments: CommentListAndUserWithChildCount = {
-  ...exampleComment,
+const {rate, ...othersData} = exampleComment;
+
+void rate;
+
+const exampleComments: ReplyCommentListAndUserWithChildCount = {
+  ...othersData,
   is_confirmed: true,
   user: {
     id: "user_id",
@@ -15,7 +19,7 @@ const exampleComments: CommentListAndUserWithChildCount = {
   parent_id: "parent_uuid"
 };
 
-export class FindRepliesOk extends getBaseOkResponseSchema<CommentListAndUser>({
+export class FindRepliesOk extends getBaseOkResponseSchema<ReplyCommentListAndUser>({
   path: 'comments/id/replies',
   response: {
     message: 'replies comment successfully found.',
