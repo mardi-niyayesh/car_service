@@ -1,6 +1,6 @@
 import {getBaseOkResponseSchema} from "@/common";
 import {exampleComment} from "@/modules/comment/dto/create.dto";
-import {ReplyCommentListAndUser, ReplyCommentListAndUserWithChildCount} from "@/types";
+import type {ReplyCommentListAndUser, ReplyCommentListAndUserWithChildCount} from "@/types";
 
 const {rate, ...othersData} = exampleComment;
 
