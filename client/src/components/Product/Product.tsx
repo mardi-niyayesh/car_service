@@ -1,0 +1,64 @@
+import { useProduct } from "../../hooks/useProduct";
+import { Link } from "react-router-dom";
+const Product = () => {
+  const { allProduct, loading } = useProduct();
+  console.log(allProduct);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-10">
+        <span className="mr-2 text-gray-600">بارگذاری محصولات ...</span>
+      </div>
+    );
+  }
+
+  if (!allProduct.length) {
+    return (
+      <div className="text-center text-gray-500 py-8">هیچ محصولی یافت نشد</div>
+    );
+  }
+  const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5173";
+  return (
+    <div>
+      {allProduct.map((product) => (
+        <div
+          key={product.id}
+          className="max-w-[350px] border-2 border-[#D7D7D7] p-4 mt-10 rounded-2xl"
+        >
+          <img src={`${baseURL}/${product.image}`} alt={product.name} />
+          <h2 className="font-bold text-[16px] text-[#0C0C0C] mb-2">
+            {product.name}
+          </h2>
+          <div className="text-[#5a5656] text-[15px] mb-2">
+            <span>کمپانی:</span>
+            <span>{product.company}</span>
+          </div>
+          <div className="flex items-center justify-between mb-2 bg-[#d0cdcd]  border-r-3 border-blue-400 p-1">
+            <div className="flex items-center justify-center">
+              <span className="text-[#212121] text-[12px]">هزینه :</span>
+              <span className="text-[#05164D] text-[16px] font-bold">
+                {product.price_per_day}
+              </span>
+            </div>
+            <p className="text-[#212121] text-[12px]">روزانه</p>
+          </div>
+          <div className="text-gray-500  font-bold text-[12px] mb-2">
+            <span>قابل اجاره هست؟</span>
+            <span>{product.can_rent ? "بله" : "خیر"}</span>
+          </div>
+
+          <p className="text-[#212121]  font-bold text-[12px] mb-2">
+            {product.description}
+          </p>
+
+          <Link to="">
+            <button className="bg-[#194BF0] text-[#FFFFFF] w-full px-4 py-2 rounded-2xl">
+              درخواست رزرو
+            </button>
+          </Link>
+        </div>
+      ))}
+    </div>
+  );
+};
+export default Product;
