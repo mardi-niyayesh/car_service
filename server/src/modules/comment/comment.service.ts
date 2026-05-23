@@ -240,7 +240,7 @@ export class CommentService {
    * @param car_id - ID of the car to update
    */
   @OnEvent(eventsEmitter.UPDATE_CAR_RATE)
-  async updateCarRateEvent({car_id}: UpdateCarRateEvent) {
+  async updateCarRateEvent({car_id}: UpdateCarRateEvent): Promise<void> {
     const rates = await this.prisma.comment.aggregate({
       where: {
         car_id,
