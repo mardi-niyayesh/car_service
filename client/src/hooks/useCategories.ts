@@ -34,5 +34,5 @@ export const useCategories = (page = 1, limit = 10) => {
     fetchCategories();
   }, [page, limit]);
 
-  return { categories, loaing, totalCount, refetch: fetchCategories };
+  return { categories, loading, totalCount, refetch: fetchCategories };
 };
