@@ -2,31 +2,18 @@ import { useUser } from "../../../hooks/useUser";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FaPencilAlt, FaImage, FaRegComment } from "react-icons/fa";
 import axiosClient from "../../../services/axiosClient";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ComponentPaginat from "../../../Paginate/ComponentPaginat";
-import { useCallback } from "react";
 import SuccessModal from "../../../Modal/SuccessModal";
 import WarningModal from "../../../Modal/WarningModal ";
 import ErrorModal from "../../../Modal/ErrorModal";
 import { useNavigate } from "react-router-dom";
-
-type ProductType = {
-  id: string;
-  name: string;
-  price_per_day: number;
-  description: string;
-  can_rent: boolean;
-  tags: string[];
-  company: string;
-  slug: string;
-};
+import { useProduct } from "../../../hooks/useProduct";
 
 const ComponentTableProduct = () => {
+  const { loading, allProduct, refetch,totalPage } = useProduct();
   const navigate = useNavigate();
-  const [allProduct, setAllProduct] = useState<ProductType[]>([]);
-  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(5);
   const { hasRole, hasPermission } = useUser();
 
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
@@ -46,40 +33,13 @@ const ComponentTableProduct = () => {
     hasPermission(["product.update", "product.create"]) ||
     hasRole("product_manager");
 
-  const fetchAllProduct = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await axiosClient.get(
-        `cars?page=${page}&limit=5&order=desc&order_by_field=created_at`,
-      );
-      const AllProduct = response.data.response.data.cars;
-      console.log("responst to get All Products :", AllProduct);
-      setAllProduct(AllProduct);
-
-      const totlalItem = response.data.response.data.count;
-      console.log("total items product", totlalItem);
-
-      const CountItem = Math.ceil(totlalItem / 5);
-
-      setTotalPage(CountItem);
-    } catch (err) {
-      console.log("Error in Gt All Products :", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [page]);
-
-  useEffect(() => {
-    fetchAllProduct();
-  }, [page, fetchAllProduct]);
-
   const handleDeleatProduct = async (id: string) => {
     try {
       const response = await axiosClient.delete(`/cars/${id}`);
       if (response.status === 200) {
         setIsSuccessOpen(true);
         setSuccessMessage("محصول مورد نظر با موفقیت حذف شد .");
-        fetchAllProduct();
+        refetch();
       }
     } catch (err: any) {
       console.log("Error in deleat Product : ", err);
