@@ -1,6 +1,7 @@
 import { useProduct } from "../../hooks/useProduct";
 import { Link } from "react-router-dom";
-const Product = () => {
+import { FaStar } from "react-icons/fa";
+const Product = (product) => {
   const { allProduct, loading } = useProduct();
   console.log(allProduct);
 
@@ -17,7 +18,7 @@ const Product = () => {
       <div className="text-center text-gray-500 py-8">هیچ محصولی یافت نشد</div>
     );
   }
-  const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5173";
+
   return (
     <div>
       {allProduct.map((product) => (
@@ -25,7 +26,7 @@ const Product = () => {
           key={product.id}
           className="max-w-[350px] border-2 border-[#D7D7D7] p-4 mt-10 rounded-2xl"
         >
-          <img src={`${baseURL}/${product.image}`} alt={product.name} />
+          <img src={product.image} alt={product.name} />
           <h2 className="font-bold text-[16px] text-[#0C0C0C] mb-2">
             {product.name}
           </h2>
@@ -33,7 +34,7 @@ const Product = () => {
             <span>کمپانی:</span>
             <span>{product.company}</span>
           </div>
-          <div className="flex items-center justify-between mb-2 bg-[#d0cdcd]  border-r-3 border-blue-400 p-1">
+          <div className="flex items-center justify-between mb-2 bg-[#e8e4e4]  border-r-3 border-blue-400 p-1">
             <div className="flex items-center justify-center">
               <span className="text-[#212121] text-[12px]">هزینه :</span>
               <span className="text-[#05164D] text-[16px] font-bold">
@@ -46,7 +47,15 @@ const Product = () => {
             <span>قابل اجاره هست؟</span>
             <span>{product.can_rent ? "بله" : "خیر"}</span>
           </div>
+          <div className="flex justify-between items-center text-[15px] mb-2 mt-2">
+            <p>امتیاز :</p>
 
+            <div className="flex ">
+              {Array.from({ length: product.rate }, (_, index) => (
+                <FaStar key={index} color="gold" size={15} />
+              ))}
+            </div>
+          </div>
           <p className="text-[#212121]  font-bold text-[12px] mb-2">
             {product.description}
           </p>
