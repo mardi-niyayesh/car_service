@@ -25,6 +25,7 @@ import ProductDetailsPage from "./components/ReserveCar.tsx/Pages/ProductDetails
 import BlogDetail from "./components/Main/Blog/BlogDetail";
 import BlogPage from "./pages/BlogPage";
 import DetailArticle from "./components/Main/Article/DetailArticle";
+import ProductComponent from "./components/Product/ProductComponent";
 //authorization pages
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
@@ -77,6 +78,7 @@ function App() {
             <Route path="/reserve/Yazd" element={<YazdPage />} />
             <Route path="/reserve/neyshaboor" element={<Nayshaboor />} />
             <Route path="/articles/:id" element={<DetailArticle />} />
+            <Route path="/category/:slug" element={<ProductComponent />} />
 
             <Route
               path="/car-details/:carId"
