@@ -1,5 +1,5 @@
 import { useCategories } from "../../hooks/useCategories";
-
+import { FaCar } from "react-icons/fa";
 const ShowCategoryForm = () => {
   const { loading, categories } = useCategories();
 
@@ -21,15 +21,18 @@ const ShowCategoryForm = () => {
 
   return (
     <div className="w-full bg-white py-6 px-4 rounded-xl shadow-sm">
-      <h2 className="text-xl font-bold text-right text-gray-800 mb-4 border-r-4 border-blue-500 pr-3">
-        دسته‌بندی ماشین‌ها
-      </h2>
+      <div className="flex justify-center md:justify-start gap-2 items-center self-center mb-4">
+        <h2 className="text-xl font-bold text-right text-gray-800 border-r-4 border-blue-500 pr-3">
+          دسته‌بندی ماشین‌ها
+        </h2>
+        <FaCar size={20} />
+      </div>
       <div className="flex flex-wrap gap-3 justify-center md:justify-start">
         {categories.map((cat) => (
           <a
             key={cat.id}
             href={`/category/${cat.slug}`}
-            className="inline-block px-5 py-2 bg-gray-100 hover:bg-blue-600 text-gray-700 hover:text-white rounded-full transition-all duration-200 shadow-sm text-sm font-medium cursor-pointer"
+            className="inline-block px-5 py-2 bg-gray-100 hover:bg-blue-500 text-gray-700 hover:text-white rounded-full transition-all duration-200 shadow-sm text-sm font-medium cursor-pointer"
           >
             {cat.name}
           </a>
