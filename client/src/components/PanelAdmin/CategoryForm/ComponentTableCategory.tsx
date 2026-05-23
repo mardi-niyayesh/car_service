@@ -70,6 +70,11 @@ const ComponentTableCategory = (): React.ReactElement => {
         setWarningMessage(
           "این دسته‌بندی قبلاً حذف شده است لطفا صفحه رو رفرش کنید",
         );
+      } else if (err.response?.status === 409) {
+        setIsWarningOpen(true);
+        setWarningMessage(
+          "اول باید تمام ماشین که با این کتگوری ساخته شدن رو حذف کنید یا کتگوری ایدی ماشین ها رو تغییر بدید بعد میتوانید کتگوری را حذف کنید",
+        );
       } else {
         setIsWarningOpen(true);
         setWarningMessage("خطا در حذف دسته بندی مجدد تلاش کنید");

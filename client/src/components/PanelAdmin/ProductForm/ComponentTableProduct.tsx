@@ -1,6 +1,6 @@
 import { useUser } from "../../../hooks/useUser";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { FaPencilAlt } from "react-icons/fa";
+import { FaPencilAlt, FaImage, FaRegComment } from "react-icons/fa";
 import axiosClient from "../../../services/axiosClient";
 import { useEffect, useState } from "react";
 import ComponentPaginat from "../../../Paginate/ComponentPaginat";
@@ -9,7 +9,6 @@ import SuccessModal from "../../../Modal/SuccessModal";
 import WarningModal from "../../../Modal/WarningModal ";
 import ErrorModal from "../../../Modal/ErrorModal";
 import { useNavigate } from "react-router-dom";
-import { FaImage } from "react-icons/fa";
 
 type ProductType = {
   id: string;
@@ -82,7 +81,7 @@ const ComponentTableProduct = () => {
         setSuccessMessage("محصول مورد نظر با موفقیت حذف شد .");
         fetchAllProduct();
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log("Error in deleat Product : ", err);
       if (err.response?.status === 403) {
         setIsWarningOpen(true);
@@ -104,8 +103,11 @@ const ComponentTableProduct = () => {
     navigate(`updateproduct/${id}`);
   };
 
-  const handleupdatProfile = async (id: string) => {
-    navigate(`updateImg/${id}`);
+  const handleupdatProfile = async (slug: string) => {
+    navigate(`updateImg/${slug}`);
+  };
+  const handleShowComment = async (id: string) => {
+    navigate(`showComment/${id}`);
   };
 
   return (
@@ -139,6 +141,8 @@ const ComponentTableProduct = () => {
                 {hasUpdateProfile && (
                   <th className="w-20 px-4 py-3 font-medium"> عکس</th>
                 )}
+
+                <th className="w-20 px-4 py-3 font-medium"> کامنت</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -181,7 +185,7 @@ const ComponentTableProduct = () => {
                             color="blue"
                             opacity={0.5}
                             className="cursor-pointer"
-                            onClick={() => handleupdatProduct(product.id)}
+                            onClick={() => handleupdatProduct(product.slug)}
                           />
                         }
                       </td>
@@ -200,6 +204,16 @@ const ComponentTableProduct = () => {
                         }
                       </td>
                     )}
+
+                    <td>
+                      {
+                        <FaRegComment
+                          size={18}
+                          className="cursor-pointer"
+                          onClick={() => handleShowComment(product.id)}
+                        />
+                      }
+                    </td>
                   </tr>
                 );
               })}

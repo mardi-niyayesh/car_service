@@ -1,4 +1,5 @@
 type description = {
+  id?:number,
   img: string;
   title: string;
   des: string;

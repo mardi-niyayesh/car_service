@@ -24,6 +24,7 @@ import YazdPage from "./components/ReserveCar.tsx/Pages/YazdPage";
 import ProductDetailsPage from "./components/ReserveCar.tsx/Pages/ProductDetailsPage";
 import BlogDetail from "./components/Main/Blog/BlogDetail";
 import BlogPage from "./pages/BlogPage";
+import DetailArticle from "./components/Main/Article/DetailArticle";
 //authorization pages
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
@@ -53,6 +54,7 @@ import UpdateCategory from "./components/PanelAdmin/CategoryForm/UpdateCategory"
 import ComponentCreatpoduct from "./components/PanelAdmin/ProductForm/ComponentCreatpoduct";
 import ComponentUpdateProduct from "./components/PanelAdmin/ProductForm/ComponentUpdateProduct";
 import ComponentImgProduct from "./components/PanelAdmin/ProductForm/ComponentImgProduct";
+import ShowAllCommentsProduct from "./components/PanelAdmin/CommentForm/ShowAllCommentsProduct";
 function App() {
   return (
     <>
@@ -74,6 +76,7 @@ function App() {
             <Route path="/reserve/mashhad" element={<MashhadPage />} />
             <Route path="/reserve/Yazd" element={<YazdPage />} />
             <Route path="/reserve/neyshaboor" element={<Nayshaboor />} />
+            <Route path="/articles/:id" element={<DetailArticle />} />
 
             <Route
               path="/car-details/:carId"
@@ -149,7 +152,7 @@ function App() {
             <Route path="logout" element={<LogoutPage />} />
             <Route path="Profile" element={<Profile />} />
             <Route
-              path="product/updateproduct/:id"
+              path="product/updateproduct/:slug"
               element={<ComponentUpdateProduct />}
             />
             <Route
@@ -171,6 +174,10 @@ function App() {
             <Route
               path="Profile/updatePassword"
               element={<ComponnetUpdetePassword />}
+            />
+            <Route
+              path="product/showComment/:id"
+              element={<ShowAllCommentsProduct />}
             />
           </Route>
 

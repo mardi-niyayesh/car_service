@@ -50,66 +50,72 @@ const ComponentTableUser = () => {
   }, [page, fetchUsers]);
 
   return (
-    <div className="rounded-lg shadow-sm border border-gray-200 bg-white p-4">
-      {loading ? (
-        <p className="text-center text-gray-500 py-8">در حال گرفتن همه کاربران ...</p>
-      ) : (
-        <>
-          <table className="min-w-full text-right text-sm text-gray-700">
-            <thead className="bg-gray-100 text-gray-700">
-              <tr>
-                <th className="px-4 py-3 font-medium hidden sm:table-cell">
-                  ردیف
-                </th>
-                <th className="px-4 py-3 font-medium hidden sm:table-cell">
-                  کاربر
-                </th>
-                <th className="px-4 py-3 font-medium sm:table-cell">ایمیل</th>
-                <th className="px-4 py-3 font-medium sm:table-cell">نقش</th>
-                <th className="px-4 py-3 font-medium sm:table-cell">جزئیات</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {users.length === 0 ? (
+    <>
+      <div className="rounded-lg shadow-sm border border-gray-200 bg-white p-4">
+        {loading ? (
+          <p className="text-center text-gray-500 py-8">
+            در حال گرفتن همه کاربران ...
+          </p>
+        ) : (
+          <>
+            <table className="min-w-full text-right text-sm text-gray-700">
+              <thead className="bg-gray-100 text-gray-700">
                 <tr>
-                  <td colSpan={5} className="px-4 py-3 text-center">
-                    هیچ کاربری یافت نشد.
-                  </td>
+                  <th className="px-4 py-3 font-medium hidden sm:table-cell">
+                    ردیف
+                  </th>
+                  <th className="px-4 py-3 font-medium hidden sm:table-cell">
+                    کاربر
+                  </th>
+                  <th className="px-4 py-3 font-medium sm:table-cell">ایمیل</th>
+                  <th className="px-4 py-3 font-medium sm:table-cell">نقش</th>
+                  <th className="px-4 py-3 font-medium sm:table-cell">
+                    جزئیات
+                  </th>
                 </tr>
-              ) : (
-                users.map((user, index) => (
-                  <tr
-                    key={user.id}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="px-4 py-3 hidden sm:table-cell">
-                      {(page - 1) * 5 + index + 1}
-                    </td>
-                    <td className="px-4 py-3 hidden sm:table-cell">
-                      {user.display_name}
-                    </td>
-                    <td className="px-4 py-3">{user.email}</td>
-                    <td className="px-4 py-3 text-green-600 font-medium">
-                      {Array.isArray(user.roles)
-                        ? user.roles.join(", ")
-                        : user.roles}
-                    </td>
-                    <td className="font-bold text-blue-600">
-                      <Link to={`detail/${user.id}`}>مشاهده</Link>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {users.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-4 py-3 text-center">
+                      هیچ کاربری یافت نشد.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </>
-      )}
+                ) : (
+                  users.map((user, index) => (
+                    <tr
+                      key={user.id}
+                      className="hover:bg-gray-50 transition-colors"
+                    >
+                      <td className="px-4 py-3 hidden sm:table-cell">
+                        {(page - 1) * 5 + index + 1}
+                      </td>
+                      <td className="px-4 py-3 hidden sm:table-cell">
+                        {user.display_name}
+                      </td>
+                      <td className="px-4 py-3">{user.email}</td>
+                      <td className="px-4 py-3 text-green-600 font-medium">
+                        {Array.isArray(user.roles)
+                          ? user.roles.join(", ")
+                          : user.roles}
+                      </td>
+                      <td className="font-bold text-blue-600">
+                        <Link to={`detail/${user.id}`}>مشاهده</Link>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </>
+        )}
+      </div>
       <ComponentPaginat
         currentPage={page}
         totalPages={totalPages}
         onPageChange={setPage}
       />
-    </div>
+    </>
   );
 };
 

@@ -63,7 +63,9 @@ const UpdateCategory = () => {
       payload.ownership = data.ownership;
 
     if (Object.keys(payload).length === 0) {
-      setWarningMessage("هیچ تغییری در فیلدهای مربوطه اعمال نشد");
+      setWarningMessage(
+        "هیچ تغییری در فیلد های مربوطه اعمال نشد حدالقل باید یک فیلد را تغییر بدهید.",
+      );
       setIsWarningOpen(true);
       setIsLoading(false);
       return;
