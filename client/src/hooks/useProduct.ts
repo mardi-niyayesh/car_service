@@ -10,6 +10,7 @@ type ProductType = {
   tags: string[];
   company: string;
   slug: string;
+  image: string;
 };
 export const useProduct = (page = 1, limit = 10) => {
   const [totalPage, setTotalPage] = useState(5);
