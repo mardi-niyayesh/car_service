@@ -1,6 +1,8 @@
 import { useCategories } from "../../hooks/useCategories";
 import { FaCar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 const ShowCategoryForm = () => {
+  const navigate = useNavigate();
   const { loading, categories } = useCategories();
 
   if (loading) {
@@ -18,7 +20,9 @@ const ShowCategoryForm = () => {
       </div>
     );
   }
-
+  const hadleCategory = (slug: string) => {
+    navigate(`/category/${slug}`);
+  };
   return (
     <div className="w-full bg-white py-6 px-4 rounded-xl shadow-sm">
       <div className="flex justify-center md:justify-start gap-2 items-center self-center mb-4">
@@ -29,13 +33,13 @@ const ShowCategoryForm = () => {
       </div>
       <div className="flex flex-wrap gap-3 justify-center md:justify-start">
         {categories.map((cat) => (
-          <a
+          <button
             key={cat.id}
-            href={`/category/${cat.slug}`}
             className="inline-block px-5 py-2 bg-gray-100 hover:bg-blue-500 text-gray-700 hover:text-white rounded-full transition-all duration-200 shadow-sm text-sm font-medium cursor-pointer"
+            onClick={() => hadleCategory(cat.slug)}
           >
             {cat.name}
-          </a>
+          </button>
         ))}
       </div>
     </div>
