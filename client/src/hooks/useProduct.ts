@@ -12,6 +12,7 @@ type ProductType = {
   slug: string;
   image: string;
   rate: number;
+  category_id: string;
 };
 export const useProduct = (page = 1, limit = 10) => {
   const [totalPage, setTotalPage] = useState(5);
