@@ -6,6 +6,7 @@ type CategoryType = {
   name: string;
   description: string;
   slug: string;
+  category_id:string
 };
 
 export const useCategories = (page = 1, limit = 10) => {
