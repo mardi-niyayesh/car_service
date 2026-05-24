@@ -3,7 +3,7 @@ import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {CommentService} from "@/modules/comment/comment.service";
 import * as CommentDecorator from "./decorators/comment.decorator";
 import {Body, Controller, Get, Param, Patch, Post, Query, Req} from "@nestjs/common";
-import type {AccessRequest, ApiResponse, CommentListAndUser, CommentNUserNCarList, CreateCommentResponse, ReplyCommentListAndUser} from "@/types";
+import type {AccessRequest, ApiResponse, CommentNUserNCarList, CreateCommentResponse, ReplyCommentListAndUser} from "@/types";
 import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
 
 /**
