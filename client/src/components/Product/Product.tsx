@@ -1,7 +1,7 @@
 import { useProduct } from "../../hooks/useProduct";
 import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
-const Product = (product) => {
+const Product = () => {
   const { allProduct, loading } = useProduct();
   console.log(allProduct);
 
@@ -26,7 +26,7 @@ const Product = (product) => {
           key={product.id}
           className="max-w-[350px] border-2 border-[#D7D7D7] p-4 mt-10 rounded-2xl"
         >
-          <img src={product.image} alt={product.name} />
+          <img src={`/${product.image}`} alt={product.name} />
           <h2 className="font-bold text-[16px] text-[#0C0C0C] mb-2">
             {product.name}
           </h2>
@@ -34,7 +34,7 @@ const Product = (product) => {
             <span>کمپانی:</span>
             <span>{product.company}</span>
           </div>
-          <div className="flex items-center justify-between mb-2 bg-[#e8e4e4]  border-r-3 border-blue-400 p-1">
+          <div className="flex items-center justify-between mb-2 bg-gray-200 rounded border-r-3 border-blue-400 p-1">
             <div className="flex items-center justify-center">
               <span className="text-[#212121] text-[12px]">هزینه :</span>
               <span className="text-[#05164D] text-[16px] font-bold">
