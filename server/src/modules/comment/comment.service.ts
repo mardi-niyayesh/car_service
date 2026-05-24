@@ -202,7 +202,7 @@ export class CommentService {
           },
         });
 
-        this.eventEmitter.emit(eventsEmitter.UPDATE_CAR_RATE, {
+        if (comment.parent_id === null) this.eventEmitter.emit(eventsEmitter.UPDATE_CAR_RATE, {
           car_id: comment.car_id
         } as UpdateCarRateEvent);
 
