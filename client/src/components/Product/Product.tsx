@@ -1,9 +1,12 @@
 import { useProduct } from "../../hooks/useProduct";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
+import { AiOutlineHeart } from "react-icons/ai";
+import { FiBookmark } from "react-icons/fi";
 const Product = () => {
   const { allProduct, loading } = useProduct();
   console.log(allProduct);
+  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -19,6 +22,10 @@ const Product = () => {
     );
   }
 
+  const handleClickBtn = (id: string) => {
+    navigate(`/detailcar/${id}`);
+  };
+
   return (
     <div>
       {allProduct.map((product) => (
@@ -27,9 +34,16 @@ const Product = () => {
           className="max-w-[350px] border-2 border-[#D7D7D7] p-4 mt-10 rounded-2xl"
         >
           <img src={`/${product.image}`} alt={product.name} />
-          <h2 className="font-bold text-[16px] text-[#0C0C0C] mb-2">
-            {product.name}
-          </h2>
+          <div className="flex justify-between items-center">
+            <h2 className="font-bold text-[16px] text-[#0C0C0C] mb-2">
+              {product.name}
+            </h2>
+            <div className="flex gap-1">
+              <AiOutlineHeart color="red" size={18} />
+              <FiBookmark size={18} />
+            </div>
+          </div>
+
           <div className="text-[#5a5656] text-[15px] mb-2">
             <span>کمپانی:</span>
             <span>{product.company}</span>
@@ -60,11 +74,12 @@ const Product = () => {
             {product.description}
           </p>
 
-          <Link to="">
-            <button className="bg-[#194BF0] text-[#FFFFFF] w-full px-4 py-2 rounded-2xl">
-              درخواست رزرو
-            </button>
-          </Link>
+          <button
+            className="bg-[#194BF0] text-[#FFFFFF] w-full px-4 py-2 rounded-2xl"
+            onClick={() => handleClickBtn(product.id)}
+          >
+            درخواست رزرو
+          </button>
         </div>
       ))}
     </div>
