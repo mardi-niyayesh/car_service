@@ -5,7 +5,6 @@ import DetailCarService from "./DetailCarService";
 import Desctiption from "./Desctiption";
 import ComponentQuestion from "./Question/ComponentQuestion";
 import Comment from "../../Commens/Comment";
-import Product from "../Product";
 
 const MainSite = () => {
   return (
@@ -16,12 +15,6 @@ const MainSite = () => {
       <ArticleCar />
       <Desctiption />
       <ComponentQuestion />
-      {/* for a test and later refactor */}
-      <div className="container max-auto  m-auto  grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 rounded-xl ">
-        <Product />
-        <Product />
-        <Product />
-      </div>
       <Comment />
     </>
   );
