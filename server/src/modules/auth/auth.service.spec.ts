@@ -1,5 +1,5 @@
-import {exampleDate} from "@/lib";
 import * as AuthDto from "./dto";
+import {exampleDate} from "@/lib";
 import {JwtService} from "@nestjs/jwt";
 import {ConfigService} from "@nestjs/config";
 import {EventEmitter2} from "@nestjs/event-emitter";
