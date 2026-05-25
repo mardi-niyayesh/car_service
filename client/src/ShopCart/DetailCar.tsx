@@ -4,8 +4,11 @@ import { useParams } from "react-router-dom";
 import { useProduct } from "../hooks/useProduct";
 import Des1Car from "./Des1Car";
 import Des2Car from "./Des2Car";
+import Des3Car from "./Des3Car";
 import Comment from "../Commens/Comment";
 import TotalPrice from "./TotalPrice";
+import { FaStar } from "react-icons/fa";
+
 const DetailCar = () => {
   const { allProduct } = useProduct();
   const { id } = useParams();
@@ -25,13 +28,20 @@ const DetailCar = () => {
       className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8"
       dir="rtl"
     >
-      <div className="max-w-max ">
+      <div className="md:w-1/2 w-full  ">
         <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-            <div className="p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-300">
-              <h1 className="text-blue-700 font-bold text-2xl lg:text-3xl">
-                {findProduct.name}
-              </h1>
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 ">
+            <div className="p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div className="flex  items-center justify-center gap-2.5">
+                <h1 className="text-blue-700 font-bold text-2xl lg:text-3xl">
+                  {findProduct.name}
+                </h1>
+                <div className="flex ">
+                  {Array.from({ length: findProduct.rate }, (_, index) => (
+                    <FaStar key={index} color="gold" size={18} />
+                  ))}
+                </div>
+              </div>
               <img
                 src={`/${findProduct.image}`}
                 alt={findProduct.name}
@@ -42,6 +52,11 @@ const DetailCar = () => {
           </div>
           <Des1Car />
         </div>
+        {findProduct.description && (
+          <div className="mt-2">
+            <Des3Car />
+          </div>
+        )}
       </div>
 
       <div className="flex">
