@@ -1,19 +1,19 @@
 import {exampleDate} from "@/lib";
+import * as AuthDto from "./dto";
 import {JwtService} from "@nestjs/jwt";
-import {PERMISSIONS, ROLES, eventsEmitter} from "@/common";
 import {ConfigService} from "@nestjs/config";
 import {EventEmitter2} from "@nestjs/event-emitter";
+import {UnauthorizedException} from "@nestjs/common";
 import {AuthService} from "@/modules/auth/auth.service";
 import {EmailService} from "@/modules/email/email.service";
+import {PERMISSIONS, ROLES, eventsEmitter} from "@/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {afterEach, beforeEach, describe, expect, it, vi, type Mock} from "vitest";
 import {ConfigMock, NormalizedClientInfo, PrismaMock} from "@/types";
 import {DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
-import {PermissionType, RefreshToken, Role, RoleType, User, UserRole} from "@/modules/prisma/generated/client";
 import {compareSecret, generateRandomToken, hashSecretToken} from "@/lib";
-import {UnauthorizedException} from "@nestjs/common";
-import * as AuthDto from "./dto";
-import {Prisma__RefreshTokenClient} from "@/modules/prisma/generated/models/RefreshToken";
+import {afterEach, beforeEach, describe, expect, it, vi, type Mock} from "vitest";
+import type {Prisma__RefreshTokenClient} from "@/modules/prisma/generated/models/RefreshToken";
+import {PermissionType, RefreshToken, Role, RoleType, User, UserRole} from "@/modules/prisma/generated/client";
 
 vi.mock('@/lib/utils/crypto', () => ({
   compareSecret: vi.fn(),
