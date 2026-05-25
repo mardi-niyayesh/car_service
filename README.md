@@ -234,7 +234,7 @@ A clean and modern full‑stack collaboration.
   <tr>
     <td align="center">
       <img src="https://github.com/homow.png" width="90" style="border-radius: 50%;" /><br>
-      <b>homow</b><br>
+      <b>Humayun</b><br>
       <sub>Backend Developer · Server‑Side</sub><br>
       <a href="https://github.com/homow">github.com/homow</a>
     </td>
