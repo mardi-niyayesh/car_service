@@ -38,12 +38,14 @@ const Des2Car = () => {
   ];
 
   return (
-    <ComponentDes
-      state="terms"
-      title="قوانین و شرایط"
-      destitle="برای اجاره خودرو با کارسرویس، این موارد را مطالعه کنید:"
-      sections={termsSections}
-    />
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 p-5">
+      <ComponentDes
+        state="terms"
+        title="قوانین و شرایط"
+        destitle="برای اجاره خودرو با کارسرویس، این موارد را مطالعه کنید:"
+        sections={termsSections}
+      />
+    </div>
   );
 };
 
