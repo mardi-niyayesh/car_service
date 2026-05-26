@@ -17,7 +17,7 @@ const AllProductMain = () => {
       <div className="flex  justify-end container max-auto">
         <div className="mt-10 ">
           <Link
-            to="/"
+            to="/reservcar"
             className="flex items-center justify-end gap-2 text-blue-500 hover:text-blue-700 font-semibold  "
           >
             <span> مشاهده ی همه </span>
