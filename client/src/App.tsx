@@ -27,6 +27,7 @@ import BlogPage from "./pages/BlogPage";
 import DetailArticle from "./components/Main/Article/DetailArticle";
 import ProductComponent from "./components/Product/ProductComponent";
 import DetailCar from "./ShopCart/DetailCar";
+import ReserveProduct from "./components/Product/ReserveProduct";
 //authorization pages
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
@@ -81,6 +82,7 @@ function App() {
             <Route path="/articles/:id" element={<DetailArticle />} />
             <Route path="/category/:slug" element={<ProductComponent />} />
             <Route path="/detailcar/:slug" element={<DetailCar />} />
+            <Route path="/reservcar" element={<ReserveProduct />} />
             <Route
               path="/car-details/:carId"
               element={<ProductDetailsPage />}
