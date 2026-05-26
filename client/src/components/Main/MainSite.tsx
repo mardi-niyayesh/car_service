@@ -4,7 +4,7 @@ import ArticleCar from "./Article/ArticleCar";
 import DetailCarService from "./DetailCarService";
 import Desctiption from "./Desctiption";
 import ComponentQuestion from "./Question/ComponentQuestion";
-import Comment from "../../Commens/Comment";
+import ProductMain from "./Product/AllProductMain";
 
 const MainSite = () => {
   return (
@@ -14,8 +14,8 @@ const MainSite = () => {
       <CarParts />
       <ArticleCar />
       <Desctiption />
+      <ProductMain />
       <ComponentQuestion />
-      <Comment />
     </>
   );
 };
