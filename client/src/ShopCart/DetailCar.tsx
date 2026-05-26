@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 import { useProduct } from "../hooks/useProduct";
 import Des1Car from "./Des1Car";
@@ -12,9 +10,9 @@ import HeroBaner from "../components/Main/HeroBaner";
 
 const DetailCar = () => {
   const { allProduct } = useProduct();
-  const { id } = useParams();
+  const { slug } = useParams();
 
-  const findProduct = allProduct.find((pro) => pro.id === id);
+  const findProduct = allProduct.find((pro) => pro.slug === slug);
 
   if (!findProduct) {
     return (
@@ -46,7 +44,6 @@ const DetailCar = () => {
 
           <div className="w-full md:w-1/2">
             <HeroBaner />
-           
           </div>
         </div>
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 p-5  md:w-1/2 mt-4">
