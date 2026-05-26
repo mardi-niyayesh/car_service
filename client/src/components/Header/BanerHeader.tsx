@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import ShowCategoryForm from "../Main/ShowCategoryForm";
 const BanerHeader = () => {
   return (
     <>
@@ -33,7 +32,6 @@ const BanerHeader = () => {
           </div>
         </div>
       </div>
-      <ShowCategoryForm />
     </>
   );
 };
