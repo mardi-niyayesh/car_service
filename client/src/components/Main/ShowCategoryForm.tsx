@@ -1,5 +1,4 @@
 import { useCategories } from "../../hooks/useCategories";
-import { FaCar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 const ShowCategoryForm = () => {
   const navigate = useNavigate();
@@ -24,18 +23,13 @@ const ShowCategoryForm = () => {
     navigate(`/category/${slug}`);
   };
   return (
-    <div className="w-full bg-white py-6 px-4 rounded-xl shadow-sm">
-      <div className="flex justify-center md:justify-start gap-2 items-center self-center mb-4">
-        <h2 className="text-xl font-bold text-right text-gray-800 border-r-4 border-blue-500 pr-3">
-          دسته‌بندی ماشین‌ها
-        </h2>
-        <FaCar size={20} />
-      </div>
-      <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+    <div className="w-full bg-white py-6 px-4 rounded-xl ">
+ 
+      <div className="flex flex-wrap gap-3 justify-center md:justify-center">
         {categories.map((cat) => (
           <button
             key={cat.id}
-            className="inline-block px-5 py-2 bg-gray-100 hover:bg-blue-500 text-gray-700 hover:text-white rounded-full transition-all duration-200 shadow-sm text-sm font-medium cursor-pointer"
+            className="inline-block px-5 py-2 bg-blue-400 hover:bg-blue-600 text-white hover:text-white rounded transition-all duration-200 shadow-sm text-sm font-medium cursor-pointer"
             onClick={() => hadleCategory(cat.slug)}
           >
             {cat.name}
