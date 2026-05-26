@@ -3,9 +3,9 @@ import { useParams } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 const Des4Car = () => {
   const { allProduct } = useProduct();
-  const { id } = useParams();
+  const { slug } = useParams();
 
-  const findProduct = allProduct.find((pro) => pro.id === id);
+  const findProduct = allProduct.find((pro) => pro.slug === slug);
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 mb-2 ">
       <div className="p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
