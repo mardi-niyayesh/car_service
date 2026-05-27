@@ -1,19 +1,34 @@
 import ComponentPaginat from "../../../Paginate/ComponentPaginat";
 import { useState, useEffect } from "react";
 import { FaCheck, FaTimesCircle } from "react-icons/fa";
-
+import { useUser } from "../../../hooks/useUser";
 import axiosClient from "../../../services/axiosClient";
+import SuccessModal from "../../../Modal/SuccessModal";
+import WarningModal from "../../../Modal/WarningModal ";
+import ErrorModal from "../../../Modal/ErrorModal";
 type CommentType = {
   rate: number;
   id: string;
   content: string;
 };
 const ComponentTableComment = () => {
+  const { hasPermission, hasRole } = useUser();
+
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [allcomment, setAllComment] = useState<CommentType[]>([]);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isWarningOpen, setIsWarningOpen] = useState(false);
+  const [WarningMessage, setWarningMessage] = useState("");
+  const [isErroOpen, setIsErroOpen] = useState(false);
+  const [ErroMessage, setErroMessage] = useState("");
 
+  const hasReject =
+    hasPermission("comment.reject") || hasRole("comment_manager");
+  const hasConfirm =
+    hasPermission("comment.confirm") || hasRole("comment_manager");
   const fetchAllComment = async () => {
     setLoading(true);
     try {
@@ -23,7 +38,7 @@ const ComponentTableComment = () => {
       const dataComment = response.data.response.data.comments;
       console.log("response to Get All Comments :", dataComment);
       setAllComment(dataComment);
-      
+
       const totalItems = response.data.response.data.count;
       const calculatedTotalPages = Math.ceil(totalItems / 5);
 
@@ -38,7 +53,26 @@ const ComponentTableComment = () => {
     fetchAllComment();
   }, [page]);
 
-  const handleRejectComment = () => {};
+  const handleRejectComment = async (id: string) => {
+    try {
+      const responsive = await axiosClient.patch(`comments/${id}/reject`);
+      if (responsive.status === 200) {
+        setIsSuccessOpen(true);
+        setSuccessMessage(
+          "کامنت مورد نظر با موفقیت ریجکت شد و از دیتابیس حذف شد",
+        );
+        fetchAllComment()
+      }
+    } catch (err: any) {
+      console.log("Error in reject comment : ", err);
+      if (err.responsive.res?.status === 404) {
+        setIsWarningOpen(true);
+        setWarningMessage(
+          "کامنت مورد نظر برای ریجکت کردن در دیتابیس یافت نشد لطفا صفحه رو رفرش کنید",
+        );
+      }
+    }
+  };
   const handleConfirmComment = () => {};
   return (
     <>
@@ -57,10 +91,12 @@ const ComponentTableComment = () => {
                 <th className="w-32 px-4 py-3 font-medium">نظر </th>
 
                 <th className="w-32 px-4 py-3 font-medium">امتیاز </th>
-
-                <th className="w-20 px-4 py-3 font-medium"> ریجکت</th>
-
-                <th className="w-20 px-4 py-3 font-medium"> تایید</th>
+                {hasReject && (
+                  <th className="w-20 px-4 py-3 font-medium"> ریجکت</th>
+                )}
+                {hasConfirm && (
+                  <th className="w-20 px-4 py-3 font-medium"> تایید</th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -76,19 +112,23 @@ const ComponentTableComment = () => {
                     <td className="px-4 py-3  sm:table-cell">{com.content}</td>
                     <td className="px-4 py-3  sm:table-cell">{com.rate}/5</td>
                     <td>
-                      <FaTimesCircle
-                        color="red"
-                        size={20}
-                        onClick={() => handleRejectComment()}
-                      />
+                      {hasReject && (
+                        <FaTimesCircle
+                          color="red"
+                          size={20}
+                          onClick={() => handleRejectComment(com.id)}
+                        />
+                      )}
                     </td>
-                    <td>
-                      <FaCheck
-                        color="green"
-                        size={20}
-                        onClick={() => handleConfirmComment()}
-                      />
-                    </td>
+                    {hasConfirm && (
+                      <td>
+                        <FaCheck
+                          color="green"
+                          size={20}
+                          onClick={() => handleConfirmComment()}
+                        />
+                      </td>
+                    )}
                   </tr>
                 );
               })}
@@ -100,6 +140,22 @@ const ComponentTableComment = () => {
         currentPage={page}
         totalPages={totalPage}
         onPageChange={setPage}
+      />
+      <SuccessModal
+        isOpen={isSuccessOpen}
+        onClose={() => setIsSuccessOpen(false)}
+        message={successMessage}
+      />
+
+      <WarningModal
+        isOpen={isWarningOpen}
+        onClose={() => setIsWarningOpen(false)}
+        message={WarningMessage}
+      />
+      <ErrorModal
+        isOpen={isErroOpen}
+        onClose={() => setIsErroOpen(false)}
+        message={ErroMessage}
       />
     </>
   );
