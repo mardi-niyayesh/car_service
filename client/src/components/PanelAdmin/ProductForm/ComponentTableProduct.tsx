@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useProduct } from "../../../hooks/useProduct";
 
 const ComponentTableProduct = () => {
-  const { loading, allProduct, refetch,totalPage } = useProduct();
+  const { loading, allProduct, refetch, totalPage } = useProduct();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const { hasRole, hasPermission } = useUser();
@@ -32,6 +32,9 @@ const ComponentTableProduct = () => {
   const hasUpdateProfile =
     hasPermission(["product.update", "product.create"]) ||
     hasRole("product_manager");
+
+  const hasViewComment =
+    hasPermission("comment.view") || hasRole("comment_manager");
 
   const handleDeleatProduct = async (id: string) => {
     try {
@@ -101,8 +104,9 @@ const ComponentTableProduct = () => {
                 {hasUpdateProfile && (
                   <th className="w-20 px-4 py-3 font-medium"> عکس</th>
                 )}
-
-                <th className="w-20 px-4 py-3 font-medium"> کامنت</th>
+                {hasViewComment && (
+                  <th className="w-20 px-4 py-3 font-medium"> کامنت</th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -164,16 +168,17 @@ const ComponentTableProduct = () => {
                         }
                       </td>
                     )}
-
-                    <td>
-                      {
-                        <FaRegComment
-                          size={18}
-                          className="cursor-pointer"
-                          onClick={() => handleShowComment(product.id)}
-                        />
-                      }
-                    </td>
+                    {hasViewComment && (
+                      <td>
+                        {
+                          <FaRegComment
+                            size={18}
+                            className="cursor-pointer"
+                            onClick={() => handleShowComment(product.id)}
+                          />
+                        }
+                      </td>
+                    )}
                   </tr>
                 );
               })}
