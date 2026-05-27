@@ -1,11 +1,8 @@
-// icons
 import { GiTowTruck, GiDart } from "react-icons/gi";
 import { AiFillCar } from "react-icons/ai";
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa";
-//component Modal
 import Modal from "./Modal";
-//hooks
 import { useState } from "react";
 
 const detail = [

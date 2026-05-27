@@ -15,6 +15,7 @@ type CacheEvictDecoratorPrefix = Omit<ParamCacheKeyType, "resource" | 'ctx'> & {
 
 interface FindPrefix {
   param: string;
+  extraKeys?: string[];
 }
 
 type CacheEvictDecoratorFindPrefixAndList = Omit<CacheEvictDecoratorPrefix, "prefix"> & {

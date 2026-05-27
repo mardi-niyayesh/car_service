@@ -1,0 +1,110 @@
+services:
+  postgres-db:
+    image: postgres:16-alpine
+    container_name: auto_rent_postgres_db
+    env_file:
+      - .env
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5433:5432"
+    volumes:
+      - auto_rent_postgres_db:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - AutoRentNetwork
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  redis-cache:
+    image: redis:8-alpine
+    container_name: auto_rent_redis_cache
+    volumes:
+      - auto_rent_redis_cache:/data
+    restart: always
+    ports:
+      - "6380:6379"
+    networks:
+      - AutoRentNetwork
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  nest-server:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile-dev
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+    container_name: auto_rent_nest_server
+    env_file:
+      - .env
+    networks:
+      - AutoRentNetwork
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres-db:5432/${DB_NAME}?pool_timeout=10&connect_timeout=15
+      NODE_ENV: development
+      REDIS_URL: redis://redis-cache:6379
+      REDIS_HOST: redis-cache
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      BASE_URL: ${BASE_URL}
+      PORT: ${PORT}
+      REDIS_KEY_PREFIX: ${REDIS_KEY_PREFIX}
+      CLIENT_NAME: "Auto Rent"
+      CLIENT_ADDRESS: http://localhost:5173/
+      CLIENT_DASHBOARD: http://localhost:5173/dashboard
+      CLIENT_RESET_PASSWORD: http://localhost:5173/reset-password
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES: ${JWT_EXPIRES}
+      EMAIL_SERVICE: ${EMAIL_SERVICE}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASS: ${EMAIL_PASS}
+      EMAIL_FROM: ${EMAIL_FROM}
+      EMAIL_REPLAY: ${EMAIL_REPLAY}
+      EMAIL_HOST: ${EMAIL_HOST}
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    restart: always
+
+  react-client:
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile-dev
+    container_name: auto_rent_react_client
+    depends_on:
+      - nest-server
+    ports:
+      - "5173:5173"
+    networks:
+      - AutoRentNetwork
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    restart: always
+
+volumes:
+  auto_rent_postgres_db:
+    name: auto_rent_postgres_db
+  auto_rent_redis_cache:
+    name: auto_rent_redis_cache
+
+networks:
+  AutoRentNetwork:
+    name: AutoRentNetwork
+    driver: bridge

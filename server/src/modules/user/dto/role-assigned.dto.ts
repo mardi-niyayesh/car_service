@@ -9,7 +9,7 @@ export const UserRoleAssigned = z.object({
   rolesId: z
     .array(z.uuidv4({error: "Invalid role ID format"}))
     .nonempty({error: "roles id Cannot be empty"})
-    .max(4, {error: "Cannot assign more than 4 roles at once"})
+    .max(5, {error: "Cannot assign more than 5 roles at once"})
     .transform(ids => [...new Set(ids)])
 });
 

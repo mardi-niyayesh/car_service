@@ -96,6 +96,10 @@ const COMMENT_PERMISSIONS = {
   COMMENT_REJECT: {
     name: 'comment.reject',
     permission_type: PermissionType.STANDARD
+  },
+  COMMENT_VIEW: {
+    name: 'comment.view',
+    permission_type: PermissionType.STANDARD
   }
 } as const satisfies PermissionStructure;
 

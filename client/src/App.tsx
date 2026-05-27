@@ -5,8 +5,8 @@ import { Routes, Route } from "react-router-dom";
 //layout components
 import MainLayout from "./Layouts/MainLayout";
 import AuthLayout from "./Layouts/AuthLayout";
-import DashboardLayout from "./dashboard/Components/DashboardLayout";
-import PanelAdminLayout from "./PanelAdmin/Components/PanelAdminLayout";
+import DashboardLayout from "./Layouts/DashboardLayout";
+import PanelAdminLayout from "./Layouts/PanelAdminLayout";
 //public pages
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
@@ -24,32 +24,37 @@ import YazdPage from "./components/ReserveCar.tsx/Pages/YazdPage";
 import ProductDetailsPage from "./components/ReserveCar.tsx/Pages/ProductDetailsPage";
 import BlogDetail from "./components/Main/Blog/BlogDetail";
 import BlogPage from "./pages/BlogPage";
+import DetailArticle from "./components/Main/Article/DetailArticle";
 //authorization pages
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 //pages for panelUser
-import AddressPages from "./dashboard/Pages/AddressPages";
-import CommentPages from "./dashboard/Pages/CommentPages";
-import ReservePages from "./dashboard/Pages/ReservePages";
-import WalletPages from "./dashboard/Pages/WalletPages";
-import CardPages from "./dashboard/Pages/CardPages";
-import LogoutPage from "./dashboard/Pages/LogoutPage";
-import ComponentFormUpdateUser from "./dashboard/Components/ComponentFormUpdateUser";
-import ComponnetUpdetePassword from "./dashboard/Components/ComponnetUpdetePassword";
-import Profile from "./dashboard/Components/Profile";
+import AddressPages from "./pages/AddressPages";
+import CommentPages from "./pages/CommentPages";
+import ReservePages from "./pages/ReservePages";
+import WalletPages from "./pages/WalletPages";
+import CardPages from "./pages/CardPages";
+import LogoutPage from "./pages/LogoutPage";
+import ComponentFormUpdateUser from "./components/Dashboard/ComponentFormUpdateUser";
+import ComponnetUpdetePassword from "./components/Dashboard/ComponnetUpdetePassword";
+import Profile from "./pages/Profile";
 //pages for panelAdmin
-import DetalisUserPage from "./PanelAdmin/Pages/DetalisUserPage";
-import ProductPage from "./PanelAdmin/Pages/ProductPage";
-import CategoryPage from "./PanelAdmin/Pages/CategoryPage";
-import UsersPage from "./PanelAdmin/Pages/UsersPage";
-import DescriptionRolePage from "./PanelAdmin/Pages/DescriptionRolePage";
-import CreatCustomRolePage from "./PanelAdmin/Pages/CreatCustomRolePage";
-import RolesPage from "./PanelAdmin/Pages/RolesPage";
+import DetalisUserPage from "./pages/DetalisUserPage";
+import ProductPage from "./pages/ProductPage";
+import CategoryPage from "./pages/CategoryPage";
+import UsersPage from "./pages/UsersPage";
+import DescriptionRolePage from "./pages/DescriptionRolePage";
+import CreatCustomRolePage from "./pages/CreatCustomRolePage";
+import RolesPage from "./pages/RolesPage";
 import { GaurdRoute } from "./Routes/GaurdRoute";
-import CreateCategory from "./PanelAdmin/Components/CategoryForm/Pages/CreateCategory";
-import UpdateCategory from "./PanelAdmin/Components/CategoryForm/Pages/UpdateCategory";
+import CreateCategory from "./components/PanelAdmin/CategoryForm/CreateCategory";
+import UpdateCategory from "./components/PanelAdmin/CategoryForm/UpdateCategory";
+import ComponentCreatpoduct from "./components/PanelAdmin/ProductForm/ComponentCreatpoduct";
+import ComponentUpdateProduct from "./components/PanelAdmin/ProductForm/ComponentUpdateProduct";
+import ComponentImgProduct from "./components/PanelAdmin/ProductForm/ComponentImgProduct";
+import ShowAllCommentsProduct from "./components/PanelAdmin/CommentForm/ShowAllCommentsProduct";
 function App() {
   return (
     <>
@@ -71,6 +76,7 @@ function App() {
             <Route path="/reserve/mashhad" element={<MashhadPage />} />
             <Route path="/reserve/Yazd" element={<YazdPage />} />
             <Route path="/reserve/neyshaboor" element={<Nayshaboor />} />
+            <Route path="/articles/:id" element={<DetailArticle />} />
 
             <Route
               path="/car-details/:carId"
@@ -93,14 +99,15 @@ function App() {
             <Route path="wallet" element={<WalletPages />} />
             <Route path="card" element={<CardPages />} />
             <Route path="logout" element={<LogoutPage />} />
-            <Route
-              path="Profile/updateUser"
-              element={<ComponentFormUpdateUser />}
-            />
+
             <Route path="Profile" element={<Profile />} />
             <Route
               path="Profile/updatePassword"
               element={<ComponnetUpdetePassword />}
+            />
+            <Route
+              path="Profile/updateUser"
+              element={<ComponentFormUpdateUser />}
             />
           </Route>
           {/* ------- Panel Admin Layout ------- */}
@@ -130,12 +137,28 @@ function App() {
                 </GaurdRoute>
               }
             />
+            <Route
+              path="customrole/description"
+              element={<DescriptionRolePage />}
+            />
             <Route path="customrole" element={<CreatCustomRolePage />} />
             <Route path="product" element={<ProductPage />} />
+            <Route
+              path="product/creatproduct"
+              element={<ComponentCreatpoduct />}
+            />
             <Route path="category" element={<CategoryPage />} />
             <Route path="roles" element={<RolesPage />} />
             <Route path="logout" element={<LogoutPage />} />
             <Route path="Profile" element={<Profile />} />
+            <Route
+              path="product/updateproduct/:slug"
+              element={<ComponentUpdateProduct />}
+            />
+            <Route
+              path="product/updateImg/:id"
+              element={<ComponentImgProduct />}
+            />
             <Route
               path="category/CreatCategory"
               element={
@@ -151,6 +174,10 @@ function App() {
             <Route
               path="Profile/updatePassword"
               element={<ComponnetUpdetePassword />}
+            />
+            <Route
+              path="product/showComment/:id"
+              element={<ShowAllCommentsProduct />}
             />
           </Route>
 

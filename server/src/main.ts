@@ -64,6 +64,7 @@ async function bootstrap(): Promise<void> {
       swaggerOptions: {
         withCredentials: true,
         persistAuthorization: true,
+        defaultModelsExpandDepth: -1,
       },
       customCssUrl: "/static/styles/swagger.css"
     });
@@ -117,7 +118,7 @@ ${colors.bold}${colors.white}📍 ENDPOINTS${colors.reset}
 ${colors.dim}${colors.gray}────────────────────────────────────────────────────────────────${colors.reset}
 
 ${colors.green}●${colors.reset} ${colors.bold}Server Address${colors.reset}     ${colors.cyan}${colors.underline}http://localhost:${PORT}${colors.reset}
-${colors.blue}●${colors.reset} ${colors.bold}API Base Path${colors.reset}       ${colors.blue}${colors.underline}${baseUrl}${colors.reset}
+${colors.blue}●${colors.reset} ${colors.bold}API Base Path${colors.reset}      ${colors.blue}${colors.underline}${baseUrl}${colors.reset}
 ${colors.yellow}●${colors.reset} ${colors.bold}Swagger JSON${colors.reset}       ${colors.yellow}${colors.underline}${baseUrl}/docs-json${colors.reset}
 ${colors.red}●${colors.reset} ${colors.bold}Swagger YAML${colors.reset}       ${colors.red}${colors.underline}${baseUrl}/docs-yaml${colors.reset}
 ${colors.magenta}●${colors.reset} ${colors.bold}Swagger UI${colors.reset}         ${colors.magenta}${colors.underline}${baseUrl}/docs${colors.reset}

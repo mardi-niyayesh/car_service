@@ -2,7 +2,7 @@ import z from "zod";
 import {SetMetadata} from "@nestjs/common";
 import {PermissionsKeyType, PrismaModels} from "@/common";
 
-export const PERMISSION_METADATA = "PERMISSIONS";
+export const PERMISSION_METADATA = "PERMISSIONS_METADATA" as const;
 
 export interface PermissionDecoratorParams<T extends Record<string, unknown> = never, U extends z.ZodTypeAny = never> {
   owner?: boolean;

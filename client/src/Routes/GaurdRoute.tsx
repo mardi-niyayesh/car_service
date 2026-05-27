@@ -3,16 +3,14 @@ import { useUser } from "../hooks/useUser";
 
 type GaurdRouteType = {
   children: React.ReactNode;
-  requiredPermission: string;
-  //if not accesss => what page?
+  requiredPermission: string | string[]; 
   fallbackPath?: string;
 };
 
 export const GaurdRoute = ({
-  //All pages
   children,
   requiredPermission,
-  fallbackPath = "/dashboard",
+  fallbackPath = "/",
 }: GaurdRouteType) => {
   const { hasPermission, isLoading } = useUser();
 
@@ -20,7 +18,12 @@ export const GaurdRoute = ({
     return <div>Loading...</div>;
   }
 
-  if (!hasPermission(requiredPermission)) {
+
+  const hasAccess = Array.isArray(requiredPermission)
+    ? requiredPermission.some(perm => hasPermission(perm))
+    : hasPermission(requiredPermission);
+
+  if (!hasAccess) {
     return <Navigate to={fallbackPath} replace />;
   }
 

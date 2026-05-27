@@ -1,11 +1,10 @@
-//components
 import CarParts from "./CarParts";
 import WhyAutoRent from "./WhyAutoRent";
 import ArticleCar from "./Article/ArticleCar";
 import DetailCarService from "./DetailCarService";
 import Desctiption from "./Desctiption";
 import ComponentQuestion from "./Question/ComponentQuestion";
-import Comment from "../../ComponentPublic/Comment";
+import Comment from "../../Commens/Comment";
 import Product from "../Product";
 
 const MainSite = () => {

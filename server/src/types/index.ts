@@ -2,6 +2,7 @@ export * from "./express";
 export * from "./car.types";
 export * from "./auth.types";
 export * from "./cart.types";
+export * from "./test.types";
 export * from "./role.types";
 export * from "./user.types";
 export * from "./request.types";

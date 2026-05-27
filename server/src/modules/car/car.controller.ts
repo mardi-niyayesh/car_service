@@ -3,9 +3,9 @@ import {ApiTags} from "@nestjs/swagger";
 import {CarService} from "./car.service";
 import * as CarDecorator from "./decorators";
 import {Car} from "@/modules/prisma/generated/client";
-import {ZodPipe, PREFIX_PUBLIC_PATH, CAR_IMAGE_UPLOAD_PATH} from "@/common";
 import {Put, Get, Req, Body, Post, Param, Query, Delete, Controller, UploadedFile, BadRequestException} from '@nestjs/common';
-import type {AccessRequest, ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, OwnershipRequest, SafeCarNCategory} from "@/types";
+import {ZodPipe, PREFIX_PUBLIC_PATH, CAR_IMAGE_UPLOAD_PATH, PaginationValidator, type PaginationValidatorType, UUIDv4Validator} from "@/common";
+import type {AccessRequest, ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, CommentListAndUser, OwnershipRequest, SafeCarNCategory} from "@/types";
 
 /**
  * Car management endpoints for handling vehicle resources.
@@ -120,5 +120,25 @@ export class CarController {
     @Req() req: OwnershipRequest<Car>
   ) {
     return this.carService.delete(id, req.ownershipData);
+  }
+
+  /**
+   * Retrieves all comments for a specific car identified by its id.
+   *
+   * @param id - Unique car identifier from route parameter
+   * @param pagination
+   * @returns Paginated list of comments associated with the car
+   *
+   * @public - No authentication required
+   *
+   * @example GET /cars/car-id/comments?page=1&limit=10&order=desc
+   */
+  @Get(':id/comments')
+  @CarDecorator.FindAllCommentsDecorator()
+  findCarComments(
+    @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
+    @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
+  ): Promise<ApiResponse<CommentListAndUser>> {
+    return this.carService.findAllComments(id, pagination);
   }
 }

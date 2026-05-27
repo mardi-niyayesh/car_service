@@ -10,8 +10,6 @@ export const CreateCommentValidator = z.object({
 
   rate: z.number().min(1).max(5).optional().default(5),
 
-  car_id: z.uuidv4(),
-
   parent_id: z.uuidv4().nullable().default(null),
 });
 
@@ -36,7 +34,7 @@ export const exampleComment: CreateCommentResponse['comment'] = {
 /** example success response */
 export class CreateCommentOk extends getBaseOkResponseSchema<CreateCommentResponse>({
   create: true,
-  path: "comments",
+  path: "comments/id",
   response: {
     message: "comment created successfully.",
     data: {
@@ -47,7 +45,7 @@ export class CreateCommentOk extends getBaseOkResponseSchema<CreateCommentRespon
 
 /** example bad request response */
 export class CreateCommentBadReq extends getZodErrorBody({
-  path: "comments",
+  path: "comments/id",
   errors: [
     {
       field: "content",
@@ -71,7 +69,7 @@ export class CreateCommentBadReq extends getZodErrorBody({
 /** example not found response */
 export class CreateCommentNotFound extends getNormalErrorResponse({
   statusCode: 404,
-  path: "comments",
+  path: "comments/id",
   message: "car not exist exists in database, please change car_id",
   error: "car not exists"
 }) {}

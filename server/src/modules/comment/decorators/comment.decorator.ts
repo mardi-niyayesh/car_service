@@ -2,6 +2,7 @@ import {
   ApiBody,
   ApiParam,
   ApiOperation,
+  ApiOkResponse,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiForbiddenResponse,
@@ -9,14 +10,43 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 
+import {
+  Public,
+  UUID4Dto,
+  Permission,
+  CacheEvict,
+  PERMISSIONS,
+  getForbiddenResponse,
+  getUnauthorizedResponse,
+  PaginationDecoratorQueries,
+} from "@/common";
+
 import * as CommentDto from "../dto";
-import {applyDecorators} from "@nestjs/common";
-import {getForbiddenResponse, getNormalErrorResponse, getUnauthorizedResponse, Permission, PERMISSIONS, UUID4Dto} from "@/common";
+import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
+import {findAllCommentCacheableExtraKeys} from "@/modules/car/decorators";
+
+export const FindCommentRepliesDecorator = () => applyDecorators(
+  HttpCode(HttpStatus.OK),
+  ApiOperation(CommentDto.findCommentRepliesOperation),
+  Public(),
+  ApiParam(UUID4Dto('id')),
+  PaginationDecoratorQueries(),
+  ApiOkResponse({type: CommentDto.FindRepliesOk}),
+);
 
 export const CreateCommentDecorator = () => applyDecorators(
+  CacheEvict({
+    resource: 'comment',
+    findPrefix: {
+      param: 'id',
+      extraKeys: findAllCommentCacheableExtraKeys,
+    }
+  }),
+  HttpCode(HttpStatus.CREATED),
   Permission({
     permissions: [PERMISSIONS.USER_SELF]
   }),
+  ApiParam(UUID4Dto('id')),
   ApiBody({type: CommentDto.CreateCommentDto}),
   ApiOperation(CommentDto.createCommentOperation),
   ApiCreatedResponse({type: CommentDto.CreateCommentOk}),
@@ -25,12 +55,33 @@ export const CreateCommentDecorator = () => applyDecorators(
   ApiNotFoundResponse({type: CommentDto.CreateCommentNotFound})
 );
 
+export const FindAllUnconfirmedCommentDecorator = () => applyDecorators(
+  HttpCode(HttpStatus.OK),
+  Permission({
+    permissions: [PERMISSIONS.COMMENT_VIEW]
+  }),
+  ApiOperation(CommentDto.findAllUnconfirmedCommentsOperation),
+  PaginationDecoratorQueries(),
+  ApiOkResponse({type: CommentDto.FindAllUnconfirmedOk}),
+  ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/unconfirmed")}),
+  ApiForbiddenResponse({
+    type: getForbiddenResponse("comments/unconfirmed", {
+      resource: 'comment',
+      required_mode: 'ALL',
+      required_permissions: [PERMISSIONS.COMMENT_VIEW],
+      missing_permissions: [PERMISSIONS.COMMENT_VIEW],
+    })
+  }),
+);
+
 export const ConfirmCommentDecorator = () => applyDecorators(
+  HttpCode(HttpStatus.OK),
   Permission({
     permissions: [PERMISSIONS.COMMENT_CONFIRM]
   }),
   ApiParam(UUID4Dto('id')),
   ApiOperation(CommentDto.confirmCommentOperation),
+  ApiOkResponse({type: CommentDto.ConfirmedCommentOk}),
   ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/id/confirm")}),
   ApiForbiddenResponse({
     type: getForbiddenResponse("comments/id/confirm", {
@@ -40,12 +91,25 @@ export const ConfirmCommentDecorator = () => applyDecorators(
       missing_permissions: [PERMISSIONS.COMMENT_CONFIRM],
     })
   }),
-  ApiNotFoundResponse({
-    type: getNormalErrorResponse({
-      path: "comment/id/confirm",
-      statusCode: 404,
-      message: 'comment not found in database, or already is confirmed',
-      error: 'comment not found'
+  ApiNotFoundResponse({type: CommentDto.ConfirmCommentNotFound})
+);
+
+export const RejectCommentDecorator = () => applyDecorators(
+  HttpCode(HttpStatus.OK),
+  Permission({
+    permissions: [PERMISSIONS.COMMENT_REJECT],
+  }),
+  ApiParam(UUID4Dto('id')),
+  ApiOperation(CommentDto.rejectCommentOperation),
+  ApiOkResponse({type: CommentDto.RejectCommentOk}),
+  ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/id/reject")}),
+  ApiForbiddenResponse({
+    type: getForbiddenResponse("comments/id/reject", {
+      resource: 'comment',
+      required_mode: 'ANY',
+      required_permissions: [PERMISSIONS.COMMENT_REJECT],
+      missing_permissions: [PERMISSIONS.COMMENT_REJECT],
     })
-  })
+  }),
+  ApiNotFoundResponse({type: CommentDto.RejectCommentNotFound})
 );

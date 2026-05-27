@@ -1,14 +1,10 @@
-//components
 import AuthForm from "../components/common/AuthForm";
-//Modal
-import SuccessModal from "../components/common/SuccessModal";
-import ErrorModal from "../components/common/ErrorModal";
-import WarningModal from "../components/common/WarningModal ";
-//hooks
+import SuccessModal from "../Modal/SuccessModal";
+import ErrorModal from "../Modal/ErrorModal";
+import WarningModal from "../Modal/WarningModal ";
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-//api
 import { resetPassword } from "../services/api";
 
 const ResetPasswordPage = () => {
@@ -16,15 +12,12 @@ const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
 
-  // SuccessModal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 
-  // ErrorModal
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // WarningModal
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
   const [warningMessage, setWarningMessage] = useState("");
 
@@ -33,16 +26,13 @@ const ResetPasswordPage = () => {
     onSuccess: (data) => {
       console.log("پاسخ سرور:", data);
 
-      //success
       if (data.success === true) {
         setModalMessage(data.message || "رمز عبور شما با موفقیت تغییر کرد");
         setIsModalOpen(true);
         setTimeout(() => {
           navigate("/dashboard");
         }, 3000);
-      }
-      // error 400
-      else if (data.statusCode === 400) {
+      } else if (data.statusCode === 400) {
         setWarningMessage(
           "اطلاعات وارد شده معتبر نیست.\n" +
             "لطفاً رمز عبور جدید را با شرایط زیر وارد کنید:\n" +
@@ -50,9 +40,7 @@ const ResetPasswordPage = () => {
             "• شامل حروف و اعداد",
         );
         setIsWarningModalOpen(true);
-      }
-      // error 401
-      else if (data.statusCode === 401) {
+      } else if (data.statusCode === 401) {
         setWarningMessage(
           " لینک بازیابی رمز عبور منقضی شده است.\n" +
             "لطفاً مجدداً درخواست بازیابی رمز بدهید.",
@@ -61,9 +49,7 @@ const ResetPasswordPage = () => {
         setTimeout(() => {
           navigate("/forgot-password");
         }, 3000);
-      }
-      // error 409
-      else if (data.statusCode === 409) {
+      } else if (data.statusCode === 409) {
         setWarningMessage(
           " این لینک قبلاً استفاده شده است.\n" +
             "اگر نیاز به تغییر رمز دارید، مجدداً درخواست بدهید.",
@@ -72,9 +58,7 @@ const ResetPasswordPage = () => {
         setTimeout(() => {
           navigate("/forgot-password");
         }, 3000);
-      }
-      //other error
-      else {
+      } else {
         setErrorMessage("خطایی رخ داد. لطفاً دوباره تلاش کنید.");
         setIsErrorModalOpen(true);
       }
@@ -86,18 +70,15 @@ const ResetPasswordPage = () => {
     },
   });
 
-  // SuccessModal
   const handleCloseModal = () => {
     setIsModalOpen(false);
     navigate("/login");
   };
 
-  // ErrorModal
   const handleCloseErrorModal = () => {
     setIsErrorModalOpen(false);
   };
 
-  // WarningModal
   const handleCloseWarningModal = () => {
     setIsWarningModalOpen(false);
   };

@@ -2,18 +2,16 @@ import {
   UUID4Dto,
   Cacheable,
   PERMISSIONS,
-  pagePaginationDto,
-  limitPaginationDto,
-  orderByPaginationDto,
   getForbiddenResponse,
   getBadRequestUUIDParams,
   getUnauthorizedResponse,
+  PaginationDecoratorQueries,
 } from "@/common";
 
 import {ONE_MINUTE_MS} from "@/lib";
 import * as PermissionDto from "../dto";
 import {applyDecorators, Get, HttpCode, HttpStatus} from "@nestjs/common";
-import {ApiBadRequestResponse, ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {ApiBadRequestResponse, ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 export const FindOneDecorators = () => {
   return applyDecorators(
@@ -57,9 +55,7 @@ export const FindAllDecorators = () => {
   get permission list with pagination **Access restricted to users with permission: (owner.all or permission.view) only.**`,
       operationId: 'find_all_permission',
     }),
-    ApiQuery(pagePaginationDto),
-    ApiQuery(limitPaginationDto),
-    ApiQuery(orderByPaginationDto),
+    PaginationDecoratorQueries(),
     ApiOkResponse({type: PermissionDto.FindAllPermissionsOkRes}),
     ApiUnauthorizedResponse({type: getUnauthorizedResponse('permissions')}),
     ApiForbiddenResponse({type: getForbiddenResponse('permissions')}),

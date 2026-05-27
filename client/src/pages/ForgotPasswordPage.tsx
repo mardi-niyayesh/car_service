@@ -1,25 +1,19 @@
-//components
 import AuthForm from "../components/common/AuthForm";
-//modal
-import SuccessModal from "../components/common/SuccessModal";
-import ErrorModal from "../components/common/ErrorModal";
-import WarningModal from "../components/common/WarningModal ";
-//api
+import SuccessModal from "../Modal/SuccessModal";
+import ErrorModal from "../Modal/ErrorModal";
+import WarningModal from "../Modal/WarningModal ";
 import { forgotPassword } from "../services/api";
-//hook
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
-  //SuccessModal
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  //ErrorModal
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  //WarningModal
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
   const mutation = useMutation({
@@ -27,7 +21,6 @@ const ForgotPasswordPage = () => {
     onSuccess: (data) => {
       console.log("success", data);
 
-      //error 404
       if (data.statusCode === 404) {
         setWarningMessage(
           "شما ثبت نام نکرده اید . ابتدا وارد حساب کاربری خود شوید",
@@ -36,26 +29,18 @@ const ForgotPasswordPage = () => {
         setTimeout(() => {
           navigate("/register");
         }, 3000);
-      }
-      //error 409
-      else if (data.statusCode === 409) {
+      } else if (data.statusCode === 409) {
         setWarningMessage(
           "یک لینک فعال قبلاً برای این ایمیل ارسال شده است. لطفاً صندوق ورودی یا اسپم خود را بررسی کنید.",
         );
         setIsWarningModalOpen(true);
-      }
-      //error 500
-      else if (data.statusCode === 500) {
+      } else if (data.statusCode === 500) {
         setErrorMessage("خطای سرور. لطفاً بعداً دوباره تلاش کنید.");
         setIsErrorModalOpen(true);
-      }
-      //other error
-      else if (data.success === false) {
+      } else if (data.success === false) {
         setWarningMessage("خطایی رخ داده است");
         setIsWarningModalOpen(true);
-      }
-      //success
-      else {
+      } else {
         setModalMessage(
           "لینک بازیابی رمز عبور با موفقیت برای ایمیل شما ارسال شد",
         );
@@ -82,16 +67,16 @@ const ForgotPasswordPage = () => {
   const handleSubmit = (data: { email: string }) => {
     mutation.mutate(data);
   };
-  //SuccessModal
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     navigate("/reset-password");
   };
-  //ErrorModal
+
   const handleCloseErrorModal = () => {
     setIsErrorModalOpen(false);
   };
-  // WarningModal
+
   const handleCloseWarningModal = () => {
     setIsWarningModalOpen(false);
   };

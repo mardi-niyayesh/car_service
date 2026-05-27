@@ -1,7 +1,7 @@
 import * as AuthDto from "./dto";
-import {isProduction} from "@/lib";
 import {ApiTags} from "@nestjs/swagger";
 import {AuthService} from "./auth.service";
+import {ConfigService} from "@nestjs/config";
 import * as AuthDecorator from "./decorators";
 import type {CookieOptions, Response} from "express";
 import {BaseUserSchema} from "../user/dto/validators.dto";
@@ -23,10 +23,15 @@ import type {RefreshRequest, LoginResponse, ApiResponse, UserResponse, Normalize
 @Controller('auth')
 @Public()
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly config: ConfigService,
+  ) {}
 
   /** get same refreshToken options */
   getCookieOptions(maxAge?: number): CookieOptions {
+    const isProduction: boolean = this.config.get<string>('NODE_ENV') === "production";
+
     return {
       sameSite: isProduction ? "strict" : "lax",
       httpOnly: true,
@@ -109,7 +114,7 @@ export class AuthController {
   logout(
     @Req() req: RefreshRequest,
     @Res({passthrough: true}) res: Response
-  ): Promise<ApiResponse<void>> {
+  ): Promise<ApiResponse> {
     res.clearCookie("refreshToken", this.getCookieOptions());
     return this.authService.logout(req.refreshPayload);
   }
@@ -130,7 +135,7 @@ export class AuthController {
   resetPassword(
     @NormalizeClientInfo() clientInfo: NormalizedClientInfo,
     @Body(new ZodPipe(AuthDto.ResetPassword)) body: AuthDto.ResetPasswordType
-  ): Promise<ApiResponse<void>> {
+  ): Promise<ApiResponse> {
     return this.authService.resetPassword(body.token, body.password, clientInfo);
   }
 }

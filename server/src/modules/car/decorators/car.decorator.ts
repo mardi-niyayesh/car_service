@@ -6,13 +6,11 @@ import {
   Permission,
   PERMISSIONS,
   UUIDv4Validator,
-  pagePaginationDto,
-  limitPaginationDto,
-  orderByPaginationDto,
   getForbiddenResponse,
   CAR_IMAGE_UPLOAD_PATH,
   getUnauthorizedResponse,
   getBaseOkResponseSchema,
+  PaginationDecoratorQueries,
 } from "@/common";
 
 import {
@@ -35,8 +33,8 @@ import z from "zod";
 import * as CarDto from "../dto";
 import {getPath, ONE_HOUR_MS} from "@/lib";
 import * as CarConfig from "@/modules/car/configs";
-import {FileInterceptor} from "@nestjs/platform-express";
 import {Prisma} from "@/modules/prisma/generated/client";
+import {FileInterceptor} from "@nestjs/platform-express";
 import {applyDecorators, HttpCode, HttpStatus, UseInterceptors} from "@nestjs/common";
 
 export const FindOneDecorators = () => {
@@ -46,6 +44,19 @@ export const FindOneDecorators = () => {
       resource: 'car',
       paramsKey: ['slug'],
       ttl: ONE_HOUR_MS,
+    }),
+    ApiParam({
+      name: 'slug',
+      type: 'string',
+      required: true,
+      description: 'car slug',
+      example: 'car',
+      schema: {
+        type: 'string',
+        required: ['slug'],
+        description: 'car slug',
+        example: 'car',
+      }
     }),
     HttpCode(HttpStatus.OK),
     ApiOperation(CarDto.findOneCarOperation),
@@ -67,9 +78,7 @@ export const FindAllDecorators = () => {
     HttpCode(HttpStatus.OK),
     ApiOperation(CarDto.findAllCarOperation),
     ApiOkResponse({type: CarDto.FindAllCarOkRes}),
-    ApiQuery(pagePaginationDto),
-    ApiQuery(limitPaginationDto),
-    ApiQuery(orderByPaginationDto),
+    PaginationDecoratorQueries(),
     ApiQuery(CarDto.orderByFieldFindAllCarQuery),
     ApiQuery(CarDto.categoryFindAllCarQuery),
     ApiQuery(CarDto.inRentFindAllCarQuery),
@@ -211,3 +220,21 @@ export const DeleteDecorator = () => {
     }),
   );
 };
+
+export const findAllCommentCacheableExtraKeys: string[] = ['confirmed-car-comments'];
+
+export const FindAllCommentsDecorator = () => applyDecorators(
+  Cacheable({
+    resource: 'comment',
+    pagination: true,
+    ttl: ONE_HOUR_MS,
+    paramsKey: ['id'],
+    extraKeys: findAllCommentCacheableExtraKeys,
+  }),
+  HttpCode(HttpStatus.OK),
+  Public(),
+  ApiOperation(CarDto.findAllCommentsOperation),
+  ApiParam(UUID4Dto('id')),
+  PaginationDecoratorQueries(),
+  ApiOkResponse({type: CarDto.FindAllCommentsOk})
+);

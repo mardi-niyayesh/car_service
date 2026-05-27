@@ -17,11 +17,28 @@
 ```
 car_service/
 │
-├── backend/        # Car Service – Server‑Side API (NestJS)
+├── backend/        # Car Service – Server‑Side API (NestJS + Redis + PosrgresQL)
 │   └── server/
 │
 └── frontend/       # Client application (React + Vite)
     └── client/
+```
+
+# 📟 چطوری کار میکنه؟
+
+```mermaid
+graph TB
+    A["🌐 کاربر"] -->|HTTP Request|B["⚛️ کلاینت"]
+B -->|API Call|C["🟢 سرور"]
+
+C -->|Cache Hit/Miss|D["📡 ردیس"]
+D -->|Cached Data|C
+
+C -->|CRUD Operation|E["🐘 دیتابیس"]
+E -->|Raw Data|C
+
+C -->|HTTP Response| B
+B -->|UI Update|A
 ```
 
 ---
@@ -218,7 +235,7 @@ http://localhost:3000/api
   <tr>
     <td align="center">
       <img src="https://github.com/homow.png" width="90" style="border-radius: 50%;" /><br>
-      <b>homow</b><br>
+      <b>Humayun</b><br>
       <sub>توسعه‌دهنده بک‌اند · سمت سرور</sub><br>
       <a href="https://github.com/homow">github.com/homow</a>
     </td>

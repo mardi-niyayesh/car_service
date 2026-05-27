@@ -11,21 +11,21 @@ import { loginUser } from "../services/api";
 //types
 import { type LoginFormData } from "../types/auth.types";
 //Modal
-import SuccessModal from "../components/common/SuccessModal";
-import ErrorModal from "../components/common/ErrorModal";
-import WarningModal from "../components/common/WarningModal ";
+import SuccessModal from "../Modal/SuccessModal";
+import ErrorModal from "../Modal/ErrorModal";
+import WarningModal from "../Modal/WarningModal ";
 
 function LoginPage() {
   const navigate = useNavigate();
   //use az context for send infomation user to context
   const { setUser, setToken } = useUser();
-  //SuccessModal
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  //ErrorModal
+
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  //WarningModal
+
   const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
 

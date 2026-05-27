@@ -94,13 +94,20 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const hasPermission = useCallback(
-    (perm: string) => {
-      //reade All permessions user
-      const permissions = user?.permissions || [];
+    (permission: string | string[]): boolean => {
+      const isOwner =
+        user?.roles?.includes("owner") ||
+        user?.permissions?.includes("owner.all");
 
-      if (permissions.includes("owner.all")) return true;
+      if (isOwner) {
+        return true;
+      }
 
-      return permissions.includes(perm);
+      const userPermissions = user?.permissions ?? [];
+      if (Array.isArray(permission)) {
+        return permission.some((p) => userPermissions.includes(p));
+      }
+      return userPermissions.includes(permission);
     },
     [user],
   );

@@ -1,14 +1,14 @@
 import * as CarDto from "./dto";
-import {PREFIX_PUBLIC_PATH} from "@/common";
-import {Car, Prisma} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {type Car, Prisma} from "@/modules/prisma/generated/client";
+import {PaginationValidatorType, PREFIX_PUBLIC_PATH} from "@/common";
 import {checkConflictRecord, checkPrismaError, deleteOneFile} from "@/lib";
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
-import type {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, SafeCarNCategory} from "@/types";
+import type {CommentWhereInput} from "@/modules/prisma/generated/models/Comment";
+import type {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, CommentListAndUser, SafeCarNCategory} from "@/types";
 
 @Injectable()
-export class CarService {
-  constructor(private readonly prisma: PrismaService) {}
+export class CarService {constructor(private readonly prisma: PrismaService) {}
 
   /**
    * Find a single car by its unique slug.
@@ -33,7 +33,10 @@ export class CarService {
     return {
       message: "car successfully found.",
       data: {
-        car
+        car: {
+          ...car,
+          rate: parseFloat(car.rate.toFixed(1))
+        }
       }
     };
   }
@@ -237,7 +240,7 @@ export class CarService {
   /** delete a car record with id and ownership permission
    * - **only roles with permission (owner.all or product.delete or product.update) can accessibility to this route**
    */
-  async delete(id: string, car: Car): Promise<ApiResponse<void>> {
+  async delete(id: string, car: Car): Promise<ApiResponse> {
     try {
       await this.prisma.car.delete({
         where: {id}
@@ -259,5 +262,51 @@ export class CarService {
         notFoundResource: 'Car',
       });
     }
+  }
+
+  /**
+   * Find all comment with pagination by its unique id car.
+   * - **Accessible to all users (public endpoint)**
+   */
+  async findAllComments(car_id: string, {limit, offset, orderByLower}: PaginationValidatorType): Promise<ApiResponse<CommentListAndUser>> {
+    const where: CommentWhereInput = {
+      car_id,
+      parent_id: null,
+      is_confirmed: true,
+    };
+
+    const count: number = await this.prisma.comment.count({where});
+
+    const comments = await this.prisma.comment.findMany({
+      where,
+      take: limit,
+      skip: offset,
+      orderBy: {
+        created_at: orderByLower
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            display_name: true,
+          },
+        },
+        _count: {
+          select: {
+            replies: {
+              where: {is_confirmed: true}
+            }
+          }
+        }
+      }
+    });
+
+    return {
+      message: 'comments find successfully.',
+      data: {
+        count,
+        comments,
+      }
+    };
   }
 }

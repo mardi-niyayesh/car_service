@@ -1,4 +1,3 @@
-//Types
 import { type ReservAutorentType } from "../../types/auth.types";
 const ComponentReservAutorent = (props: ReservAutorentType) => {
   return (

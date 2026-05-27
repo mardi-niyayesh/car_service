@@ -2,7 +2,7 @@
 import ReserveComponent from "../ReserveComponent";
 import DesCar from "../DesCar";
 import CarComponent from "../CarComponent";
-import Comment from "../../../ComponentPublic/Comment";
+import Comment from "../../../Commens/Comment";
 //img neyshaboor
 import Nayshabbor from "../../../../assets/neydhaboor.png";
 import car1 from "../../../../assets/206.png";
@@ -12,28 +12,28 @@ import car4 from "../../../../assets/PERSIA.png";
 
 const ItemCar = [
   {
-    id:2,
+    id: 2,
     img: car1,
     ttile: "پژو ۲۰۶ ",
     price: "۲٫۴۰۰٫۰۰۰",
     duration: "3 تا 6 روز",
   },
   {
-    id:3,
-    img:car2,
+    id: 3,
+    img: car2,
     ttile: " ﻫﺎﯾﻤﺎ S8 TURBO",
     price: "۷٫۱۰۰٫۰۰۰",
     duration: "3 تا 6 روز",
   },
   {
-    id:6,
+    id: 6,
     img: car4,
     ttile: " پژو پرﺷﯿﺎ TU5",
     price: "۲٫۸۰۰٫۰۰۰",
     duration: "3 تا 6 روز",
   },
   {
-    id:5,
+    id: 5,
     img: car3,
     ttile: "  راﻧﺎ پلاس",
     price: "۲٫۴۰۰٫۰۰۰",
@@ -60,7 +60,7 @@ const Nayshaboor = () => {
           {ItemCar.map((car) => (
             <CarComponent
               key={car.id}
-               id={car.id}
+              id={car.id}
               img={car.img}
               title={car.ttile}
               price={car.price}
@@ -70,7 +70,7 @@ const Nayshaboor = () => {
         </div>
       </div>
       <DesCar />
-      <Comment/>
+      <Comment />
     </div>
   );
 };
