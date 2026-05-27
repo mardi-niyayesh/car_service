@@ -57,7 +57,8 @@ import UpdateCategory from "./components/PanelAdmin/CategoryForm/UpdateCategory"
 import ComponentCreatpoduct from "./components/PanelAdmin/ProductForm/ComponentCreatpoduct";
 import ComponentUpdateProduct from "./components/PanelAdmin/ProductForm/ComponentUpdateProduct";
 import ComponentImgProduct from "./components/PanelAdmin/ProductForm/ComponentImgProduct";
-import ShowAllCommentsProduct from "./components/PanelAdmin/CommentForm/ShowAllCommentsProduct";
+import CommentComponent from "./components/PanelAdmin/CommentForm/CommentComponent";
+
 function App() {
   return (
     <>
@@ -180,10 +181,7 @@ function App() {
               path="Profile/updatePassword"
               element={<ComponnetUpdetePassword />}
             />
-            <Route
-              path="product/showComment/:id"
-              element={<ShowAllCommentsProduct />}
-            />
+            <Route path="Comment" element={<CommentComponent />} />
           </Route>
 
           {/* ------- 404 ------- */}
