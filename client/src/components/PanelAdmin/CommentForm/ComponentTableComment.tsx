@@ -61,11 +61,11 @@ const ComponentTableComment = () => {
         setSuccessMessage(
           "کامنت مورد نظر با موفقیت ریجکت شد و از دیتابیس حذف شد",
         );
-        fetchAllComment()
+        fetchAllComment();
       }
     } catch (err: any) {
       console.log("Error in reject comment : ", err);
-      if (err.responsive.res?.status === 404) {
+      if (err.response?.status === 400) {
         setIsWarningOpen(true);
         setWarningMessage(
           "کامنت مورد نظر برای ریجکت کردن در دیتابیس یافت نشد لطفا صفحه رو رفرش کنید",
@@ -73,7 +73,23 @@ const ComponentTableComment = () => {
       }
     }
   };
-  const handleConfirmComment = () => {};
+  const handleConfirmComment = async (id: string) => {
+    try {
+      const respoinse = await axiosClient.patch(`comments/${id}/confirm`);
+      if (respoinse.status === 200) {
+        setIsSuccessOpen(true);
+        setSuccessMessage("کامنت مورد نظر با موفقیت تایید شد");
+      }
+    } catch (err: any) {
+      console.log("Error in tick comment :", err);
+      if (err.response?.status === 400) {
+        setIsWarningOpen(true);
+        setWarningMessage(
+          "کامنت مورد نظر برای تایید کردن در دیتابیس یافت نشد لطفا صفحه رو رفرش کنید",
+        );
+      }
+    }
+  };
   return (
     <>
       <div className="overflow-x-auto rounded-lg shadow-sm border border-gray-200 bg-white">
@@ -125,7 +141,7 @@ const ComponentTableComment = () => {
                         <FaCheck
                           color="green"
                           size={20}
-                          onClick={() => handleConfirmComment()}
+                          onClick={() => handleConfirmComment(com.id)}
                         />
                       </td>
                     )}
