@@ -1,3 +1,24 @@
+import {
+  Injectable,
+  HttpStatus,
+  ConflictException,
+  NotFoundException,
+  BadRequestException,
+  UnauthorizedException,
+  InternalServerErrorException,
+} from '@nestjs/common';
+
+import type {
+  ApiResponse,
+  UserResponse,
+  BaseException,
+  LoginResponse,
+  CreateCartSignup,
+  AccessTokenPayload,
+  RefreshTokenPayload,
+  NormalizedClientInfo,
+} from "@/types";
+
 import * as AuthDto from "./dto";
 import type {StringValue} from "ms";
 import {randomUUID} from "node:crypto";
@@ -8,8 +29,6 @@ import {EventEmitter2} from "@nestjs/event-emitter";
 import {PrismaService} from "../prisma/prisma.service";
 import {EmailService} from "@/modules/email/email.service";
 import {buildEmailHtml, checkPrismaError, compareSecret, generateRandomToken, getSafeUser, hashSecret, hashSecretToken} from "@/lib";
-import type {AccessTokenPayload, RefreshTokenPayload, ApiResponse, UserResponse, LoginResponse, BaseException, NormalizedClientInfo, CreateCartSignup} from "@/types";
-import {BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException} from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
