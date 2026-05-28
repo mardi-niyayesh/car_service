@@ -3,7 +3,7 @@ import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {CommentService} from "@/modules/comment/comment.service";
 import * as CommentDecorator from "./decorators/comment.decorator";
 import {Body, Controller, Get, Param, Patch, Post, Query, Req} from "@nestjs/common";
-import type {AccessRequest, ApiResponse, CommentListAndUser, CommentNUserNCarList, CreateCommentResponse} from "@/types";
+import type {AccessRequest, ApiResponse, CommentNUserNCarList, CreateCommentResponse, ReplyCommentListAndUser} from "@/types";
 import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
 
 /**
@@ -76,7 +76,7 @@ export class CommentController {
   findCommentReplies(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType,
-  ): Promise<ApiResponse<CommentListAndUser>> {
+  ): Promise<ApiResponse<ReplyCommentListAndUser>> {
     return this.commentService.findCommentReplies(id, pagination);
   }
 

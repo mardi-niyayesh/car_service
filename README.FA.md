@@ -235,7 +235,7 @@ http://localhost:3000/api
   <tr>
     <td align="center">
       <img src="https://github.com/homow.png" width="90" style="border-radius: 50%;" /><br>
-      <b>homow</b><br>
+      <b>Humayun</b><br>
       <sub>توسعه‌دهنده بک‌اند · سمت سرور</sub><br>
       <a href="https://github.com/homow">github.com/homow</a>
     </td>

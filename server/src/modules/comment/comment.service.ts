@@ -7,7 +7,7 @@ import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {eventsEmitter, PaginationValidatorType} from "@/common";
 import type {CommentWhereInput} from "@/modules/prisma/generated/models/Comment";
-import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList, UpdateCarRateEvent, CommentListAndUser} from "@/types";
+import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList, UpdateCarRateEvent, ReplyCommentListAndUser} from "@/types";
 
 @Injectable()
 export class CommentService {
@@ -24,7 +24,7 @@ export class CommentService {
    * @param pagination - pagination queries
    * @returns CommentListAndUser
    */
-  async findCommentReplies(id: string, pagination: PaginationValidatorType): Promise<ApiResponse<CommentListAndUser>> {
+  async findCommentReplies(id: string, pagination: PaginationValidatorType): Promise<ApiResponse<ReplyCommentListAndUser>> {
     const where: CommentWhereInput = {
       parent_id: id,
       is_confirmed: true,
@@ -36,6 +36,9 @@ export class CommentService {
 
     const comments = await this.prisma.comment.findMany({
       where,
+      omit: {
+        rate: true
+      },
       include: {
         user: {
           select: {
@@ -199,7 +202,7 @@ export class CommentService {
           },
         });
 
-        this.eventEmitter.emit(eventsEmitter.UPDATE_CAR_RATE, {
+        if (comment.parent_id === null) this.eventEmitter.emit(eventsEmitter.UPDATE_CAR_RATE, {
           car_id: comment.car_id
         } as UpdateCarRateEvent);
 
@@ -237,11 +240,12 @@ export class CommentService {
    * @param car_id - ID of the car to update
    */
   @OnEvent(eventsEmitter.UPDATE_CAR_RATE)
-  async updateCarRateEvent({car_id}: UpdateCarRateEvent) {
+  async updateCarRateEvent({car_id}: UpdateCarRateEvent): Promise<void> {
     const rates = await this.prisma.comment.aggregate({
       where: {
         car_id,
-        is_confirmed: true
+        is_confirmed: true,
+        parent_id: null,
       },
       _avg: {
         rate: true

@@ -29,6 +29,21 @@ export type CommentListAndUser = ListWithCount<{
   comments: CommentListAndUserWithChildCount[];
 }>;
 
+/** Comment without rate with user safe */
+type ReplyCommentAndUser = Omit<Comment, 'rate'> & {
+  user: Pick<SafeUser, "id" | 'display_name'>;
+};
+
+export type ReplyCommentListAndUserWithChildCount = ReplyCommentAndUser & {
+  _count: {
+    replies: number;
+  };
+};
+
+export type ReplyCommentListAndUser = ListWithCount<{
+  comments: ReplyCommentListAndUserWithChildCount[];
+}>;
+
 /** create comment response */
 export interface CreateCommentResponse {
   comment: Comment;

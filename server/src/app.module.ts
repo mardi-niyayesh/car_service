@@ -1,3 +1,4 @@
+import {join} from "path";
 import * as Modules from "./modules";
 import {throttlerConfig} from "@/lib";
 import {ConfigModule} from "@nestjs/config";
@@ -12,7 +13,8 @@ import {AccessTokenGuard, PermissionGuard, ClientInfoMiddleware, CacheableInterc
   imports: [
     // Config Service for Environment
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
+      envFilePath: join(process.cwd(), ".env"),
     }),
 
     // Throttler Module -Rate Limits
