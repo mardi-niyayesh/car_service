@@ -1,13 +1,3 @@
-import {
-  Injectable,
-  HttpStatus,
-  ConflictException,
-  NotFoundException,
-  BadRequestException,
-  UnauthorizedException,
-  InternalServerErrorException,
-} from '@nestjs/common';
-
 import type {
   ApiResponse,
   UserResponse,
@@ -18,6 +8,16 @@ import type {
   RefreshTokenPayload,
   NormalizedClientInfo,
 } from "@/types";
+
+import {
+  Injectable,
+  HttpStatus,
+  ConflictException,
+  NotFoundException,
+  BadRequestException,
+  UnauthorizedException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 
 import * as AuthDto from "./dto";
 import type {StringValue} from "ms";
