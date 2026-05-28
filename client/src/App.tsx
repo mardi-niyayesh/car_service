@@ -27,7 +27,7 @@ import BlogPage from "./pages/BlogPage";
 import DetailArticle from "./components/Main/Article/DetailArticle";
 import ProductComponent from "./components/Product/ProductComponent";
 import DetailCar from "./ShopCart/DetailCar";
-import ReserveProduct from "./components/Product/ReserveProduct";
+// import ReserveProduct from "./components/Product/ReserveProduct";
 //authorization pages
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
@@ -57,6 +57,7 @@ import UpdateCategory from "./components/PanelAdmin/CategoryForm/UpdateCategory"
 import ComponentCreatpoduct from "./components/PanelAdmin/ProductForm/ComponentCreatpoduct";
 import ComponentUpdateProduct from "./components/PanelAdmin/ProductForm/ComponentUpdateProduct";
 import ComponentImgProduct from "./components/PanelAdmin/ProductForm/ComponentImgProduct";
+
 import ComponentTableComment from "./components/PanelAdmin/CommentForm/ComponentTableComment";
 
 function App() {
@@ -83,7 +84,7 @@ function App() {
             <Route path="/articles/:id" element={<DetailArticle />} />
             <Route path="/category/:slug" element={<ProductComponent />} />
             <Route path="/detailcar/:slug" element={<DetailCar />} />
-            <Route path="/reservcar" element={<ReserveProduct />} />
+            {/* <Route path="/reservcar" element={<ReserveProduct />} /> */}
             <Route
               path="/car-details/:carId"
               element={<ProductDetailsPage />}
