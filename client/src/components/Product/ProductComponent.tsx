@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import Product from "./Product";
+import Product from "./GetAllProduct";
 import { useProduct } from "../../hooks/useProduct";
 import { useCategories } from "../../hooks/useCategories";
 
@@ -7,7 +7,7 @@ const ProductComponent = () => {
   const { allProduct, loading: productloding } = useProduct();
   const { categories, loading: categoryloding } = useCategories();
   const { slug } = useParams();
-  //   console.log("slug for product component : ", slug);
+  console.log("slug for product component : ", slug);
 
   if (productloding || categoryloding) {
     return (
@@ -30,12 +30,12 @@ const ProductComponent = () => {
   const categoryName = findCat?.name;
 
   const categoryId = findCat?.id;
-  //   console.log("categoryId :", categoryId);
+  console.log("categoryId :", categoryId);
 
   const filteredProducts = allProduct.filter(
     (pro) => pro.category_id === categoryId,
   );
-  //   console.log("filteredProducts :", filteredProducts);
+  console.log("filteredProducts :", filteredProducts);
 
   if (filteredProducts.length === 0) {
     return (
@@ -50,7 +50,7 @@ const ProductComponent = () => {
         <span>{categoryName}</span>
       </div>
 
-      <div className="container max-auto  m-auto  grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 rounded-xl ">
+      <div className="container max-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredProducts.map((pro) => (
           <Product key={pro.id} />
         ))}
