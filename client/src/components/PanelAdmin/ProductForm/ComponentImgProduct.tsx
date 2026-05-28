@@ -41,7 +41,7 @@ const ComponentImgProduct = () => {
         setSelecedtImg(null);
         setTimeout(() => {
           navigate("/panel/product");
-        }, 5000);
+        }, 3000);
       }
     } catch (err: any) {
       console.log("Error in upload img to ptoduct :", err);

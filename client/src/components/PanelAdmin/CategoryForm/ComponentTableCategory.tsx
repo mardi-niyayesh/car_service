@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FaPencilAlt } from "react-icons/fa";
@@ -7,48 +7,25 @@ import ComponentPaginat from "../../../Paginate/ComponentPaginat";
 import SuccessModal from "../../../Modal/SuccessModal";
 import WarningModal from "../../../Modal/WarningModal ";
 import { useUser } from "../../../hooks/useUser";
-type CategoryType = {
-  id: string;
-  name: string;
-  description: string;
-  slug: string;
-};
+import { useCategories } from "../../../hooks/useCategories";
 
 const ComponentTableCategory = (): React.ReactElement => {
   const { hasRole, hasPermission } = useUser();
   const navigate = useNavigate();
-  const [getcat, setGetcat] = useState<CategoryType[]>([]);
   const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(5);
+  
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [warningMessage, setWarningMessage] = useState("");
 
+  const { categories, totalCount, refetch } = useCategories(page, 5);
+  const totalPage = Math.ceil(totalCount / 5);
+
   const hasDeletePermission =
     hasPermission("category.delete") || hasRole("category_manager");
   const hasUpdatePermission =
     hasPermission("category.update") || hasRole("category_manager");
-
-  const GetAllCategory = async () => {
-    try {
-      const resCat = await axiosClient.get(
-        `/categories?page=${page}&limit=5&order=desc`,
-      );
-      const Allcat = resCat.data.response.data.categories;
-      const count = resCat.data.response.data.count;
-
-      const tota = Math.ceil(count / 5);
-      setTotalPage(tota);
-      console.log("response to grt all category :", Allcat);
-      setGetcat(Allcat);
-    } catch (err) {
-      console.log("Error in fetch All category :", err);
-    }
-  };
-  useEffect(() => {
-    GetAllCategory();
-  }, [page]);
 
   const handleDeleatCategory = async (CategoryId: string) => {
     if (!window.confirm("آیا از حذف این دسته‌بندی مطمئن هستید؟")) return;
@@ -57,7 +34,7 @@ const ComponentTableCategory = (): React.ReactElement => {
       console.log("response to deleat category : ", response);
       setIsSuccessOpen(true);
       setSuccessMessage("دسته بندی با موفقیت حذف شد");
-      GetAllCategory();
+      refetch();
     } catch (err) {
       console.log("error in deleat category :", err);
       if (err.response?.status === 403) {
@@ -110,7 +87,7 @@ const ComponentTableCategory = (): React.ReactElement => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {getcat.map((cat, index) => (
+            {categories.map((cat, index) => (
               <tr key={cat.id} className="hover:bg-gray-50 transition-colors">
                 <td className="px-4 py-3 hidden sm:table-cell">{index + 1}</td>
                 <td className="px-4 py-3 text-green-500">{cat.name}</td>

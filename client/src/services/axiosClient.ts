@@ -31,7 +31,7 @@ axiosClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const token = getCurrentToken();
 
-    // ✅ این دو خط رو اضافه کن
+   
     console.log("token in interceptor:", token);
     console.log("heder in  Authorization:", token ? `Bearer ${token}` : "Not");
 

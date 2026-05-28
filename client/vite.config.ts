@@ -12,10 +12,20 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, "/api/v1"),
-
         configure: (proxy, _options) => {
           proxy.on("proxyReq", (proxyReq, req, _res) => {
-            console.log("proxi:", req.method, req.url, "→", proxyReq.path);
+            console.log("proxy /api:", req.method, req.url, "→", proxyReq.path);
+          });
+        },
+      },
+    
+      "/uploads": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        secure: false,
+        configure: (proxy, _options) => {
+          proxy.on("proxyReq", (proxyReq, req, _res) => {
+            console.log("proxy /uploads:", req.method, req.url, "→", proxyReq.path);
           });
         },
       },
