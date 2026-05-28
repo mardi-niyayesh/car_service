@@ -3,8 +3,9 @@ import DatePicker from "react-datepicker-jalali";
 import "react-datepicker/dist/react-datepicker.css";
 import { MdLocationOn } from "react-icons/md";
 import { FaCalendarAlt } from "react-icons/fa";
-import { FaSearch } from "react-icons/fa";
 import { IoArrowDown } from "react-icons/io5";
+import { Link } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 
 const months = [
   "فروردین",
@@ -28,12 +29,9 @@ const HeroBaner = () => {
   const [returnDate, setReturnDate] = useState<Date | null>(null);
 
   return (
-    <div className=" ">
-      <div className=" text-center my-8 text-2xl font-bold text-blue-800">
-        اجاره خودرو در ایران با کار سرویس
-      </div>
+    <div>
       <form className="max-w-screen-lg container mx-auto mx-auto p-4 sm:p-6 bg-white rounded-lg shadow-md">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 ">
+        <div className="grid grid-cols-1  gap-4 mb-6 ">
           <div className="col-span-1">
             <label className="block text-lg font-semibold text-gray-700 mb-2">
               ایستگاه تحویل
@@ -145,7 +143,7 @@ const HeroBaner = () => {
                 <div className="absolute inset-y-0 right-0  flex items-center   pr-4">
                   <FaCalendarAlt size={24} className="text-blue-800 " />
                 </div>
-            
+
                 <div className="relative">
                   <DatePicker
                     selected={returnDate}
@@ -184,10 +182,22 @@ const HeroBaner = () => {
           </div>
         </div>
 
-        <button className="bg-blue-800 w-full hover:bg-blue-700 md:w-auto text-center text-white p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto">
-          <FaSearch />
-          خودروی مورد نظر را پیدا کنید
-        </button>
+        
+          <button className="bg-blue-500 w-full hover:bg-blue-700  text-center text-white p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto">
+            ثبت درخواست
+          </button>
+          <div className="flex">
+            <div className="mt-10 flex justify-end">
+              <Link
+                to="/"
+                className="flex items-center gap-2 text-blue-500 hover:text-blue-700 font-semibold  "
+              >
+                <span>انتقال به رزرو بعدی</span>
+                <FiArrowLeft className="text-lg" />
+              </Link>
+            </div>
+          </div>
+      
       </form>
     </div>
   );

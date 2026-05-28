@@ -25,6 +25,9 @@ import ProductDetailsPage from "./components/ReserveCar.tsx/Pages/ProductDetails
 import BlogDetail from "./components/Main/Blog/BlogDetail";
 import BlogPage from "./pages/BlogPage";
 import DetailArticle from "./components/Main/Article/DetailArticle";
+import ProductComponent from "./components/Product/ProductComponent";
+import DetailCar from "./ShopCart/DetailCar";
+import ReserveProduct from "./components/Product/ReserveProduct";
 //authorization pages
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
@@ -54,7 +57,8 @@ import UpdateCategory from "./components/PanelAdmin/CategoryForm/UpdateCategory"
 import ComponentCreatpoduct from "./components/PanelAdmin/ProductForm/ComponentCreatpoduct";
 import ComponentUpdateProduct from "./components/PanelAdmin/ProductForm/ComponentUpdateProduct";
 import ComponentImgProduct from "./components/PanelAdmin/ProductForm/ComponentImgProduct";
-import ShowAllCommentsProduct from "./components/PanelAdmin/CommentForm/ShowAllCommentsProduct";
+import CommentComponent from "./components/PanelAdmin/CommentForm/CommentComponent";
+
 function App() {
   return (
     <>
@@ -77,7 +81,9 @@ function App() {
             <Route path="/reserve/Yazd" element={<YazdPage />} />
             <Route path="/reserve/neyshaboor" element={<Nayshaboor />} />
             <Route path="/articles/:id" element={<DetailArticle />} />
-
+            <Route path="/category/:slug" element={<ProductComponent />} />
+            <Route path="/detailcar/:slug" element={<DetailCar />} />
+            <Route path="/reservcar" element={<ReserveProduct />} />
             <Route
               path="/car-details/:carId"
               element={<ProductDetailsPage />}
@@ -175,10 +181,7 @@ function App() {
               path="Profile/updatePassword"
               element={<ComponnetUpdetePassword />}
             />
-            <Route
-              path="product/showComment/:id"
-              element={<ShowAllCommentsProduct />}
-            />
+            <Route path="Comment" element={<CommentComponent />} />
           </Route>
 
           {/* ------- 404 ------- */}

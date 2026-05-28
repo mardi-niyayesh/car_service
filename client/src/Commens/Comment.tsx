@@ -1,10 +1,7 @@
 const Comment = () => {
   return (
-    <div className="container mx-auto p-4 sm:p-6 lg:p-8  mt-10">
-      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-600 mb-6 text-center">
-        دیدگاهتان را بنویسید
-      </h1>
-      <form className="bg-white p-4 sm:p-6 lg:p-8 rounded-lg shadow-md">
+    <div >
+      <form >
         <p className="text-gray-600 mb-4 text-sm sm:text-base">
           نشانی ایمیل شما منتشر نخواهد شد
         </p>

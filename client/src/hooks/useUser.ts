@@ -1,6 +1,4 @@
-//hooks
 import { useContext } from "react";
-//context
 import UserContext from "../Context/UserContext";
 
 export const useUser = () => {
