@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useUpdatePassword } from "../../dashboard/Api/ApiUpdatPassword";
+import { useUpdatePassword } from "./APi/ApiUpdatPassword";
 import SuccessModal from "../../Modal/SuccessModal";
 import WarningModal from "../../Modal/WarningModal ";
 import { useState } from "react";

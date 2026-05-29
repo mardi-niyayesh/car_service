@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LogoutUser } from "../dashboard/Api/ApiLogoutUser";
+import { LogoutUser } from "../components/Dashboard/APi/ApiLogoutUser";
 import WarningModal from "../Modal/WarningModal ";
 import SuccessModal from "../Modal/SuccessModal";
 import ErrorModal from "../Modal/ErrorModal";
