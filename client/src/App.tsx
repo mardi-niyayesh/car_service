@@ -57,7 +57,7 @@ import UpdateCategory from "./components/PanelAdmin/CategoryForm/UpdateCategory"
 import ComponentCreatpoduct from "./components/PanelAdmin/ProductForm/ComponentCreatpoduct";
 import ComponentUpdateProduct from "./components/PanelAdmin/ProductForm/ComponentUpdateProduct";
 import ComponentImgProduct from "./components/PanelAdmin/ProductForm/ComponentImgProduct";
-
+import CommentOneProduct from "./components/PanelAdmin/CommentForm/CommentOneProduct";
 import ComponentTableComment from "./components/PanelAdmin/CommentForm/ComponentTableComment";
 
 function App() {
@@ -183,6 +183,10 @@ function App() {
               element={<ComponnetUpdetePassword />}
             />
             <Route path="Comment" element={<ComponentTableComment />} />
+            <Route
+              path="product/commentoneproduct/:id"
+              element={<CommentOneProduct />}
+            />
           </Route>
 
           {/* ------- 404 ------- */}
