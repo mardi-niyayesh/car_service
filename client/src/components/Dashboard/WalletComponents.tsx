@@ -1,7 +1,6 @@
 import logowallet from "../../../assets/logowallet.png";
-import { type walletType } from "../../dashboard/Types/Dashboard.type";
 
-const WalletComponents = (props: walletType) => {
+const WalletComponents = (props) => {
   return (
     <div className="bg-gradient-to-br from-white to-gray-50/50 p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 group">
       <div className="flex items-center justify-between">
