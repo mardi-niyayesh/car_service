@@ -70,7 +70,7 @@ const ComponentTableProduct = () => {
     navigate(`updateImg/${slug}`);
   };
   const handleShowComment = async (id: string) => {
-    navigate(`showComment/${id}`);
+    navigate(`commentoneproduct/${id}`);
   };
 
   return (
