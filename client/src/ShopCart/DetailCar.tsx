@@ -5,7 +5,7 @@ import Des2Car from "./Des2Car";
 import Des3Car from "./Des3Car";
 import Des4Car from "./Des4Car";
 import Comment from "../Commens/Comment";
-
+import CommentOneProduct from "../components/PanelAdmin/CommentForm/CommentOneProduct";
 import HeroBaner from "../components/Main/HeroBaner";
 
 const DetailCar = () => {
@@ -13,6 +13,8 @@ const DetailCar = () => {
   const { slug } = useParams();
 
   const findProduct = allProduct.find((pro) => pro.slug === slug);
+
+  const productId = findProduct?.id;
 
   if (!findProduct) {
     return (
@@ -41,8 +43,7 @@ const DetailCar = () => {
               </div>
             )}
           </div>
-
-          <div className="w-full md:w-1/2">
+          <div className=" left-5  w-1/2">
             <HeroBaner />
           </div>
         </div>
@@ -52,6 +53,7 @@ const DetailCar = () => {
           </h2>
           <Comment />
         </div>
+        <CommentOneProduct productId={productId} />
       </div>
     </>
   );
