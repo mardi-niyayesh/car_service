@@ -5,14 +5,20 @@ import { useProduct } from "../hooks/useProduct";
 import { useState } from "react";
 import SuccessModal from "../Modal/SuccessModal";
 import WarningModal from "../Modal/WarningModal ";
+import { useUser } from "../hooks/useUser";
 type CommentForm = {
   rate?: number;
   content: string;
   parent_id: null | string;
 };
-const Comment = (replyToId: null) => {
+type CommentProps = {
+  replyToId?: string | null;
+  onSuccess?: () => void; // برای بستن مودال بعد از ثبت موفق
+};
+const Comment = ({ replyToId, onSuccess }: CommentProps) => {
   const { slug } = useParams();
   console.log("slug :", slug);
+  const { user } = useUser();
 
   const { allProduct } = useProduct();
 
@@ -24,7 +30,7 @@ const Comment = (replyToId: null) => {
 
   const {
     register,
-  
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -33,12 +39,12 @@ const Comment = (replyToId: null) => {
 
   const product = allProduct.find((pro) => pro.slug === slug);
   console.log("inform product :", product);
- 
+
   if (!product) {
     return <div>محصول مورد نظر یافت نشد</div>;
   }
 
- const selectedProduct = product.id;
+  const selectedProduct = product.id;
 
   const onsubmit = async (data: CommentForm) => {
     setLoading(true);
@@ -46,6 +52,15 @@ const Comment = (replyToId: null) => {
       content: String(data.content).trim(),
       rate: Number(data.rate ?? 5),
     };
+    if (data.parent_id) {
+      payload.parent_id = data.parent_id;
+    }
+
+    if (!user) {
+      setWarningMessage("برای ثبت نظر ابتدا باید وارد حساب کاربری خود شوید.");
+      setIsWarningOpen(true);
+      return;
+    }
 
     try {
       const response = await axiosClient.post(
@@ -58,6 +73,7 @@ const Comment = (replyToId: null) => {
         setSuccessMessage(
           "کامنت شما با موفقیت ثبت شد پس از تایید توسط ادمین نشان داده خواهد شد",
         );
+        reset()
       }
     } catch (err: any) {
       console.log("Error in response creat comment :", err);
@@ -71,6 +87,7 @@ const Comment = (replyToId: null) => {
       setLoading(false);
     }
   };
+
   return (
     <>
       <div>
@@ -83,7 +100,7 @@ const Comment = (replyToId: null) => {
               className={`mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm resize-y${
                 errors.content ? "border-red-500" : "border-gray-300"
               }`}
-              placeholder="نظر خود را اینجا بنویسید..."
+              placeholder="دیدگاه خود را اینجا بنویسید..."
               {...register("content", {
                 minLength: {
                   value: 2,
@@ -132,9 +149,10 @@ const Comment = (replyToId: null) => {
           <div className="mt-8 text-center">
             <button
               type="submit"
+              disabled={loading}
               className="w-full  px-6 py-3 bg-indigo-500 text-white font-medium rounded-md shadow-sm hover:bg-indigo-700 "
             >
-              فرستادن دیدگاه
+              {loading ? "در حال ارسال..." : "فرستادن دیدگاه"}
             </button>
           </div>
         </form>
