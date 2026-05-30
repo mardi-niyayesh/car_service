@@ -1,7 +1,7 @@
 import ReserveComponent from "../ReserveComponent";
 import CarComponent from "../CarComponent";
 import DesCar from "../DesCar";
-import Comment from "../../../Commens/Comment";
+import Comment from "../../CommentForm/Comment";
 
 //img qeshm
 import qeshm from "../../../../assets/qeshm-3.png";

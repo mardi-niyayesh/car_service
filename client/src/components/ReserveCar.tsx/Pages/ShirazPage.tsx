@@ -2,7 +2,7 @@
 import DesCar from "../DesCar";
 import ReserveComponent from "../ReserveComponent";
 import CarComponent from "../CarComponent";
-import Comment from "../../../Commens/Comment";
+import Comment from "../../CommentForm/Comment";
 //img shiraz
 import shirazimg from "../../../../assets/shiraz-2.png";
 //img car
