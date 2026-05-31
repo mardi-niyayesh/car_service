@@ -1,47 +1,6 @@
 import ReserveComponent from "../ReserveComponent";
-import CarComponent from "../CarComponent";
 import DesCar from "../DesCar";
-import Comment from "../../CommentForm/CommentForm";
-
-//img qeshm
 import qeshm from "../../../../assets/qeshm-3.png";
-
-//img car
-import car1 from "../../../../assets/tara.png";
-import car2 from "../../../../assets/tara.png";
-import car3 from "../../../../assets/caarr2qeshm.png";
-import car4 from "../../../../assets/pngegg-1.png";
-
-const ItemCar = [
-  {
-    id: 10,
-    img: car1,
-    ttile: "ﺗﺎرا اﺗﻮﻣﺎت",
-    price: "۳٫۷۰۰٫۰۰۰",
-    duration: "3 تا 6 روز",
-  },
-  {
-    id: 2,
-    img: car2,
-    ttile: "هیوندای ون H1",
-    price: "۷٫۶۰۰٫۰۰۰",
-    duration: "2 تا 5 روز",
-  },
-  {
-    id: 4,
-    img: car3,
-    ttile: " هیوﻧﺪا اﻟﻨﺘﺮا ۲۰۱۷",
-    price: "۶٫۳۰۰٫۰۰۰",
-    duration: "3 تا 6 روز",
-  },
-  {
-    id: 11,
-    img: car4,
-    ttile: "کیا اسپورتیج ۲۰۱۸",
-    price: "۶٫۳۰۰٫۰۰۰",
-    duration: "3 تا 6 روز",
-  },
-];
 
 const QeshmPage = () => {
   return (
@@ -59,22 +18,7 @@ const QeshmPage = () => {
          از جاذبه‌های زیبای جزیره قشم دیدن کنید."
       />
 
-      <div className="container mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {ItemCar.map((car) => (
-            <CarComponent
-              key={car.id}
-              id={car.id}
-              img={car.img}
-              title={car.ttile}
-              price={car.price}
-              duration={car.duration}
-            />
-          ))}
-        </div>
-      </div>
       <DesCar />
-      <Comment />
     </div>
   );
 };
