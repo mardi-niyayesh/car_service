@@ -3,8 +3,8 @@ import type {CarsResponse} from "@/types";
 import {ApiQueryOptions} from "@nestjs/swagger";
 import {exampleSafeCarRecord} from "./find-one.dto";
 import {minPriceAtDayCar, maxPriceAtDayCar} from "./create.dto";
+import {getBaseOkResponseSchema, getSafePaginationValidator} from "@/common";
 import {SlugCategoryRegex, CategorySlugValidator} from "@/modules/category/dto";
-import {getBaseOkResponseSchema, BasePaginationValidator, getSafePaginationValidator} from "@/common";
 
 function checkStringBoolean(value?: string): undefined | boolean {
   if (value === 'true') return true;
@@ -46,7 +46,7 @@ export const FindAllCarValidator = getSafePaginationValidator(z.object({
     .optional()
     .default('created_at')
     .catch('created_at')
-}).extend(BasePaginationValidator.shape));
+}));
 
 export type FindAllCarValidatorType = z.infer<typeof FindAllCarValidator>;
 
