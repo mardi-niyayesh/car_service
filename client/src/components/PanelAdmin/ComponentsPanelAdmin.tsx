@@ -36,13 +36,7 @@ const Menu = [
     label: "محصولات",
     icon: <FaBoxOpen style={{ opacity: 0.6 }} />,
   },
-  {
-    to:"comment",
-    label:"کامنت ",
-    icon:<FaRegComment style={{ opacity: 0.6 }}/>,
-    permission:"comment.view",
-    role:"comment_manager"
-  },
+ 
 ];
 
 const ComponentsPanelAdmin = () => {
