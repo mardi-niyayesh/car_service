@@ -9,6 +9,7 @@ import WarningModal from "../../../Modal/WarningModal ";
 import ErrorModal from "../../../Modal/ErrorModal";
 import { useNavigate } from "react-router-dom";
 import { useProduct } from "../../../hooks/useProduct";
+import ComponentTableComment from "../../CommentForm/ComponentTableComment";
 
 const ComponentTableProduct = () => {
   const { loading, allProduct, refetch, totalPage } = useProduct();
