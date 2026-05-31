@@ -143,16 +143,12 @@ export class CommentService {
       is_confirmed: false,
     };
 
-    console.log(pagination);
-
     if (pagination.car) {
       where = {
         ...where,
         car_id: pagination.car
       };
     }
-
-    console.log(where);
 
     const comments = await this.prisma.comment.findMany({
       where,
