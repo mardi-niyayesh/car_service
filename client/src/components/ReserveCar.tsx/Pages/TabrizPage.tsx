@@ -2,7 +2,7 @@
 import DesCar from "../DesCar";
 import ReserveComponent from "../ReserveComponent";
 import CarComponent from "../CarComponent";
-import Comment from "../../CommentForm/Comment";
+import Comment from "../../CommentForm/CommentForm";
 //img tabriz
 import Tabrizimg from "../../../../assets/TABRIZ-2.png";
 

@@ -2,7 +2,7 @@
 import ReserveComponent from "../ReserveComponent";
 import DesCar from "../DesCar";
 import CarComponent from "../CarComponent";
-import Comment from "../../CommentForm/Comment";
+import Comment from "../../CommentForm/CommentForm";
 //img neyshaboor
 import Nayshabbor from "../../../../assets/neydhaboor.png";
 import car1 from "../../../../assets/206.png";
