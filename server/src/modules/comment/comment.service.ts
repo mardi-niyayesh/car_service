@@ -24,11 +24,18 @@ export class CommentService {
    * @param pagination - pagination queries
    * @returns CommentListAndUser
    */
-  async findCommentReplies(id: string, pagination: PaginationValidatorType): Promise<ApiResponse<ReplyCommentListAndUser>> {
-    const where: CommentWhereInput = {
+  async findCommentReplies(id: string, pagination: CommentDto.FindUnconfirmedValidatorType): Promise<ApiResponse<ReplyCommentListAndUser>> {
+    let where: CommentWhereInput = {
       parent_id: id,
       is_confirmed: true,
     };
+
+    if (pagination.car?.length) {
+      where = {
+        ...where,
+        car_id: pagination.car,
+      };
+    }
 
     const count: number = await this.prisma.comment.count({where});
 

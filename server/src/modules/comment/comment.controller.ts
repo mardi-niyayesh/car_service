@@ -75,7 +75,7 @@ export class CommentController {
   @CommentDecorator.FindCommentRepliesDecorator()
   findCommentReplies(
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
-    @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType,
+    @Query(new ZodPipe(CommentDto.FindUnconfirmedValidator)) pagination: CommentDto.FindUnconfirmedValidatorType,
   ): Promise<ApiResponse<ReplyCommentListAndUser>> {
     return this.commentService.findCommentReplies(id, pagination);
   }

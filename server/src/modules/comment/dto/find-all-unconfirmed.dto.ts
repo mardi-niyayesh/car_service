@@ -1,7 +1,22 @@
+import z from "zod";
 import {exampleDate} from "@/lib";
-import {getBaseOkResponseSchema} from "@/common";
+import {ApiQueryOptions} from "@nestjs/swagger";
 import {confirmedCommentExample} from "./confirm.dto";
 import type {CommentNUserNCar, CommentNUserNCarList} from "@/types";
+import {BasePaginationValidator, getBaseOkResponseSchema, getSafePaginationValidator} from "@/common";
+
+export const FindUnconfirmedValidator = getSafePaginationValidator(z.object({
+  car: z.uuidv4().optional(),
+}).extend(BasePaginationValidator.shape));
+
+export type FindUnconfirmedValidatorType = z.infer<typeof FindUnconfirmedValidator>;
+
+export const carIdQuery: ApiQueryOptions = {
+  name: 'car',
+  type: 'string',
+  description: "car uuid v4",
+  required: false,
+};
 
 export const unconfirmedComment: CommentNUserNCar = {
   ...confirmedCommentExample,
