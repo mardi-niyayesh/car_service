@@ -31,14 +31,14 @@ export const BasePaginationValidator = z.object({
     .default("desc"),
 });
 
-export function getSafePaginationValidator<T extends z.ZodObject>(Schema: T) {
-  const FullSchema = Schema.extend(BasePaginationValidator.shape);
+type BasePaginationValidatorType = z.infer<typeof BasePaginationValidator>;
 
-  return FullSchema.transform(({order, ...data}) => ({
+export function getSafePaginationValidator<T extends z.ZodTypeAny<BasePaginationValidatorType>>(Schema: T) {
+  return Schema.transform(({order, ...data}) => ({
     ...data,
     orderByLower: order,
     orderByUpper: order === 'asc' ? 'ASC' : 'DESC',
-    offset: (data.limit as number) * ((data.page as number) - 1),
+    offset: data.limit * (data.page - 1),
   }));
 }
 
