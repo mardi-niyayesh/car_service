@@ -24,18 +24,11 @@ export class CommentService {
    * @param pagination - pagination queries
    * @returns CommentListAndUser
    */
-  async findCommentReplies(id: string, pagination: CommentDto.FindUnconfirmedValidatorType): Promise<ApiResponse<ReplyCommentListAndUser>> {
-    let where: CommentWhereInput = {
+  async findCommentReplies(id: string, pagination: PaginationValidatorType): Promise<ApiResponse<ReplyCommentListAndUser>> {
+    const where: CommentWhereInput = {
       parent_id: id,
       is_confirmed: true,
     };
-
-    if (pagination.car?.length) {
-      where = {
-        ...where,
-        car_id: pagination.car,
-      };
-    }
 
     const count: number = await this.prisma.comment.count({where});
 
@@ -143,12 +136,23 @@ export class CommentService {
    * @example
    * GET /comments/unconfirmed?page=2&limit=20&order=asc
    */
-  async findAllUnconfirmed(pagination: PaginationValidatorType): Promise<ApiResponse<CommentNUserNCarList>> {
+  async findAllUnconfirmed(pagination: CommentDto.FindUnconfirmedValidatorType): Promise<ApiResponse<CommentNUserNCarList>> {
     const {offset, limit, orderByLower} = pagination;
 
-    const where: Prisma.CommentWhereInput = {
+    let where: Prisma.CommentWhereInput = {
       is_confirmed: false,
     };
+
+    console.log(pagination);
+
+    if (pagination.car) {
+      where = {
+        ...where,
+        car_id: pagination.car
+      };
+    }
+
+    console.log(where);
 
     const comments = await this.prisma.comment.findMany({
       where,
