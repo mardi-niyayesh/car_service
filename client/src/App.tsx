@@ -57,8 +57,8 @@ import UpdateCategory from "./components/PanelAdmin/CategoryForm/UpdateCategory"
 import ComponentCreatpoduct from "./components/PanelAdmin/ProductForm/ComponentCreatpoduct";
 import ComponentUpdateProduct from "./components/PanelAdmin/ProductForm/ComponentUpdateProduct";
 import ComponentImgProduct from "./components/PanelAdmin/ProductForm/ComponentImgProduct";
-import CommentOneProduct from "./components/CommentForm/CommentOneProduct";
 import ComponentTableComment from "./components/CommentForm/ComponentTableComment";
+
 
 function App() {
   return (
@@ -185,7 +185,7 @@ function App() {
             <Route path="Comment" element={<ComponentTableComment />} />
             <Route
               path="product/commentoneproduct/:id"
-              element={<CommentOneProduct />}
+              element={<ComponentTableComment />}
             />
           </Route>
 
