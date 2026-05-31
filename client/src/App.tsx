@@ -21,7 +21,6 @@ import TabrizPage from "./components/ReserveCar.tsx/Pages/TabrizPage";
 import MashhadPage from "./components/ReserveCar.tsx/Pages/MashhadPage";
 import Nayshaboor from "./components/ReserveCar.tsx/Pages/Nayshaboor";
 import YazdPage from "./components/ReserveCar.tsx/Pages/YazdPage";
-import ProductDetailsPage from "./components/ReserveCar.tsx/Pages/ProductDetailsPage";
 import BlogDetail from "./components/Main/Blog/BlogDetail";
 import BlogPage from "./pages/BlogPage";
 import DetailArticle from "./components/Main/Article/DetailArticle";
@@ -59,7 +58,6 @@ import ComponentUpdateProduct from "./components/PanelAdmin/ProductForm/Componen
 import ComponentImgProduct from "./components/PanelAdmin/ProductForm/ComponentImgProduct";
 import ComponentTableComment from "./components/CommentForm/ComponentTableComment";
 
-
 function App() {
   return (
     <>
@@ -84,11 +82,6 @@ function App() {
             <Route path="/articles/:id" element={<DetailArticle />} />
             <Route path="/category/:slug" element={<ProductComponent />} />
             <Route path="/detailcar/:slug" element={<DetailCar />} />
-            {/* <Route path="/reservcar" element={<ReserveProduct />} /> */}
-            <Route
-              path="/car-details/:carId"
-              element={<ProductDetailsPage />}
-            />
           </Route>
 
           {/* ------- Auth Layout ------- */}
