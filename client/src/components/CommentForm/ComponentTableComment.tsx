@@ -1,18 +1,26 @@
-import ComponentPaginat from "../../../Paginate/ComponentPaginat";
+import ComponentPaginat from "../../Paginate/ComponentPaginat";
 import { useState, useEffect } from "react";
 import { FaCheck, FaTimesCircle } from "react-icons/fa";
-import { useUser } from "../../../hooks/useUser";
-import axiosClient from "../../../services/axiosClient";
-import SuccessModal from "../../../Modal/SuccessModal";
-import WarningModal from "../../../Modal/WarningModal ";
-import ErrorModal from "../../../Modal/ErrorModal";
+import { useUser } from "../../hooks/useUser";
+import axiosClient from "../../services/axiosClient";
+import SuccessModal from "../../Modal/SuccessModal";
+import WarningModal from "../../Modal/WarningModal ";
+import { useParams } from "react-router-dom";
+type User = {
+  display_name: string;
+};
 type CommentType = {
   rate: number;
   id: string;
   content: string;
+  user: User;
+  created_at: string;
+  is_confirmed: boolean;
 };
 const ComponentTableComment = () => {
   const { hasPermission, hasRole } = useUser();
+  const { id } = useParams();
+  console.log(id);
 
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPages] = useState(1);
@@ -23,7 +31,6 @@ const ComponentTableComment = () => {
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
   const [isErroOpen, setIsErroOpen] = useState(false);
-  const [ErroMessage, setErroMessage] = useState("");
 
   const hasReject =
     hasPermission("comment.reject") || hasRole("comment_manager");
@@ -33,7 +40,7 @@ const ComponentTableComment = () => {
     setLoading(true);
     try {
       const response = await axiosClient.get(
-        `/comments/unconfirmed?page=${page}&limit=5&order=desc`,
+        `/comments/unconfirmed?page=${page}&limit=10&order=desc&car=${id}`,
       );
       const dataComment = response.data.response.data.comments;
       console.log("response to Get All Comments :", dataComment);
@@ -104,9 +111,11 @@ const ComponentTableComment = () => {
                 <th className="w-12 px-4 py-3 font-medium hidden sm:table-cell">
                   ردیف
                 </th>
-                <th className="w-32 px-4 py-3 font-medium">نظر </th>
-
-                <th className="w-32 px-4 py-3 font-medium">امتیاز </th>
+                <th className="w-32 px-4 py-3 font-medium">متن </th>
+                <th className="w-32 px-4 py-3 font-medium hidden sm:table-cell">نویسنده </th>
+                <th className="w-32 px-4 py-3 font-medium">تاریخ ایجاد </th>
+                <th className="w-32 px-4 py-3 font-medium hidden sm:table-cell">امتیاز </th>
+                <th className="w-32 px-4 py-3 font-medium">وضعیت </th>
                 {hasReject && (
                   <th className="w-20 px-4 py-3 font-medium"> ریجکت</th>
                 )}
@@ -126,7 +135,20 @@ const ComponentTableComment = () => {
                       {(page - 1) * 5 + index + 1}
                     </td>
                     <td className="px-4 py-3  sm:table-cell">{com.content}</td>
-                    <td className="px-4 py-3  sm:table-cell">{com.rate}/5</td>
+                    <td className="px-4 py-3  hidden sm:table-cell">
+                      {com.user.display_name}
+                    </td>
+                    <td className="px-4 py-3  sm:table-cell">
+                      {new Date(com.created_at).toLocaleDateString("fa-IR")}
+                    </td>
+                    <td className="px-4 py-3  hidden sm:table-cell">{com.rate}/5</td>
+                    <td className="px-4 py-3  sm:table-cell">
+                      {!com.is_confirmed && (
+                        <span className="text-white text-[12px] bg-gray-400 rounded-2xl pr-1.5 pl-1.5">
+                          در انتظار تایید
+                        </span>
+                      )}
+                    </td>
                     <td>
                       {hasReject && (
                         <FaTimesCircle
@@ -167,11 +189,6 @@ const ComponentTableComment = () => {
         isOpen={isWarningOpen}
         onClose={() => setIsWarningOpen(false)}
         message={WarningMessage}
-      />
-      <ErrorModal
-        isOpen={isErroOpen}
-        onClose={() => setIsErroOpen(false)}
-        message={ErroMessage}
       />
     </>
   );

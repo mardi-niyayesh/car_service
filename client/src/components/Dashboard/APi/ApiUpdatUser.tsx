@@ -1,6 +1,6 @@
-import axiosClient from "../../services/axiosClient";
-import { useUser } from "../../hooks/useUser";
-import { setAxiosToken } from "../../services/axiosClient";
+import axiosClient from "../../../services/axiosClient";
+import { useUser } from "../../../hooks/useUser";
+import { setAxiosToken } from "../../../services/axiosClient";
 
 type UpdateUserData = {
   display_name?: string;
