@@ -17,7 +17,6 @@ type CommentType = {
   content: string;
   user: User;
   created_at: string;
-  is_confirmed: boolean;
 };
 const ComponentTableComment = () => {
   const { hasPermission, hasRole } = useUser();
@@ -148,10 +147,10 @@ const ComponentTableComment = () => {
                   امتیاز{" "}
                 </th>
                 <th className="w-32 px-4 py-3 font-medium">وضعیت </th>
-                {hasReject && (
+                {activeTable === "pending" && hasReject && (
                   <th className="w-20 px-4 py-3 font-medium"> ریجکت</th>
                 )}
-                {hasConfirm && (
+                {activeTable === "pending" && hasConfirm && (
                   <th className="w-20 px-4 py-3 font-medium"> تایید</th>
                 )}
               </tr>
@@ -187,23 +186,29 @@ const ComponentTableComment = () => {
                         </span>
                       )}
                     </td>
-                    <td>
-                      {hasReject && (
-                        <FaTimesCircle
-                          color="red"
-                          size={20}
-                          onClick={() => handleRejectComment(com.id)}
-                        />
-                      )}
-                    </td>
-                    {hasConfirm && (
-                      <td>
-                        <FaCheck
-                          color="green"
-                          size={20}
-                          onClick={() => handleConfirmComment(com.id)}
-                        />
-                      </td>
+                    {activeTable === "pending" && (
+                      <>
+                        {hasReject && (
+                          <td className="px-4 py-3">
+                            <FaTimesCircle
+                              color="red"
+                              size={20}
+                              onClick={() => handleRejectComment(com.id)}
+                              className="cursor-pointer"
+                            />
+                          </td>
+                        )}
+                        {hasConfirm && (
+                          <td className="px-4 py-3">
+                            <FaCheck
+                              color="green"
+                              size={20}
+                              onClick={() => handleConfirmComment(com.id)}
+                              className="cursor-pointer"
+                            />
+                          </td>
+                        )}
+                      </>
                     )}
                   </tr>
                 );
