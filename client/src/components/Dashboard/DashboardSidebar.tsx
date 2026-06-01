@@ -1,4 +1,4 @@
-import wallet from "../../../assets/empty-wallet.png";
+
 import ArrowLeft from "../../../assets/Arrowleft.png";
 import card from "../../../assets/card-pos.png";
 import reserv from "../../../assets/reserve.png";
@@ -6,7 +6,7 @@ import comment from "../../../assets/comment.png";
 import { Link } from "react-router-dom";
 
 const Menu = [
-  { to: "/dashboard/wallet", label: "کیف پول", icon: wallet },
+
   { to: "reserve", label: "رزروها", icon: reserv },
   { to: "card", label: "پرداخت", icon: card },
   { to: "comment", label: "نظرات", icon: comment },
