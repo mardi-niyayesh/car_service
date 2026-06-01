@@ -6,6 +6,8 @@ import axiosClient from "../../services/axiosClient";
 import SuccessModal from "../../Modal/SuccessModal";
 import WarningModal from "../../Modal/WarningModal ";
 import { useParams } from "react-router-dom";
+import { IoSyncOutline } from "react-icons/io5";
+
 type User = {
   display_name: string;
 };
@@ -30,25 +32,28 @@ const ComponentTableComment = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
-  const [isErroOpen, setIsErroOpen] = useState(false);
+  const [activeTable, setActiveTable] = useState("pending");
 
   const hasReject =
     hasPermission("comment.reject") || hasRole("comment_manager");
   const hasConfirm =
     hasPermission("comment.confirm") || hasRole("comment_manager");
+
   const fetchAllComment = async () => {
     setLoading(true);
+
     try {
-      const response = await axiosClient.get(
-        `/comments/unconfirmed?page=${page}&limit=10&order=desc&car=${id}`,
-      );
-      const dataComment = response.data.response.data.comments;
-      console.log("response to Get All Comments :", dataComment);
-      setAllComment(dataComment);
+      const endpoint =
+        activeTable === "pending"
+          ? `/comments/unconfirmed?page=${page}&limit=10&order=desc&car=${id}`
+          : `cars/${id}/comments?page=${page}&limit=10&order=desc`;
 
-      const totalItems = response.data.response.data.count;
-      const calculatedTotalPages = Math.ceil(totalItems / 5);
+      const response = await axiosClient.get(endpoint);
+      const { comments, count } = response.data.response.data;
+      console.log("response to Get All Comments :", comments);
 
+      setAllComment(comments);
+      const calculatedTotalPages = Math.ceil(count / 5);
       setTotalPages(calculatedTotalPages);
     } catch (err) {
       console.log("Error in get all comment :", err);
@@ -58,7 +63,7 @@ const ComponentTableComment = () => {
   };
   useEffect(() => {
     fetchAllComment();
-  }, [page]);
+  }, [page, activeTable]);
 
   const handleRejectComment = async (id: string) => {
     try {
@@ -97,8 +102,31 @@ const ComponentTableComment = () => {
       }
     }
   };
+  const handleConfirmed = () => {
+    setActiveTable("confirmed");
+  };
+  const handlePennding = () => {
+    setActiveTable("pending");
+  };
   return (
     <>
+      <div className="flex flex-wrap gap-3 sm:gap-4 mb-8">
+        <button
+          onClick={handleConfirmed}
+          className="bg-white text-[#9A9A9A] text-sm sm:text-base font-medium px-4 sm:px-6 py-2.5 sm:py-3 border-2 border-[#C2C2C2] rounded-xl hover:border-green-500 hover:text-green-600 transition-all duration-300 shadow-sm hover:shadow-md flex items-center gap-2"
+        >
+          <span>نظرات تایید شده</span>
+          <FaCheck size={20} />
+        </button>
+
+        <button
+          onClick={handlePennding}
+          className="bg-white text-[#9A9A9A] text-sm sm:text-base font-medium px-4 sm:px-6 py-2.5 sm:py-3 border-2 border-[#C2C2C2] rounded-xl hover:border-yellow-500 hover:text-yellow-600 transition-all duration-300 shadow-sm hover:shadow-md flex items-center gap-2"
+        >
+          <span> نظرات در انتظار تایید</span>
+          <IoSyncOutline size={20} />
+        </button>
+      </div>
       <div className="overflow-x-auto rounded-lg shadow-sm border border-gray-200 bg-white">
         {loading ? (
           <p className="text-center text-gray-500 py-8">
@@ -112,9 +140,13 @@ const ComponentTableComment = () => {
                   ردیف
                 </th>
                 <th className="w-32 px-4 py-3 font-medium">متن </th>
-                <th className="w-32 px-4 py-3 font-medium hidden sm:table-cell">نویسنده </th>
+                <th className="w-32 px-4 py-3 font-medium hidden sm:table-cell">
+                  نویسنده{" "}
+                </th>
                 <th className="w-32 px-4 py-3 font-medium">تاریخ ایجاد </th>
-                <th className="w-32 px-4 py-3 font-medium hidden sm:table-cell">امتیاز </th>
+                <th className="w-32 px-4 py-3 font-medium hidden sm:table-cell">
+                  امتیاز{" "}
+                </th>
                 <th className="w-32 px-4 py-3 font-medium">وضعیت </th>
                 {hasReject && (
                   <th className="w-20 px-4 py-3 font-medium"> ریجکت</th>
@@ -141,11 +173,17 @@ const ComponentTableComment = () => {
                     <td className="px-4 py-3  sm:table-cell">
                       {new Date(com.created_at).toLocaleDateString("fa-IR")}
                     </td>
-                    <td className="px-4 py-3  hidden sm:table-cell">{com.rate}/5</td>
+                    <td className="px-4 py-3  hidden sm:table-cell">
+                      {com.rate}/5
+                    </td>
                     <td className="px-4 py-3  sm:table-cell">
-                      {!com.is_confirmed && (
-                        <span className="text-white text-[12px] bg-gray-400 rounded-2xl pr-1.5 pl-1.5">
+                      {com.is_confirmed === false ? (
+                        <span className="text-gray-600 text-[12px] bg-yellow-100 rounded-2xl px-1.5 py-1">
                           در انتظار تایید
+                        </span>
+                      ) : (
+                        <span className="text-gray-600 text-[12px] bg-green-100 rounded-2xl px-1.5 py-1">
+                          تایید شده
                         </span>
                       )}
                     </td>
