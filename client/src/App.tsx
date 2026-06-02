@@ -34,9 +34,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 //pages for panelUser
 import AddressPages from "./pages/AddressPages";
-import CommentPages from "./pages/CommentPages";
 import ReservePages from "./pages/ReservePages";
-import WalletPages from "./pages/WalletPages";
 import CardPages from "./pages/CardPages";
 import LogoutPage from "./pages/LogoutPage";
 import ComponentFormUpdateUser from "./components/Dashboard/ComponentFormUpdateUser";
@@ -94,9 +92,8 @@ function App() {
           {/* ------- Dashboard Layout ------- */}
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route path="address" element={<AddressPages />} />
-            <Route path="comment" element={<CommentPages />} />
             <Route path="reserve" element={<ReservePages />} />
-            <Route path="wallet" element={<WalletPages />} />
+            
             <Route path="card" element={<CardPages />} />
             <Route path="logout" element={<LogoutPage />} />
 
