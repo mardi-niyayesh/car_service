@@ -1,18 +1,39 @@
 import { useParams } from "react-router-dom";
+import { useState } from "react"; // اضافه کردن import useState
 import { useProduct } from "../hooks/useProduct";
 import Des1Car from "./Des1Car";
 import Des2Car from "./Des2Car";
 import Des3Car from "./Des3Car";
 import Des4Car from "./Des4Car";
-import Comment from "../Commens/Comment";
-
+import CommentForm from "../components/CommentForm/CommentForm";
+import CommentOneProduct from "../components/CommentForm/CommentOneProduct";
 import HeroBaner from "../components/Main/HeroBaner";
+import PubliModal from "../Modal/PubliModal";
 
 const DetailCar = () => {
   const { allProduct } = useProduct();
   const { slug } = useParams();
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
+  const [replyToId, setReplyToId] = useState<string | null>(null);
+  const [refresh, setRefresh] = useState(0);
 
   const findProduct = allProduct.find((pro) => pro.slug === slug);
+  const productId = findProduct?.id;
+
+  const openReplyModal = (commentId: string) => {
+    setReplyToId(commentId);
+    setIsCommentModalOpen(true);
+  };
+
+  const openNewCommentModal = () => {
+    setReplyToId(null);
+    setIsCommentModalOpen(true);
+  };
+
+  const handleCommentSuccess = () => {
+    setIsCommentModalOpen(false);
+    setRefresh((prev) => prev + 1);
+  };
 
   if (!findProduct) {
     return (
@@ -29,7 +50,7 @@ const DetailCar = () => {
         dir="rtl"
       >
         <div className="flex flex-col md:flex-row gap-6 md:justify-between">
-          <div className="md:w-1/2 w-full  ">
+          <div className="md:w-1/2 w-full">
             <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
               <Des4Car />
               <Des2Car />
@@ -41,18 +62,31 @@ const DetailCar = () => {
               </div>
             )}
           </div>
-
-          <div className="w-full md:w-1/2">
+          <div className="left-5 w-1/2">
             <HeroBaner />
           </div>
         </div>
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 p-5  md:w-1/2 mt-4">
-          <h2 className="text-2xl font-bold text-blue-800 border-r-4 border-blue-600 pr-3 mb-4">
-            نظرات
-          </h2>
-          <Comment />
-        </div>
+        <button
+          onClick={openNewCommentModal}
+          className="bg-blue-600 text-white px-4 py-2 rounded mt-4"
+        >
+          ثبت دیدگاه جدید
+        </button>
+
+        <CommentOneProduct
+          productId={productId}
+          onReply={openReplyModal}
+          refreshTrigger={refresh}
+        />
       </div>
+
+      <PubliModal
+        isOpen={isCommentModalOpen}
+        onClose={() => setIsCommentModalOpen(false)}
+        title={replyToId ? "پاسخ به دیدگاه" : "ثبت دیدگاه جدید"}
+      >
+        <CommentForm replyToId={replyToId} onSuccess={handleCommentSuccess} />
+      </PubliModal>
     </>
   );
 };

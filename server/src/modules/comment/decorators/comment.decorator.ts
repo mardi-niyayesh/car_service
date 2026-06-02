@@ -1,6 +1,7 @@
 import {
   ApiBody,
   ApiParam,
+  ApiQuery,
   ApiOperation,
   ApiOkResponse,
   ApiCreatedResponse,
@@ -62,6 +63,7 @@ export const FindAllUnconfirmedCommentDecorator = () => applyDecorators(
   }),
   ApiOperation(CommentDto.findAllUnconfirmedCommentsOperation),
   PaginationDecoratorQueries(),
+  ApiQuery(CommentDto.carIdQuery),
   ApiOkResponse({type: CommentDto.FindAllUnconfirmedOk}),
   ApiUnauthorizedResponse({type: getUnauthorizedResponse("comments/unconfirmed")}),
   ApiForbiddenResponse({

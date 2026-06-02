@@ -136,12 +136,19 @@ export class CommentService {
    * @example
    * GET /comments/unconfirmed?page=2&limit=20&order=asc
    */
-  async findAllUnconfirmed(pagination: PaginationValidatorType): Promise<ApiResponse<CommentNUserNCarList>> {
+  async findAllUnconfirmed(pagination: CommentDto.FindUnconfirmedValidatorType): Promise<ApiResponse<CommentNUserNCarList>> {
     const {offset, limit, orderByLower} = pagination;
 
-    const where: Prisma.CommentWhereInput = {
+    let where: Prisma.CommentWhereInput = {
       is_confirmed: false,
     };
+
+    if (pagination.car) {
+      where = {
+        ...where,
+        car_id: pagination.car
+      };
+    }
 
     const comments = await this.prisma.comment.findMany({
       where,

@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
-import { FaUser } from "react-icons/fa";
-import { FaListUl } from "react-icons/fa";
-import { FaBoxOpen } from "react-icons/fa";
+import { FaUser,FaListUl,FaBoxOpen,FaRegComment } from "react-icons/fa";
 import { FiFilePlus } from "react-icons/fi";
 import { useUser } from "../../hooks/useUser";
-import { FaRegComment } from "react-icons/fa";
+
 
 const Menu = [
   {
@@ -38,13 +36,7 @@ const Menu = [
     label: "محصولات",
     icon: <FaBoxOpen style={{ opacity: 0.6 }} />,
   },
-  {
-    to:"comment",
-    label:"کامنت ",
-    icon:<FaRegComment style={{ opacity: 0.6 }}/>,
-    permission:"comment.view",
-    role:"comment_manager"
-  },
+ 
 ];
 
 const ComponentsPanelAdmin = () => {

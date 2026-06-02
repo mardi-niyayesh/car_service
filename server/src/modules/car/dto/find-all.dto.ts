@@ -4,7 +4,7 @@ import {ApiQueryOptions} from "@nestjs/swagger";
 import {exampleSafeCarRecord} from "./find-one.dto";
 import {minPriceAtDayCar, maxPriceAtDayCar} from "./create.dto";
 import {SlugCategoryRegex, CategorySlugValidator} from "@/modules/category/dto";
-import {getBaseOkResponseSchema, BasePaginationValidator, getSafePaginationValidator} from "@/common";
+import {BasePaginationValidator, getBaseOkResponseSchema, getSafePaginationValidator} from "@/common";
 
 function checkStringBoolean(value?: string): undefined | boolean {
   if (value === 'true') return true;

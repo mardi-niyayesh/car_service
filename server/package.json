@@ -79,7 +79,7 @@
     "@types/express": "^5.0.0",
     "@types/geoip-lite": "^1.4.4",
     "@types/multer": "^2.1.0",
-    "@types/node": "^22.19.11",
+    "@types/node": "^22.19.19",
     "@types/nodemailer": "^7.0.11",
     "@types/passport-jwt": "^4.0.1",
     "@types/pg": "^8.16.0",

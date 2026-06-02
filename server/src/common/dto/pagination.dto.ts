@@ -33,8 +33,8 @@ export const BasePaginationValidator = z.object({
 
 type BasePaginationValidatorType = z.infer<typeof BasePaginationValidator>;
 
-export function getSafePaginationValidator<T extends z.ZodTypeAny<BasePaginationValidatorType>>(Pagination: T) {
-  return Pagination.transform(({order, ...data}) => ({
+export function getSafePaginationValidator<T extends z.ZodTypeAny<BasePaginationValidatorType>>(Schema: T) {
+  return Schema.transform(({order, ...data}) => ({
     ...data,
     orderByLower: order,
     orderByUpper: order === 'asc' ? 'ASC' : 'DESC',
