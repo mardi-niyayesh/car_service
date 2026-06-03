@@ -1,9 +1,9 @@
 import type {PrismaMock} from "@/types";
+import {Role} from "@/modules/prisma/generated/client";
 import {RoleService} from "@/modules/role/role.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
-import {describe, beforeEach, afterEach, it, expect} from "vitest";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {Role} from "@/modules/prisma/generated/client";
+import {describe, beforeEach, afterEach, it, expect} from "vitest";
 
 const fakeRole = {
   id: "6d64a06a-f1a2-44c1-bd47-e557bd57bcc8",
