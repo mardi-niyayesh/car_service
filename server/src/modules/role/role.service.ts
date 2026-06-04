@@ -1,4 +1,4 @@
-import {
+import type {
   UserAccess,
   ApiResponse,
   RoleResponse,
@@ -56,13 +56,14 @@ export class RoleService {
     const roles = await this.prisma.$queryRaw<RoleResponse[]>(
       Prisma.sql`
           SELECT r.*,
-             ARRAY_AGG(ROW_TO_JSON(p.*)) AS permissions
+                 ARRAY_AGG(ROW_TO_JSON(p.*)) AS permissions
           FROM roles r
-               INNER JOIN role_permission rp ON r.id = rp.role_id
-               INNER JOIN permissions p ON rp.permission_id = p.id
+                   INNER JOIN role_permission rp ON r.id = rp.role_id
+                   INNER JOIN permissions p ON rp.permission_id = p.id
           GROUP BY r.id
           ORDER BY r.created_at ${Prisma.sql([pagination.orderByUpper])}
-          LIMIT ${pagination.limit} OFFSET ${pagination.offset}`
+          LIMIT ${pagination.limit}
+          OFFSET ${pagination.offset}`
     );
 
     return {
