@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosClient from "../../services/axiosClient";
 import SuccessModal from "../../Modal/SuccessModal";
+import WarningModal from "../../Modal/WarningModal ";
 
 type Car = {
   name: string;
@@ -21,31 +22,30 @@ type CarRent = {
 };
 
 const BasketComponent = () => {
- 
   const [dataReserve, setDataReserve] = useState<CarRent[]>([]);
   const [loading, setLoading] = useState(true);
   const [cartTotal, setCartTotal] = useState<number>(0);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [isWarningOpen, setIsWarningOpen] = useState(false);
+  const [WarningMessage, setWarningMessage] = useState("");
+
+  const fetchAllReserve = async () => {
+    try {
+      const response = await axiosClient.get(`/carts`);
+      const allReserve = response.data.response.data.cart.carRents;
+      setDataReserve(allReserve);
+
+      const TotalPrice = response.data.response.data.cart.total_price;
+      setCartTotal(TotalPrice);
+    } catch (err) {
+      console.log("Error in get basket :", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchAllReserve = async () => {
-      try {
-        const response = await axiosClient.get(`/carts`);
-
-        const allReserve = response.data.response.data.cart.carRents;
-        setDataReserve(allReserve);
-        // console.log("All reserve to Basket :", allReserve);
-
-        const TotalPrice = response.data.response.data.cart.total_price;
-        setCartTotal(TotalPrice);
-      } catch (err) {
-        console.log("Error in get basket :", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchAllReserve();
   }, []);
 
@@ -55,6 +55,30 @@ const BasketComponent = () => {
     setSuccessMessage(`پرداخت شما با موفقیت انجام شد خودرو ی شما آماده ی تحویل می باشد و
         کارشناسان ما در کمترین زمان ممکن جهت پیگیری سفارش شما با شما تماس خواهند
         گرفت`);
+  };
+
+  const handleDeletItemBasket = async (id: string) => {
+    try {
+      const resdeletItem = await axiosClient.delete(`/carts/${id}`);
+      if (resdeletItem.status === 200) {
+        setIsSuccessOpen(true);
+        setSuccessMessage("ماشین مورد نظر با موفیت از سبد خرید شما حذف شد");
+      }
+      await fetchAllReserve();
+    } catch (err: any) {
+      console.log("Error in deleat car ", err);
+      if (err.response?.status === 400) {
+        setIsWarningOpen(true);
+        setSuccessMessage(
+          "ماشین مورد نظر در دیتابیس وجود ندارد لطفا صفحه را رفرش کنید",
+        );
+      } else {
+        setIsWarningOpen(true);
+        setWarningMessage(
+          "خطایی در سرور رخ داده است لطفا لحاظاتی بعد دوباره تلاش کنید",
+        );
+      }
+    }
   };
 
   return (
@@ -81,25 +105,31 @@ const BasketComponent = () => {
                     قیمت کل اجاره: {rent.price} تومان
                   </p>
                   <p className="text-gray-600">
-                    <span className="font-semibold">خودرو:</span>{" "}
+                    <span className="font-semibold">خودرو:</span>
                     {rent.car.name}
                   </p>
                   <p className="text-gray-600">
-                    <span className="font-semibold">شرکت:</span>{" "}
+                    <span className="font-semibold">شرکت:</span>
                     {rent.car.company}
                   </p>
                   <p className="text-gray-600">
-                    <span className="font-semibold">قیمت روزانه:</span>{" "}
+                    <span className="font-semibold">قیمت روزانه:</span>
                     {rent.car.price_per_day} تومان
                   </p>
                   <p className="text-gray-600">
-                    <span className="font-semibold">تاریخ شروع:</span>{" "}
+                    <span className="font-semibold">تاریخ شروع:</span>
                     {new Date(rent.start_date).toLocaleDateString("fa-IR")}
                   </p>
                   <p className="text-gray-600">
-                    <span className="font-semibold">تاریخ پایان:</span>{" "}
+                    <span className="font-semibold">تاریخ پایان:</span>
                     {new Date(rent.end_date).toLocaleDateString("fa-IR")}
                   </p>
+                  <button
+                    onClick={() => handleDeletItemBasket(rent.id)}
+                    className=" mt-4 bg-red-500 text-white py-2 px-2 rounded-lg  hover:bg-red-600 transition"
+                  >
+                    حذف از سبد خرید
+                  </button>
                 </div>
               </div>
             ))}
@@ -128,6 +158,11 @@ const BasketComponent = () => {
         isOpen={isSuccessOpen}
         onClose={() => setIsSuccessOpen(false)}
         message={successMessage}
+      />
+      <WarningModal
+        isOpen={isWarningOpen}
+        onClose={() => setIsWarningOpen(false)}
+        message={WarningMessage}
       />
     </>
   );
