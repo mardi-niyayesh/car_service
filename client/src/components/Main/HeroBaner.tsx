@@ -1,11 +1,10 @@
 import { useState } from "react";
 import DatePicker from "react-datepicker-jalali";
 import "react-datepicker/dist/react-datepicker.css";
-import { MdLocationOn } from "react-icons/md";
 import { FaCalendarAlt } from "react-icons/fa";
-import { IoArrowDown } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
+import { useForm, Controller } from "react-hook-form";
 
 const months = [
   "فروردین",
@@ -25,73 +24,32 @@ const months = [
 const weekDays = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
 
 const HeroBaner = () => {
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      deliveryDate: null,
+      returnDate: null,
+      description: "",
+    },
+  });
   const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
   const [returnDate, setReturnDate] = useState<Date | null>(null);
 
   return (
- <div>  
+    <div>
       <div className=" px-4">
-        <form className=" container w-full bg-white rounded-lg shadow-md p-4 sm:p-6 mx-auto">
+        <form
+          onSubmit={handleSubmit(onsubmit)}
+          className=" container w-full bg-white rounded-lg shadow-md p-4 sm:p-6 mx-auto"
+        >
           <div className="grid grid-cols-1  gap-4 mb-6 ">
             <div className="col-span-1">
               <label className="block text-lg font-semibold text-gray-700 mb-2">
-                ایستگاه تحویل
-              </label>
-              <div className="flex items-center space-x-3">
-                <div className="relative flex-grow">
-                  <div className="absolute inset-y-0 right-0  flex items-center  pr-4 ">
-                    <MdLocationOn size={24} className="text-blue-800" />
-                  </div>
-                  <select
-                    defaultValue="tehran"
-                    className="flex-grow px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400 appearance-none w-full pr-10"
-                  >
-                    <option value="" disabled hidden>
-                      انتخاب کنید...
-                    </option>
-                    <option value="tehran">تهران</option>
-                    <option value="shiraz">شیراز</option>
-                    <option value="mashhad">مشهد</option>
-                    <option value="karaj">کرج</option>
-                    <option value="isfahan">اصفهان</option>
-                    <option value="sari">ساری</option>
-                    <option value="bushehr">بوشهر</option>
-                  </select>
-                  <div className="absolute inset-y-0 left-0 flex items-center pr-3 pointer-events-none">
-                    <IoArrowDown size={20} className="text-gray-400" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-span-1">
-              <label className="block text-lg font-semibold text-gray-700 mb-2">
-                نوع تحویل
-              </label>
-              <div className="relative flex-grow">
-                <select
-                  defaultValue="at-location"
-                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none w-full"
-                >
-                  <option value="" disabled>
-                    انتخاب کنید...
-                  </option>
-                  <option value="at-location">تحویل در محل</option>
-                  <option value="imam-airport">فرودگاه امام</option>
-                  <option value="mehrabad-airport">فرودگاه مهرآباد</option>
-                  <option value="azadi-hotel">هتل آزادی</option>
-                  <option value="esteglal-hotel">هتل استقلال</option>
-                  <option value="simorgh-hotel">هتل سیمرغ</option>
-                </select>
-                <div className="absolute inset-y-0 left-0 flex items-center pr-3 pointer-events-none">
-                  <IoArrowDown size={20} className="text-gray-400" />
-                </div>
-              </div>
-            </div>
-
-            <div className="col-span-1">
-              <label className="block text-lg font-semibold text-gray-700 mb-2">
-                تاریخ تحویل
+                تاریخ تحویل<span className="text-red-600">*</span>
               </label>
               <div className="flex items-center space-x-3">
                 <div className="relative flex-grow">
@@ -112,32 +70,7 @@ const HeroBaner = () => {
 
             <div className="col-span-1">
               <label className="block text-lg font-semibold text-gray-700 mb-2">
-                ساعت تحویل
-              </label>
-              <div className="relative flex-grow">
-                <select
-                  defaultValue="07:00"
-                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none w-full"
-                >
-                  <option value="07:00">07:00</option>
-                  <option value="08:00">08:00</option>
-                  <option value="09:00">09:00</option>
-                  <option value="10:00">10:00</option>
-                  <option value="11:00">11:00</option>
-                  <option value="12:00">12:00</option>
-                  <option value="13:00">13:00</option>
-                  <option value="14:00">14:00</option>
-                  <option value="15:00">15:00</option>
-                </select>
-                <div className="absolute inset-y-0 left-0 flex items-center pr-3 pointer-events-none">
-                  <IoArrowDown size={20} className="text-gray-400" />
-                </div>
-              </div>
-            </div>
-
-            <div className="col-span-1">
-              <label className="block text-lg font-semibold text-gray-700 mb-2">
-                تاریخ بازگشت
+                تاریخ بازگشت<span className="text-red-600">*</span>
               </label>
               <div className="flex items-center space-x-3">
                 <div className="relative flex-grow">
@@ -157,29 +90,27 @@ const HeroBaner = () => {
               </div>
             </div>
 
-            <div className="col-span-1">
-              <label className="block text-lg font-semibold text-gray-700 mb-2">
-                ساعت بازگشت
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                توضیحات ماشین <span className="text-gray-400">(اختیاری)</span>
               </label>
-              <div className="relative flex-grow">
-                <select
-                  defaultValue="07:00"
-                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm appearance-none w-full"
-                >
-                  <option value="07:00">07:00</option>
-                  <option value="08:00">08:00</option>
-                  <option value="09:00">09:00</option>
-                  <option value="10:00">10:00</option>
-                  <option value="11:00">11:00</option>
-                  <option value="12:00">12:00</option>
-                  <option value="13:00">13:00</option>
-                  <option value="14:00">14:00</option>
-                  <option value="15:00">15:00</option>
-                </select>
-                <div className="absolute inset-y-0 left-0 flex items-center pr-3 pointer-events-none">
-                  <IoArrowDown size={20} className="text-gray-400" />
-                </div>
-              </div>
+              <input
+                type="text"
+                placeholder="توضیحات..."
+                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ${
+                  errors.description ? "border-red-500" : "border-gray-300"
+                }`}
+                {...register("description", {
+                  minLength: {
+                    value: 5,
+                    message: "حدالقل 5 کاراکتر",
+                  },
+                  maxLength: {
+                    value: 500,
+                    message: "حدالکثر 500 کاراکتر",
+                  },
+                })}  
+              />
             </div>
           </div>
 

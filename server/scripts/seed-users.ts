@@ -54,40 +54,50 @@ async function bootstrap(): Promise<void> {
     email: display_name + "@example.com",
   }));
 
-  const selfRole = await prisma.role.findUnique({
-    where: {
-      name: ROLES.SELF
-    }
-  });
+  await prisma.$transaction(async (tx) => {
+    const selfRole = await tx.role.findUnique({
+      where: {
+        name: ROLES.SELF
+      }
+    });
 
-  if (!selfRole) {
-    console.error("❌ Role 'self' not found in database.");
-    console.error("👉 Please run: npm run seed:roles");
-    console.error("👉 Then run this script again.");
+    if (!selfRole) {
+      console.error("❌ Role 'self' not found in database.");
+      console.error("👉 Please run: npm run seed:roles");
+      console.error("👉 Then run this script again.");
+      await app.close();
+      process.exit(1);
+    }
+
+    const users_id = await tx.user.createManyAndReturn({
+      data: users,
+      skipDuplicates: true,
+      select: {
+        id: true
+      }
+    });
+
+    await tx.userRole.createMany({
+      data: users_id.map(({id}) => ({
+        user_id: id,
+        role_id: selfRole.id
+      })),
+      skipDuplicates: true,
+    });
+
+    await tx.cart.createMany({
+      skipDuplicates: true,
+      data: users_id.map(u => ({
+        user_id: u.id,
+        total_price: 0,
+      }))
+    });
+
+    console.log(`✅ ${users_id.length} users seeded with 'self' role.`);
+    console.log("all users password is: ", rawPassword);
     await app.close();
-    process.exit(1);
-  }
-
-  const users_id = await prisma.user.createManyAndReturn({
-    data: users,
-    skipDuplicates: true,
-    select: {
-      id: true
-    }
+    process.exit(0);
   });
-
-  await prisma.userRole.createMany({
-    data: users_id.map(({id}) => ({
-      user_id: id,
-      role_id: selfRole.id
-    })),
-    skipDuplicates: true,
-  });
-
-  console.log(`✅ ${users_id.length} users seeded with 'self' role.`);
-  console.log("all users password is: ", rawPassword);
-  await app.close();
-  process.exit(0);
 }
 
 bootstrap()

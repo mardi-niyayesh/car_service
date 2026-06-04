@@ -1,46 +1,13 @@
-import {exampleDate} from "@/lib";
 import type {PrismaMock} from "@/types";
 import {UserService} from "./user.service";
 import {PERMISSIONS, ROLES} from "@/common";
+import {exampleDate, fakeUserTest} from "@/lib";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {hashSecret, compareSecret} from "@/lib/utils/crypto";
 import {Role, User} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {it, expect, describe, afterEach, beforeEach, vi, type Mock} from "vitest";
 import {BadRequestException, ConflictException, ForbiddenException, NotFoundException, UnauthorizedException} from "@nestjs/common";
-
-const fakeUser = {
-  id: "2a55bda6-e1fc-4047-9725-aeec8fcc9ec4",
-  createdAt: exampleDate,
-  updatedAt: exampleDate,
-  email: "user@example.com",
-  password: "example_password",
-  display_name: "first user",
-  age: 20,
-  userRoles: [
-    {
-      role: {
-        name: "self",
-        rolePermissions: [
-          {
-            permission: {name: "user.self"}
-          }
-        ]
-      }
-    },
-    {
-      role: {
-        name: "user_manager",
-        rolePermissions: [
-          {permission: {name: "role.revoke"}},
-          {permission: {name: "role.assign"}},
-          {permission: {name: "user.delete"}},
-          {permission: {name: "user.view"}}
-        ]
-      }
-    }
-  ]
-} as unknown as User;
 
 vi.mock('@/lib/utils/crypto', () => ({
   hashSecret: vi.fn(),
@@ -70,12 +37,12 @@ describe("UserService", (): void => {
   describe("findOne()", (): void => {
     // success
     it('should find user and don`t send password: ', async (): Promise<void> => {
-      prisma.user.findUnique.mockResolvedValue(fakeUser);
+      prisma.user.findUnique.mockResolvedValue(fakeUserTest);
 
-      const result = await service.findOne(fakeUser.id);
+      const result = await service.findOne(fakeUserTest.id);
 
       expect((result.data.user as unknown as User).password).toBeUndefined();
-      expect(result.data.user.email).toBe(fakeUser.email);
+      expect(result.data.user.email).toBe(fakeUserTest.email);
       expect(result.data.user.roles).toEqual(["self", "user_manager"]);
       expect(result.data.user.permissions).toEqual([
         "user.self",
@@ -106,7 +73,7 @@ describe("UserService", (): void => {
     it('should Success and get user list with count', async () => {
       const count = 20;
       const limit = 10;
-      const fakeUsers: User[] = Array.from({length: limit}, () => fakeUser);
+      const fakeUsers: User[] = Array.from({length: limit}, () => fakeUserTest);
 
       // user fake count in databases
       prisma.user.count.mockResolvedValue(count);

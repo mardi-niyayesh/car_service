@@ -19,7 +19,7 @@ import {applyDecorators, HttpCode, HttpStatus, UseGuards} from "@nestjs/common";
 export const RegisterDecorators = () => {
   return applyDecorators(
     HttpCode(HttpStatus.CREATED),
-    CacheEvict({prefix: '*users:list*'}),
+    CacheEvict({prefix: '*user:list*'}),
     ApiOperation(AuthDto.authRegisterOperation),
     ApiBody({type: AuthDto.CreateUserSchema}),
     ApiCreatedResponse({type: AuthDto.CreateUserOkResponse}),
