@@ -1,31 +1,17 @@
-import ShowCategoryForm from "../ShowCategoryForm";
-import { FaCar } from "react-icons/fa";
-import { FiArrowLeft } from "react-icons/fi";
-import { Link } from "react-router-dom";
-
+import { useProduct } from "../../../hooks/useProduct";
 import GetAllProduct from "../../Product/GetAllProduct";
+
+import { type ProductFormType } from "../../PanelAdmin/ProductForm/ProductFormComponent";
 const AllProductMain = () => {
+  const { allProduct, loading } = useProduct();
+  if (loading) return <div>در حال لود محصولات...</div>;
   return (
     <>
-      <div className="text-2xl font-bold items-center flex  justify-center">
-        <span>رزو خودرو در</span>
-        <span className="text-yellow-500">اتورنت</span>
-        <FaCar size={25} opacity={0.7} className="mr-2" />
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {allProduct.map((pro: ProductFormType) => (
+          <GetAllProduct key={pro.id} product={pro} />
+        ))}
       </div>
-
-      <ShowCategoryForm />
-      <div className="flex  justify-end container max-auto">
-        <div className="mt-10 ">
-          <Link
-            to="/reservcar"
-            className="flex items-center justify-end gap-2 text-blue-500 hover:text-blue-700 font-semibold  "
-          >
-            <span> مشاهده ی همه </span>
-            <FiArrowLeft className="text-lg" />
-          </Link>
-        </div>
-      </div>
-      <GetAllProduct />
     </>
   );
 };
