@@ -27,7 +27,6 @@ import DetailArticle from "./components/Main/Article/DetailArticle";
 import ProductComponent from "./components/Product/ProductComponent";
 import DetailCar from "./ShopCart/DetailCar";
 import BasketComponent from "./components/Basket/BasketComponent";
-// import ReserveProduct from "./components/Product/ReserveProduct";
 //authorization pages
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
