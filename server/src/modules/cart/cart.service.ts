@@ -34,8 +34,11 @@ export class CartService {
           include: {
             car: {
               select: {
-                image: true,
+                name: true,
                 slug: true,
+                image: true,
+                company: true,
+                price_per_day: true,
               }
             }
           }
