@@ -20,7 +20,8 @@ import {
   UUIDv4Validator,
   getForbiddenResponse,
   getUnauthorizedResponse,
-  getBadRequestUUIDParams, PaginationDecoratorQueries,
+  getBadRequestUUIDParams,
+  PaginationDecoratorQueries,
 } from "@/common";
 
 import z from "zod";
