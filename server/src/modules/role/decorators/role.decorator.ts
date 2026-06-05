@@ -1,7 +1,7 @@
 import {
-  ApiParam,
-  ApiQuery,
   ApiBody,
+  ApiQuery,
+  ApiParam,
   ApiOperation,
   ApiOkResponse,
   ApiNotFoundResponse,
