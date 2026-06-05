@@ -5,6 +5,8 @@ import { FaCalendarAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { useForm, Controller } from "react-hook-form";
+import { useUser } from "../../hooks/useUser";
+import WarningModal from "../../Modal/WarningModal ";
 
 const months = [
   "فروردین",
@@ -24,6 +26,9 @@ const months = [
 const weekDays = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
 
 const HeroBaner = () => {
+  const { user } = useUser();
+  const [isWarningOpen, setIsWarningOpen] = useState(false);
+  const [warningMessage, setWarningMessage] = useState("");
   const {
     control,
     register,
@@ -38,6 +43,14 @@ const HeroBaner = () => {
   });
   const [deliveryDate, setDeliveryDate] = useState<Date | null>(null);
   const [returnDate, setReturnDate] = useState<Date | null>(null);
+
+  const onsubmit = () => {
+    if (!user) {
+      setWarningMessage("برای ثبت رزرو ابتدا باید وارد حساب کاربری خود شوید.");
+      setIsWarningOpen(true);
+      return;
+    }
+  };
 
   return (
     <div>
@@ -109,7 +122,7 @@ const HeroBaner = () => {
                     value: 500,
                     message: "حدالکثر 500 کاراکتر",
                   },
-                })}  
+                })}
               />
             </div>
           </div>
@@ -130,6 +143,12 @@ const HeroBaner = () => {
           </div>
         </form>
       </div>
+
+      <WarningModal
+        isOpen={isWarningOpen}
+        onClose={() => setIsWarningOpen(false)}
+        message={warningMessage}
+      />
     </div>
   );
 };
