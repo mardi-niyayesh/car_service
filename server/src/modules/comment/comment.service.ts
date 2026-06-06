@@ -1,11 +1,12 @@
 import * as CommentDto from "./dto";
-import {checkPrismaError} from "@/lib";
+import {checkPrismaError, RedisKey} from "@/lib";
 import {Prisma} from "@/modules/prisma/generated/client";
 import {RedisService} from "@/modules/redis/redis.service";
 import {EventEmitter2, OnEvent} from "@nestjs/event-emitter";
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {eventsEmitter, PaginationValidatorType} from "@/common";
+import {findAllCommentCacheableExtraKeys} from "@/modules/car/decorators";
 import type {CommentWhereInput} from "@/modules/prisma/generated/models/Comment";
 import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList, UpdateCarRateEvent, ReplyCommentListAndUser} from "@/types";
 
@@ -212,6 +213,10 @@ export class CommentService {
         if (comment.parent_id === null) this.eventEmitter.emit(eventsEmitter.UPDATE_CAR_RATE, {
           car_id: comment.car_id
         } as UpdateCarRateEvent);
+
+        const keyCache: string = RedisKey.build('comment', ...findAllCommentCacheableExtraKeys, `id=${comment.car_id}`);
+
+        await this.redis.deletePrefix(`*${keyCache}*`);
 
         return {
           message: 'comment successfully confirmed.',
