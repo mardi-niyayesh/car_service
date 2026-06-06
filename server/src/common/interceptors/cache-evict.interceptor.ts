@@ -80,10 +80,13 @@ export class CacheEvictInterceptor implements NestInterceptor {
             if (cacheParams.findPrefix.extraKeys?.length) {
               const extraKeys: string = cacheParams.findPrefix.extraKeys.join(":");
 
-              await this.redisService.deletePrefix(`*${cacheParams.resource}:${extraKeys}:${keyParam}=${paramValue}:list*`);
+              const finalKey = `*${cacheParams.resource}:${extraKeys}:${keyParam}=${paramValue}:list*`;
+              console.log(finalKey);
+              await this.redisService.deletePrefix(finalKey);
 
             } else {
-              await this.redisService.deletePrefix(`*${cacheParams.resource}:${paramValue}:list*`);
+              const finalKey = `*${cacheParams.resource}:${paramValue}:list*`;
+              await this.redisService.deletePrefix(finalKey);
             }
 
           } else {
