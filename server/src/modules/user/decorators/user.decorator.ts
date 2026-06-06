@@ -18,7 +18,8 @@ import {
   Permission,
   PERMISSIONS,
   getForbiddenResponse,
-  getUnauthorizedResponse, PaginationDecoratorQueries,
+  getUnauthorizedResponse,
+  PaginationDecoratorQueries,
 } from "@/common";
 
 import * as UserDto from "../dto";
