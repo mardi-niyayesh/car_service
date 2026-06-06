@@ -22,7 +22,7 @@ export class RedisKey {
    * RedisKey.build('users', '123')    → "app:users:123"
    * RedisKey.build('users', '')       → "app:users:list"   (empty after trim)
    */
-  static build(resource: string, ...parts: (string | undefined | number)[]): string {
+  static build(resource: Resource, ...parts: (string | undefined | number)[]): string {
     const cleanParts = parts
       .filter(p => p !== undefined && p !== null)
       .map(p => p.toString().trim())

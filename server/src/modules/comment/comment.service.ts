@@ -266,13 +266,17 @@ export class CommentService {
 
     const rate: number = rates._avg.rate ?? 0.0;
 
-    await this.prisma.car.update({
+    const car = await this.prisma.car.update({
       where: {
         id: car_id,
       },
-      data: {rate}
+      data: {rate},
+      select: {
+        slug: true
+      }
     });
 
-    await this.redis.deletePrefix("*car:list*");
+    const keyCache: string = RedisKey.build('car', `slug=${car.slug}`);
+    await this.redis.delete(keyCache);
   }
 }
