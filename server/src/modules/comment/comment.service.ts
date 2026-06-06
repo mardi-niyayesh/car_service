@@ -1,11 +1,11 @@
 import * as CommentDto from "./dto";
 import {checkPrismaError, RedisKey} from "@/lib";
-import {Prisma} from "@/modules/prisma/generated/client";
 import {RedisService} from "@/modules/redis/redis.service";
 import {EventEmitter2, OnEvent} from "@nestjs/event-emitter";
 import {Injectable, NotFoundException} from "@nestjs/common";
-import {PrismaService} from "@/modules/prisma/prisma.service";
+import {type Prisma} from "@/modules/prisma/generated/client";
 import {eventsEmitter, PaginationValidatorType} from "@/common";
+import {type PrismaService} from "@/modules/prisma/prisma.service";
 import {findAllCommentCacheableExtraKeys} from "@/modules/car/decorators";
 import type {CommentWhereInput} from "@/modules/prisma/generated/models/Comment";
 import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList, UpdateCarRateEvent, ReplyCommentListAndUser} from "@/types";
