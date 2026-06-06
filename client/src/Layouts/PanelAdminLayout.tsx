@@ -5,7 +5,7 @@ import HeaderDashbord from "../components/Dashboard/HeaderDashbord";
 const PanelAdminLayout = () => {
   return (
     <div className="flex bg-[#F6F6F6] min-h-screen">
-      <div className=" md:flex fixed top-0 right-0 h-full w-72 z-40">
+      <div className="-right-100 md:flex fixed top-0 md:right-0 h-full w-72 z-40">
         <ComponentsPanelAdmin />
       </div>
       <div className="flex-1 md:mr-72 flex flex-col">
