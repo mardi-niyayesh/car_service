@@ -50,7 +50,7 @@ const ComponentCreatpoduct = () => {
         setSuccessMessage("محصول شما با موفقیت ساخته شد ");
         setTimeout(() => {
           navigate("/panel/product");
-        }, 5000);
+        }, 3000);
       }
     } catch (err: any) {
       console.log("Error in creat new Produvt :", err);

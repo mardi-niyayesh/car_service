@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
-import { FaUser,FaListUl,FaBoxOpen,FaRegComment } from "react-icons/fa";
+import { FaUser, FaListUl, FaBoxOpen } from "react-icons/fa";
 import { FiFilePlus } from "react-icons/fi";
 import { useUser } from "../../hooks/useUser";
-
 
 const Menu = [
   {
@@ -36,7 +35,6 @@ const Menu = [
     label: "محصولات",
     icon: <FaBoxOpen style={{ opacity: 0.6 }} />,
   },
- 
 ];
 
 const ComponentsPanelAdmin = () => {

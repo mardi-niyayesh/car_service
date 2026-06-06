@@ -11,8 +11,11 @@ export type ProductFormType = {
   tags: string[];
   description: string;
   can_rent: boolean;
-  ownership: boolean;
+  ownership?: boolean;
   category_id: string;
+  id: string;
+  image: string;
+  rate: number;
 };
 
 type ProductFormProps = {

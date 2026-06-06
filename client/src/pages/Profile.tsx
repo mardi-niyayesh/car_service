@@ -61,12 +61,12 @@ const Profile = () => {
             />
           </div>
 
-          <Link to="updateUser">
+          <Link to="/dashboard/updateUser">
             <div className="flex items-center justify-end gap-5 cursor-pointer">
               <p className="text-blue-600">ویرایش اطلاعات پروفایل </p>
             </div>
           </Link>
-          <Link to="updatePassword">
+          <Link to="/dashboard/updatePassword">
             <div className="flex items-center justify-end gap-5 cursor-pointer">
               <p className="text-blue-600">ویرایش رمز عبور </p>
             </div>

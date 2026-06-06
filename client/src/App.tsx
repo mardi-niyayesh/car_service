@@ -26,7 +26,7 @@ import BlogPage from "./pages/BlogPage";
 import DetailArticle from "./components/Main/Article/DetailArticle";
 import ProductComponent from "./components/Product/ProductComponent";
 import DetailCar from "./ShopCart/DetailCar";
-// import ReserveProduct from "./components/Product/ReserveProduct";
+import BasketComponent from "./components/Basket/BasketComponent";
 //authorization pages
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
@@ -80,6 +80,7 @@ function App() {
             <Route path="/articles/:id" element={<DetailArticle />} />
             <Route path="/category/:slug" element={<ProductComponent />} />
             <Route path="/detailcar/:slug" element={<DetailCar />} />
+            <Route path="/basket" element={<BasketComponent />} />
           </Route>
 
           {/* ------- Auth Layout ------- */}
@@ -93,17 +94,17 @@ function App() {
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route path="address" element={<AddressPages />} />
             <Route path="reserve" element={<ReservePages />} />
-            
+
             <Route path="card" element={<CardPages />} />
             <Route path="logout" element={<LogoutPage />} />
 
             <Route path="Profile" element={<Profile />} />
             <Route
-              path="Profile/updatePassword"
+              path="updatePassword"
               element={<ComponnetUpdetePassword />}
             />
             <Route
-              path="Profile/updateUser"
+              path="updateUser"
               element={<ComponentFormUpdateUser />}
             />
           </Route>
