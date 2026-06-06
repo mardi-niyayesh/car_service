@@ -60,9 +60,9 @@ const DetailCar = () => {
               <Des3Car />
               <button
                 onClick={handleClick}
-                className="bg-gray-200 w-full hover:bg-gray-300 cursor-pointer  text-center text-gray-400 p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto"
+                className="bg-gray-200 w-full hover:bg-gray-300 cursor-pointer  text-center text-gray-600 p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto"
               >
-                نمایش اطلاعات رزو خودرو
+                {showbtn ? "نمایش قوانین رزو" : "مخفی کردن قوانین رزو"}
               </button>
               {!showbtn && (
                 <>
