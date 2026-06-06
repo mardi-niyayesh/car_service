@@ -1,8 +1,8 @@
 import {RedisKey} from "@/lib";
 import {map, Observable} from "rxjs";
 import type {Request} from "express";
-import {BaseException} from "@/types";
 import {Reflector} from "@nestjs/core";
+import type {BaseException} from "@/types";
 import {RedisService} from "@/modules/redis/redis.service";
 import {CACHE_EVICT_KEY, type CacheEvictDecorator} from "@/common";
 import {CallHandler, ExecutionContext, Injectable, InternalServerErrorException, NestInterceptor} from "@nestjs/common";
