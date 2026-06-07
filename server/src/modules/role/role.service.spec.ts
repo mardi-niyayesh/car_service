@@ -293,7 +293,7 @@ describe('RoleService', (): void => {
           permission: {
             id: 'perm-1',
             name: 'user.view',
-            permission_type: 'STANDARD',
+            permission_type: 'MANAGER',
             description: 'View users',
             created_at: new Date(),
             updated_at: new Date()
@@ -317,8 +317,21 @@ describe('RoleService', (): void => {
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.role.delete).toHaveBeenCalledWith({
-        where: { id: mockRoleRecord.id }
+        where: {id: mockRoleRecord.id}
       });
+    });
+
+    // error: permission denied
+    it('should throw ForbiddenException when user does not have owner.all permission and role with CORE permissions type', async () => {
+      const userWithoutOwner = {
+        userId: 'user-456',
+        permissions: ['role.view', 'role.delete'],
+        roles: ['user_manager'],
+      };
+
+      await expect(service.delete(mockRoleRecord, userWithoutOwner))
+        .rejects
+        .toThrow();
     });
   });
 });
