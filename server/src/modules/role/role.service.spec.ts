@@ -471,5 +471,33 @@ describe('RoleService', (): void => {
         }
       });
     });
+
+    // success: delete permissions
+    it('should delete permissions from role successfully', async () => {
+      const updateData = {
+        deletePermissions: ['perm-2']
+      };
+
+      prisma.rolePermission.deleteMany.mockResolvedValue({count: 1});
+      prisma.role.update.mockResolvedValue(mockRoleAfterDelete as unknown as RoleIncludeType);
+
+      const result = await service.update(mockRoleRecord, mockActionPayload, updateData);
+
+      // 1. Test that deleted permission is no longer present
+      const remainingPermIds = result.data.role.permissions.map(p => p.id);
+      expect(remainingPermIds).not.toContain('perm-2');
+      expect(remainingPermIds).toContain('perm-1');
+
+      // 2. Verify deleteMany call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.rolePermission.deleteMany).toHaveBeenCalledWith({
+        where: {
+          permission_id: {
+            in: updateData.deletePermissions
+          },
+          role_id: mockRoleRecord.id
+        }
+      });
+    });
   });
 });
