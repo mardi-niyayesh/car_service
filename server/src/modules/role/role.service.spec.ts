@@ -1,10 +1,10 @@
 import type {PrismaMock} from "@/types";
-import {Permission, Prisma, Role} from "@/modules/prisma/generated/client";
 import {fakePermissionsTest, fakeRoleTest} from "@/lib";
 import {RoleService} from "@/modules/role/role.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {describe, beforeEach, afterEach, it, expect, vi} from "vitest";
+import {Permission, Prisma, Role} from "@/modules/prisma/generated/client";
 
 describe('RoleService', (): void => {
   let prisma: PrismaMock;
