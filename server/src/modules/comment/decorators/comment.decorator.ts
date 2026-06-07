@@ -15,7 +15,6 @@ import {
   Public,
   UUID4Dto,
   Permission,
-  CacheEvict,
   PERMISSIONS,
   getForbiddenResponse,
   getUnauthorizedResponse,
@@ -24,7 +23,6 @@ import {
 
 import * as CommentDto from "../dto";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
-import {findAllCommentCacheableExtraKeys} from "@/modules/car/decorators";
 
 export const FindCommentRepliesDecorator = () => applyDecorators(
   HttpCode(HttpStatus.OK),
@@ -36,13 +34,6 @@ export const FindCommentRepliesDecorator = () => applyDecorators(
 );
 
 export const CreateCommentDecorator = () => applyDecorators(
-  CacheEvict({
-    resource: 'comment',
-    findPrefix: {
-      param: 'id',
-      extraKeys: findAllCommentCacheableExtraKeys,
-    }
-  }),
   HttpCode(HttpStatus.CREATED),
   Permission({
     permissions: [PERMISSIONS.USER_SELF]
