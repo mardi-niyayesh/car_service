@@ -5,6 +5,7 @@ import {RoleService} from "@/modules/role/role.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {describe, beforeEach, afterEach, it, expect} from "vitest";
+import {ConflictException} from "@nestjs/common";
 
 describe('RoleService', (): void => {
   let prisma: PrismaMock;
@@ -192,6 +193,22 @@ describe('RoleService', (): void => {
 
       // Verify create was not called
       expect(prisma.role.create).not.toHaveBeenCalled();
+    });
+
+    // error: duplicate role name
+    it('should throw conflict error when role name already exists', async () => {
+      prisma.permission.findMany.mockResolvedValue(mockPermissionsRecord as unknown as Permission[]);
+
+      // Mock Prisma unique constraint error
+      const prismaError = new Error('Unique constraint failed');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2002';
+      prisma.role.create.mockRejectedValue(prismaError);
+
+      await expect(service.create(mockActionPayload, mockCreateRoleInput))
+        .rejects
+        .toThrow();
+
+      expect(prisma.rolePermission.createMany).not.toHaveBeenCalled();
     });
   });
 });
