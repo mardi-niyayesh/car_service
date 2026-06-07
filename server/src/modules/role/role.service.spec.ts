@@ -141,10 +141,12 @@ describe('RoleService', (): void => {
       }
 
       // 6. Verify database calls
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.permission.findMany).toHaveBeenCalledWith({
         where: {id: {in: mockCreateRoleInput.permissions}}
       });
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.role.create).toHaveBeenCalledWith({
         data: {
           creator_id: mockActionPayload.userId,
@@ -154,6 +156,7 @@ describe('RoleService', (): void => {
         }
       });
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.rolePermission.createMany).toHaveBeenCalledWith({
         data: mockCreateRoleInput.permissions.map(p => ({
           role_id: mockCreatedRole.id,
@@ -173,7 +176,10 @@ describe('RoleService', (): void => {
         .toThrow('One or many Permissions does not exist in database');
 
       // Verify create and createMany were not called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.role.create).not.toHaveBeenCalled();
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.rolePermission.createMany).not.toHaveBeenCalled();
     });
 
@@ -191,6 +197,7 @@ describe('RoleService', (): void => {
       })).rejects.toThrow('you cannot create a new role with base Permissions');
 
       // Verify create was not called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.role.create).not.toHaveBeenCalled();
     });
 
@@ -207,6 +214,7 @@ describe('RoleService', (): void => {
         .rejects
         .toThrow();
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.rolePermission.createMany).not.toHaveBeenCalled();
     });
 
@@ -226,6 +234,7 @@ describe('RoleService', (): void => {
       const result = await service.create(mockActionPayload, inputWithoutOwnership);
 
       expect(result.data.role.creator_id).toBeNull();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.role.create).toHaveBeenCalledWith({
         data: {
           creator_id: null,
