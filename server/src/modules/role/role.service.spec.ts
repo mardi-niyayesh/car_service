@@ -161,5 +161,20 @@ describe('RoleService', (): void => {
         }))
       });
     });
+
+    // error: permission not found
+    it('should throw NotFoundException when one or more permissions do not exist', async () => {
+      // Mock findMany to return fewer permissions (missing one)
+      const incompletePermissions = mockPermissionsRecord.slice(0, 2);
+      prisma.permission.findMany.mockResolvedValue(incompletePermissions as unknown as Permission[]);
+
+      await expect(service.create(mockActionPayload, mockCreateRoleInput))
+        .rejects
+        .toThrow('One or many Permissions does not exist in database');
+
+      // Verify create and createMany were not called
+      expect(prisma.role.create).not.toHaveBeenCalled();
+      expect(prisma.rolePermission.createMany).not.toHaveBeenCalled();
+    });
   });
 });
