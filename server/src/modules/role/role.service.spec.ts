@@ -333,5 +333,16 @@ describe('RoleService', (): void => {
         .rejects
         .toThrow();
     });
+
+    // error: role not found
+    it('should throw NotFoundException when role does not exist in database', async () => {
+      const prismaError = new Error('Record to delete does not exist');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
+      prisma.role.delete.mockRejectedValue(prismaError);
+
+      await expect(service.delete(mockRoleRecord, mockActionPayload))
+        .rejects
+        .toThrow();
+    });
   });
 });
