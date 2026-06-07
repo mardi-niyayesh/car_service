@@ -345,4 +345,87 @@ describe('RoleService', (): void => {
         .toThrow();
     });
   });
+
+  /** ================================================
+   * Update
+   *  ================================================
+   */
+  describe('update()', (): void => {
+    // Mock data
+    const mockActionPayload = {
+      userId: 'user-123',
+      permissions: ['owner.all', 'role.update'],
+      roles: ['owner'],
+    };
+
+    const mockUserManagerPayload = {
+      userId: 'user-456',
+      permissions: ['role.update'],
+      roles: ['user_manager'],
+    };
+
+    const mockPermissionsRecord: Permission[] = [
+      {id: 'perm-1', name: 'user.view', permission_type: 'STANDARD', description: 'View users', created_at: new Date(), updated_at: new Date()},
+      {id: 'perm-2', name: 'user.edit', permission_type: 'STANDARD', description: 'Edit users', created_at: new Date(), updated_at: new Date()},
+      {id: 'perm-3', name: 'role.view', permission_type: 'STANDARD', description: 'View roles', created_at: new Date(), updated_at: new Date()},
+      {id: 'perm-4', name: 'role.delete', permission_type: 'MANAGER', description: 'Delete roles', created_at: new Date(), updated_at: new Date()},
+    ];
+
+    const mockRoleRecord: RoleIncludeType = {
+      id: 'role-456',
+      name: 'custom_role_1',
+      description: 'This is a custom role for testing',
+      role_type: 'CUSTOM',
+      creator_id: 'user-123',
+      created_at: new Date(),
+      updated_at: new Date(),
+      rolePermissions: [
+        {
+          id: 'rp-1',
+          role_id: 'role-456',
+          permission_id: 'perm-1',
+          created_at: new Date(),
+          updated_at: new Date(),
+          permission: mockPermissionsRecord[0]
+        },
+        {
+          id: 'rp-2',
+          role_id: 'role-456',
+          permission_id: 'perm-2',
+          created_at: new Date(),
+          updated_at: new Date(),
+          permission: mockPermissionsRecord[1]
+        }
+      ]
+    };
+
+    const mockSystemRoleRecord: RoleIncludeType = {
+      ...mockRoleRecord,
+      name: 'admin',
+      role_type: 'SYSTEM',
+      creator_id: null
+    };
+
+    const mockUpdatedRoleRecord: RoleIncludeType = {
+      ...mockRoleRecord,
+      name: 'updated_role_name',
+      description: 'Updated description',
+      rolePermissions: [
+        ...mockRoleRecord.rolePermissions,
+        {
+          id: 'rp-3',
+          role_id: 'role-456',
+          permission_id: 'perm-3',
+          created_at: new Date(),
+          updated_at: new Date(),
+          permission: mockPermissionsRecord[2]
+        }
+      ]
+    };
+
+    const mockRoleAfterDelete: RoleIncludeType = {
+      ...mockRoleRecord,
+      rolePermissions: mockRoleRecord.rolePermissions.slice(0, 1)
+    };
+  });
 });
