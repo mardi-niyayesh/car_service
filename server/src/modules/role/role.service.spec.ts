@@ -4,8 +4,7 @@ import {fakePermissionsTest, fakeRoleTest} from "@/lib";
 import {RoleService} from "@/modules/role/role.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {describe, beforeEach, afterEach, it, expect} from "vitest";
-import {ConflictException} from "@nestjs/common";
+import {describe, beforeEach, afterEach, it, expect, vi} from "vitest";
 
 describe('RoleService', (): void => {
   let prisma: PrismaMock;
@@ -235,6 +234,23 @@ describe('RoleService', (): void => {
           role_type: 'CUSTOM'
         }
       });
+    });
+
+    it('should call rolePermissionPolicy with correct parameters', async () => {
+      prisma.permission.findMany.mockResolvedValue(mockPermissionsRecord as unknown as Permission[]);
+      prisma.role.create.mockResolvedValue(mockCreatedRole as unknown as Role);
+
+      const policySpy = vi.spyOn(service, 'rolePermissionPolicy');
+
+      await service.create(mockActionPayload, mockCreateRoleInput);
+
+      expect(policySpy).toHaveBeenCalledWith({
+        mode: "create",
+        actionPermissions: mockActionPayload.permissions,
+        permissions: mockPermissionsRecord
+      });
+
+      policySpy.mockRestore();
     });
   });
 });
