@@ -427,5 +427,49 @@ describe('RoleService', (): void => {
       ...mockRoleRecord,
       rolePermissions: mockRoleRecord.rolePermissions.slice(0, 1)
     };
+
+    // success: update name only
+    it('should update role name successfully', async () => {
+      const updateData = {
+        name: 'updated_role_name'
+      };
+
+      prisma.role.update.mockResolvedValue({
+        ...mockRoleRecord,
+        name: updateData.name
+      } as unknown as RoleIncludeType);
+
+      const result = await service.update(mockRoleRecord, mockActionPayload, updateData);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('role');
+
+      // 2. Test success message
+      expect(result.message).toBe('Role successfully updated.');
+
+      // 3. Test updated role data
+      const {role} = result.data;
+      expect(role.id).toBe(mockRoleRecord.id);
+      expect(role.name).toBe(updateData.name);
+      expect(role.description).toBe(mockRoleRecord.description);
+
+      // 4. Verify database call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.role.update).toHaveBeenCalledWith({
+        where: {id: mockRoleRecord.id},
+        data: {
+          name: updateData.name,
+          description: undefined,
+          creator_id: undefined
+        },
+        include: {
+          rolePermissions: {
+            include: {permission: true}
+          }
+        }
+      });
+    });
   });
 });
