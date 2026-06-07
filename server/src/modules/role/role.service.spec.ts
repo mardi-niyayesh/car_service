@@ -304,7 +304,7 @@ describe('RoleService', (): void => {
 
     // success
     it('should delete role successfully with valid permissions', async () => {
-      prisma.role.delete.mockResolvedValue(mockRoleRecord as unknown as Role);
+      prisma.role.delete.mockResolvedValue(mockRoleRecord);
 
       const result = await service.delete(mockRoleRecord, mockActionPayload);
 
