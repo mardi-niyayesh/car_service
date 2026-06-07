@@ -176,5 +176,22 @@ describe('RoleService', (): void => {
       expect(prisma.role.create).not.toHaveBeenCalled();
       expect(prisma.rolePermission.createMany).not.toHaveBeenCalled();
     });
+
+    // error: base permission
+    it('should throw ForbiddenException when trying to create role with base permissions (CORE or OWNER_ALL)', async () => {
+      const permissionsWithBase = [
+        ...mockPermissionsRecord,
+        {id: 'perm-core', name: 'owner.all', permission_type: 'CORE', description: 'Owner all access'}
+      ];
+      prisma.permission.findMany.mockResolvedValue(permissionsWithBase as unknown as Permission[]);
+
+      await expect(service.create(mockActionPayload, {
+        ...mockCreateRoleInput,
+        permissions: [...mockCreateRoleInput.permissions, 'perm-core']
+      })).rejects.toThrow('you cannot create a new role with base Permissions');
+
+      // Verify create was not called
+      expect(prisma.role.create).not.toHaveBeenCalled();
+    });
   });
 });
