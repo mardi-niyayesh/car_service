@@ -1,4 +1,4 @@
-import type {PrismaMock} from "@/types";
+import type {PrismaMock, RoleIncludeType} from "@/types";
 import {fakePermissionsTest, fakeRoleTest} from "@/lib";
 import {RoleService} from "@/modules/role/role.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
@@ -260,6 +260,65 @@ describe('RoleService', (): void => {
       });
 
       policySpy.mockRestore();
+    });
+  });
+
+  /** ================================================
+   * Delete
+   *  ================================================
+   */
+  describe('delete()', (): void => {
+    // Mock data
+    const mockActionPayload = {
+      userId: 'user-123',
+      permissions: ['owner.all'],
+      roles: ['owner'],
+    };
+
+    const mockRoleRecord: RoleIncludeType = {
+      id: 'role-456',
+      name: 'custom_role_1',
+      description: 'This is a custom role for testing',
+      role_type: 'CUSTOM',
+      creator_id: 'user-123',
+      created_at: new Date(),
+      updated_at: new Date(),
+      rolePermissions: [
+        {
+          id: 'rp-1',
+          role_id: 'role-456',
+          permission_id: 'perm-1',
+          created_at: new Date(),
+          updated_at: new Date(),
+          permission: {
+            id: 'perm-1',
+            name: 'user.view',
+            permission_type: 'STANDARD',
+            description: 'View users',
+            created_at: new Date(),
+            updated_at: new Date()
+          }
+        }
+      ]
+    };
+
+    // success
+    it('should delete role successfully with valid permissions', async () => {
+      prisma.role.delete.mockResolvedValue(mockRoleRecord as unknown as Role);
+
+      const result = await service.delete(mockRoleRecord, mockActionPayload);
+
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('role');
+      expect(result.message).toBe('role deleted successfully.');
+      expect(result.data.role.id).toBe(mockRoleRecord.id);
+      expect(result.data.role.name).toBe(mockRoleRecord.name);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.role.delete).toHaveBeenCalledWith({
+        where: { id: mockRoleRecord.id }
+      });
     });
   });
 });
