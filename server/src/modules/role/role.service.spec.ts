@@ -210,5 +210,31 @@ describe('RoleService', (): void => {
 
       expect(prisma.rolePermission.createMany).not.toHaveBeenCalled();
     });
+
+    // test without ownership
+    it('should create role with creator_id = null when ownership is false', async () => {
+      const inputWithoutOwnership = {
+        ...mockCreateRoleInput,
+        ownership: false
+      };
+
+      prisma.permission.findMany.mockResolvedValue(mockPermissionsRecord as unknown as Permission[]);
+      prisma.role.create.mockResolvedValue({
+        ...mockCreatedRole,
+        creator_id: null
+      } as Role);
+
+      const result = await service.create(mockActionPayload, inputWithoutOwnership);
+
+      expect(result.data.role.creator_id).toBeNull();
+      expect(prisma.role.create).toHaveBeenCalledWith({
+        data: {
+          creator_id: null,
+          name: mockCreateRoleInput.name,
+          description: mockCreateRoleInput.description,
+          role_type: 'CUSTOM'
+        }
+      });
+    });
   });
 });
