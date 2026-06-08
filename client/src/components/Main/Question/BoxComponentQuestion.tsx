@@ -10,7 +10,7 @@ const BoxComponentQuestion = (props: BoxComponentType) => {
   const [showFullText, setShowFullText] = useState(false);
   return (
     <div className="w-full px-2 py-2">
-     <div className="bg-white rounded-xl border p-4 border-blue-100 shadow-lg overflow-hidden">
+     <div className="bg-white rounded-xl border  border-blue-100 shadow-lg overflow-hidden">
 
         <div className="block sm:hidden">
           {props.image && (
