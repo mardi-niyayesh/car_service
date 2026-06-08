@@ -638,5 +638,21 @@ describe('RoleService', (): void => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.role.update).not.toHaveBeenCalled();
     });
+
+    // error: no changes provided (conflict - all fields same)
+    it('should throw ConflictException when no fields are different from existing role', async () => {
+      const updateData = {
+        name: mockRoleRecord.name,
+        description: mockRoleRecord.description as string
+      };
+
+      await expect(service.update(mockRoleRecord, mockActionPayload, updateData))
+        .rejects
+        .toThrow('At least one field must differ from the existing role data');
+
+      // Verify update was not called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.role.update).not.toHaveBeenCalled();
+    });
   });
 });
