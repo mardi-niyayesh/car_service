@@ -1,7 +1,7 @@
-import type {PrismaMock, RoleIncludeType} from "@/types";
 import {fakePermissionsTest, fakeRoleTest} from "@/lib";
 import {RoleService} from "@/modules/role/role.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
+import type {PrismaMock, RoleIncludeType} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {describe, beforeEach, afterEach, it, expect, vi} from "vitest";
 import {Permission, Prisma, Role} from "@/modules/prisma/generated/client";
@@ -343,6 +343,469 @@ describe('RoleService', (): void => {
       await expect(service.delete(mockRoleRecord, mockActionPayload))
         .rejects
         .toThrow();
+    });
+  });
+
+  /** ================================================
+   * Update
+   *  ================================================
+   */
+  describe('update()', (): void => {
+    // Mock data
+    const mockActionPayload = {
+      userId: 'user-123',
+      permissions: ['owner.all', 'role.update'],
+      roles: ['owner'],
+    };
+
+    const mockUserManagerPayload = {
+      userId: 'user-456',
+      permissions: ['role.update'],
+      roles: ['user_manager'],
+    };
+
+    const mockPermissionsRecord: Permission[] = [
+      {id: 'perm-1', name: 'user.view', permission_type: 'STANDARD', description: 'View users', created_at: new Date(), updated_at: new Date()},
+      {id: 'perm-2', name: 'user.edit', permission_type: 'STANDARD', description: 'Edit users', created_at: new Date(), updated_at: new Date()},
+      {id: 'perm-3', name: 'role.view', permission_type: 'STANDARD', description: 'View roles', created_at: new Date(), updated_at: new Date()},
+      {id: 'perm-4', name: 'role.delete', permission_type: 'MANAGER', description: 'Delete roles', created_at: new Date(), updated_at: new Date()},
+    ];
+
+    const mockRoleRecord: RoleIncludeType = {
+      id: 'role-456',
+      name: 'custom_role_1',
+      description: 'This is a custom role for testing',
+      role_type: 'CUSTOM',
+      creator_id: 'user-123',
+      created_at: new Date(),
+      updated_at: new Date(),
+      rolePermissions: [
+        {
+          id: 'rp-1',
+          role_id: 'role-456',
+          permission_id: 'perm-1',
+          created_at: new Date(),
+          updated_at: new Date(),
+          permission: mockPermissionsRecord[0]
+        },
+        {
+          id: 'rp-2',
+          role_id: 'role-456',
+          permission_id: 'perm-2',
+          created_at: new Date(),
+          updated_at: new Date(),
+          permission: mockPermissionsRecord[1]
+        }
+      ]
+    };
+
+    const mockSystemRoleRecord: RoleIncludeType = {
+      ...mockRoleRecord,
+      name: 'admin',
+      role_type: 'SYSTEM',
+      creator_id: null
+    };
+
+    const mockUpdatedRoleRecord: RoleIncludeType = {
+      ...mockRoleRecord,
+      name: 'updated_role_name',
+      description: 'Updated description',
+      rolePermissions: [
+        ...mockRoleRecord.rolePermissions,
+        {
+          id: 'rp-3',
+          role_id: 'role-456',
+          permission_id: 'perm-3',
+          created_at: new Date(),
+          updated_at: new Date(),
+          permission: mockPermissionsRecord[2]
+        }
+      ]
+    };
+
+    const mockRoleAfterDelete: RoleIncludeType = {
+      ...mockRoleRecord,
+      rolePermissions: mockRoleRecord.rolePermissions.slice(0, 1)
+    };
+
+    // success: update name only
+    it('should update role name successfully', async () => {
+      const updateData = {
+        name: 'updated_role_name'
+      };
+
+      prisma.role.update.mockResolvedValue({
+        ...mockRoleRecord,
+        name: updateData.name
+      } as unknown as RoleIncludeType);
+
+      const result = await service.update(mockRoleRecord, mockActionPayload, updateData);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('role');
+
+      // 2. Test success message
+      expect(result.message).toBe('Role successfully updated.');
+
+      // 3. Test updated role data
+      const {role} = result.data;
+      expect(role.id).toBe(mockRoleRecord.id);
+      expect(role.name).toBe(updateData.name);
+      expect(role.description).toBe(mockRoleRecord.description);
+
+      // 4. Verify database call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.role.update).toHaveBeenCalledWith({
+        where: {id: mockRoleRecord.id},
+        data: {
+          name: updateData.name,
+          description: undefined,
+          creator_id: undefined
+        },
+        include: {
+          rolePermissions: {
+            include: {permission: true}
+          }
+        }
+      });
+    });
+
+    // success: delete permissions
+    it('should delete permissions from role successfully', async () => {
+      const updateData = {
+        deletePermissions: ['perm-2']
+      };
+
+      prisma.rolePermission.deleteMany.mockResolvedValue({count: 1});
+      prisma.role.update.mockResolvedValue(mockRoleAfterDelete as unknown as RoleIncludeType);
+
+      const result = await service.update(mockRoleRecord, mockActionPayload, updateData);
+
+      // 1. Test that deleted permission is no longer present
+      const remainingPermIds = result.data.role.permissions.map(p => p.id);
+      expect(remainingPermIds).not.toContain('perm-2');
+      expect(remainingPermIds).toContain('perm-1');
+
+      // 2. Verify deleteMany call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.rolePermission.deleteMany).toHaveBeenCalledWith({
+        where: {
+          permission_id: {
+            in: updateData.deletePermissions
+          },
+          role_id: mockRoleRecord.id
+        }
+      });
+    });
+
+    // success: add additional permissions
+    it('should add additional permissions to role successfully', async () => {
+      const updateData = {
+        additionalPermissions: ['perm-3', 'perm-4']
+      };
+
+      prisma.permission.findMany.mockResolvedValue([
+        mockPermissionsRecord[2],
+        mockPermissionsRecord[3]
+      ] as unknown as Permission[]);
+
+      const mockRoleAfterAddPermissions: RoleIncludeType = {
+        ...mockRoleRecord,
+        rolePermissions: [
+          ...mockRoleRecord.rolePermissions,
+          {
+            id: 'rp-3',
+            role_id: 'role-456',
+            permission_id: 'perm-3',
+            created_at: new Date(),
+            updated_at: new Date(),
+            permission: mockPermissionsRecord[2]
+          },
+          {
+            id: 'rp-4',
+            role_id: 'role-456',
+            permission_id: 'perm-4',
+            created_at: new Date(),
+            updated_at: new Date(),
+            permission: mockPermissionsRecord[3]
+          }
+        ]
+      };
+
+      prisma.rolePermission.createMany.mockResolvedValue({count: 2});
+      prisma.role.update.mockResolvedValue(mockRoleAfterAddPermissions as unknown as RoleIncludeType);
+
+      const result = await service.update(mockRoleRecord, mockActionPayload, updateData);
+
+      // 1. Test that new permissions are added
+      const permIds = result.data.role.permissions.map(p => p.id);
+      expect(permIds).toContain('perm-1');
+      expect(permIds).toContain('perm-2');
+      expect(permIds).toContain('perm-3');
+      expect(permIds).toContain('perm-4');
+
+      // 2. Verify findMany call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.permission.findMany).toHaveBeenCalledWith({
+        where: {
+          id: {in: updateData.additionalPermissions}
+        }
+      });
+
+      // 3. Verify createMany call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.rolePermission.createMany).toHaveBeenCalledWith({
+        data: updateData.additionalPermissions.map(p => ({
+          role_id: mockRoleRecord.id,
+          permission_id: p
+        }))
+      });
+    });
+
+    // success: combine all updates
+    it('should handle name, description, ownership, delete and add permissions together', async () => {
+      const updateData = {
+        name: 'completely_updated_role',
+        description: 'Brand new description',
+        ownership: false as const,
+        deletePermissions: ['perm-2'],
+        additionalPermissions: ['perm-3', 'perm-4']
+      };
+
+      prisma.permission.findMany.mockResolvedValue([
+        mockPermissionsRecord[2],
+        mockPermissionsRecord[3]
+      ] as unknown as Permission[]);
+
+      prisma.rolePermission.deleteMany.mockResolvedValue({count: 1});
+      prisma.rolePermission.createMany.mockResolvedValue({count: 2});
+      prisma.role.update.mockResolvedValue({
+        ...mockUpdatedRoleRecord,
+        name: updateData.name,
+        description: updateData.description,
+        creator_id: null
+      } as unknown as RoleIncludeType);
+
+      const result = await service.update(mockRoleRecord, mockActionPayload, updateData);
+
+      expect(result.data.role.name).toBe(updateData.name);
+      expect(result.data.role.description).toBe(updateData.description);
+      expect(result.data.role.creator_id).toBeNull();
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.role.update).toHaveBeenCalledWith({
+        where: {id: mockRoleRecord.id},
+        data: {
+          name: updateData.name,
+          description: updateData.description,
+          creator_id: null
+        },
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        include: expect.any(Object)
+      });
+    });
+
+    // success: user with role.update permission (without owner.all)
+    it('should allow update by user with role.update permission', async () => {
+      const updateData = {
+        name: 'updated_by_manager'
+      };
+
+      prisma.role.update.mockResolvedValue({
+        ...mockRoleRecord,
+        name: updateData.name
+      } as unknown as RoleIncludeType);
+
+      const result = await service.update(mockRoleRecord, mockUserManagerPayload, updateData);
+
+      expect(result.data.role.name).toBe(updateData.name);
+      expect(result.message).toBe('Role successfully updated.');
+    });
+
+    // error: system role cannot be updated
+    it('should throw ForbiddenException when trying to update a SYSTEM role', async () => {
+      const updateData = {
+        name: 'trying_to_rename_system_role'
+      };
+
+      await expect(service.update(mockSystemRoleRecord, mockActionPayload, updateData))
+        .rejects
+        .toThrow('Basic roles are essential to the system and cannot be updated.');
+
+      // Verify update was not called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.role.update).not.toHaveBeenCalled();
+    });
+
+    // error: no changes provided (conflict - all fields same)
+    it('should throw ConflictException when no fields are different from existing role', async () => {
+      const updateData = {
+        name: mockRoleRecord.name,
+        description: mockRoleRecord.description as string
+      };
+
+      await expect(service.update(mockRoleRecord, mockActionPayload, updateData))
+        .rejects
+        .toThrow('At least one field must differ from the existing role data');
+
+      // Verify update was not called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.role.update).not.toHaveBeenCalled();
+    });
+
+    // error: delete non-existent permission from role
+    it('should throw NotFoundException when trying to delete a permission that does not exist in the role', async () => {
+      const updateData = {
+        deletePermissions: ['non-existent-perm-id']
+      };
+
+      await expect(service.update(mockRoleRecord, mockActionPayload, updateData))
+        .rejects
+        .toThrow('One or many Permissions does not exist in this role');
+
+      // Verify deleteMany was not called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.rolePermission.deleteMany).not.toHaveBeenCalled();
+    });
+
+    // error: add permission that already exists in role
+    it('should throw ConflictException when trying to add a permission that already exists in the role', async () => {
+      const updateData = {
+        additionalPermissions: ['perm-1', 'perm-2']
+      };
+
+      await expect(service.update(mockRoleRecord, mockActionPayload, updateData))
+        .rejects
+        .toThrow('One or many Permissions already exist in this role');
+
+      // Verify findMany was not called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.permission.findMany).not.toHaveBeenCalled();
+    });
+
+    // error: add permission that doesn't exist in database
+    it('should throw NotFoundException when one or more additional permissions do not exist in database', async () => {
+      const updateData = {
+        additionalPermissions: ['perm-3', 'fake-perm-id']
+      };
+
+      // Mock findMany returning fewer permissions (missing one)
+      prisma.permission.findMany.mockResolvedValue([mockPermissionsRecord[2]] as unknown as Permission[]);
+
+      await expect(service.update(mockRoleRecord, mockActionPayload, updateData))
+        .rejects
+        .toThrow('One or many Permissions does not exist in database');
+
+      // Verify createMany was not called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.rolePermission.createMany).not.toHaveBeenCalled();
+    });
+
+    // error: duplicate role name (Prisma P2002 error)
+    it('should throw error when role name already exists (unique constraint violation)', async () => {
+      const updateData = {
+        name: 'duplicate_role_name'
+      };
+
+      const prismaError = new Error('Unique constraint failed');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2002';
+      prisma.role.update.mockRejectedValue(prismaError);
+
+      await expect(service.update(mockRoleRecord, mockActionPayload, updateData))
+        .rejects
+        .toThrow();
+    });
+
+    // error: user without owner.all trying to update role with MANAGER permissions
+    it('should throw ForbiddenException when user lacks owner.all and role contains MANAGER permissions', async () => {
+      const roleWithManagerPerms: RoleIncludeType = {
+        ...mockRoleRecord,
+        rolePermissions: [
+          ...mockRoleRecord.rolePermissions,
+          {
+            id: 'rp-manager',
+            role_id: 'role-456',
+            permission_id: 'perm-4',
+            created_at: new Date(),
+            updated_at: new Date(),
+            permission: mockPermissionsRecord[3]
+          }
+        ]
+      };
+
+      const updateData = {
+        name: 'updated_name'
+      };
+
+      await expect(service.update(roleWithManagerPerms, mockUserManagerPayload, updateData))
+        .rejects
+        .toThrow('High‑level permission protection');
+
+      // Verify update was not called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.role.update).not.toHaveBeenCalled();
+    });
+
+    // error: empty update data (no name, description, ownership, deletePermissions, additionalPermissions)
+    it('should throw validation error when update data is completely empty', async () => {
+      const updateData = {};
+
+      await expect(service.update(mockRoleRecord, mockActionPayload, updateData))
+        .rejects
+        .toThrow();
+    });
+
+    // test: rolePermissionPolicy called with correct parameters
+    it('should call rolePermissionPolicy with correct parameters when adding MANAGER permissions', async () => {
+      const updateData = {
+        additionalPermissions: ['perm-4'] // MANAGER type permission
+      };
+
+      prisma.permission.findMany.mockResolvedValue([mockPermissionsRecord[3]] as unknown as Permission[]);
+      prisma.rolePermission.createMany.mockResolvedValue({count: 1});
+      prisma.role.update.mockResolvedValue(mockUpdatedRoleRecord as unknown as RoleIncludeType);
+
+      const policySpy = vi.spyOn(service, 'rolePermissionPolicy');
+
+      await service.update(mockRoleRecord, mockActionPayload, updateData);
+
+      expect(policySpy).toHaveBeenCalledWith({
+        mode: "update",
+        permissions: [mockPermissionsRecord[3]],
+        actionPermissions: mockActionPayload.permissions
+      });
+
+      policySpy.mockRestore();
+    });
+
+    // test: rolePolicy called with correct parameters
+    it('should call rolePolicy with correct parameters before update', async () => {
+      const updateData = {
+        name: 'new_role_name'
+      };
+
+      prisma.role.update.mockResolvedValue({
+        ...mockRoleRecord,
+        name: updateData.name
+      } as unknown as RoleIncludeType);
+
+      const policySpy = vi.spyOn(service, 'rolePolicy');
+
+      await service.update(mockRoleRecord, mockActionPayload, updateData);
+
+      expect(policySpy).toHaveBeenCalledWith({
+        mode: "update",
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        role: expect.objectContaining({
+          id: mockRoleRecord.id,
+          role_type: mockRoleRecord.role_type
+        }),
+        actionPermissions: mockActionPayload.permissions
+      });
+
+      policySpy.mockRestore();
     });
   });
 });
