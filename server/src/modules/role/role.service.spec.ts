@@ -563,5 +563,48 @@ describe('RoleService', (): void => {
         }))
       });
     });
+
+    // success: combine all updates
+    it('should handle name, description, ownership, delete and add permissions together', async () => {
+      const updateData = {
+        name: 'completely_updated_role',
+        description: 'Brand new description',
+        ownership: false as const,
+        deletePermissions: ['perm-2'],
+        additionalPermissions: ['perm-3', 'perm-4']
+      };
+
+      prisma.permission.findMany.mockResolvedValue([
+        mockPermissionsRecord[2],
+        mockPermissionsRecord[3]
+      ] as unknown as Permission[]);
+
+      prisma.rolePermission.deleteMany.mockResolvedValue({count: 1});
+      prisma.rolePermission.createMany.mockResolvedValue({count: 2});
+      prisma.role.update.mockResolvedValue({
+        ...mockUpdatedRoleRecord,
+        name: updateData.name,
+        description: updateData.description,
+        creator_id: null
+      } as unknown as RoleIncludeType);
+
+      const result = await service.update(mockRoleRecord, mockActionPayload, updateData);
+
+      expect(result.data.role.name).toBe(updateData.name);
+      expect(result.data.role.description).toBe(updateData.description);
+      expect(result.data.role.creator_id).toBeNull();
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.role.update).toHaveBeenCalledWith({
+        where: {id: mockRoleRecord.id},
+        data: {
+          name: updateData.name,
+          description: updateData.description,
+          creator_id: null
+        },
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        include: expect.any(Object)
+      });
+    });
   });
 });
