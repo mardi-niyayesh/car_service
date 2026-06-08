@@ -717,5 +717,35 @@ describe('RoleService', (): void => {
         .rejects
         .toThrow();
     });
+
+    // error: user without owner.all trying to update role with MANAGER permissions
+    it('should throw ForbiddenException when user lacks owner.all and role contains MANAGER permissions', async () => {
+      const roleWithManagerPerms: RoleIncludeType = {
+        ...mockRoleRecord,
+        rolePermissions: [
+          ...mockRoleRecord.rolePermissions,
+          {
+            id: 'rp-manager',
+            role_id: 'role-456',
+            permission_id: 'perm-4',
+            created_at: new Date(),
+            updated_at: new Date(),
+            permission: mockPermissionsRecord[3]
+          }
+        ]
+      };
+
+      const updateData = {
+        name: 'updated_name'
+      };
+
+      await expect(service.update(roleWithManagerPerms, mockUserManagerPayload, updateData))
+        .rejects
+        .toThrow('High‑level permission protection');
+
+      // Verify update was not called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.role.update).not.toHaveBeenCalled();
+    });
   });
 });
