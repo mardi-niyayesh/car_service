@@ -623,5 +623,20 @@ describe('RoleService', (): void => {
       expect(result.data.role.name).toBe(updateData.name);
       expect(result.message).toBe('Role successfully updated.');
     });
+
+    // error: system role cannot be updated
+    it('should throw ForbiddenException when trying to update a SYSTEM role', async () => {
+      const updateData = {
+        name: 'trying_to_rename_system_role'
+      };
+
+      await expect(service.update(mockSystemRoleRecord, mockActionPayload, updateData))
+        .rejects
+        .toThrow('Basic roles are essential to the system and cannot be updated.');
+
+      // Verify update was not called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.role.update).not.toHaveBeenCalled();
+    });
   });
 });
