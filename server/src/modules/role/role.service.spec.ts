@@ -684,5 +684,23 @@ describe('RoleService', (): void => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.permission.findMany).not.toHaveBeenCalled();
     });
+
+    // error: add permission that doesn't exist in database
+    it('should throw NotFoundException when one or more additional permissions do not exist in database', async () => {
+      const updateData = {
+        additionalPermissions: ['perm-3', 'fake-perm-id']
+      };
+
+      // Mock findMany returning fewer permissions (missing one)
+      prisma.permission.findMany.mockResolvedValue([mockPermissionsRecord[2]] as unknown as Permission[]);
+
+      await expect(service.update(mockRoleRecord, mockActionPayload, updateData))
+        .rejects
+        .toThrow('One or many Permissions does not exist in database');
+
+      // Verify createMany was not called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.rolePermission.createMany).not.toHaveBeenCalled();
+    });
   });
 });
