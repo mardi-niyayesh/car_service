@@ -16,6 +16,7 @@ const DetailCar = () => {
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [replyToId, setReplyToId] = useState<string | null>(null);
   const [refresh, setRefresh] = useState(0);
+  const [showbtn, setShowbtn] = useState(false);
 
   const findProduct = allProduct.find((pro) => pro.slug === slug);
   const productId = findProduct?.id;
@@ -42,6 +43,9 @@ const DetailCar = () => {
       </div>
     );
   }
+  const handleClick = () => {
+    setShowbtn((prev) => !prev);
+  };
 
   return (
     <>
@@ -53,14 +57,21 @@ const DetailCar = () => {
           <div className="md:w-1/2 w-full">
             <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
               <Des4Car />
-              <Des2Car />
-              <Des1Car />
+              <Des3Car />
+              <button
+                onClick={handleClick}
+                className="bg-gray-200 w-full hover:bg-gray-300 cursor-pointer  text-center text-gray-600 p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto"
+              >
+                {showbtn ? "نمایش قوانین رزو" : "مخفی کردن قوانین رزو"}
+              </button>
+              {!showbtn && (
+                <>
+                  <Des2Car />
+                  <Des1Car />
+                </>
+              )}
             </div>
-            {findProduct.description && (
-              <div className="mt-2">
-                <Des3Car />
-              </div>
-            )}
+            {findProduct.description && <div className="mt-2"></div>}
           </div>
           <div className="left-5 w-1/2">
             <HeroBaner />

@@ -100,11 +100,11 @@ function App() {
 
             <Route path="Profile" element={<Profile />} />
             <Route
-              path="Profile/updatePassword"
+              path="updatePassword"
               element={<ComponnetUpdetePassword />}
             />
             <Route
-              path="Profile/updateUser"
+              path="updateUser"
               element={<ComponentFormUpdateUser />}
             />
           </Route>

@@ -9,7 +9,7 @@ import WarningModal from "../../../Modal/WarningModal ";
 import ErrorModal from "../../../Modal/ErrorModal";
 import { useNavigate } from "react-router-dom";
 import { useProduct } from "../../../hooks/useProduct";
-import ComponentTableComment from "../../CommentForm/ComponentTableComment";
+import { FaEye } from "react-icons/fa";
 
 const ComponentTableProduct = () => {
   const { loading, allProduct, refetch, totalPage } = useProduct();
@@ -73,7 +73,9 @@ const ComponentTableProduct = () => {
   const handleShowComment = async (id: string) => {
     navigate(`commentoneproduct/${id}`);
   };
-
+  const handleShowDetailCar = async (id: string) => {
+    navigate(`/detailcar/niyayesh`);
+  };
   return (
     <>
       <div className="overflow-x-auto rounded-lg shadow-sm border border-gray-200 bg-white">
@@ -108,6 +110,7 @@ const ComponentTableProduct = () => {
                 {hasViewComment && (
                   <th className="w-20 px-4 py-3 font-medium"> کامنت</th>
                 )}
+                <th className="w-20 px-4 py-3 font-medium"> مشاهده</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -180,6 +183,15 @@ const ComponentTableProduct = () => {
                         }
                       </td>
                     )}
+                    <td>
+                      {
+                        <FaEye
+                          size={18}
+                          className="cursor-pointer"
+                          onClick={() => handleShowDetailCar(product.id)}
+                        />
+                      }
+                    </td>
                   </tr>
                 );
               })}

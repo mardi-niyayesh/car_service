@@ -1,11 +1,12 @@
 import * as CommentDto from "./dto";
-import {checkPrismaError} from "@/lib";
-import {Prisma} from "@/modules/prisma/generated/client";
+import {checkPrismaError, RedisKey} from "@/lib";
 import {RedisService} from "@/modules/redis/redis.service";
 import {EventEmitter2, OnEvent} from "@nestjs/event-emitter";
 import {Injectable, NotFoundException} from "@nestjs/common";
-import {PrismaService} from "@/modules/prisma/prisma.service";
+import {type Prisma} from "@/modules/prisma/generated/client";
 import {eventsEmitter, PaginationValidatorType} from "@/common";
+import {type PrismaService} from "@/modules/prisma/prisma.service";
+import {findAllCommentCacheableExtraKeys} from "@/modules/car/decorators";
 import type {CommentWhereInput} from "@/modules/prisma/generated/models/Comment";
 import type {BaseException, CreateCommentResponse, ApiResponse, CommentNUserNCarList, UpdateCarRateEvent, ReplyCommentListAndUser} from "@/types";
 
@@ -213,6 +214,10 @@ export class CommentService {
           car_id: comment.car_id
         } as UpdateCarRateEvent);
 
+        const keyCache: string = RedisKey.build('comment', ...findAllCommentCacheableExtraKeys, `id=${comment.car_id}`);
+
+        await this.redis.deletePrefix(`*${keyCache}*`);
+
         return {
           message: 'comment successfully confirmed.',
           data: {
@@ -261,13 +266,17 @@ export class CommentService {
 
     const rate: number = rates._avg.rate ?? 0.0;
 
-    await this.prisma.car.update({
+    const car = await this.prisma.car.update({
       where: {
         id: car_id,
       },
-      data: {rate}
+      data: {rate},
+      select: {
+        slug: true
+      }
     });
 
-    await this.redis.deletePrefix("*car:list*");
+    const keyCache: string = RedisKey.build('car', `slug=${car.slug}`);
+    await this.redis.delete(keyCache);
   }
 }

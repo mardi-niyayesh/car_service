@@ -1,8 +1,8 @@
 import {RedisKey} from "@/lib";
 import {map, Observable} from "rxjs";
 import type {Request} from "express";
-import {BaseException} from "@/types";
 import {Reflector} from "@nestjs/core";
+import type {BaseException} from "@/types";
 import {RedisService} from "@/modules/redis/redis.service";
 import {CACHE_EVICT_KEY, type CacheEvictDecorator} from "@/common";
 import {CallHandler, ExecutionContext, Injectable, InternalServerErrorException, NestInterceptor} from "@nestjs/common";
@@ -60,7 +60,8 @@ export class CacheEvictInterceptor implements NestInterceptor {
 
         if ('prefix' in cacheParams && cacheParams.prefix?.trim()) {
           try {
-            await this.redisService.deletePrefix(`*${cacheParams.prefix}*`);
+            const finalKey = `*${cacheParams.prefix}*`;
+            await this.redisService.deletePrefix(finalKey);
           } catch (e) {
             throw new InternalServerErrorException({
               message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a prefix cache',
@@ -80,14 +81,17 @@ export class CacheEvictInterceptor implements NestInterceptor {
             if (cacheParams.findPrefix.extraKeys?.length) {
               const extraKeys: string = cacheParams.findPrefix.extraKeys.join(":");
 
-              await this.redisService.deletePrefix(`*${cacheParams.resource}:${extraKeys}:${keyParam}=${paramValue}:list*`);
+              const finalKey = `*${cacheParams.resource}:${extraKeys}:${keyParam}=${paramValue}:list*`;
+              await this.redisService.deletePrefix(finalKey);
 
             } else {
-              await this.redisService.deletePrefix(`*${cacheParams.resource}:${paramValue}:list*`);
+              const finalKey = `*${cacheParams.resource}:${paramValue}:list*`;
+              await this.redisService.deletePrefix(finalKey);
             }
 
           } else {
-            await this.redisService.deletePrefix(`*${paramValue}*`);
+            const finalKey = `*${paramValue}*`;
+            await this.redisService.deletePrefix(finalKey);
           }
         }
 

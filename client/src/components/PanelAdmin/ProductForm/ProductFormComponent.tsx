@@ -1,7 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import TagInput from "./TagInput";
-import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useCategories } from "../../../hooks/useCategories";
 
 export type ProductFormType = {
   name: string;
@@ -33,6 +33,10 @@ const ProductFormComponent = ({
   submitButtonText,
   isLoading = false,
 }: ProductFormProps) => {
+  const { categories } = useCategories();
+  const [allcat, setAllcat] = useState(() => categories);
+  console.log("all cat :", categories);
+
   const {
     register,
     reset,
@@ -53,6 +57,12 @@ const ProductFormComponent = ({
       ...defaultValues,
     },
   });
+
+  useEffect(() => {
+    if (JSON.stringify(allcat) !== JSON.stringify(categories)) {
+      setAllcat(categories);
+    }
+  }, [categories, allcat]);
   useEffect(() => {
     if (defaultValues) {
       reset(defaultValues);
@@ -288,29 +298,31 @@ const ProductFormComponent = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                آیدی دسته بندی ماشین
+                دسته بندی ماشین
                 {mode === "create" ? (
                   <span className="text-red-500"> *</span>
                 ) : (
                   <span className="text-gray-400 text-xs">(اختیاری)</span>
                 )}
               </label>
-              <input
-                type="text"
-                placeholder="آیدی دسته بندی..."
+
+              <select
                 className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ${
                   errors.category_id ? "border-red-500" : "border-gray-300"
                 }`}
                 {...register("category_id", {
                   required:
-                    mode === "create" ? "آیدی دسته بندی الزامی است" : false,
-                  pattern: {
-                    value:
-                      /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$/,
-                    message: "فرمت UUID معتبر نیست (36 کاراکتر با خط تیره)",
-                  },
+                    mode === "create" ? "دسته بندی ماشین الزامی است" : false,
                 })}
-              />
+              >
+                <option value=""> دسته بندی </option>
+                {allcat.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+
               {errors.category_id && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.category_id.message}
@@ -318,6 +330,7 @@ const ProductFormComponent = ({
               )}
             </div>
           </div>
+
           <div className="mb-4 pb-3">
             <div className="flex items-center gap-2">
               <input
@@ -352,11 +365,6 @@ const ProductFormComponent = ({
           </button>
         </div>
       </form>
-      <Link to="/panel/category">
-        <button className="text-blue-600 mb-3 hover:bg-gray-300 font-medium mr-5 mt-3 bg-gray-200 p-1.5 rounded-lg">
-          برای دیدن ایدی دسته بندی ها کلیک کنید
-        </button>
-      </Link>
     </>
   );
 };
