@@ -702,5 +702,20 @@ describe('RoleService', (): void => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.rolePermission.createMany).not.toHaveBeenCalled();
     });
+
+    // error: duplicate role name (Prisma P2002 error)
+    it('should throw error when role name already exists (unique constraint violation)', async () => {
+      const updateData = {
+        name: 'duplicate_role_name'
+      };
+
+      const prismaError = new Error('Unique constraint failed');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2002';
+      prisma.role.update.mockRejectedValue(prismaError);
+
+      await expect(service.update(mockRoleRecord, mockActionPayload, updateData))
+        .rejects
+        .toThrow();
+    });
   });
 });
