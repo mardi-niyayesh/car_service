@@ -756,5 +756,28 @@ describe('RoleService', (): void => {
         .rejects
         .toThrow();
     });
+
+    // test: rolePermissionPolicy called with correct parameters
+    it('should call rolePermissionPolicy with correct parameters when adding MANAGER permissions', async () => {
+      const updateData = {
+        additionalPermissions: ['perm-4'] // MANAGER type permission
+      };
+
+      prisma.permission.findMany.mockResolvedValue([mockPermissionsRecord[3]] as unknown as Permission[]);
+      prisma.rolePermission.createMany.mockResolvedValue({count: 1});
+      prisma.role.update.mockResolvedValue(mockUpdatedRoleRecord as unknown as RoleIncludeType);
+
+      const policySpy = vi.spyOn(service, 'rolePermissionPolicy');
+
+      await service.update(mockRoleRecord, mockActionPayload, updateData);
+
+      expect(policySpy).toHaveBeenCalledWith({
+        mode: "update",
+        permissions: [mockPermissionsRecord[3]],
+        actionPermissions: mockActionPayload.permissions
+      });
+
+      policySpy.mockRestore();
+    });
   });
 });
