@@ -747,5 +747,14 @@ describe('RoleService', (): void => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.role.update).not.toHaveBeenCalled();
     });
+
+    // error: empty update data (no name, description, ownership, deletePermissions, additionalPermissions)
+    it('should throw validation error when update data is completely empty', async () => {
+      const updateData = {};
+
+      await expect(service.update(mockRoleRecord, mockActionPayload, updateData))
+        .rejects
+        .toThrow();
+    });
   });
 });
