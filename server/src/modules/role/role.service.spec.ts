@@ -654,5 +654,20 @@ describe('RoleService', (): void => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.role.update).not.toHaveBeenCalled();
     });
+
+    // error: delete non-existent permission from role
+    it('should throw NotFoundException when trying to delete a permission that does not exist in the role', async () => {
+      const updateData = {
+        deletePermissions: ['non-existent-perm-id']
+      };
+
+      await expect(service.update(mockRoleRecord, mockActionPayload, updateData))
+        .rejects
+        .toThrow('One or many Permissions does not exist in this role');
+
+      // Verify deleteMany was not called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.rolePermission.deleteMany).not.toHaveBeenCalled();
+    });
   });
 });
