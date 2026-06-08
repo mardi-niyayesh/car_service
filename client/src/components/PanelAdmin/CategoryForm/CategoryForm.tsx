@@ -5,7 +5,7 @@ export type CategoryFormData = {
   name: string;
   description: string;
   slug: string;
-  ownership: boolean;
+  ownership?: boolean;
 };
 
 type CategoryFormProps = {
