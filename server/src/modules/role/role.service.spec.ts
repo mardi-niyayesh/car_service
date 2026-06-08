@@ -606,5 +606,22 @@ describe('RoleService', (): void => {
         include: expect.any(Object)
       });
     });
+
+    // success: user with role.update permission (without owner.all)
+    it('should allow update by user with role.update permission', async () => {
+      const updateData = {
+        name: 'updated_by_manager'
+      };
+
+      prisma.role.update.mockResolvedValue({
+        ...mockRoleRecord,
+        name: updateData.name
+      } as unknown as RoleIncludeType);
+
+      const result = await service.update(mockRoleRecord, mockUserManagerPayload, updateData);
+
+      expect(result.data.role.name).toBe(updateData.name);
+      expect(result.message).toBe('Role successfully updated.');
+    });
   });
 });
