@@ -499,5 +499,69 @@ describe('RoleService', (): void => {
         }
       });
     });
+
+    // success: add additional permissions
+    it('should add additional permissions to role successfully', async () => {
+      const updateData = {
+        additionalPermissions: ['perm-3', 'perm-4']
+      };
+
+      prisma.permission.findMany.mockResolvedValue([
+        mockPermissionsRecord[2],
+        mockPermissionsRecord[3]
+      ] as unknown as Permission[]);
+
+      const mockRoleAfterAddPermissions: RoleIncludeType = {
+        ...mockRoleRecord,
+        rolePermissions: [
+          ...mockRoleRecord.rolePermissions,
+          {
+            id: 'rp-3',
+            role_id: 'role-456',
+            permission_id: 'perm-3',
+            created_at: new Date(),
+            updated_at: new Date(),
+            permission: mockPermissionsRecord[2]
+          },
+          {
+            id: 'rp-4',
+            role_id: 'role-456',
+            permission_id: 'perm-4',
+            created_at: new Date(),
+            updated_at: new Date(),
+            permission: mockPermissionsRecord[3]
+          }
+        ]
+      };
+
+      prisma.rolePermission.createMany.mockResolvedValue({count: 2});
+      prisma.role.update.mockResolvedValue(mockRoleAfterAddPermissions as unknown as RoleIncludeType);
+
+      const result = await service.update(mockRoleRecord, mockActionPayload, updateData);
+
+      // 1. Test that new permissions are added
+      const permIds = result.data.role.permissions.map(p => p.id);
+      expect(permIds).toContain('perm-1');
+      expect(permIds).toContain('perm-2');
+      expect(permIds).toContain('perm-3');
+      expect(permIds).toContain('perm-4');
+
+      // 2. Verify findMany call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.permission.findMany).toHaveBeenCalledWith({
+        where: {
+          id: {in: updateData.additionalPermissions}
+        }
+      });
+
+      // 3. Verify createMany call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.rolePermission.createMany).toHaveBeenCalledWith({
+        data: updateData.additionalPermissions.map(p => ({
+          role_id: mockRoleRecord.id,
+          permission_id: p
+        }))
+      });
+    });
   });
 });
