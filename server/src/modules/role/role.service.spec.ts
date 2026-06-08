@@ -669,5 +669,20 @@ describe('RoleService', (): void => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.rolePermission.deleteMany).not.toHaveBeenCalled();
     });
+
+    // error: add permission that already exists in role
+    it('should throw ConflictException when trying to add a permission that already exists in the role', async () => {
+      const updateData = {
+        additionalPermissions: ['perm-1', 'perm-2']
+      };
+
+      await expect(service.update(mockRoleRecord, mockActionPayload, updateData))
+        .rejects
+        .toThrow('One or many Permissions already exist in this role');
+
+      // Verify findMany was not called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.permission.findMany).not.toHaveBeenCalled();
+    });
   });
 });
