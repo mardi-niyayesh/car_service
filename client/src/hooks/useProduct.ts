@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axiosClient from "../services/axiosClient";
-
+type Category = {
+  name: string;
+};
 type ProductType = {
   id: string;
   name: string;
@@ -13,6 +15,9 @@ type ProductType = {
   image: string;
   rate: number;
   category_id: string;
+  category: Category;
+  created_at: string;
+  updated_at: string;
 };
 export const useProduct = (page = 1, limit = 10) => {
   const [totalPage, setTotalPage] = useState(5);
