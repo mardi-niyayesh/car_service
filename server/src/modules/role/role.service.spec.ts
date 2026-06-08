@@ -779,5 +779,33 @@ describe('RoleService', (): void => {
 
       policySpy.mockRestore();
     });
+
+    // test: rolePolicy called with correct parameters
+    it('should call rolePolicy with correct parameters before update', async () => {
+      const updateData = {
+        name: 'new_role_name'
+      };
+
+      prisma.role.update.mockResolvedValue({
+        ...mockRoleRecord,
+        name: updateData.name
+      } as unknown as RoleIncludeType);
+
+      const policySpy = vi.spyOn(service, 'rolePolicy');
+
+      await service.update(mockRoleRecord, mockActionPayload, updateData);
+
+      expect(policySpy).toHaveBeenCalledWith({
+        mode: "update",
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        role: expect.objectContaining({
+          id: mockRoleRecord.id,
+          role_type: mockRoleRecord.role_type
+        }),
+        actionPermissions: mockActionPayload.permissions
+      });
+
+      policySpy.mockRestore();
+    });
   });
 });
