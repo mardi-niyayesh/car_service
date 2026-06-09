@@ -139,4 +139,48 @@ describe('PermissionService', () => {
         .toThrow(NotFoundException);
     });
   });
+
+  /** ================================================
+   * Find All
+   *  ================================================
+   */
+  describe('findAll()', (): void => {
+    // success: default pagination
+    it('should return all permissions with default pagination', async () => {
+      prisma.permission.findMany.mockResolvedValue(mockPermissionsList as unknown as Permission[]);
+      prisma.permission.count.mockResolvedValue(mockPermissionsList.length);
+
+      const result = await service.findAll({limit: 10, page: 1, orderByLower: 'asc', orderByUpper: 'ASC', offset: 0});
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('count');
+      expect(result.data).toHaveProperty('permissions');
+
+      // 2. Test success message
+      expect(result.message).toBe('permission successfully found');
+
+      // 3. Test count and permissions length
+      expect(result.data.count).toBe(mockPermissionsList.length);
+      expect(result.data.permissions.length).toBe(mockPermissionsList.length);
+
+      // 4. Test permissions data
+      expect(result.data.permissions[0].id).toBe(mockPermission.id);
+      expect(result.data.permissions[1].id).toBe(mockPermission2.id);
+      expect(result.data.permissions[2].id).toBe(mockPermission3.id);
+
+      // 5. Verify database calls
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.permission.count).toHaveBeenCalled();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.permission.findMany).toHaveBeenCalledWith({
+        orderBy: {
+          created_at: 'asc'
+        },
+        skip: 0,
+        take: 10,
+      });
+    });
+  });
 });
