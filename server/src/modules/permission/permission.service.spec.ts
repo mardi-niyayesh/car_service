@@ -182,5 +182,36 @@ describe('PermissionService', () => {
         take: 10,
       });
     });
+
+    // success: custom pagination (page 2, limit 5)
+    it('should respect custom limit and page parameters', async () => {
+      const customLimit = 5;
+      const customPage = 2;
+      const expectedSkip = (customPage - 1) * customLimit;
+
+      prisma.permission.findMany.mockResolvedValue([mockPermission3] as unknown as Permission[]);
+      prisma.permission.count.mockResolvedValue(6);
+
+      const result = await service.findAll({
+        limit: customLimit,
+        page: customPage,
+        orderByLower: 'asc',
+        orderByUpper: 'ASC',
+        offset: customLimit * (customPage - 1),
+      });
+
+      expect(result.data.count).toBe(6);
+      expect(result.data.permissions.length).toBe(1);
+      expect(result.data.permissions[0].id).toBe(mockPermission3.id);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.permission.findMany).toHaveBeenCalledWith({
+        orderBy: {
+          created_at: 'asc'
+        },
+        skip: expectedSkip,
+        take: customLimit
+      });
+    });
   });
 });
