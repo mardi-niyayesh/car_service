@@ -287,5 +287,22 @@ describe('PermissionService', () => {
         take: 0
       });
     });
+
+    // success: large offset (page beyond available data)
+    it('should return empty array when page is beyond available data', async () => {
+      prisma.permission.findMany.mockResolvedValue([]);
+      prisma.permission.count.mockResolvedValue(10);
+
+      const result = await service.findAll({
+        limit: 5,
+        page: 10, // page 10 with limit 5 means skip = 45, but only 10 items exist
+        orderByUpper: 'ASC',
+        orderByLower: 'asc',
+        offset: 45
+      });
+
+      expect(result.data.permissions).toEqual([]);
+      expect(result.data.count).toBe(10);
+    });
   });
 });
