@@ -248,5 +248,44 @@ describe('PermissionService', () => {
       expect(result.data.count).toBe(0);
       expect(result.data.permissions.length).toBe(0);
     });
+
+    // success: verify all permission fields are returned
+    it('should return all required fields for each permission', async () => {
+      prisma.permission.findMany.mockResolvedValue([mockPermission] as unknown as Permission[]);
+      prisma.permission.count.mockResolvedValue(1);
+
+      const result = await service.findAll({limit: 10, page: 1, orderBy: 'created_at', order: 'asc'});
+
+      const permission = result.data.permissions[0];
+      expect(permission).toHaveProperty('id');
+      expect(permission).toHaveProperty('name');
+      expect(permission).toHaveProperty('permission_type');
+      expect(permission).toHaveProperty('description');
+      expect(permission).toHaveProperty('created_at');
+      expect(permission).toHaveProperty('updated_at');
+    });
+
+    // success: zero limit (should still work)
+    it('should handle zero limit and return empty array', async () => {
+      prisma.permission.findMany.mockResolvedValue([]);
+      prisma.permission.count.mockResolvedValue(10);
+
+      const result = await service.findAll({
+        limit: 0,
+        page: 1,
+        orderByLower: 'asc',
+        orderByUpper: 'ASC',
+        offset: 0
+      });
+
+      expect(result.data.permissions).toEqual([]);
+      expect(result.data.count).toBe(10);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.permission.findMany).toHaveBeenCalledWith({
+        orderBy: {created_at: 'asc'},
+        skip: 0,
+        take: 0
+      });
+    });
   });
 });
