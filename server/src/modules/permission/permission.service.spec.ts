@@ -254,7 +254,7 @@ describe('PermissionService', () => {
       prisma.permission.findMany.mockResolvedValue([mockPermission] as unknown as Permission[]);
       prisma.permission.count.mockResolvedValue(1);
 
-      const result = await service.findAll({limit: 10, page: 1, orderBy: 'created_at', order: 'asc'});
+      const result = await service.findAll({limit: 10, page: 1, orderByUpper: 'ASC', orderByLower: 'asc', offset: 0});
 
       const permission = result.data.permissions[0];
       expect(permission).toHaveProperty('id');
