@@ -4,6 +4,7 @@ import {mockDeep, mockReset} from "vitest-mock-extended";
 import {Permission} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {PrismaMock} from "@/types";
+import {NotFoundException} from "@nestjs/common";
 
 describe('PermissionService', () => {
   let prisma: PrismaMock;
@@ -109,6 +110,23 @@ describe('PermissionService', () => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.permission.findUnique).toHaveBeenCalledWith({
         where: {id: mockPermission4.id}
+      });
+    });
+
+    // error: permission not found
+    it('should throw NotFoundException when permission does not exist', async () => {
+      prisma.permission.findUnique.mockResolvedValue(null);
+
+      await expect(service.find('non-existent-id'))
+        .rejects
+        .toThrow(NotFoundException);
+      await expect(service.find('non-existent-id'))
+        .rejects
+        .toThrow('this permission not found in database');
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.permission.findUnique).toHaveBeenCalledWith({
+        where: {id: 'non-existent-id'}
       });
     });
   });
