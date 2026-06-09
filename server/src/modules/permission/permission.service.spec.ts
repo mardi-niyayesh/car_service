@@ -236,5 +236,17 @@ describe('PermissionService', () => {
         take: 10
       });
     });
+
+    // success: empty list (no permissions in database)
+    it('should return empty array when no permissions exist', async () => {
+      prisma.permission.findMany.mockResolvedValue([]);
+      prisma.permission.count.mockResolvedValue(0);
+
+      const result = await service.findAll({limit: 10, page: 1, orderByLower: 'asc', orderByUpper: 'ASC', offset: 0});
+
+      expect(result.data.permissions).toEqual([]);
+      expect(result.data.count).toBe(0);
+      expect(result.data.permissions.length).toBe(0);
+    });
   });
 });
