@@ -1,11 +1,12 @@
-import {describe, beforeEach, afterEach} from "vitest";
+import {describe, beforeEach, afterEach, it, expect} from "vitest";
 import {PermissionService} from "./permission.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {Permission} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {PrismaMock} from "@/types";
 
 describe('PermissionService', () => {
-  let prisma: PrismaService;
+  let prisma: PrismaMock;
   let service: PermissionService;
 
   // Mock data
@@ -60,5 +61,41 @@ describe('PermissionService', () => {
 
   afterEach((): void => {
     mockReset(prisma);
+  });
+
+  /** ================================================
+   * Find One
+   *  ================================================
+   */
+  describe('findOne()', (): void => {
+    // success
+    it('should find a permission by id and return it', async () => {
+      prisma.permission.findUnique.mockResolvedValue(mockPermission as unknown as Permission);
+
+      const result = await service.find(mockPermission.id);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('permission');
+
+      // 2. Test success message
+      expect(result.message).toBe('permission successfully found');
+
+      // 3. Test permission data
+      const {permission} = result.data;
+      expect(permission.id).toBe(mockPermission.id);
+      expect(permission.name).toBe(mockPermission.name);
+      expect(permission.permission_type).toBe(mockPermission.permission_type);
+      expect(permission.description).toBe(mockPermission.description);
+      expect(permission.created_at).toBe(mockDate);
+      expect(permission.updated_at).toBe(mockDate);
+
+      // 4. Verify database call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.permission.findUnique).toHaveBeenCalledWith({
+        where: {id: mockPermission.id}
+      });
+    });
   });
 });
