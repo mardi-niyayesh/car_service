@@ -213,5 +213,28 @@ describe('PermissionService', () => {
         take: customLimit
       });
     });
+
+    // success: order by name descending
+    it('should order permissions by name in descending order', async () => {
+      prisma.permission.findMany.mockResolvedValue([mockPermission3, mockPermission2, mockPermission] as unknown as Permission[]);
+      prisma.permission.count.mockResolvedValue(3);
+
+      await service.findAll({
+        limit: 10,
+        page: 1,
+        orderByLower: 'desc',
+        orderByUpper: 'DESC',
+        offset: 0
+      });
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.permission.findMany).toHaveBeenCalledWith({
+        orderBy: {
+          created_at: 'desc'
+        },
+        skip: 0,
+        take: 10
+      });
+    });
   });
 });
