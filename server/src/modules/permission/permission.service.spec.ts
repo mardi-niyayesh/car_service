@@ -97,5 +97,19 @@ describe('PermissionService', () => {
         where: {id: mockPermission.id}
       });
     });
+
+    // success: permission with CORE type
+    it('should find a permission with CORE type successfully', async () => {
+      prisma.permission.findUnique.mockResolvedValue(mockPermission4 as unknown as Permission);
+
+      const result = await service.find(mockPermission4.id);
+
+      expect(result.data.permission.permission_type).toBe('CORE');
+      expect(result.data.permission.name).toBe('owner.all');
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.permission.findUnique).toHaveBeenCalledWith({
+        where: {id: mockPermission4.id}
+      });
+    });
   });
 });
