@@ -129,5 +129,14 @@ describe('PermissionService', () => {
         where: {id: 'non-existent-id'}
       });
     });
+
+    // error: empty string id
+    it('should throw NotFoundException when id is empty string', async () => {
+      prisma.permission.findUnique.mockResolvedValue(null);
+
+      await expect(service.find(''))
+        .rejects
+        .toThrow(NotFoundException);
+    });
   });
 });
