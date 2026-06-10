@@ -1,5 +1,6 @@
 import type {PrismaMock} from "@/types";
 import {NotFoundException} from "@nestjs/common";
+import type {FindAllCarValidatorType} from "./dto";
 import {CarService} from "@/modules/car/car.service";
 import {Car} from "@/modules/prisma/generated/client";
 import {mockDeep, mockReset} from "vitest-mock-extended";
@@ -135,7 +136,7 @@ describe('CarService', (): void => {
       prisma.car.count.mockResolvedValue(2);
       prisma.car.findMany.mockResolvedValue(mockCars as unknown as Car[]);
 
-      const result = await service.findAll(mockPaginationInput);
+      const result = await service.findAll(mockPaginationInput as FindAllCarValidatorType);
 
       // 1. Test response structure
       expect(result).toHaveProperty('message');
