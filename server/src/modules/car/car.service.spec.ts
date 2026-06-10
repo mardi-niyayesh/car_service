@@ -6,6 +6,35 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 import {beforeEach, describe, afterEach, it, expect} from "vitest";
 import {NotFoundException} from "@nestjs/common";
 
+const mockDate = new Date();
+const mockCarWithCategory = {
+  id: "c8217255-b4b2-4734-a10c-76a1b752693b",
+  created_at: mockDate,
+  updated_at: mockDate,
+  name: "car",
+  slug: "bmw",
+  company: "car",
+  price_per_day: 200000,
+  tags: [
+    "car",
+    "test"
+  ],
+  image: "c8217255-b4b2-4734-a10c-76a1b752693b.png",
+  in_rent: false,
+  can_rent: true,
+  category_id: "ef85d0db-e822-4ec9-8009-da7925c965bd",
+  description: "a test car",
+  rate: 5,
+  category: {
+    id: "6d17a3c5-fcd8-4667-bf31-66843a9623e6",
+    created_at: mockDate,
+    updated_at: mockDate,
+    name: "test category",
+    slug: "test_category",
+    description: "test test test",
+  },
+};
+
 describe('CarService', (): void => {
   let prisma: PrismaMock;
   let service: CarService;
@@ -25,35 +54,7 @@ describe('CarService', (): void => {
    *  ================================================
    */
   describe('findOne()', (): void => {
-    const mockSlug = 'bmw';
-    const mockDate = new Date();
-    const mockCarWithCategory = {
-      id: "c8217255-b4b2-4734-a10c-76a1b752693b",
-      created_at: mockDate,
-      updated_at: mockDate,
-      name: "car",
-      slug: "bmw",
-      company: "car",
-      price_per_day: 200000,
-      tags: [
-        "car",
-        "test"
-      ],
-      image: "c8217255-b4b2-4734-a10c-76a1b752693b.png",
-      in_rent: false,
-      can_rent: true,
-      category_id: "ef85d0db-e822-4ec9-8009-da7925c965bd",
-      description: "a test car",
-      rate: 5,
-      category: {
-        id: "6d17a3c5-fcd8-4667-bf31-66843a9623e6",
-        created_at: mockDate,
-        updated_at: mockDate,
-        name: "test category",
-        slug: "test_category",
-        description: "test test test",
-      },
-    };
+    const mockSlug = mockCarWithCategory.slug;
 
     // success
     it('should find car by slug and return with category (without creator_id fields)', async () => {
@@ -91,5 +92,13 @@ describe('CarService', (): void => {
         .rejects
         .toThrow(NotFoundException);
     });
+  });
+
+  /** ================================================
+   * Find All(get list)
+   *  ================================================
+   */
+  describe('findAll()', (): void => {
+
   });
 });
