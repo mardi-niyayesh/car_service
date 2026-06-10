@@ -5,10 +5,11 @@ import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {beforeEach, describe, afterEach, it, expect} from "vitest";
 import {NotFoundException} from "@nestjs/common";
+import {CarWhereInput} from "@/modules/prisma/generated/models/Car";
 
 const mockDate = new Date();
 const mockCarWithCategory = {
-  id: "c8217255-b4b2-4734-a10c-76a1b752693b",
+  id: "car-1",
   created_at: mockDate,
   updated_at: mockDate,
   name: "car",
@@ -19,7 +20,7 @@ const mockCarWithCategory = {
     "car",
     "test"
   ],
-  image: "c8217255-b4b2-4734-a10c-76a1b752693b.png",
+  image: "car-1.png",
   in_rent: false,
   can_rent: true,
   category_id: "ef85d0db-e822-4ec9-8009-da7925c965bd",
@@ -99,6 +100,79 @@ describe('CarService', (): void => {
    *  ================================================
    */
   describe('findAll()', (): void => {
+    const mockCars = [
+      mockCarWithCategory,
+      {
+        ...mockCarWithCategory,
+        id: "car-2",
+        image: "car-2.png",
+        name: "Benz",
+        slug: "benz",
+        company: "benz",
+        price_per_day: 350000,
+        tags: ["electric", "sedan"],
+        in_rent: true,
+        can_rent: true,
+        category_id: "cat-2",
+        description: "Electric sedan",
+        rate: 4.8,
+      }
+    ];
 
+    const mockPaginationInput = {
+      limit: 10,
+      offset: 0,
+      in_rent: false,
+      can_rent: true,
+      category: "suv",
+      orderByLower: "asc",
+      order_by_field: "price_per_day",
+      price_per_day_lte: 500000,
+      price_per_day_gte: 100000,
+    };
+
+    // success
+    it('should return paginated list of cars with filters applied', async () => {
+      prisma.car.count.mockResolvedValue(2);
+      prisma.car.findMany.mockResolvedValue(mockCars as unknown as Car[]);
+
+      const result = await service.findAll(mockPaginationInput);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('count');
+      expect(result.data).toHaveProperty('cars');
+
+      // 2. Test message
+      expect(result.message).toBe('cars successfully found.');
+
+      // 3. Test count and cars array
+      expect(result.data.count).toBe(2);
+      expect(Array.isArray(result.data.cars)).toBe(true);
+      expect(result.data.cars.length).toBe(2);
+
+      // 4. Test each car doesn't have creator_id
+      for (const car of result.data.cars) {
+        expect(car).not.toHaveProperty('creator_id');
+        expect(car.category).not.toHaveProperty('creator_id');
+      }
+
+      // 5. Verify count call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.car.count).toHaveBeenCalledWith({
+        where: {
+          can_rent: mockPaginationInput.can_rent,
+          in_rent: mockPaginationInput.in_rent,
+          price_per_day: {
+            gte: mockPaginationInput.price_per_day_gte,
+            lte: mockPaginationInput.price_per_day_lte,
+          },
+          category: {
+            slug: mockPaginationInput.category,
+          }
+        }
+      });
+    });
   });
 });
