@@ -4,7 +4,7 @@ import type {FindAllCarValidatorType} from "./dto";
 import {CarService} from "@/modules/car/car.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {type Car, Prisma} from "@/modules/prisma/generated/client";
+import type {Car, Prisma} from "@/modules/prisma/generated/client";
 import {beforeEach, describe, afterEach, it, expect} from "vitest";
 
 const mockDate = new Date();
@@ -408,7 +408,7 @@ describe('CarService', (): void => {
   describe('update()', (): void => {
     const mockDate = new Date();
 
-    const mockCarRecord: CarAndCategory = {
+    const mockCarRecord = {
       id: 'car-789',
       created_at: mockDate,
       updated_at: mockDate,
@@ -435,7 +435,7 @@ describe('CarService', (): void => {
       },
     };
 
-    const mockUpdateCarInput: CarDto.UpdateCarType = {
+    const mockUpdateCarInput = {
       name: 'BMW X6',
       slug: 'bmw-x6-2024',
       price_per_day: 250000,
