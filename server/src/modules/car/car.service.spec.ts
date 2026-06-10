@@ -4,6 +4,7 @@ import {Car} from "@/modules/prisma/generated/client";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {beforeEach, describe, afterEach, it, expect} from "vitest";
+import {NotFoundException} from "@nestjs/common";
 
 describe('CarService', (): void => {
   let prisma: PrismaMock;
@@ -80,6 +81,15 @@ describe('CarService', (): void => {
         },
         omit: {creator_id: true}
       });
+    });
+
+    // error: car not found
+    it('should throw NotFoundException when car with given slug does not exist', async () => {
+      prisma.car.findUnique.mockResolvedValue(null);
+
+      await expect(service.findOne('non-existent-slug'))
+        .rejects
+        .toThrow(NotFoundException);
     });
   });
 });
