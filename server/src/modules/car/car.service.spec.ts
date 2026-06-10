@@ -280,6 +280,59 @@ describe('CarService', (): void => {
       },
     };
 
+    // success
+    it('should create a new car successfully with ownership true', async () => {
+      prisma.car.create.mockResolvedValue(mockCreatedCar as unknown as Car);
 
+      const result = await service.create(mockUserId, mockCreateCarInput);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('car');
+
+      // 2. Test success message
+      expect(result.message).toBe('Car Successfully created.');
+
+      // 3. Test created car data
+      const {car} = result.data;
+      expect(car.id).toBe(mockCreatedCar.id);
+      expect(car.name).toBe(mockCreateCarInput.name);
+      expect(car.slug).toBe(mockCreateCarInput.slug);
+      expect(car.company).toBe(mockCreateCarInput.company);
+      expect(car.price_per_day).toBe(mockCreateCarInput.price_per_day);
+      expect(car.tags).toEqual(mockCreateCarInput.tags);
+      expect(car.description).toBe(mockCreateCarInput.description);
+      expect(car.can_rent).toBe(mockCreateCarInput.can_rent);
+      expect(car.rate).toBe(5);
+      expect(car.in_rent).toBe(false);
+      expect(car.creator_id).toBe(mockUserId);
+      expect(car.category_id).toBe(mockCreateCarInput.category_id);
+
+      // 4. Test category inclusion
+      expect(car.category).toBeDefined();
+      expect(car.category.id).toBe(mockCreatedCar.category.id);
+
+      // 5. Verify Prisma create call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.car.create).toHaveBeenCalledWith({
+        data: {
+          name: mockCreateCarInput.name,
+          slug: mockCreateCarInput.slug,
+          tags: mockCreateCarInput.tags,
+          company: mockCreateCarInput.company,
+          rate: 5,
+          can_rent: mockCreateCarInput.can_rent,
+          description: mockCreateCarInput.description,
+          category_id: mockCreateCarInput.category_id,
+          price_per_day: mockCreateCarInput.price_per_day,
+          in_rent: false,
+          creator_id: mockUserId,
+        },
+        include: {
+          category: true
+        }
+      });
+    });
   });
 });
