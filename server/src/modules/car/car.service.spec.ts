@@ -334,5 +334,44 @@ describe('CarService', (): void => {
         }
       });
     });
+
+    // success with ownership false
+    it('should create a new car with creator_id = null when ownership is false', async () => {
+      const inputWithoutOwnership = {
+        ...mockCreateCarInput,
+        ownership: false,
+      };
+
+      const carWithoutCreator = {
+        ...mockCreatedCar,
+        creator_id: null,
+      };
+
+      prisma.car.create.mockResolvedValue(carWithoutCreator as unknown as Car);
+
+      const result = await service.create(mockUserId, inputWithoutOwnership);
+
+      expect(result.data.car.creator_id).toBeNull();
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.car.create).toHaveBeenCalledWith({
+        data: {
+          name: inputWithoutOwnership.name,
+          slug: inputWithoutOwnership.slug,
+          tags: inputWithoutOwnership.tags,
+          company: inputWithoutOwnership.company,
+          rate: 5,
+          can_rent: inputWithoutOwnership.can_rent,
+          description: inputWithoutOwnership.description,
+          category_id: inputWithoutOwnership.category_id,
+          price_per_day: inputWithoutOwnership.price_per_day,
+          in_rent: false,
+          creator_id: null,
+        },
+        include: {
+          category: true
+        }
+      });
+    });
   });
 });
