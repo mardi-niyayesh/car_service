@@ -201,5 +201,36 @@ describe('CarService', (): void => {
         omit: {creator_id: true}
       });
     });
+
+    // success with empty filters
+    it('should return all cars when no filters are provided', async () => {
+      const emptyFilters = {
+        limit: 10,
+        offset: 0,
+      };
+
+      prisma.car.count.mockResolvedValue(2);
+      prisma.car.findMany.mockResolvedValue(mockCars as unknown as Car[]);
+
+      const result = await service.findAll(emptyFilters as FindAllCarValidatorType);
+
+      expect(result.data.count).toBe(2);
+      expect(result.data.cars.length).toBe(2);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.car.count).toHaveBeenCalledWith({
+        where: {
+          can_rent: undefined,
+          in_rent: undefined,
+          price_per_day: {
+            gte: undefined,
+            lte: undefined,
+          },
+          category: {
+            slug: undefined,
+          }
+        }
+      });
+    });
   });
 });
