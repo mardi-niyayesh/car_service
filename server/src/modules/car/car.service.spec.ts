@@ -173,6 +173,33 @@ describe('CarService', (): void => {
           }
         }
       });
+
+      // 6. Verify findMany call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.car.findMany).toHaveBeenCalledWith({
+        include: {
+          category: {
+            omit: {creator_id: true}
+          }
+        },
+        where: {
+          can_rent: mockPaginationInput.can_rent,
+          in_rent: mockPaginationInput.in_rent,
+          price_per_day: {
+            gte: mockPaginationInput.price_per_day_gte,
+            lte: mockPaginationInput.price_per_day_lte,
+          },
+          category: {
+            slug: mockPaginationInput.category,
+          }
+        },
+        take: mockPaginationInput.limit,
+        skip: mockPaginationInput.offset,
+        orderBy: {
+          [mockPaginationInput.order_by_field]: mockPaginationInput.orderByLower,
+        },
+        omit: {creator_id: true}
+      });
     });
   });
 });
