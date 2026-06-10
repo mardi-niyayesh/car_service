@@ -233,4 +233,53 @@ describe('CarService', (): void => {
       });
     });
   });
+
+  /** ================================================
+   * Create car
+   *  ================================================
+   */
+  describe('create()', (): void => {
+    const mockUserId = 'user-123';
+
+    const mockCreateCarInput = {
+      name: 'BMW X5',
+      slug: 'bmw-x5-2024',
+      company: 'BMW',
+      price_per_day: 200000,
+      tags: ['luxury', 'suv', '2024'],
+      description: 'A luxurious BMW X5 for rent',
+      can_rent: true,
+      category_id: 'cat-456',
+      ownership: true,
+    };
+
+    const mockCreatedCar = {
+      id: 'car-789',
+      created_at: mockDate,
+      updated_at: mockDate,
+      name: 'BMW X5',
+      slug: 'bmw-x5-2024',
+      company: 'BMW',
+      price_per_day: 200000,
+      tags: ['luxury', 'suv', '2024'],
+      image: null,
+      in_rent: false,
+      can_rent: true,
+      rate: 5,
+      description: 'A luxurious BMW X5 for rent',
+      category_id: 'cat-456',
+      creator_id: mockUserId,
+      category: {
+        id: 'cat-456',
+        created_at: mockDate,
+        updated_at: mockDate,
+        name: 'SUV',
+        slug: 'suv',
+        description: 'SUV category',
+        creator_id: 'user-789',
+      },
+    };
+
+
+  });
 });
