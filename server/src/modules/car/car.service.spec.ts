@@ -1,10 +1,10 @@
 import type {PrismaMock} from "@/types";
-import {ConflictException, NotFoundException} from "@nestjs/common";
+import {NotFoundException} from "@nestjs/common";
 import type {FindAllCarValidatorType} from "./dto";
 import {CarService} from "@/modules/car/car.service";
-import {Car, Prisma} from "@/modules/prisma/generated/client";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {type Car, Prisma} from "@/modules/prisma/generated/client";
 import {beforeEach, describe, afterEach, it, expect} from "vitest";
 
 const mockDate = new Date();
