@@ -1,11 +1,10 @@
 import type {PrismaMock} from "@/types";
+import {NotFoundException} from "@nestjs/common";
 import {CarService} from "@/modules/car/car.service";
 import {Car} from "@/modules/prisma/generated/client";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {beforeEach, describe, afterEach, it, expect} from "vitest";
-import {NotFoundException} from "@nestjs/common";
-import {CarWhereInput} from "@/modules/prisma/generated/models/Car";
 
 const mockDate = new Date();
 const mockCarWithCategory = {
