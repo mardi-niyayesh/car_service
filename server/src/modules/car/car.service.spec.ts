@@ -1,12 +1,9 @@
 import type {PrismaMock} from "@/types";
 import {CarService} from "@/modules/car/car.service";
-import {beforeEach, describe, afterEach, it, expect} from "vitest";
-import {exampleSafeCarRecord} from "@/modules/car/dto";
+import {Car} from "@/modules/prisma/generated/client";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {Car} from "@/modules/prisma/generated/client";
-import {exampleDate} from "@/lib";
-import {categoryExampleRes} from "@/modules/category/dto";
+import {beforeEach, describe, afterEach, it, expect} from "vitest";
 
 describe('CarService', (): void => {
   let prisma: PrismaMock;
