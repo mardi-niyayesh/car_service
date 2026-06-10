@@ -1,8 +1,8 @@
 import type {PrismaMock} from "@/types";
-import {NotFoundException} from "@nestjs/common";
+import {ConflictException, NotFoundException} from "@nestjs/common";
 import type {FindAllCarValidatorType} from "./dto";
 import {CarService} from "@/modules/car/car.service";
-import {Car} from "@/modules/prisma/generated/client";
+import {Car, Prisma} from "@/modules/prisma/generated/client";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {beforeEach, describe, afterEach, it, expect} from "vitest";
@@ -372,6 +372,19 @@ describe('CarService', (): void => {
           category: true
         }
       });
+    });
+
+    // error: duplicate slug
+    it('should throw ConflictException when car slug already exists', async () => {
+      const prismaError = new Error('Unique constraint failed');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2002';
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = { target: ['slug'] };
+
+      prisma.car.create.mockRejectedValue(prismaError);
+
+      await expect(service.create(mockUserId, mockCreateCarInput))
+        .rejects
+        .toThrow();
     });
   });
 });
