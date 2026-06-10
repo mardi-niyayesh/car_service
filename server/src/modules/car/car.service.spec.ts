@@ -400,4 +400,71 @@ describe('CarService', (): void => {
         .toThrow();
     });
   });
+
+  /** ================================================
+   * Update
+   * ================================================
+   */
+  describe('update()', (): void => {
+    const mockDate = new Date();
+
+    const mockCarRecord: CarAndCategory = {
+      id: 'car-789',
+      created_at: mockDate,
+      updated_at: mockDate,
+      name: 'BMW X5',
+      slug: 'bmw-x5-2024',
+      company: 'BMW',
+      price_per_day: 200000,
+      tags: ['luxury', 'suv'],
+      image: null,
+      in_rent: false,
+      can_rent: true,
+      rate: 5,
+      description: 'A luxurious BMW X5',
+      category_id: 'cat-456',
+      creator_id: 'user-123',
+      category: {
+        id: 'cat-456',
+        created_at: mockDate,
+        updated_at: mockDate,
+        name: 'SUV',
+        slug: 'suv',
+        description: 'SUV category',
+        creator_id: 'user-789',
+      },
+    };
+
+    const mockUpdateCarInput: CarDto.UpdateCarType = {
+      name: 'BMW X6',
+      slug: 'bmw-x6-2024',
+      price_per_day: 250000,
+      tags: ['luxury', 'suv', 'sport'],
+      description: 'An updated luxurious BMW X6',
+      category_id: 'cat-789',
+      can_rent: true,
+      ownership: false,
+    };
+
+    const mockUpdatedCar = {
+      ...mockCarRecord,
+      name: 'BMW X6',
+      slug: 'bmw-x6-2024',
+      price_per_day: 250000,
+      tags: ['luxury', 'suv', 'sport'],
+      description: 'An updated luxurious BMW X6',
+      category_id: 'cat-789',
+      creator_id: null,
+      updated_at: new Date(),
+      category: {
+        id: 'cat-789',
+        created_at: mockDate,
+        updated_at: mockDate,
+        name: 'Luxury SUV',
+        slug: 'luxury-suv',
+        description: 'Luxury SUV category',
+        creator_id: 'user-789',
+      },
+    };
+  });
 });
