@@ -386,5 +386,18 @@ describe('CarService', (): void => {
         .rejects
         .toThrow();
     });
+
+    // error: category not found
+    it('should throw NotFoundException when category_id does not exist', async () => {
+      const prismaError = new Error('Foreign key constraint failed');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2003';
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = { field_name: 'category_id' };
+
+      prisma.car.create.mockRejectedValue(prismaError);
+
+      await expect(service.create(mockUserId, mockCreateCarInput))
+        .rejects
+        .toThrow();
+    });
   });
 });
