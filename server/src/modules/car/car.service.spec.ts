@@ -831,5 +831,17 @@ describe('CarService', (): void => {
         }
       });
     });
+
+    // success: empty comments
+    it('should return count 0 and empty array when no comments exist for the car', async () => {
+      prisma.comment.count.mockResolvedValue(0);
+      prisma.comment.findMany.mockResolvedValue([]);
+
+      const result = await service.findAllComments(mockCarId, mockPaginationInput);
+
+      expect(result.data.count).toBe(0);
+      expect(result.data.comments).toEqual([]);
+      expect(result.message).toBe('comments find successfully.');
+    });
   });
 });
