@@ -665,5 +665,20 @@ describe('CarService', (): void => {
       expect(result.message).toBe('Car deleted successfully.');
       expect(deleteOneFile).toHaveBeenCalledWith(`${PREFIX_PUBLIC_PATH}/null`);
     });
+
+    // error: car not found
+    it('should throw NotFoundException when car with given id does not exist', async () => {
+      const prismaError = new Error('Record to delete does not exist');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
+
+      prisma.car.delete.mockRejectedValue(prismaError);
+
+      await expect(service.delete(mockCarId, mockCarRecord))
+        .rejects
+        .toThrow();
+
+      // Verify deleteOneFile was NOT called (car not found)
+      expect(deleteOneFile).not.toHaveBeenCalled();
+    });
   });
 });
