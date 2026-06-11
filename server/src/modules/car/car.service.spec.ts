@@ -843,5 +843,50 @@ describe('CarService', (): void => {
       expect(result.data.comments).toEqual([]);
       expect(result.message).toBe('comments find successfully.');
     });
+
+    // success: with different pagination values
+    it('should apply correct offset based on page and limit', async () => {
+      const paginationWithPage2: PaginationValidatorType = {
+        limit: 5,
+        offset: 5,
+        orderByLower: 'asc',
+        page: 2,
+        orderByUpper: 'ASC',
+      };
+
+      prisma.comment.count.mockResolvedValue(3);
+      prisma.comment.findMany.mockResolvedValue([mockComments[0]] as unknown as Comment[]);
+
+      await service.findAllComments(mockCarId, paginationWithPage2);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.findMany).toHaveBeenCalledWith({
+        where: {
+          car_id: mockCarId,
+          parent_id: null,
+          is_confirmed: true,
+        },
+        take: 5,
+        skip: 5,
+        orderBy: {
+          created_at: 'asc'
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              display_name: true,
+            },
+          },
+          _count: {
+            select: {
+              replies: {
+                where: {is_confirmed: true}
+              }
+            }
+          }
+        }
+      });
+    });
   });
 });
