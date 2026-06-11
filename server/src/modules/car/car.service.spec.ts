@@ -586,4 +586,28 @@ describe('CarService', (): void => {
         .toThrow();
     });
   });
+
+  describe("delete", (): void => {
+    const mockDate = new Date();
+    const mockCarId = 'car-789';
+
+    const mockCarRecord: Car = {
+      id: mockCarId,
+      created_at: mockDate,
+      updated_at: mockDate,
+      name: 'BMW X5',
+      slug: 'bmw-x5-2024',
+      company: 'BMW',
+      price_per_day: 200000,
+      tags: ['luxury', 'suv'],
+      image: 'car-789.png',
+      in_rent: false,
+      can_rent: true,
+      rate: 5,
+      description: 'A luxurious BMW X5',
+      category_id: 'cat-456',
+      creator_id: 'user-123',
+    };
+    
+  });
 });
