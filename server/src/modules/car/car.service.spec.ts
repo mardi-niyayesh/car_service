@@ -1,11 +1,11 @@
 import type {PrismaMock} from "@/types";
-import {PREFIX_PUBLIC_PATH} from "@/common";
+import {PaginationValidatorType, PREFIX_PUBLIC_PATH} from "@/common";
 import type {FindAllCarValidatorType} from "./dto";
 import {CarService} from "@/modules/car/car.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {checkConflictRecord, deleteOneFile} from "@/lib";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import type {Car, Prisma} from "@/modules/prisma/generated/client";
+import type {Car, Prisma, Comment} from "@/modules/prisma/generated/client";
 import {ConflictException, NotFoundException} from "@nestjs/common";
 import {beforeEach, describe, afterEach, it, expect, vi, type Mock} from "vitest";
 
@@ -706,12 +706,12 @@ describe('CarService', (): void => {
     const mockCarId = 'car-789';
     const mockDate = new Date();
 
-    const mockPaginationInput = {
+    const mockPaginationInput: PaginationValidatorType = {
       limit: 10,
       offset: 0,
       orderByLower: 'desc',
       page: 1,
-      order: 'desc',
+      orderByUpper: 'DESC',
     };
 
     const mockComments = [
@@ -750,5 +750,86 @@ describe('CarService', (): void => {
         },
       },
     ];
+
+    // success
+    it('should return paginated list of confirmed comments for a car', async () => {
+      prisma.comment.count.mockResolvedValue(2);
+      prisma.comment.findMany.mockResolvedValue(mockComments as unknown as Comment[]);
+
+      const result = await service.findAllComments(mockCarId, mockPaginationInput);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('count');
+      expect(result.data).toHaveProperty('comments');
+
+      // 2. Test message
+      expect(result.message).toBe('comments find successfully.');
+
+      // 3. Test count and comments array
+      expect(result.data.count).toBe(2);
+      expect(Array.isArray(result.data.comments)).toBe(true);
+      expect(result.data.comments.length).toBe(2);
+
+      // 4. Test comment structure
+      const [firstComment] = result.data.comments;
+      expect(firstComment.id).toBe(mockComments[0].id);
+      expect(firstComment.content).toBe(mockComments[0].content);
+      expect(firstComment.is_confirmed).toBe(true);
+      expect(firstComment.parent_id).toBeNull();
+      expect(firstComment.car_id).toBe(mockCarId);
+
+      // 5. Test user inclusion (only id and display_name)
+      expect(firstComment.user).toBeDefined();
+      expect(firstComment.user).toHaveProperty('id');
+      expect(firstComment.user).toHaveProperty('display_name');
+      expect(firstComment.user).not.toHaveProperty('email');
+      expect(firstComment.user).not.toHaveProperty('password');
+
+      // 6. Test replies count
+      expect(firstComment._count).toBeDefined();
+      expect(firstComment._count.replies).toBe(2);
+
+      // 7. Verify count call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.count).toHaveBeenCalledWith({
+        where: {
+          car_id: mockCarId,
+          parent_id: null,
+          is_confirmed: true,
+        }
+      });
+
+      // 8. Verify findMany call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.findMany).toHaveBeenCalledWith({
+        where: {
+          car_id: mockCarId,
+          parent_id: null,
+          is_confirmed: true,
+        },
+        take: mockPaginationInput.limit,
+        skip: mockPaginationInput.offset,
+        orderBy: {
+          created_at: mockPaginationInput.orderByLower
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              display_name: true,
+            },
+          },
+          _count: {
+            select: {
+              replies: {
+                where: {is_confirmed: true}
+              }
+            }
+          }
+        }
+      });
+    });
   });
 });
