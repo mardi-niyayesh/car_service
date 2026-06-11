@@ -385,7 +385,7 @@ describe('CarService', (): void => {
     it('should throw ConflictException when car slug already exists', async () => {
       const prismaError = new Error('Unique constraint failed');
       (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2002';
-      (prismaError as Prisma.PrismaClientKnownRequestError).meta = { target: ['slug'] };
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = {target: ['slug']};
 
       prisma.car.create.mockRejectedValue(prismaError);
 
@@ -398,7 +398,7 @@ describe('CarService', (): void => {
     it('should throw NotFoundException when category_id does not exist', async () => {
       const prismaError = new Error('Foreign key constraint failed');
       (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2003';
-      (prismaError as Prisma.PrismaClientKnownRequestError).meta = { field_name: 'category_id' };
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = {field_name: 'category_id'};
 
       prisma.car.create.mockRejectedValue(prismaError);
 
@@ -480,6 +480,8 @@ describe('CarService', (): void => {
     it('should update car successfully with valid data and ownership false', async () => {
       prisma.car.update.mockResolvedValue(mockUpdatedCar as unknown as Car);
 
+      (checkConflictRecord as Mock).mockResolvedValue({hasConflict: false});
+
       const result = await service.update(mockCarRecord, mockUpdateCarInput);
 
       expect(result).toHaveProperty('message');
@@ -529,6 +531,8 @@ describe('CarService', (): void => {
         creator_id: 'user-123',
       };
 
+      (checkConflictRecord as Mock).mockResolvedValue({hasConflict: false});
+
       prisma.car.update.mockResolvedValue(carWithCreator as unknown as Car);
 
       await service.update(mockCarRecord, inputWithoutOwnership);
@@ -562,6 +566,17 @@ describe('CarService', (): void => {
         ownership: false as const,
       };
 
+      (checkConflictRecord as Mock).mockReturnValue({
+        hasConflict: true, conflictData: [
+          'name',
+          'slug',
+          "tags",
+          'company',
+          "can_rent",
+          "price_per_day",
+        ]
+      });
+
       await expect(service.update(mockCarRecord, sameData))
         .rejects
         .toThrow(ConflictException);
@@ -571,7 +586,7 @@ describe('CarService', (): void => {
     it('should throw ConflictException when updating to an existing slug', async () => {
       const prismaError = new Error('Unique constraint failed');
       (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2002';
-      (prismaError as Prisma.PrismaClientKnownRequestError).meta = { target: ['slug'] };
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = {target: ['slug']};
 
       prisma.car.update.mockRejectedValue(prismaError);
 
@@ -584,7 +599,7 @@ describe('CarService', (): void => {
     it('should throw NotFoundException when updating with non-existent category_id', async () => {
       const prismaError = new Error('Foreign key constraint failed');
       (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2003';
-      (prismaError as Prisma.PrismaClientKnownRequestError).meta = { field_name: 'category_id' };
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = {field_name: 'category_id'};
 
       prisma.car.update.mockRejectedValue(prismaError);
 
