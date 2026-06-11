@@ -888,5 +888,25 @@ describe('CarService', (): void => {
         }
       });
     });
+
+    // edge case: car with no confirmed comments but has unconfirmed ones
+    it('should only return confirmed comments (is_confirmed = true)', async () => {
+      prisma.comment.count.mockResolvedValue(0);
+      prisma.comment.findMany.mockResolvedValue([]);
+
+      const result = await service.findAllComments(mockCarId, mockPaginationInput);
+
+      expect(result.data.count).toBe(0);
+
+      // Verify where clause includes is_confirmed: true
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.count).toHaveBeenCalledWith({
+        where: {
+          car_id: mockCarId,
+          parent_id: null,
+          is_confirmed: true,
+        }
+      });
+    });
   });
 });
