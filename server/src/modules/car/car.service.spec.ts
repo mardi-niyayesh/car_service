@@ -1,5 +1,5 @@
 import type {PrismaMock} from "@/types";
-import {NotFoundException} from "@nestjs/common";
+import {ConflictException, NotFoundException} from "@nestjs/common";
 import type {FindAllCarValidatorType} from "./dto";
 import {CarService} from "@/modules/car/car.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
@@ -541,6 +541,23 @@ describe('CarService', (): void => {
         },
         include: {category: true}
       });
+    });
+
+    // error: conflict detection (same data)
+    it('should throw ConflictException when new data conflicts with existing record (no changes)', async () => {
+      const sameData = {
+        name: mockCarRecord.name,
+        slug: mockCarRecord.slug,
+        company: mockCarRecord.company,
+        price_per_day: mockCarRecord.price_per_day,
+        tags: mockCarRecord.tags as [string, ...string[]],
+        can_rent: mockCarRecord.can_rent,
+        ownership: false as const,
+      };
+
+      await expect(service.update(mockCarRecord, sameData))
+        .rejects
+        .toThrow(ConflictException);
     });
   });
 });
