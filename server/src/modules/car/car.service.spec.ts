@@ -509,5 +509,38 @@ describe('CarService', (): void => {
         include: {category: true}
       });
     });
+
+    // success: update without changing ownership (creator_id stays undefined)
+    it('should keep creator_id unchanged when ownership is not provided', async () => {
+      const inputWithoutOwnership = {
+        name: 'BMW X6',
+        slug: 'bmw-x6-2024',
+      };
+
+      const carWithCreator = {
+        ...mockUpdatedCar,
+        creator_id: 'user-123',
+      };
+
+      prisma.car.update.mockResolvedValue(carWithCreator as unknown as Car);
+
+      await service.update(mockCarRecord, inputWithoutOwnership);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.car.update).toHaveBeenCalledWith({
+        where: {id: mockCarRecord.id},
+        data: {
+          name: inputWithoutOwnership.name,
+          slug: inputWithoutOwnership.slug,
+          tags: undefined,
+          company: undefined,
+          description: undefined,
+          category_id: undefined,
+          price_per_day: undefined,
+          creator_id: undefined,
+        },
+        include: {category: true}
+      });
+    });
   });
 });
