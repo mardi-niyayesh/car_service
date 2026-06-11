@@ -609,6 +609,10 @@ describe('CarService', (): void => {
     });
   });
 
+  /** ================================================
+   * Delete
+   * ================================================
+   */
   describe("delete", (): void => {
     const mockDate = new Date();
     const mockCarId = 'car-789';
@@ -692,5 +696,59 @@ describe('CarService', (): void => {
         .rejects
         .toThrow();
     });
+  });
+
+  /** ================================================
+   * Find All Comments
+   * ================================================
+   */
+  describe('findAllComments()', (): void => {
+    const mockCarId = 'car-789';
+    const mockDate = new Date();
+
+    const mockPaginationInput = {
+      limit: 10,
+      offset: 0,
+      orderByLower: 'desc',
+      page: 1,
+      order: 'desc',
+    };
+
+    const mockComments = [
+      {
+        id: 'comment-1',
+        content: 'Great car! Very comfortable.',
+        created_at: mockDate,
+        updated_at: mockDate,
+        user_id: 'user-123',
+        car_id: mockCarId,
+        parent_id: null,
+        is_confirmed: true,
+        user: {
+          id: 'user-123',
+          display_name: 'John Doe',
+        },
+        _count: {
+          replies: 2,
+        },
+      },
+      {
+        id: 'comment-2',
+        content: 'Good value for money.',
+        created_at: mockDate,
+        updated_at: mockDate,
+        user_id: 'user-456',
+        car_id: mockCarId,
+        parent_id: null,
+        is_confirmed: true,
+        user: {
+          id: 'user-456',
+          display_name: 'Jane Smith',
+        },
+        _count: {
+          replies: 0,
+        },
+      },
+    ];
   });
 });
