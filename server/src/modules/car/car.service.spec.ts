@@ -436,24 +436,26 @@ describe('CarService', (): void => {
     };
 
     const mockUpdateCarInput = {
-      name: 'BMW X6',
-      slug: 'bmw-x6-2024',
+      name: 'BMW X11',
+      slug: 'bmw-x11-2026',
       price_per_day: 250000,
       tags: ['luxury', 'suv', 'sport'],
-      description: 'An updated luxurious BMW X6',
+      description: 'An updated luxurious BMW X11',
       category_id: 'cat-789',
-      can_rent: true,
-      ownership: false,
+      can_rent: false,
+      ownership: false as const,
     };
 
     const mockUpdatedCar = {
       ...mockCarRecord,
-      name: 'BMW X6',
-      slug: 'bmw-x6-2024',
+      name: 'BMW X11',
+      slug: 'bmw-x11-2026',
+      company: 'BMW',
       price_per_day: 250000,
       tags: ['luxury', 'suv', 'sport'],
-      description: 'An updated luxurious BMW X6',
+      description: 'An updated luxurious BMW X11',
       category_id: 'cat-789',
+      can_rent: false,
       creator_id: null,
       updated_at: new Date(),
       category: {
@@ -466,5 +468,46 @@ describe('CarService', (): void => {
         creator_id: 'user-789',
       },
     };
+
+    // success
+    it('should update car successfully with valid data and ownership false', async () => {
+      prisma.car.update.mockResolvedValue(mockUpdatedCar as unknown as Car);
+
+      const result = await service.update(mockCarRecord, mockUpdateCarInput);
+
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('car');
+      expect(result.message).toBe('Car Successfully Updated.');
+
+      const {car} = result.data;
+      expect(car.id).toBe(mockCarRecord.id);
+      expect(car.name).toBe(mockUpdateCarInput.name);
+      expect(car.slug).toBe(mockUpdateCarInput.slug);
+      expect(car.price_per_day).toBe(mockUpdateCarInput.price_per_day);
+      expect(car.tags).toEqual(mockUpdateCarInput.tags);
+      expect(car.description).toBe(mockUpdateCarInput.description);
+      expect(car.category_id).toBe(mockUpdateCarInput.category_id);
+      expect(car.can_rent).toBe(mockUpdateCarInput.can_rent);
+      expect(car.creator_id).toBeNull();
+      expect(car.category).toBeDefined();
+      expect(car.category.id).toBe(mockUpdateCarInput.category_id);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.car.update).toHaveBeenCalledWith({
+        where: {id: mockCarRecord.id},
+        data: {
+          name: mockUpdateCarInput.name,
+          slug: mockUpdateCarInput.slug,
+          tags: mockUpdateCarInput.tags,
+          can_rent: mockUpdateCarInput.can_rent,
+          description: mockUpdateCarInput.description,
+          category_id: mockUpdateCarInput.category_id,
+          price_per_day: mockUpdateCarInput.price_per_day,
+          creator_id: null,
+        },
+        include: {category: true}
+      });
+    });
   });
 });
