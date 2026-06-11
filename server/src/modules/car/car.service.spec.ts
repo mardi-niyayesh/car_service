@@ -650,5 +650,20 @@ describe('CarService', (): void => {
       // 3. Verify deleteOneFile was called with correct path
       expect(deleteOneFile).toHaveBeenCalledWith(`${PREFIX_PUBLIC_PATH}/${mockCarRecord.image}`);
     });
+
+    // success: car without image
+    it('should delete car successfully even when car has no image', async () => {
+      const carWithoutImage = {
+        ...mockCarRecord,
+        image: null,
+      };
+
+      prisma.car.delete.mockResolvedValue(carWithoutImage as unknown as Car);
+
+      const result = await service.delete(mockCarId, carWithoutImage);
+
+      expect(result.message).toBe('Car deleted successfully.');
+      expect(deleteOneFile).toHaveBeenCalledWith(`${PREFIX_PUBLIC_PATH}/null`);
+    });
   });
 });
