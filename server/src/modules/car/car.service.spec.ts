@@ -559,5 +559,18 @@ describe('CarService', (): void => {
         .rejects
         .toThrow(ConflictException);
     });
+
+    // error: duplicate slug
+    it('should throw ConflictException when updating to an existing slug', async () => {
+      const prismaError = new Error('Unique constraint failed');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2002';
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = { target: ['slug'] };
+
+      prisma.car.update.mockRejectedValue(prismaError);
+
+      await expect(service.update(mockCarRecord, mockUpdateCarInput))
+        .rejects
+        .toThrow();
+    });
   });
 });
