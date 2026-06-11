@@ -4,8 +4,15 @@ import {CarService} from "@/modules/car/car.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {Car, Prisma} from "@/modules/prisma/generated/client";
-import {beforeEach, describe, afterEach, it, expect} from "vitest";
+import {beforeEach, describe, afterEach, it, expect, vi, type Mock} from "vitest";
 import {ConflictException, NotFoundException} from "@nestjs/common";
+import {checkConflictRecord, deleteOneFile} from "@/lib";
+import {PREFIX_PUBLIC_PATH} from "@/common";
+
+vi.mock("@/lib", () => ({
+  checkConflictRecord: vi.fn(),
+  deleteOneFile: vi.fn(),
+}));
 
 const mockDate = new Date();
 const mockCarWithCategory = {
@@ -608,6 +615,25 @@ describe('CarService', (): void => {
       category_id: 'cat-456',
       creator_id: 'user-123',
     };
-    
+
+    // success
+    it('should delete car successfully and remove associated image file', async () => {
+      prisma.car.delete.mockResolvedValue(mockCarRecord as unknown as Car);
+
+      const result = await service.delete(mockCarId, mockCarRecord);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result.message).toBe('Car deleted successfully.');
+
+      // 2. Verify Prisma delete call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.car.delete).toHaveBeenCalledWith({
+        where: {id: mockCarId}
+      });
+
+      // 3. Verify deleteOneFile was called with correct path
+      expect(deleteOneFile).toHaveBeenCalledWith(`${PREFIX_PUBLIC_PATH}/${mockCarRecord.image}`);
+    });
   });
 });
