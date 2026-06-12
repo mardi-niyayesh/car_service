@@ -67,5 +67,20 @@ describe('CategoryService', (): void => {
         omit: {creator_id: true}
       });
     });
+
+    // success: category without description
+    it('should return category with null description when description is not provided', async () => {
+      const categoryWithoutDesc = {
+        ...mockCategory,
+        description: null,
+      };
+
+      prisma.category.findUnique.mockResolvedValue(categoryWithoutDesc as unknown as Category);
+
+      const result = await service.findOne(mockCategoryId);
+
+      expect(result.data.category.description).toBeNull();
+      expect(result.data.category).not.toHaveProperty('creator_id');
+    });
   });
 });
