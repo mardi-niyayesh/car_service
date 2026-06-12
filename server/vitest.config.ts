@@ -4,8 +4,16 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [
+    swc.vite({
+      module: {type: 'es6'},
+      jsc: {
+        transform: {
+          legacyDecorator: true,
+          decoratorMetadata: true
+        }
+      }
+    }),
     tsconfigPaths(),
-    swc
   ],
   test: {
     mockReset: true,
