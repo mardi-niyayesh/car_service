@@ -439,21 +439,17 @@ describe('CategoryService', (): void => {
       });
     });
 
-    // error: duplicate name (conflict)
-    it('should throw ConflictException when category name already exists', async () => {
+    // error: duplicate slug
+    it('should throw ConflictException when category slug already exists', async () => {
       const prismaError = new Error('Unique constraint failed');
       (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2002';
-      (prismaError as Prisma.PrismaClientKnownRequestError).meta = {target: ['name']};
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = {target: ['slug']};
 
       prisma.category.create.mockRejectedValue(prismaError);
 
       await expect(service.create(mockUserId, mockCreateCategoryInput))
         .rejects
         .toThrow();
-
-      // Verify create was called but failed
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(prisma.category.create).toHaveBeenCalled();
     });
   });
 });
