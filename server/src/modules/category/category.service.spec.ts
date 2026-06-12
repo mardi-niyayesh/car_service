@@ -367,5 +367,41 @@ describe('CategoryService', (): void => {
         }
       });
     });
+
+    // success: with ownership false
+    it('should create a new category with creator_id = null when ownership is false', async () => {
+      const inputWithoutOwnership = {
+        name: 'Economy',
+        slug: 'economy',
+        description: 'Budget friendly cars',
+        ownership: false,
+      };
+
+      const categoryWithoutCreator = {
+        id: 'cat-999',
+        created_at: mockDate,
+        updated_at: mockDate,
+        name: 'Economy',
+        slug: 'economy',
+        description: 'Budget friendly cars',
+        creator_id: null,
+      };
+
+      prisma.category.create.mockResolvedValue(categoryWithoutCreator as unknown as Category);
+
+      const result = await service.create(mockUserId, inputWithoutOwnership);
+
+      expect(result.data.category.creator_id).toBeNull();
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.create).toHaveBeenCalledWith({
+        data: {
+          slug: inputWithoutOwnership.slug,
+          name: inputWithoutOwnership.name,
+          description: inputWithoutOwnership.description,
+          creator_id: null,
+        }
+      });
+    });
   });
 });
