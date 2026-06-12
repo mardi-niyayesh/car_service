@@ -255,5 +255,31 @@ describe('CategoryService', (): void => {
         omit: {creator_id: true}
       });
     });
+
+    // success: with pagination offset (page 2)
+    it('should apply correct offset when page is 2', async () => {
+      const paginationPage2: PaginationValidatorType = {
+        limit: 10,
+        offset: 10,
+        orderByLower: 'desc',
+        page: 2,
+        orderByUpper: 'DESC',
+      };
+
+      prisma.category.count.mockResolvedValue(15);
+      prisma.category.findMany.mockResolvedValue([mockCategories[0]] as unknown as Category[]);
+
+      await service.findAll(paginationPage2);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.findMany).toHaveBeenCalledWith({
+        orderBy: {
+          created_at: 'desc'
+        },
+        take: 10,
+        skip: 10,
+        omit: {creator_id: true}
+      });
+    });
   });
 });
