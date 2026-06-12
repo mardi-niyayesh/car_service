@@ -333,5 +333,39 @@ describe('CategoryService', (): void => {
       description: 'Premium luxury SUV category',
       creator_id: mockUserId,
     };
+
+    // success
+    it('should create a new category successfully with ownership true', async () => {
+      prisma.category.create.mockResolvedValue(mockCreatedCategory as unknown as Category);
+
+      const result = await service.create(mockUserId, mockCreateCategoryInput);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('category');
+
+      // 2. Test success message
+      expect(result.message).toBe('Category successfully created.');
+
+      // 3. Test created category data
+      const {category} = result.data;
+      expect(category.id).toBe(mockCreatedCategory.id);
+      expect(category.name).toBe(mockCreateCategoryInput.name);
+      expect(category.slug).toBe(mockCreateCategoryInput.slug);
+      expect(category.description).toBe(mockCreateCategoryInput.description);
+      expect(category.creator_id).toBe(mockUserId);
+
+      // 4. Verify Prisma create call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.create).toHaveBeenCalledWith({
+        data: {
+          slug: mockCreateCategoryInput.slug,
+          name: mockCreateCategoryInput.name,
+          description: mockCreateCategoryInput.description,
+          creator_id: mockUserId,
+        }
+      });
+    });
   });
 });
