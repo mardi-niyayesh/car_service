@@ -282,7 +282,6 @@ describe('CategoryService', (): void => {
       });
     });
 
-
     // success: large limit
     it('should handle large limit values correctly', async () => {
       const paginationLargeLimit: PaginationValidatorType = {
