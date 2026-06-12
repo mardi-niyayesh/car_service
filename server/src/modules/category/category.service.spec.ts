@@ -1,9 +1,9 @@
 import type {PrismaMock} from "@/types";
 import {CategoryService} from "./category.service";
-import {afterEach, beforeEach, describe, expect, it} from "vitest";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {Category} from "@/modules/prisma/generated/client";
+import type {Category} from "@/modules/prisma/generated/client";
+import {afterEach, beforeEach, describe, expect, it} from "vitest";
 
 describe('CategoryService', (): void => {
   let prisma: PrismaMock;
