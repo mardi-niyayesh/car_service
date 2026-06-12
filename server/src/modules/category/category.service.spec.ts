@@ -229,5 +229,31 @@ describe('CategoryService', (): void => {
       expect(result.data.categories).toEqual([]);
       expect(result.message).toBe('categories successfully found.');
     });
+
+    // success: with different pagination values (ascending order)
+    it('should respect ascending order when orderByLower is asc', async () => {
+      const paginationAsc: PaginationValidatorType = {
+        limit: 5,
+        offset: 0,
+        orderByLower: 'asc',
+        page: 1,
+        orderByUpper: 'ASC',
+      };
+
+      prisma.category.count.mockResolvedValue(2);
+      prisma.category.findMany.mockResolvedValue([mockCategories[0]] as unknown as Category[]);
+
+      await service.findAll(paginationAsc);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.findMany).toHaveBeenCalledWith({
+        orderBy: {
+          created_at: 'asc'
+        },
+        take: 5,
+        skip: 0,
+        omit: {creator_id: true}
+      });
+    });
   });
 });
