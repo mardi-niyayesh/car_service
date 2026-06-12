@@ -308,4 +308,30 @@ describe('CategoryService', (): void => {
       });
     });
   });
+
+  /** ================================================
+   * Create
+   * ================================================
+   */
+  describe('create()', (): void => {
+    const mockUserId = 'user-123';
+    const mockDate = new Date();
+
+    const mockCreateCategoryInput = {
+      name: 'Luxury SUV',
+      slug: 'luxury-suv',
+      description: 'Premium luxury SUV category',
+      ownership: true,
+    };
+
+    const mockCreatedCategory = {
+      id: 'cat-789',
+      created_at: mockDate,
+      updated_at: mockDate,
+      name: 'Luxury SUV',
+      slug: 'luxury-suv',
+      description: 'Premium luxury SUV category',
+      creator_id: mockUserId,
+    };
+  });
 });
