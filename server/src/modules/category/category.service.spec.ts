@@ -84,7 +84,6 @@ describe('CategoryService', (): void => {
       expect(result.data.category).not.toHaveProperty('creator_id');
     });
 
-
     // error: category not found
     it('should throw NotFoundException when category with given id does not exist', async () => {
       prisma.category.findUnique.mockResolvedValue(null);
