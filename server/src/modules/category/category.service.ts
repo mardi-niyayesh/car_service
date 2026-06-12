@@ -4,7 +4,7 @@ import {Category} from "@/modules/prisma/generated/client";
 import {checkConflictRecord, checkPrismaError} from "@/lib";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
-import {ApiResponse, BaseException, CategoryResponse, CategoriesResponseCount, SafeCategoryResponse} from "@/types";
+import type {ApiResponse, BaseException, CategoryResponse, CategoriesResponseCount, SafeCategoryResponse} from "@/types";
 
 @Injectable()
 export class CategoryService {
