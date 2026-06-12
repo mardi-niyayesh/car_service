@@ -4,6 +4,7 @@ import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {Category} from "@/modules/prisma/generated/client";
 import {afterEach, beforeEach, describe, expect, it} from "vitest";
+import {NotFoundException} from "@nestjs/common";
 
 describe('CategoryService', (): void => {
   let prisma: PrismaMock;
@@ -81,6 +82,31 @@ describe('CategoryService', (): void => {
 
       expect(result.data.category.description).toBeNull();
       expect(result.data.category).not.toHaveProperty('creator_id');
+    });
+
+
+    // error: category not found
+    it('should throw NotFoundException when category with given id does not exist', async () => {
+      prisma.category.findUnique.mockResolvedValue(null);
+
+      await expect(service.findOne('non-existent-id'))
+        .rejects
+        .toThrow(NotFoundException);
+
+      await expect(service.findOne('non-existent-id'))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: 'Category does not exist in database',
+            error: 'Category not found'
+          }
+        });
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.findUnique).toHaveBeenCalledWith({
+        where: {id: 'non-existent-id'},
+        omit: {creator_id: true}
+      });
     });
   });
 });
