@@ -451,5 +451,17 @@ describe('CategoryService', (): void => {
         .rejects
         .toThrow();
     });
+
+    // error: database error
+    it('should propagate Prisma errors through checkPrismaError', async () => {
+      const prismaError = new Error('Database connection error');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P1001';
+
+      prisma.category.create.mockRejectedValue(prismaError);
+
+      await expect(service.create(mockUserId, mockCreateCategoryInput))
+        .rejects
+        .toThrow();
+    });
   });
 });
