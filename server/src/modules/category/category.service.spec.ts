@@ -217,5 +217,17 @@ describe('CategoryService', (): void => {
         omit: {creator_id: true}
       });
     });
+
+    // success: empty result
+    it('should return count 0 and empty array when no categories exist', async () => {
+      prisma.category.count.mockResolvedValue(0);
+      prisma.category.findMany.mockResolvedValue([]);
+
+      const result = await service.findAll(mockPaginationInput);
+
+      expect(result.data.count).toBe(0);
+      expect(result.data.categories).toEqual([]);
+      expect(result.message).toBe('categories successfully found.');
+    });
   });
 });
