@@ -281,5 +281,32 @@ describe('CategoryService', (): void => {
         omit: {creator_id: true}
       });
     });
+
+
+    // success: large limit
+    it('should handle large limit values correctly', async () => {
+      const paginationLargeLimit: PaginationValidatorType = {
+        limit: 50,
+        offset: 0,
+        orderByLower: 'desc',
+        page: 1,
+        orderByUpper: 'DESC',
+      };
+
+      prisma.category.count.mockResolvedValue(100);
+      prisma.category.findMany.mockResolvedValue(mockCategories as unknown as Category[]);
+
+      await service.findAll(paginationLargeLimit);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.findMany).toHaveBeenCalledWith({
+        orderBy: {
+          created_at: 'desc'
+        },
+        take: 50,
+        skip: 0,
+        omit: {creator_id: true}
+      });
+    });
   });
 });
