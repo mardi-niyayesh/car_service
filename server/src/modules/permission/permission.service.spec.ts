@@ -1,10 +1,10 @@
-import {describe, beforeEach, afterEach, it, expect} from "vitest";
+import {PrismaMock} from "@/types";
+import {NotFoundException} from "@nestjs/common";
 import {PermissionService} from "./permission.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {Permission} from "@/modules/prisma/generated/client";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {PrismaMock} from "@/types";
-import {NotFoundException} from "@nestjs/common";
+import {describe, beforeEach, afterEach, it, expect} from "vitest";
 
 describe('PermissionService', () => {
   let prisma: PrismaMock;
