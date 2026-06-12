@@ -1,6 +1,6 @@
-import {afterEach, beforeEach, describe} from "vitest";
-import {PrismaMock} from "@/types";
+import type {PrismaMock} from "@/types";
 import {CategoryService} from "./category.service";
+import {afterEach, beforeEach, describe} from "vitest";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 
