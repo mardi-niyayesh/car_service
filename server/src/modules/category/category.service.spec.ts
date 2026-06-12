@@ -131,7 +131,7 @@ describe('CategoryService', (): void => {
       offset: 0,
       orderByLower: 'desc',
       page: 1,
-      order: 'desc',
+      orderByUpper: 'DESC',
     };
 
     const mockCategories = [
@@ -142,7 +142,6 @@ describe('CategoryService', (): void => {
         name: 'SUV',
         slug: 'suv',
         description: 'Sport Utility Vehicle category',
-        creator_id: 'user-123',
       },
       {
         id: 'cat-2',
@@ -151,7 +150,6 @@ describe('CategoryService', (): void => {
         name: 'Sedan',
         slug: 'sedan',
         description: 'Sedan category',
-        creator_id: 'user-456',
       },
       {
         id: 'cat-3',
@@ -160,9 +158,64 @@ describe('CategoryService', (): void => {
         name: 'Hatchback',
         slug: 'hatchback',
         description: null,
-        creator_id: 'user-789',
       },
     ];
 
+    // success
+    it('should return paginated list of categories without creator_id', async () => {
+      prisma.category.count.mockResolvedValue(3);
+      prisma.category.findMany.mockResolvedValue(mockCategories as unknown as Category[]);
+
+      const result = await service.findAll(mockPaginationInput);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('count');
+      expect(result.data).toHaveProperty('categories');
+
+      // 2. Test message
+      expect(result.message).toBe('categories successfully found.');
+
+      // 3. Test count
+      expect(result.data.count).toBe(3);
+
+      // 4. Test categories array
+      expect(Array.isArray(result.data.categories)).toBe(true);
+      expect(result.data.categories.length).toBe(3);
+
+      // 5. Test each category does NOT have creator_id
+      for (const category of result.data.categories) {
+        expect(category).not.toHaveProperty('creator_id');
+        expect(category.id).toBeDefined();
+        expect(category.name).toBeDefined();
+        expect(category.slug).toBeDefined();
+      }
+
+      // 6. Test specific category data
+      const [firstCategory] = result.data.categories;
+      expect(firstCategory.id).toBe('cat-1');
+      expect(firstCategory.name).toBe('SUV');
+      expect(firstCategory.slug).toBe('suv');
+
+      // 7. Test category with null description
+      const thirdCategory = result.data.categories[2];
+      expect(thirdCategory.description).toBeNull();
+
+      // 8. Verify count call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.count).toHaveBeenCalledWith();
+
+      // 9. Verify findMany call with correct params
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.findMany).toHaveBeenCalledWith({
+        orderBy: {
+          created_at: mockPaginationInput.orderByLower
+        },
+        take: mockPaginationInput.limit,
+        skip: mockPaginationInput.offset,
+        omit: {creator_id: true}
+      });
+    });
   });
 });
