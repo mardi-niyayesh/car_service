@@ -5,6 +5,7 @@ import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {Category} from "@/modules/prisma/generated/client";
 import {afterEach, beforeEach, describe, expect, it} from "vitest";
+import {PaginationValidatorType} from "@/common";
 
 describe('CategoryService', (): void => {
   let prisma: PrismaMock;
@@ -116,5 +117,52 @@ describe('CategoryService', (): void => {
         .rejects
         .toThrow(NotFoundException);
     });
+  });
+
+  /** ================================================
+   * Find All(get list)
+   * ================================================
+   */
+  describe('findAll()', (): void => {
+    const mockDate = new Date();
+
+    const mockPaginationInput: PaginationValidatorType = {
+      limit: 10,
+      offset: 0,
+      orderByLower: 'desc',
+      page: 1,
+      order: 'desc',
+    };
+
+    const mockCategories = [
+      {
+        id: 'cat-1',
+        created_at: mockDate,
+        updated_at: mockDate,
+        name: 'SUV',
+        slug: 'suv',
+        description: 'Sport Utility Vehicle category',
+        creator_id: 'user-123',
+      },
+      {
+        id: 'cat-2',
+        created_at: mockDate,
+        updated_at: mockDate,
+        name: 'Sedan',
+        slug: 'sedan',
+        description: 'Sedan category',
+        creator_id: 'user-456',
+      },
+      {
+        id: 'cat-3',
+        created_at: mockDate,
+        updated_at: mockDate,
+        name: 'Hatchback',
+        slug: 'hatchback',
+        description: null,
+        creator_id: 'user-789',
+      },
+    ];
+
   });
 });
