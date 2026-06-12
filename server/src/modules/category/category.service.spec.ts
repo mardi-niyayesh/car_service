@@ -1,8 +1,9 @@
 import type {PrismaMock} from "@/types";
 import {CategoryService} from "./category.service";
-import {afterEach, beforeEach, describe} from "vitest";
+import {afterEach, beforeEach, describe, expect, it} from "vitest";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {Category} from "@/modules/prisma/generated/client";
 
 describe('CategoryService', (): void => {
   let prisma: PrismaMock;
@@ -33,8 +34,38 @@ describe('CategoryService', (): void => {
       name: 'SUV',
       slug: 'suv',
       description: 'Sport Utility Vehicle category',
-      creator_id: 'user-123',
     };
 
+    // success
+    it('should find category by id and return without creator_id', async () => {
+      prisma.category.findUnique.mockResolvedValue(mockCategory as Category);
+
+      const result = await service.findOne(mockCategoryId);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('category');
+
+      // 2. Test success message
+      expect(result.message).toBe('category found successfully.');
+
+      // 3. Test category data
+      const {category} = result.data;
+      expect(category.id).toBe(mockCategoryId);
+      expect(category.name).toBe('SUV');
+      expect(category.slug).toBe('suv');
+      expect(category.description).toBe('Sport Utility Vehicle category');
+
+      // 4. Test creator_id is omitted
+      expect(category).not.toHaveProperty('creator_id');
+
+      // 5. Verify Prisma call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.findUnique).toHaveBeenCalledWith({
+        where: {id: mockCategoryId},
+        omit: {creator_id: true}
+      });
+    });
   });
 });
