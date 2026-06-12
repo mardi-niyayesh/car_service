@@ -1,10 +1,10 @@
 import type {PrismaMock} from "@/types";
+import {NotFoundException} from "@nestjs/common";
 import {CategoryService} from "./category.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {Category} from "@/modules/prisma/generated/client";
 import {afterEach, beforeEach, describe, expect, it} from "vitest";
-import {NotFoundException} from "@nestjs/common";
 
 describe('CategoryService', (): void => {
   let prisma: PrismaMock;
