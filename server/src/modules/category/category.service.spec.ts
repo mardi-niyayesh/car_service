@@ -403,5 +403,40 @@ describe('CategoryService', (): void => {
         }
       });
     });
+
+    // success: without description (description is optional)
+    it('should create a new category without description when not provided', async (): Promise<void> => {
+      const inputWithoutDescription = {
+        name: 'Sports',
+        slug: 'sports',
+        ownership: true,
+      };
+
+      const categoryWithoutDesc = {
+        id: 'cat-111',
+        created_at: mockDate,
+        updated_at: mockDate,
+        name: 'Sports',
+        slug: 'sports',
+        description: null,
+        creator_id: mockUserId,
+      };
+
+      prisma.category.create.mockResolvedValue(categoryWithoutDesc as unknown as Category);
+
+      const result = await service.create(mockUserId, inputWithoutDescription);
+
+      expect(result.data.category.description).toBeNull();
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.create).toHaveBeenCalledWith({
+        data: {
+          slug: inputWithoutDescription.slug,
+          name: inputWithoutDescription.name,
+          description: undefined,
+          creator_id: mockUserId,
+        }
+      });
+    });
   });
 });
