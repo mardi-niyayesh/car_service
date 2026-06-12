@@ -120,11 +120,6 @@ Thumbs.db
 **/.jest/
 **/cypress/
 
-# Package managers
-pnpm-lock.yaml
-yarn.lock
-package-lock.json
-
 # ========== General ==========
 # Temp files
 .tmp/

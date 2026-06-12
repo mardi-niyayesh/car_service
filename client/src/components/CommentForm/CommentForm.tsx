@@ -56,8 +56,11 @@ const CommentForm = ({ replyToId, onSuccess }: CommentProps) => {
 
   const onSubmit = async (data: CommentForm) => {
     if (!user) {
-      setWarningMessage("برای ثبت نظر ابتدا باید وارد حساب کاربری خود شوید.");
-      setIsWarningOpen(true);
+      setTimeout(() => {
+        setWarningMessage("برای ثبت نظر ابتدا باید وارد حساب کاربری خود شوید.");
+        setIsWarningOpen(true);
+      }, 2000);
+
       return;
     }
 
