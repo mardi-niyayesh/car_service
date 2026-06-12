@@ -108,5 +108,14 @@ describe('CategoryService', (): void => {
         omit: {creator_id: true}
       });
     });
+
+    // error: empty string id
+    it('should throw NotFoundException when id is empty string', async () => {
+      prisma.category.findUnique.mockResolvedValue(null);
+
+      await expect(service.findOne(''))
+        .rejects
+        .toThrow(NotFoundException);
+    });
   });
 });
