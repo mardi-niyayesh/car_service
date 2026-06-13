@@ -1,10 +1,10 @@
 import type {PrismaMock} from "@/types";
-import {ConflictException, NotFoundException} from "@nestjs/common";
 import {CategoryService} from "./category.service";
 import {type PaginationValidatorType} from "@/common";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {afterEach, beforeEach, describe, expect, it} from "vitest";
+import {ConflictException, NotFoundException} from "@nestjs/common";
 import type {Category, Prisma} from "@/modules/prisma/generated/client";
 
 describe('CategoryService', (): void => {
