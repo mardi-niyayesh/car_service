@@ -482,5 +482,33 @@ describe('CategoryService', (): void => {
       description: 'Sport Utility Vehicle category',
       creator_id: 'user-123',
     };
+
+    // success
+    it('should delete category successfully when no cars are associated', async () => {
+      prisma.category.delete.mockResolvedValue(mockCategory as unknown as Category);
+
+      const result = await service.delete(mockCategoryId);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('category');
+
+      // 2. Test success message
+      expect(result.message).toBe('category deleted successfully.');
+
+      // 3. Test deleted category data
+      const {category} = result.data;
+      expect(category.id).toBe(mockCategoryId);
+      expect(category.name).toBe('SUV');
+      expect(category.slug).toBe('suv');
+      expect(category.description).toBe('Sport Utility Vehicle category');
+
+      // 4. Verify Prisma delete call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.delete).toHaveBeenCalledWith({
+        where: {id: mockCategoryId}
+      });
+    });
   });
 });
