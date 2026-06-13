@@ -1,5 +1,5 @@
 import type {PrismaMock} from "@/types";
-import {NotFoundException} from "@nestjs/common";
+import {ConflictException, NotFoundException} from "@nestjs/common";
 import {CategoryService} from "./category.service";
 import {type PaginationValidatorType} from "@/common";
 import {mockDeep, mockReset} from "vitest-mock-extended";
@@ -505,6 +505,38 @@ describe('CategoryService', (): void => {
       expect(category.description).toBe('Sport Utility Vehicle category');
 
       // 4. Verify Prisma delete call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.delete).toHaveBeenCalledWith({
+        where: {id: mockCategoryId}
+      });
+    });
+
+    // error: category has associated cars (foreign key constraint)
+    it('should throw ConflictException when category has associated cars', async () => {
+      // Prisma foreign key constraint error (P2003)
+      const prismaError = new Error('Foreign key constraint failed');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2003';
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = {
+        field_name: 'category_id',
+        foreign_key_constraint: 'Car_category_id_fkey'
+      };
+
+      prisma.category.delete.mockRejectedValue(prismaError);
+
+      await expect(service.delete(mockCategoryId))
+        .rejects
+        .toThrow(ConflictException);
+
+      await expect(service.delete(mockCategoryId))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: 'Failed, Cannot delete category because it has associated cars. Please delete or reassign the cars first.',
+            error: 'Failed to delete category'
+          }
+        });
+
+      // Verify delete was called but failed
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.category.delete).toHaveBeenCalledWith({
         where: {id: mockCategoryId}
