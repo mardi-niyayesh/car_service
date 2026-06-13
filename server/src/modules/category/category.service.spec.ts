@@ -712,5 +712,21 @@ describe('CategoryService', (): void => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.category.update).not.toHaveBeenCalled();
     });
+
+    // error: duplicate slug
+    it('should throw ConflictException when updating to an existing slug', async () => {
+      const prismaError = new Error('Unique constraint failed');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2002';
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = { target: ['slug'] };
+
+      prisma.category.update.mockRejectedValue(prismaError);
+
+      await expect(service.update(mockCategoryId, mockExistingCategory, mockUpdateCategoryInput))
+        .rejects
+        .toThrow();
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.update).toHaveBeenCalled();
+    });
   });
 });
