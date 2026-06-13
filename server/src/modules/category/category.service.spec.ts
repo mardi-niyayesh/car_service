@@ -555,4 +555,12 @@ describe('CategoryService', (): void => {
         .toThrow(ConflictException);
     });
   });
+
+  /** ================================================
+   * Delete
+   * ================================================
+   */
+  describe('update()', (): void => {
+
+  });
 });
