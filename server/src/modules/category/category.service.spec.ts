@@ -624,5 +624,35 @@ describe('CategoryService', (): void => {
         }
       });
     });
+
+    // success: update with ownership true (creator_id set to existing creator)
+    it('should set creator_id to existing value when ownership is true', async () => {
+      const inputWithOwnershipTrue = {
+        name: 'Sports SUV',
+        slug: 'sports-suv',
+      };
+
+      const categoryWithCreator = {
+        ...mockExistingCategory,
+        name: 'Sports SUV',
+        slug: 'sports-suv',
+        creator_id: 'user-123',
+      };
+
+      prisma.category.update.mockResolvedValue(categoryWithCreator as unknown as Category);
+
+      await service.update(mockCategoryId, mockExistingCategory, inputWithOwnershipTrue);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.update).toHaveBeenCalledWith({
+        where: {id: mockCategoryId},
+        data: {
+          name: inputWithOwnershipTrue.name,
+          slug: inputWithOwnershipTrue.slug,
+          description: undefined,
+          creator_id: undefined, // true → undefined (no change)
+        }
+      });
+    });
   });
 });
