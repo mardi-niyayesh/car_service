@@ -561,6 +561,33 @@ describe('CategoryService', (): void => {
    * ================================================
    */
   describe('update()', (): void => {
+    const mockDate = new Date();
+    const mockCategoryId = 'cat-456';
 
+    const mockExistingCategory: Category = {
+      id: mockCategoryId,
+      created_at: mockDate,
+      updated_at: mockDate,
+      name: 'SUV',
+      slug: 'suv',
+      description: 'Sport Utility Vehicle category',
+      creator_id: 'user-123',
+    };
+
+    const mockUpdateCategoryInput: CategoryDto.UpdateCategoryType = {
+      name: 'Luxury SUV',
+      slug: 'luxury-suv',
+      description: 'Premium luxury SUV category',
+      ownership: false,
+    };
+
+    const mockUpdatedCategory = {
+      ...mockExistingCategory,
+      name: 'Luxury SUV',
+      slug: 'luxury-suv',
+      description: 'Premium luxury SUV category',
+      creator_id: null,
+      updated_at: new Date(),
+    };
   });
 });
