@@ -1,12 +1,12 @@
 import type {PrismaMock} from "@/types";
-import {PaginationValidatorType, PREFIX_PUBLIC_PATH} from "@/common";
 import type {FindAllCarValidatorType} from "./dto";
 import {CarService} from "@/modules/car/car.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {checkConflictRecord, deleteOneFile} from "@/lib";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import type {Car, Prisma, Comment} from "@/modules/prisma/generated/client";
 import {ConflictException, NotFoundException} from "@nestjs/common";
+import {PaginationValidatorType, PREFIX_PUBLIC_PATH} from "@/common";
+import type {Car, Prisma, Comment} from "@/modules/prisma/generated/client";
 import {beforeEach, describe, afterEach, it, expect, vi, type Mock} from "vitest";
 
 vi.mock("@/lib", () => ({
