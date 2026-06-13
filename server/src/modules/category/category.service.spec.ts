@@ -685,5 +685,32 @@ describe('CategoryService', (): void => {
         }
       });
     });
+
+    // error: conflict (no changes)
+    it('should throw ConflictException when new data is identical to existing category', async () => {
+      const sameData = {
+        name: mockExistingCategory.name,
+        slug: mockExistingCategory.slug,
+        description: mockExistingCategory.description || undefined,
+      };
+
+      await expect(service.update(mockCategoryId, mockExistingCategory, sameData))
+        .rejects
+        .toThrow(ConflictException);
+
+      await expect(service.update(mockCategoryId, mockExistingCategory, sameData))
+        .rejects
+        .toMatchObject({
+          response: {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            message: expect.stringContaining('unchanged values'),
+            error: 'Category update conflict'
+          }
+        });
+
+      // Verify update was NOT called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.update).not.toHaveBeenCalled();
+    });
   });
 });
