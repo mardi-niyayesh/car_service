@@ -1,10 +1,10 @@
 import type {PrismaMock} from "@/types";
-import {NotFoundException} from "@nestjs/common";
 import {CategoryService} from "./category.service";
 import {type PaginationValidatorType} from "@/common";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {afterEach, beforeEach, describe, expect, it} from "vitest";
+import {ConflictException, NotFoundException} from "@nestjs/common";
 import type {Category, Prisma} from "@/modules/prisma/generated/client";
 
 describe('CategoryService', (): void => {
@@ -14,7 +14,6 @@ describe('CategoryService', (): void => {
   beforeEach((): void => {
     prisma = mockDeep<PrismaService>();
     service = new CategoryService(prisma);
-    prisma.$transaction.mockImplementation(async fn => fn(prisma));
   });
 
   afterEach((): void => {
@@ -460,6 +459,284 @@ describe('CategoryService', (): void => {
       prisma.category.create.mockRejectedValue(prismaError);
 
       await expect(service.create(mockUserId, mockCreateCategoryInput))
+        .rejects
+        .toThrow();
+    });
+  });
+
+  /** ================================================
+   * Delete
+   * ================================================
+   */
+  describe('delete()', (): void => {
+    const mockDate = new Date();
+    const mockCategoryId = 'cat-456';
+
+    const mockCategory = {
+      id: mockCategoryId,
+      created_at: mockDate,
+      updated_at: mockDate,
+      name: 'SUV',
+      slug: 'suv',
+      description: 'Sport Utility Vehicle category',
+      creator_id: 'user-123',
+    };
+
+    // success
+    it('should delete category successfully when no cars are associated', async () => {
+      prisma.category.delete.mockResolvedValue(mockCategory as unknown as Category);
+
+      const result = await service.delete(mockCategoryId);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('category');
+
+      // 2. Test success message
+      expect(result.message).toBe('category deleted successfully.');
+
+      // 3. Test deleted category data
+      const {category} = result.data;
+      expect(category.id).toBe(mockCategoryId);
+      expect(category.name).toBe('SUV');
+      expect(category.slug).toBe('suv');
+      expect(category.description).toBe('Sport Utility Vehicle category');
+
+      // 4. Verify Prisma delete call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.delete).toHaveBeenCalledWith({
+        where: {id: mockCategoryId}
+      });
+    });
+
+    // error: category has associated cars (foreign key constraint)
+    it('should throw ConflictException when category has associated cars', async () => {
+      // Prisma foreign key constraint error (P2003)
+      const prismaError = new Error('Foreign key constraint failed');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2003';
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = {
+        field_name: 'category_id',
+        foreign_key_constraint: 'Car_category_id_fkey'
+      };
+
+      prisma.category.delete.mockRejectedValue(prismaError);
+
+      await expect(service.delete(mockCategoryId))
+        .rejects
+        .toThrow(ConflictException);
+
+      await expect(service.delete(mockCategoryId))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: 'Failed, Cannot delete category because it has associated cars. Please delete or reassign the cars first.',
+            error: 'Failed to delete category'
+          }
+        });
+
+      // Verify delete was called but failed
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.delete).toHaveBeenCalledWith({
+        where: {id: mockCategoryId}
+      });
+    });
+
+    // error: empty string id
+    it('should throw ConflictException when id is empty string', async () => {
+      const prismaError = new Error('Record to delete does not exist');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
+
+      prisma.category.delete.mockRejectedValue(prismaError);
+
+      await expect(service.delete(''))
+        .rejects
+        .toThrow(ConflictException);
+    });
+  });
+
+  /** ================================================
+   * Delete
+   * ================================================
+   */
+  describe('update()', (): void => {
+    const mockDate = new Date();
+    const mockCategoryId = 'cat-456';
+
+    const mockExistingCategory: Category = {
+      id: mockCategoryId,
+      created_at: mockDate,
+      updated_at: mockDate,
+      name: 'SUV',
+      slug: 'suv',
+      description: 'Sport Utility Vehicle category',
+      creator_id: 'user-123',
+    };
+
+    const mockUpdateCategoryInput = {
+      name: 'Luxury SUV',
+      slug: 'luxury-suv',
+      description: 'Premium luxury SUV category',
+      ownership: false as const,
+    };
+
+    const mockUpdatedCategory = {
+      ...mockExistingCategory,
+      name: 'Luxury SUV',
+      slug: 'luxury-suv',
+      description: 'Premium luxury SUV category',
+      creator_id: null,
+      updated_at: new Date(),
+    };
+
+    // success
+    it('should update category successfully with ownership false (creator_id becomes null)', async () => {
+      prisma.category.update.mockResolvedValue(mockUpdatedCategory as unknown as Category);
+
+      const result = await service.update(mockCategoryId, mockExistingCategory, mockUpdateCategoryInput);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('category');
+
+      // 2. Test success message
+      expect(result.message).toBe('category updated successfully.');
+
+      // 3. Test updated category data
+      const {category} = result.data;
+      expect(category.id).toBe(mockCategoryId);
+      expect(category.name).toBe('Luxury SUV');
+      expect(category.slug).toBe('luxury-suv');
+      expect(category.description).toBe('Premium luxury SUV category');
+      expect(category.creator_id).toBeNull(); // ownership false → null
+
+      // 4. Verify Prisma update call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.update).toHaveBeenCalledWith({
+        where: {id: mockCategoryId},
+        data: {
+          name: mockUpdateCategoryInput.name,
+          slug: mockUpdateCategoryInput.slug,
+          description: mockUpdateCategoryInput.description,
+          creator_id: null,
+        }
+      });
+    });
+
+    // success: update with ownership true (creator_id set to existing creator)
+    it('should set creator_id to existing value when ownership is true', async () => {
+      const inputWithOwnershipTrue = {
+        name: 'Sports SUV',
+        slug: 'sports-suv',
+      };
+
+      const categoryWithCreator = {
+        ...mockExistingCategory,
+        name: 'Sports SUV',
+        slug: 'sports-suv',
+        creator_id: 'user-123',
+      };
+
+      prisma.category.update.mockResolvedValue(categoryWithCreator as unknown as Category);
+
+      await service.update(mockCategoryId, mockExistingCategory, inputWithOwnershipTrue);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.update).toHaveBeenCalledWith({
+        where: {id: mockCategoryId},
+        data: {
+          name: inputWithOwnershipTrue.name,
+          slug: inputWithOwnershipTrue.slug,
+          description: undefined,
+          creator_id: undefined, // true → undefined (no change)
+        }
+      });
+    });
+
+    // success: partial update (only name)
+    it('should update only provided fields (partial update)', async () => {
+      const partialUpdate = {
+        name: 'Updated SUV Name',
+      };
+
+      const partiallyUpdatedCategory = {
+        ...mockExistingCategory,
+        name: 'Updated SUV Name',
+      };
+
+      prisma.category.update.mockResolvedValue(partiallyUpdatedCategory as unknown as Category);
+
+      const result = await service.update(mockCategoryId, mockExistingCategory, partialUpdate);
+
+      expect(result.data.category.name).toBe('Updated SUV Name');
+      expect(result.data.category.slug).toBe(mockExistingCategory.slug); // unchanged
+      expect(result.data.category.description).toBe(mockExistingCategory.description); // unchanged
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.update).toHaveBeenCalledWith({
+        where: {id: mockCategoryId},
+        data: {
+          name: 'Updated SUV Name',
+          slug: undefined,
+          description: undefined,
+          creator_id: undefined,
+        }
+      });
+    });
+
+    // error: conflict (no changes)
+    it('should throw ConflictException when new data is identical to existing category', async () => {
+      const sameData = {
+        name: mockExistingCategory.name,
+        slug: mockExistingCategory.slug,
+        description: mockExistingCategory.description || undefined,
+      };
+
+      await expect(service.update(mockCategoryId, mockExistingCategory, sameData))
+        .rejects
+        .toThrow(ConflictException);
+
+      await expect(service.update(mockCategoryId, mockExistingCategory, sameData))
+        .rejects
+        .toMatchObject({
+          response: {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            message: expect.stringContaining('unchanged values'),
+            error: 'Category update conflict'
+          }
+        });
+
+      // Verify update was NOT called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.update).not.toHaveBeenCalled();
+    });
+
+    // error: duplicate slug
+    it('should throw ConflictException when updating to an existing slug', async () => {
+      const prismaError = new Error('Unique constraint failed');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2002';
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = {target: ['slug']};
+
+      prisma.category.update.mockRejectedValue(prismaError);
+
+      await expect(service.update(mockCategoryId, mockExistingCategory, mockUpdateCategoryInput))
+        .rejects
+        .toThrow();
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.update).toHaveBeenCalled();
+    });
+
+    // error: duplicate name
+    it('should throw ConflictException when updating to an existing name', async () => {
+      const prismaError = new Error('Unique constraint failed');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2002';
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = {target: ['name']};
+
+      prisma.category.update.mockRejectedValue(prismaError);
+
+      await expect(service.update(mockCategoryId, mockExistingCategory, mockUpdateCategoryInput))
         .rejects
         .toThrow();
     });
