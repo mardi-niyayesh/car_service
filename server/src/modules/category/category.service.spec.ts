@@ -574,11 +574,11 @@ describe('CategoryService', (): void => {
       creator_id: 'user-123',
     };
 
-    const mockUpdateCategoryInput: CategoryDto.UpdateCategoryType = {
+    const mockUpdateCategoryInput = {
       name: 'Luxury SUV',
       slug: 'luxury-suv',
       description: 'Premium luxury SUV category',
-      ownership: false,
+      ownership: false as const,
     };
 
     const mockUpdatedCategory = {
@@ -589,5 +589,40 @@ describe('CategoryService', (): void => {
       creator_id: null,
       updated_at: new Date(),
     };
+
+    // success
+    it('should update category successfully with ownership false (creator_id becomes null)', async () => {
+      prisma.category.update.mockResolvedValue(mockUpdatedCategory as unknown as Category);
+
+      const result = await service.update(mockCategoryId, mockExistingCategory, mockUpdateCategoryInput);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('category');
+
+      // 2. Test success message
+      expect(result.message).toBe('category updated successfully.');
+
+      // 3. Test updated category data
+      const {category} = result.data;
+      expect(category.id).toBe(mockCategoryId);
+      expect(category.name).toBe('Luxury SUV');
+      expect(category.slug).toBe('luxury-suv');
+      expect(category.description).toBe('Premium luxury SUV category');
+      expect(category.creator_id).toBeNull(); // ownership false → null
+
+      // 4. Verify Prisma update call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.update).toHaveBeenCalledWith({
+        where: {id: mockCategoryId},
+        data: {
+          name: mockUpdateCategoryInput.name,
+          slug: mockUpdateCategoryInput.slug,
+          description: mockUpdateCategoryInput.description,
+          creator_id: null,
+        }
+      });
+    });
   });
 });
