@@ -654,5 +654,36 @@ describe('CategoryService', (): void => {
         }
       });
     });
+
+    // success: partial update (only name)
+    it('should update only provided fields (partial update)', async () => {
+      const partialUpdate = {
+        name: 'Updated SUV Name',
+      };
+
+      const partiallyUpdatedCategory = {
+        ...mockExistingCategory,
+        name: 'Updated SUV Name',
+      };
+
+      prisma.category.update.mockResolvedValue(partiallyUpdatedCategory as unknown as Category);
+
+      const result = await service.update(mockCategoryId, mockExistingCategory, partialUpdate);
+
+      expect(result.data.category.name).toBe('Updated SUV Name');
+      expect(result.data.category.slug).toBe(mockExistingCategory.slug); // unchanged
+      expect(result.data.category.description).toBe(mockExistingCategory.description); // unchanged
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.category.update).toHaveBeenCalledWith({
+        where: {id: mockCategoryId},
+        data: {
+          name: 'Updated SUV Name',
+          slug: undefined,
+          description: undefined,
+          creator_id: undefined,
+        }
+      });
+    });
   });
 });
