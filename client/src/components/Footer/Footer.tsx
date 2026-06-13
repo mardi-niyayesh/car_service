@@ -14,7 +14,7 @@ const Footer = () => {
             alt="call"
             className="border rounded-2xl p-2 border-[#FFFBFB] w-12 h-12 md:w-14 md:h-14"
           />
-          <div className="text-[#9A9A9A] text-sm md:text-[16px] text-right md:text-center">
+          <div className="text-[#9A9A9A]  text-right md:text-center">
             <h2 className="font-medium mb-1">ارتباط با ما</h2>
             <p className="text-white">0994-5812125</p>
             <p className="text-white">0921-0629512</p>
@@ -27,12 +27,12 @@ const Footer = () => {
             alt="email"
             className="border rounded-2xl p-2 border-[#FFFBFB] w-12 h-12 md:w-14 md:h-14"
           />
-          <div className="text-[#9A9A9A] text-sm md:text-[16px] text-right md:text-center">
-            <h2 className="font-medium mb-1">ایمیل</h2>
-            <p className="text-white text-xs md:text-sm">
-              niyayeshammardii@gmail.com
+          <div className="text-[#9A9A9A]  text-right md:text-center">
+            <h2 className=" mb-1">ایمیل</h2>
+            <p className="text-white  tracking-wide text-sm ">
+              niyayesh@gmail.com
             </p>
-            <p className="text-white text-xs md:text-sm">homow_dev@proton.me</p>
+            <p className="text-white  md:text-sm tracking-wide text-sm ">homow@proton.me</p>
           </div>
         </div>
 
@@ -42,7 +42,7 @@ const Footer = () => {
             alt="map"
             className="border rounded-2xl p-2 border-[#9A9A9A] w-12 h-12 md:w-14 md:h-14"
           />
-          <div className="text-[#9A9A9A] text-sm md:text-[16px] text-right md:text-center">
+          <div className="text-[#9A9A9A]  text-right md:text-center">
             <h2 className="font-medium mb-1">آدرس</h2>
             <p className="text-white">تهران- خ شادمان</p>
           </div>
@@ -63,7 +63,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <p className="text-[#9A9A9A] text-sm md:text-[14px] leading-relaxed mt-2 md:mt-4">
+          <p className="text-[#9A9A9A]  leading-relaxed mt-2 md:mt-4">
             اتورنت با رویکرد اعتماد به مشتری، با در اختیار داشتن بزرگترین ناوگان
             خودرویی متشکل از انواع خودروهای صفر کیلومتر، اقتصادی تا تجاری در
             سراسر کشور ایران آماده خدمت‌رسانی به مشتریان است.
@@ -71,10 +71,10 @@ const Footer = () => {
         </div>
 
         <div className="w-full lg:w-1/5">
-          <h3 className="text-white font-medium text-lg md:text-[18px] mb-4 md:mb-6">
+          <h3 className="text-white   mb-4 md:mb-6">
             دسترسی آسان
           </h3>
-          <ul className="text-[#9A9A9A] text-sm md:text-[14px] space-y-3 md:space-y-4">
+          <ul className="text-[#9A9A9A]  space-y-3 md:space-y-4">
             <li className="hover:text-white cursor-pointer transition-colors">
               <Link to="/questionPage"> سوالات متداول </Link>
             </li>
@@ -91,10 +91,10 @@ const Footer = () => {
         </div>
 
         <div className="w-full lg:w-2/5">
-          <h3 className="text-white font-medium text-lg md:text-[18px] mb-4">
+          <h3 className="text-white  mb-4">
             خبرنامه
           </h3>
-          <p className="text-[#9A9A9A] text-sm md:text-[14px] mb-4">
+          <p className="text-[#9A9A9A]  mb-4">
             برای دریافت جدیدترین تخفیف‌ها و اخبار در خبرنامه ما عضو شوید
           </p>
 
@@ -102,7 +102,7 @@ const Footer = () => {
             <input
               type="email"
               placeholder="ایمیل خود را وارد کنید"
-              className="bg-[#2A2A2A] text-white text-sm md:text-[14px] px-4 py-3 md:py-4 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-[#FDB713]"
+              className="bg-[#2A2A2A] text-white text-sm md:text-[18px] px-4 py-3 md:py-4 rounded-xl w-full focus:outline-none focus:ring-2 focus:ring-[#FDB713]"
             />
             <button className="bg-[#FDB713] text-black font-medium text-sm md:text-[14px] px-6 py-3 md:py-4 rounded-xl hover:bg-[#E5A500] transition-colors whitespace-nowrap">
               ارسال
