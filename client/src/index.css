@@ -1,8 +1,34 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "AbanFont";
+  src: url("../assets/Fonts/Aban_Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AbanFont";
+  src: url("../assets/Fonts/Aban_Light.ttf") format("truetype");
+  font-weight: 300; /* light */
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-aban: "AbanFont", sans-serif;
+  --default-font-family: "AbanFont", sans-serif;
+}
+
+body {
+  font-size: 22px;
+  line-height: 1.5;
+}
+
 ::selection {
-  background-color: #f7f2c3; 
-  color: #000;            
+  background-color: #f7f2c3;
+  color: #000;
 }
 .ReactModal__Overlay {
   opacity: 0;
