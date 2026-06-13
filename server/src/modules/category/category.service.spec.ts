@@ -14,7 +14,6 @@ describe('CategoryService', (): void => {
   beforeEach((): void => {
     prisma = mockDeep<PrismaService>();
     service = new CategoryService(prisma);
-    prisma.$transaction.mockImplementation(async fn => fn(prisma));
   });
 
   afterEach((): void => {
