@@ -542,5 +542,17 @@ describe('CategoryService', (): void => {
         where: {id: mockCategoryId}
       });
     });
+
+    // error: empty string id
+    it('should throw ConflictException when id is empty string', async () => {
+      const prismaError = new Error('Record to delete does not exist');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
+
+      prisma.category.delete.mockRejectedValue(prismaError);
+
+      await expect(service.delete(''))
+        .rejects
+        .toThrow(ConflictException);
+    });
   });
 });
