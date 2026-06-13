@@ -470,6 +470,17 @@ describe('CategoryService', (): void => {
    * ================================================
    */
   describe('delete()', (): void => {
+    const mockDate = new Date();
+    const mockCategoryId = 'cat-456';
 
+    const mockCategory = {
+      id: mockCategoryId,
+      created_at: mockDate,
+      updated_at: mockDate,
+      name: 'SUV',
+      slug: 'suv',
+      description: 'Sport Utility Vehicle category',
+      creator_id: 'user-123',
+    };
   });
 });
