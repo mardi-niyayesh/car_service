@@ -18,7 +18,6 @@ describe('CommentService', (): void => {
     redis = mockDeep<RedisService>();
     event = mockDeep<EventEmitter2>();
     prisma = mockDeep<PrismaService>();
-
     service = new CommentService(redis, prisma, event);
   });
 
