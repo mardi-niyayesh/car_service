@@ -654,7 +654,6 @@ describe('CommentService', (): void => {
       });
     });
 
-
     // success: empty result (no unconfirmed comments)
     it('should return count 0 and empty array when no unconfirmed comments exist', async () => {
       prisma.comment.findMany.mockResolvedValue([]);
@@ -665,6 +664,31 @@ describe('CommentService', (): void => {
       expect(result.data.count).toBe(0);
       expect(result.data.comments).toEqual([]);
       expect(result.message).toBe('unconfirmed comments successfully find.');
+    });
+
+    // success: filter by car that has no unconfirmed comments
+    it('should return empty result when car exists but has no unconfirmed comments', async () => {
+      const paginationWithCar: CommentDto.FindUnconfirmedValidatorType = {
+        ...mockPaginationInput,
+        car: mockCarId,
+      };
+
+      prisma.comment.findMany.mockResolvedValue([]);
+      prisma.comment.count.mockResolvedValue(0);
+
+      const result = await service.findAllUnconfirmed(paginationWithCar);
+
+      expect(result.data.count).toBe(0);
+      expect(result.data.comments).toEqual([]);
+
+      // Verify car_id filter was applied
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.count).toHaveBeenCalledWith({
+        where: {
+          is_confirmed: false,
+          car_id: mockCarId,
+        }
+      });
     });
   });
 });
