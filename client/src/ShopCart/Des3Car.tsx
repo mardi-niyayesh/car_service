@@ -11,7 +11,7 @@ const Des3Car = () => {
         <h2 className="text-2xl font-bold text-blue-800 border-r-4 border-blue-600 pr-3 mb-4">
           درباره ی ماشین
         </h2>
-        <p className="text-gray-600 mb-6 text-sm leading-relaxed">
+        <p className="text-gray-600 mb-6 leading-relaxed">
           {findProduct?.description}
         </p>
         <div className="text-gray-600 mb-3 ">
