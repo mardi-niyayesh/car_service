@@ -11,7 +11,7 @@
 @font-face {
   font-family: "AbanFont";
   src: url("../assets/Fonts/Aban_Light.ttf") format("truetype");
-  font-weight: 300; /* light */
+  font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
@@ -22,7 +22,7 @@
 }
 
 body {
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1.5;
 }
 
