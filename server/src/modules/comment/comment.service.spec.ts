@@ -724,5 +724,39 @@ describe('CommentService', (): void => {
         }
       });
     });
+
+    // success: with pagination offset (page 2)
+    it('should apply correct offset when page is 2', async () => {
+      const paginationPage2: CommentDto.FindUnconfirmedValidatorType = {
+        limit: 10,
+        offset: 10,
+        orderByLower: 'desc',
+        page: 2,
+        orderByUpper: 'DESC',
+      };
+
+      prisma.comment.findMany.mockResolvedValue([mockUnconfirmedComments[0]] as unknown as Comment[]);
+      prisma.comment.count.mockResolvedValue(15);
+
+      await service.findAllUnconfirmed(paginationPage2);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.findMany).toHaveBeenCalledWith({
+        where: {
+          is_confirmed: false,
+        },
+        orderBy: {
+          created_at: 'desc'
+        },
+        skip: 10,
+        take: 10,
+        include: {
+          user: {
+            omit: { password: true }
+          },
+          car: true
+        }
+      });
+    });
   });
 });
