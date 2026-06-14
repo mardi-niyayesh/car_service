@@ -275,6 +275,26 @@ describe('CommentService', (): void => {
    * ================================================
    */
   describe('create()', (): void => {
+    const mockCarId = 'car-789';
+    const mockUserId = 'user-123';
+    const mockDate = new Date();
 
+    const mockCreateCommentInput = {
+      content: 'This car is amazing! Very comfortable ride.',
+      rate: 5,
+      parent_id: null,
+    };
+
+    const mockCreatedComment = {
+      id: 'comment-456',
+      content: 'This car is amazing! Very comfortable ride.',
+      rate: 5,
+      parent_id: null,
+      creator_id: mockUserId,
+      car_id: mockCarId,
+      is_confirmed: false, // needs admin approval
+      created_at: mockDate,
+      updated_at: mockDate,
+    };
   });
 });
