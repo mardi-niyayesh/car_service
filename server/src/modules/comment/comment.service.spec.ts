@@ -166,5 +166,17 @@ describe('CommentService', (): void => {
         },
       });
     });
+
+    // success: empty replies (parent comment has no replies)
+    it('should return count 0 and empty array when parent comment has no replies', async () => {
+      prisma.comment.count.mockResolvedValue(0);
+      prisma.comment.findMany.mockResolvedValue([]);
+
+      const result = await service.findCommentReplies(mockParentCommentId, mockPaginationInput);
+
+      expect(result.data.count).toBe(0);
+      expect(result.data.comments).toEqual([]);
+      expect(result.message).toBe('replies comment successfully found.');
+    });
   });
 });
