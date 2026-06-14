@@ -5,6 +5,7 @@ import {afterEach, beforeEach, describe, it, expect} from "vitest";
 import {RedisService} from "@/modules/redis/redis.service";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
+import type {Comment} from "@/modules/prisma/generated/client";
 import {PaginationValidatorType} from "@/common";
 
 describe('CommentService', (): void => {
