@@ -214,5 +214,24 @@ describe('CommentService', (): void => {
         orderBy: {created_at: 'asc'}
       });
     });
+
+    // success: parent comment exists but no confirmed replies (only unconfirmed)
+    it('should only return confirmed replies (is_confirmed = true)', async () => {
+      prisma.comment.count.mockResolvedValue(0);
+      prisma.comment.findMany.mockResolvedValue([]);
+
+      const result = await service.findCommentReplies(mockParentCommentId, mockPaginationInput);
+
+      expect(result.data.count).toBe(0);
+
+      // Verify where clause includes is_confirmed: true
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.count).toHaveBeenCalledWith({
+        where: {
+          parent_id: mockParentCommentId,
+          is_confirmed: true,
+        }
+      });
+    });
   });
 });
