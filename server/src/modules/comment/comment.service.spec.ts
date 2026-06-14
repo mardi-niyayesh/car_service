@@ -479,4 +479,72 @@ describe('CommentService', (): void => {
       expect(prisma.comment.create).not.toHaveBeenCalled();
     });
   });
+
+  /** ================================================
+   * Find All Unconfirmed Comments
+   * ================================================
+   */
+  describe('findAllUnconfirmed()', (): void => {
+    const mockDate = new Date();
+    const mockCarId = 'car-789';
+
+    const mockPaginationInput: CommentDto.FindUnconfirmedValidatorType = {
+      limit: 10,
+      offset: 0,
+      orderByLower: 'desc',
+      page: 1,
+      order: 'desc',
+    };
+
+    const mockUnconfirmedComments = [
+      {
+        id: 'comment-1',
+        content: 'This car looks great!',
+        rate: 5,
+        parent_id: null,
+        creator_id: 'user-123',
+        car_id: mockCarId,
+        is_confirmed: false,
+        created_at: mockDate,
+        updated_at: mockDate,
+        user: {
+          id: 'user-123',
+          display_name: 'John Doe',
+          email: 'john@example.com',
+          password: 'hashed-password', // should be omitted
+        },
+        car: {
+          id: mockCarId,
+          name: 'BMW X5',
+          slug: 'bmw-x5',
+          company: 'BMW',
+          price_per_day: 200000,
+        },
+      },
+      {
+        id: 'comment-2',
+        content: 'Is this available for long term?',
+        rate: 4,
+        parent_id: null,
+        creator_id: 'user-456',
+        car_id: 'car-456',
+        is_confirmed: false,
+        created_at: mockDate,
+        updated_at: mockDate,
+        user: {
+          id: 'user-456',
+          display_name: 'Jane Smith',
+          email: 'jane@example.com',
+          password: 'hashed-password', // should be omitted
+        },
+        car: {
+          id: 'car-456',
+          name: 'Tesla Model 3',
+          slug: 'tesla-model-3',
+          company: 'Tesla',
+          price_per_day: 350000,
+        },
+      },
+    ];
+  });
 });
