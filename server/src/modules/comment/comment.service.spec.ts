@@ -6,7 +6,7 @@ import {RedisService} from "@/modules/redis/redis.service";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {Comment} from "@/modules/prisma/generated/client";
 import {afterEach, beforeEach, describe, it, expect} from "vitest";
-import {DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
+import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
 
 describe('CommentService', (): void => {
   let prisma: PrismaMock;
