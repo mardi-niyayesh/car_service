@@ -614,5 +614,44 @@ describe('CommentService', (): void => {
         }
       });
     });
+
+    // success: filter by specific car
+    it('should return unconfirmed comments for a specific car when car filter is provided', async () => {
+      const paginationWithCar: CommentDto.FindUnconfirmedValidatorType = {
+        ...mockPaginationInput,
+        car: mockCarId,
+      };
+
+      prisma.comment.findMany.mockResolvedValue([mockUnconfirmedComments[0]] as unknown as Comment[]);
+      prisma.comment.count.mockResolvedValue(1);
+
+      const result = await service.findAllUnconfirmed(paginationWithCar);
+
+      expect(result.data.count).toBe(1);
+      expect(result.data.comments[0].car_id).toBe(mockCarId);
+      expect(result.data.comments[0].is_confirmed).toBe(false);
+
+      // Verify where clause includes car_id filter
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.findMany).toHaveBeenCalledWith({
+        where: {
+          is_confirmed: false,
+          car_id: mockCarId,
+        },
+        orderBy: {
+          created_at: mockPaginationInput.orderByLower
+        },
+        skip: mockPaginationInput.offset,
+        take: mockPaginationInput.limit,
+        include: {
+          user: {
+            omit: {
+              password: true
+            }
+          },
+          car: true
+        }
+      });
+    });
   });
 });
