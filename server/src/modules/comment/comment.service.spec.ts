@@ -331,5 +331,59 @@ describe('CommentService', (): void => {
         }
       });
     });
+
+    // success: create reply to existing parent comment
+    it('should create a reply successfully when parent_id exists and is valid', async () => {
+      const mockParentCommentId = 'parent-123';
+      const mockReplyInput = {
+        content: 'Thanks for the review!',
+        rate: 4,
+        parent_id: mockParentCommentId,
+      };
+
+      const mockParentComment = {
+        id: mockParentCommentId,
+        content: 'Original comment',
+        parent_id: null,
+        is_confirmed: true,
+      };
+
+      const mockCreatedReply = {
+        id: 'reply-456',
+        content: 'Thanks for the review!',
+        rate: 4,
+        parent_id: mockParentCommentId,
+        creator_id: mockUserId,
+        car_id: mockCarId,
+        is_confirmed: false,
+        created_at: mockDate,
+        updated_at: mockDate,
+      };
+
+      prisma.comment.findUnique.mockResolvedValue(mockParentComment as unknown as Comment);
+      prisma.comment.create.mockResolvedValue(mockCreatedReply as unknown as Comment);
+
+      const result = await service.create(mockCarId, mockUserId, mockReplyInput);
+
+      // 1. Verify parent comment check was called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.findUnique).toHaveBeenCalledWith({
+        where: {id: mockParentCommentId}
+      });
+
+      // 2. Test reply data
+      expect(result.data.comment.parent_id).toBe(mockParentCommentId);
+      expect(result.data.comment.content).toBe(mockReplyInput.content);
+
+      // 3. Verify create call with reply data
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.create).toHaveBeenCalledWith({
+        data: {
+          ...mockReplyInput,
+          creator_id: mockUserId,
+          car_id: mockCarId
+        }
+      });
+    });
   });
 });
