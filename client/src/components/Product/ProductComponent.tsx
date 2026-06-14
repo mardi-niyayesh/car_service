@@ -50,7 +50,13 @@ const ProductComponent = () => {
         <span>{categoryName}</span>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div
+        className="w-full px-4 mx-auto 
+                grid grid-cols-1 
+                min-[700px]:grid-cols-2 
+                lg:grid-cols-3 
+                gap-6"
+      >
         {filteredProducts.map((pro) => (
           <GetAllProduct key={pro.id} product={pro} />
         ))}
