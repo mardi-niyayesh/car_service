@@ -460,5 +460,23 @@ describe('CommentService', (): void => {
           meta: {field_name: 'car_id'}
         });
     });
+
+    // error: reply to parent that doesn't exist (combined scenario)
+    it('should check parent existence before creating reply', async () => {
+      const replyInput = {
+        content: 'Reply to nowhere',
+        parent_id: 'fake-parent-id',
+      } as CommentDto.CreateCommentType;
+
+      prisma.comment.findUnique.mockResolvedValue(null);
+
+      await service.create(mockCarId, mockUserId, replyInput).catch(() => {});
+
+      // Verify findUnique was called but create was NOT
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.findUnique).toHaveBeenCalled();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.create).not.toHaveBeenCalled();
+    });
   });
 });
