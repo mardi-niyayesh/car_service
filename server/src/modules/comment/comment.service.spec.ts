@@ -653,5 +653,18 @@ describe('CommentService', (): void => {
         }
       });
     });
+
+
+    // success: empty result (no unconfirmed comments)
+    it('should return count 0 and empty array when no unconfirmed comments exist', async () => {
+      prisma.comment.findMany.mockResolvedValue([]);
+      prisma.comment.count.mockResolvedValue(0);
+
+      const result = await service.findAllUnconfirmed(mockPaginationInput);
+
+      expect(result.data.count).toBe(0);
+      expect(result.data.comments).toEqual([]);
+      expect(result.message).toBe('unconfirmed comments successfully find.');
+    });
   });
 });
