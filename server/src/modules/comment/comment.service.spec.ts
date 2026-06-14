@@ -1,13 +1,14 @@
 import type {PrismaMock} from "@/types";
 import {CommentService} from "./comment.service";
+import * as CommentDto from "@/modules/comment/dto";
 import {EventEmitter2} from "@nestjs/event-emitter";
 import type {PaginationValidatorType} from "@/common";
 import {RedisService} from "@/modules/redis/redis.service";
-import {type CreateCommentType} from "@/modules/comment/dto";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {Comment} from "@/modules/prisma/generated/client";
 import {afterEach, beforeEach, describe, it, expect} from "vitest";
 import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
+import {NotFoundException} from "@nestjs/common";
 
 describe('CommentService', (): void => {
   let prisma: PrismaMock;
@@ -392,7 +393,7 @@ describe('CommentService', (): void => {
       const inputWithoutRate = {
         content: 'Good car.',
         parent_id: null,
-      } as CreateCommentType;
+      } as CommentDto.CreateCommentType;
 
       const commentWithDefaultRate = {
         ...mockCreatedComment,
@@ -414,6 +415,34 @@ describe('CommentService', (): void => {
           car_id: mockCarId
         }
       });
+    });
+
+    // error: parent comment not found
+    it('should throw NotFoundException when parent_id does not exist in database', async () => {
+      const invalidParentId = 'non-existent-parent';
+      const replyInput = {
+        content: 'This is a reply',
+        parent_id: invalidParentId,
+      } as CommentDto.CreateCommentType;
+
+      prisma.comment.findUnique.mockResolvedValue(null);
+
+      await expect(service.create(mockCarId, mockUserId, replyInput))
+        .rejects
+        .toThrow(NotFoundException);
+
+      await expect(service.create(mockCarId, mockUserId, replyInput))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: 'parent comment not found in database, please try again and sure parent_id is exist',
+            error: 'parent comment not found'
+          }
+        });
+
+      // Verify create was NOT called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.create).not.toHaveBeenCalled();
     });
   });
 });
