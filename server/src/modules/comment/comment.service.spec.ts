@@ -7,6 +7,7 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {Comment} from "@/modules/prisma/generated/client";
 import {afterEach, beforeEach, describe, it, expect} from "vitest";
 import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
+import {CreateCommentType} from "@/modules/comment/dto";
 
 describe('CommentService', (): void => {
   let prisma: PrismaMock;
@@ -380,6 +381,35 @@ describe('CommentService', (): void => {
       expect(prisma.comment.create).toHaveBeenCalledWith({
         data: {
           ...mockReplyInput,
+          creator_id: mockUserId,
+          car_id: mockCarId
+        }
+      });
+    });
+
+    // success: create comment without rate (uses default 5)
+    it('should use default rate 5 when rate is not provided', async () => {
+      const inputWithoutRate = {
+        content: 'Good car.',
+        parent_id: null,
+      } as CreateCommentType;
+
+      const commentWithDefaultRate = {
+        ...mockCreatedComment,
+        content: 'Good car.',
+        rate: 5, // default
+      };
+
+      prisma.comment.create.mockResolvedValue(commentWithDefaultRate as unknown as Comment);
+
+      const result = await service.create(mockCarId, mockUserId, inputWithoutRate);
+
+      expect(result.data.comment.rate).toBe(5);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.create).toHaveBeenCalledWith({
+        data: {
+          ...inputWithoutRate,
           creator_id: mockUserId,
           car_id: mockCarId
         }
