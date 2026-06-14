@@ -10,21 +10,21 @@ const BanerHeader = () => {
               اُتـــو رِنت؛ سریع، آسان و به صرفه
             </h2>
 
-            <p className="text-[#F9F9F9] font-medium text-[14px] sm:text-[15px] md:text-[16px] lg:text-[17px] text-justify md:text-right mb-6 md:mb-8 max-w-lg">
+            <p className="text-[#F9F9F9]  text-justify md:text-right mb-6 md:mb-8 max-w-lg">
               سرویس دهنده رزرو خودرو در ایران در کمترین زمان ممکن!
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 md:gap-6 mt-8 md:mt-12">
               <div className="flex items-center justify-center w-full sm:w-fit px-6 py-3 md:px-8 md:py-4 gap-3 border-2 border-[#F9F9F9] rounded-lg hover:bg-white/10 transition-all duration-300 group cursor-pointer">
                 <Link to="contact">
-                  <button className="text-[#F9F9F9] font-medium text-[16px] md:text-[18px] whitespace-nowrap">
+                  <button className="text-[#F9F9F9]  whitespace-nowrap">
                     تماس با ما
                   </button>
                 </Link>
               </div>
 
               <div className="flex items-center justify-center w-full sm:w-fit px-6 py-3 md:px-8 md:py-4 gap-3 bg-[#FDB713] text-[#000000] rounded-lg hover:bg-[#e6a500] hover:scale-[1.02] transition-all duration-300 shadow-lg cursor-pointer">
-                <button className="font-bold text-[16px] md:text-[18px] lg:text-[20px] whitespace-nowrap">
+                <button className="font-bold whitespace-nowrap">
                   رزرو آسان خودرو
                 </button>
               </div>
