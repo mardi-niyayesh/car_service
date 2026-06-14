@@ -1,14 +1,14 @@
 import type {PrismaMock} from "@/types";
 import {CommentService} from "./comment.service";
+import {NotFoundException} from "@nestjs/common";
 import * as CommentDto from "@/modules/comment/dto";
 import {EventEmitter2} from "@nestjs/event-emitter";
 import type {PaginationValidatorType} from "@/common";
 import {RedisService} from "@/modules/redis/redis.service";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import type {Comment} from "@/modules/prisma/generated/client";
 import {afterEach, beforeEach, describe, it, expect} from "vitest";
+import type {Comment, Prisma} from "@/modules/prisma/generated/client";
 import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
-import {NotFoundException} from "@nestjs/common";
 
 describe('CommentService', (): void => {
   let prisma: PrismaMock;
@@ -443,6 +443,22 @@ describe('CommentService', (): void => {
       // Verify create was NOT called
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.comment.create).not.toHaveBeenCalled();
+    });
+
+    // error: car not found (foreign key constraint P2003)
+    it('should throw NotFoundException when car_id does not exist', async () => {
+      const prismaError = new Error('Foreign key constraint failed');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2003';
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = {field_name: 'car_id'};
+
+      prisma.comment.create.mockRejectedValue(prismaError);
+
+      await expect(service.create(mockCarId, mockUserId, mockCreateCommentInput))
+        .rejects
+        .toMatchObject({
+          code: 'P2003',
+          meta: {field_name: 'car_id'}
+        });
     });
   });
 });
