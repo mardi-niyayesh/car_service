@@ -8,6 +8,9 @@ vi.mock("@/common", async () => {
     getBaseOkResponseSchema: (_args: unknown) => {
       return class MockResponse {};
     },
+    getZodErrorBody: (_args: unknown) => {
+      return class MockResponse {};
+    }
   };
 });
 
