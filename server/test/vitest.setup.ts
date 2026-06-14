@@ -10,6 +10,9 @@ vi.mock("@/common", async () => {
     },
     getZodErrorBody: (_args: unknown) => {
       return class MockResponse {};
+    },
+    getNormalErrorResponse: (_args: unknown) => {
+      return class MockResponse {};
     }
   };
 });
