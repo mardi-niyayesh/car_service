@@ -233,5 +233,41 @@ describe('CommentService', (): void => {
         }
       });
     });
+
+    // edge case: pagination with offset (page 2)
+    it('should apply correct offset when page is 2', async () => {
+      const paginationPage2: PaginationValidatorType = {
+        limit: 10,
+        offset: 10,
+        orderByLower: 'desc',
+        page: 2,
+        orderByUpper: 'DESC',
+      };
+
+      prisma.comment.count.mockResolvedValue(15);
+      prisma.comment.findMany.mockResolvedValue([mockReplies[0]] as unknown as Comment[]);
+
+      await service.findCommentReplies(mockParentCommentId, paginationPage2);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.findMany).toHaveBeenCalledWith({
+        where: {
+          parent_id: mockParentCommentId,
+          is_confirmed: true,
+        },
+        omit: {rate: true},
+        include: {
+          user: {
+            select: {id: true, display_name: true}
+          },
+          _count: {
+            select: {replies: {where: {is_confirmed: true}}}
+          }
+        },
+        take: 10,
+        skip: 10,
+        orderBy: {created_at: 'desc'}
+      });
+    });
   });
 });
