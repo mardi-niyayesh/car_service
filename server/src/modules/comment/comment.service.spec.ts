@@ -718,7 +718,7 @@ describe('CommentService', (): void => {
         take: 10,
         include: {
           user: {
-            omit: { password: true }
+            omit: {password: true}
           },
           car: true
         }
@@ -752,11 +752,27 @@ describe('CommentService', (): void => {
         take: 10,
         include: {
           user: {
-            omit: { password: true }
+            omit: {password: true}
           },
           car: true
         }
       });
+    });
+
+    // edge case: car filter with empty string (should be ignored by validator)
+    it('should handle car filter that doesn\'t match any comments', async () => {
+      const paginationWithInvalidCar: CommentDto.FindUnconfirmedValidatorType = {
+        ...mockPaginationInput,
+        car: 'non-existent-car-id',
+      };
+
+      prisma.comment.findMany.mockResolvedValue([]);
+      prisma.comment.count.mockResolvedValue(0);
+
+      const result = await service.findAllUnconfirmed(paginationWithInvalidCar);
+
+      expect(result.data.count).toBe(0);
+      expect(result.data.comments).toEqual([]);
     });
   });
 });
