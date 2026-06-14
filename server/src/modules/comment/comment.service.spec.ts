@@ -493,7 +493,7 @@ describe('CommentService', (): void => {
       offset: 0,
       orderByLower: 'desc',
       page: 1,
-      order: 'desc',
+      orderByUpper: 'DESC',
     };
 
     const mockUnconfirmedComments = [
@@ -511,7 +511,6 @@ describe('CommentService', (): void => {
           id: 'user-123',
           display_name: 'John Doe',
           email: 'john@example.com',
-          password: 'hashed-password', // should be omitted
         },
         car: {
           id: mockCarId,
@@ -535,7 +534,6 @@ describe('CommentService', (): void => {
           id: 'user-456',
           display_name: 'Jane Smith',
           email: 'jane@example.com',
-          password: 'hashed-password', // should be omitted
         },
         car: {
           id: 'car-456',
@@ -546,5 +544,75 @@ describe('CommentService', (): void => {
         },
       },
     ];
+
+    // success: get all unconfirmed comments (no car filter)
+    it('should return all unconfirmed comments without car filter', async () => {
+      prisma.comment.findMany.mockResolvedValue(mockUnconfirmedComments as unknown as Comment[]);
+      prisma.comment.count.mockResolvedValue(2);
+
+      const result = await service.findAllUnconfirmed(mockPaginationInput);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('count');
+      expect(result.data).toHaveProperty('comments');
+
+      // 2. Test message
+      expect(result.message).toBe('unconfirmed comments successfully find.');
+
+      // 3. Test count
+      expect(result.data.count).toBe(2);
+      expect(result.data.comments.length).toBe(2);
+
+      // 4. Test all comments are unconfirmed
+      for (const comment of result.data.comments) {
+        expect(comment.is_confirmed).toBe(false);
+      }
+
+      // 5. Test user password is omitted
+      for (const comment of result.data.comments) {
+        expect(comment.user).not.toHaveProperty('password');
+        expect(comment.user).toHaveProperty('id');
+        expect(comment.user).toHaveProperty('display_name');
+        expect(comment.user).toHaveProperty('email');
+      }
+
+      // 6. Test car is included
+      for (const comment of result.data.comments) {
+        expect(comment.car).toBeDefined();
+        expect(comment.car.id).toBeDefined();
+        expect(comment.car.name).toBeDefined();
+      }
+
+      // 7. Verify findMany call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.findMany).toHaveBeenCalledWith({
+        where: {
+          is_confirmed: false,
+        },
+        orderBy: {
+          created_at: mockPaginationInput.orderByLower
+        },
+        skip: mockPaginationInput.offset,
+        take: mockPaginationInput.limit,
+        include: {
+          user: {
+            omit: {
+              password: true
+            }
+          },
+          car: true
+        }
+      });
+
+      // 8. Verify count call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.count).toHaveBeenCalledWith({
+        where: {
+          is_confirmed: false,
+        }
+      });
+    });
   });
 });
