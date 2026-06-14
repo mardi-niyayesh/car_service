@@ -178,5 +178,41 @@ describe('CommentService', (): void => {
       expect(result.data.comments).toEqual([]);
       expect(result.message).toBe('replies comment successfully found.');
     });
+
+    // success: with different pagination values (ascending order)
+    it('should return replies in ascending order when orderByLower is asc', async () => {
+      const paginationAsc: PaginationValidatorType = {
+        limit: 5,
+        offset: 0,
+        orderByLower: 'asc',
+        page: 1,
+        orderByUpper: 'ASC',
+      };
+
+      prisma.comment.count.mockResolvedValue(1);
+      prisma.comment.findMany.mockResolvedValue([mockReplies[0]] as unknown as Comment[]);
+
+      await service.findCommentReplies(mockParentCommentId, paginationAsc);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.findMany).toHaveBeenCalledWith({
+        where: {
+          parent_id: mockParentCommentId,
+          is_confirmed: true,
+        },
+        omit: {rate: true},
+        include: {
+          user: {
+            select: {id: true, display_name: true}
+          },
+          _count: {
+            select: {replies: {where: {is_confirmed: true}}}
+          }
+        },
+        take: 5,
+        skip: 0,
+        orderBy: {created_at: 'asc'}
+      });
+    });
   });
 });
