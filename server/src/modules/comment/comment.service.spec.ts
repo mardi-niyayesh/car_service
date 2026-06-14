@@ -1,10 +1,10 @@
-import {CommentService} from "./comment.service";
 import type {PrismaMock} from "@/types";
-import {afterEach, beforeEach, describe} from "vitest";
+import {CommentService} from "./comment.service";
 import {EventEmitter2} from "@nestjs/event-emitter";
-import {DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
-import {PrismaService} from "@/modules/prisma/prisma.service";
+import {afterEach, beforeEach, describe} from "vitest";
 import {RedisService} from "@/modules/redis/redis.service";
+import {PrismaService} from "@/modules/prisma/prisma.service";
+import {DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
 
 describe('CommentService', (): void => {
   let prisma: PrismaMock;
