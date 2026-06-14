@@ -3,11 +3,11 @@ import {CommentService} from "./comment.service";
 import {EventEmitter2} from "@nestjs/event-emitter";
 import type {PaginationValidatorType} from "@/common";
 import {RedisService} from "@/modules/redis/redis.service";
+import {type CreateCommentType} from "@/modules/comment/dto";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {Comment} from "@/modules/prisma/generated/client";
 import {afterEach, beforeEach, describe, it, expect} from "vitest";
 import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
-import {CreateCommentType} from "@/modules/comment/dto";
 
 describe('CommentService', (): void => {
   let prisma: PrismaMock;
