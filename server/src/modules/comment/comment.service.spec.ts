@@ -690,5 +690,39 @@ describe('CommentService', (): void => {
         }
       });
     });
+
+    // success: ascending order
+    it('should return comments in ascending order when orderByLower is asc', async () => {
+      const paginationAsc: CommentDto.FindUnconfirmedValidatorType = {
+        limit: 10,
+        offset: 0,
+        orderByLower: 'asc',
+        page: 1,
+        orderByUpper: 'ASC',
+      };
+
+      prisma.comment.findMany.mockResolvedValue(mockUnconfirmedComments as unknown as Comment[]);
+      prisma.comment.count.mockResolvedValue(2);
+
+      await service.findAllUnconfirmed(paginationAsc);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.findMany).toHaveBeenCalledWith({
+        where: {
+          is_confirmed: false,
+        },
+        orderBy: {
+          created_at: 'asc'
+        },
+        skip: 0,
+        take: 10,
+        include: {
+          user: {
+            omit: { password: true }
+          },
+          car: true
+        }
+      });
+    });
   });
 });
