@@ -296,5 +296,40 @@ describe('CommentService', (): void => {
       created_at: mockDate,
       updated_at: mockDate,
     };
+
+    // success: create top-level comment (no parent)
+    it('should create a top-level comment successfully when parent_id is null', async () => {
+      prisma.comment.create.mockResolvedValue(mockCreatedComment as unknown as Comment);
+
+      const result = await service.create(mockCarId, mockUserId, mockCreateCommentInput);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('comment');
+
+      // 2. Test success message
+      expect(result.message).toBe('comment created successfully.');
+
+      // 3. Test created comment data
+      const {comment} = result.data;
+      expect(comment.id).toBe(mockCreatedComment.id);
+      expect(comment.content).toBe(mockCreateCommentInput.content);
+      expect(comment.rate).toBe(mockCreateCommentInput.rate);
+      expect(comment.parent_id).toBeNull();
+      expect(comment.creator_id).toBe(mockUserId);
+      expect(comment.car_id).toBe(mockCarId);
+      expect(comment.is_confirmed).toBe(false);
+
+      // 4. Verify Prisma create call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.create).toHaveBeenCalledWith({
+        data: {
+          ...mockCreateCommentInput,
+          creator_id: mockUserId,
+          car_id: mockCarId
+        }
+      });
+    });
   });
 });
