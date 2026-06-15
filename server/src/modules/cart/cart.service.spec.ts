@@ -207,5 +207,16 @@ describe('CartService', (): void => {
         }
       });
     });
+
+    // error: user_id doesn't match any cart
+    it('should throw NotFoundException when user_id is invalid', async () => {
+      const invalidUserId = 'non-existent-user';
+
+      prisma.cart.findUnique.mockResolvedValue(null);
+
+      await expect(service.getCart(invalidUserId, mockUserAccess))
+        .rejects
+        .toThrow(NotFoundException);
+    });
   });
 });
