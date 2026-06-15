@@ -1,9 +1,9 @@
 import type {PrismaMock, UserAccess} from "@/types";
-import {afterEach, beforeEach, describe, it, expect} from "vitest";
+import {Cart} from "@/modules/prisma/generated/client";
 import {CartService} from "@/modules/cart/cart.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {Cart} from "@/modules/prisma/generated/client";
+import {afterEach, beforeEach, describe, it, expect} from "vitest";
 
 describe('CartService', (): void => {
   let prisma: PrismaMock;
