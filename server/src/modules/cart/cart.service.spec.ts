@@ -5,7 +5,7 @@ import {Cart} from "@/modules/prisma/generated/client";
 import {CartService} from "@/modules/cart/cart.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {afterEach, beforeEach, describe, it, expect} from "vitest";
+import {afterEach, beforeEach, describe, it, expect, vi} from "vitest";
 
 describe('CartService', (): void => {
   let prisma: PrismaMock;
@@ -14,6 +14,9 @@ describe('CartService', (): void => {
   beforeEach((): void => {
     prisma = mockDeep<PrismaService>();
     service = new CartService(prisma);
+
+    // mock transaction
+    prisma.$transaction.mockImplementation(async (fn) => fn(prisma));
   });
 
   afterEach((): void => {
@@ -270,7 +273,6 @@ describe('CartService', (): void => {
       in_rent: false,
       image: 'bmw-x5.png',
       category_id: 'cat-123',
-      creator_id: 'user-creator',
       created_at: mockDate,
       updated_at: mockDate,
       category: {
@@ -303,5 +305,52 @@ describe('CartService', (): void => {
       created_at: mockDate,
       updated_at: mockDate,
     };
+
+    // success
+    it('should add car to cart successfully when no date conflicts exist', async () => {
+      prisma.$transaction.mockImplementation(async (callback) => {
+        const tx = {
+          car: {
+            findUnique: vi.fn().mockResolvedValue(mockCar),
+          },
+          user: {
+            findUnique: vi.fn().mockResolvedValue(mockUserWithCart),
+          },
+          carRent: {
+            create: vi.fn().mockResolvedValue(mockCreatedCarRent),
+          },
+          cart: {
+            update: vi.fn().mockResolvedValue({}),
+          },
+        } as unknown as PrismaService;
+
+        return callback(tx);
+      });
+
+      const result = await service.addToCart(mockUserId, mockAddToCartInput);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('carRent');
+
+      // 2. Test message
+      expect(result.message).toBe('car rent successfully add to your cart');
+
+      // 3. Test carRent data
+      const {carRent} = result.data;
+      expect(carRent.id).toBe(mockCreatedCarRent.id);
+      expect(carRent.price).toBe(400000);
+      expect(carRent.description).toBe(mockAddToCartInput.description);
+      expect(carRent.status).toBe('PENDING');
+
+      // 4. Test car is included in response
+      expect(carRent.car).toBeDefined();
+      expect(carRent.car.id).toBe(mockCarId);
+      expect(carRent.car.name).toBe('BMW X5');
+      expect(carRent.car.slug).toBe('bmw-x5');
+      expect(carRent.car).not.toHaveProperty('creator_id');
+      expect(carRent.car.category).not.toHaveProperty('creator_id');
+    });
   });
 });
