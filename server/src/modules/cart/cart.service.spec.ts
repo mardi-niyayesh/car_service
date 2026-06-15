@@ -494,10 +494,10 @@ describe('CartService', (): void => {
 
       prisma.$transaction.mockImplementation(async (fn) => {
         const tx = {
-          car: { findUnique: vi.fn().mockResolvedValue(mockCar) },
-          user: { findUnique: vi.fn().mockResolvedValue(mockUserWithCart) },
-          carRent: { create: vi.fn().mockResolvedValue(mockCreatedCarRent) },
-          cart: { update: vi.fn().mockResolvedValue({}) },
+          car: {findUnique: vi.fn().mockResolvedValue(mockCar)},
+          user: {findUnique: vi.fn().mockResolvedValue(mockUserWithCart)},
+          carRent: {create: vi.fn().mockResolvedValue(mockCreatedCarRent)},
+          cart: {update: vi.fn().mockResolvedValue({})},
         } as unknown as PrismaService;
 
         return fn(tx);
@@ -506,6 +506,33 @@ describe('CartService', (): void => {
       const result = await service.addToCart(mockUserId, mockAddToCartInput);
 
       expect(result.data.carRent.price).toBe(expectedPrice);
+    });
+
+    // verify cart total_price increment
+    it('should increment cart total_price by rent price', async () => {
+      let cartUpdateCalledWith: null | object = null;
+
+      prisma.$transaction.mockImplementation(async (fn) => {
+        const tx = {
+          car: {findUnique: vi.fn().mockResolvedValue(mockCar)},
+          user: {findUnique: vi.fn().mockResolvedValue(mockUserWithCart)},
+          carRent: {create: vi.fn().mockResolvedValue(mockCreatedCarRent)},
+          cart: {
+            update: vi.fn().mockImplementation(({data}: { data: object; }) => {
+              cartUpdateCalledWith = data;
+              return Promise.resolve({});
+            })
+          },
+        } as unknown as PrismaService;
+
+        return fn(tx);
+      });
+
+      await service.addToCart(mockUserId, mockAddToCartInput);
+
+      expect(cartUpdateCalledWith).toEqual({
+        total_price: {increment: 400000}
+      });
     });
   });
 });
