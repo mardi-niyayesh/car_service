@@ -238,4 +238,12 @@ describe('CartService', (): void => {
       expect(result.data.cart.carRents[0].car).toBeNull();
     });
   });
+
+  /** ================================================
+   * Add To Cart
+   * ================================================
+   */
+  describe('addToCart()', (): void => {
+
+  });
 });
