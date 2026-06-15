@@ -218,5 +218,24 @@ describe('CartService', (): void => {
         .rejects
         .toThrow(NotFoundException);
     });
+
+    // edge case: cart exists but carRents have null car (should not happen but handle)
+    it('should handle cart with carRents that have missing car data', async () => {
+      const cartWithNullCar = {
+        ...mockCart,
+        carRents: [
+          {
+            ...mockCart.carRents[0],
+            car: null,
+          },
+        ],
+      };
+
+      prisma.cart.findUnique.mockResolvedValue(cartWithNullCar as unknown as Cart);
+
+      const result = await service.getCart(mockUserId, mockUserAccess);
+
+      expect(result.data.cart.carRents[0].car).toBeNull();
+    });
   });
 });
