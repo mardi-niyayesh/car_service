@@ -16,4 +16,12 @@ describe('CartService', (): void => {
   afterEach((): void => {
     mockReset(prisma);
   });
+
+  /** ================================================
+   * Get Cart
+   * ================================================
+   */
+  describe('getCart()', (): void => {
+
+  });
 });
