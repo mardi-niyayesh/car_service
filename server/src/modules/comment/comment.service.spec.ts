@@ -960,5 +960,18 @@ describe('CommentService', (): void => {
           }
         });
     });
+
+    // error: confirm comment that was already confirmed (is_confirmed: true in where clause)
+    it('should throw NotFoundException when trying to confirm already confirmed comment', async () => {
+      // Even if comment exists, if is_confirmed: true, update won't find it
+      const prismaError = new Error('Record not found');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
+
+      prisma.comment.update.mockRejectedValue(prismaError);
+
+      await expect(service.moderateComment(mockCommentId, 'confirm'))
+        .rejects
+        .toThrow(NotFoundException);
+    });
   });
 });
