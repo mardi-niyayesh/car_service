@@ -846,5 +846,42 @@ describe('CommentService', (): void => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(redis.deletePrefix).toHaveBeenCalled();
     });
+
+    // success: confirm reply comment (has parent) - NO rate update event
+    it('should confirm reply comment without emitting UPDATE_CAR_RATE event', async () => {
+      const mockReplyComment = {
+        ...mockUnconfirmedComment,
+        id: 'reply-789',
+        parent_id: 'parent-comment-123',
+        rate: undefined, // replies don't have rate
+      };
+
+      const mockConfirmedReply = {
+        ...mockReplyComment,
+        is_confirmed: true,
+      };
+
+      prisma.comment.update.mockResolvedValue(mockConfirmedReply as unknown as Comment);
+      redis.deletePrefix.mockResolvedValue(1);
+
+      const result = await service.moderateComment('reply-789', 'confirm') as unknown as ApiResponse<CreateCommentResponse>;
+
+      expect(result.message).toBe('comment successfully confirmed.');
+      expect(result.data.comment.is_confirmed).toBe(true);
+
+      // Verify event was NOT emitted (reply has parent_id)
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(event.emit).not.toHaveBeenCalledWith(eventsEmitter.UPDATE_CAR_RATE, expect.anything());
+
+      // Verify update was called with correct where
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.update).toHaveBeenCalledWith({
+        where: {
+          id: 'reply-789',
+          is_confirmed: false
+        },
+        data: { is_confirmed: true },
+      });
+    });
   });
 });
