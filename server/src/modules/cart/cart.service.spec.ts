@@ -666,5 +666,18 @@ describe('CartService', (): void => {
         .rejects
         .toThrow(NotFoundException);
     });
+
+    // error: invalid rent_id format
+    it('should throw NotFoundException when rent_id does not exist', async () => {
+      const invalidRentId = 'non-existent-rent';
+      const prismaError = new Error('Record not found');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
+
+      prisma.carRent.delete.mockRejectedValue(prismaError);
+
+      await expect(service.removeFromCart(mockUserId, invalidRentId))
+        .rejects
+        .toThrow(NotFoundException);
+    });
   });
 });
