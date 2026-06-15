@@ -939,5 +939,26 @@ describe('CommentService', (): void => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(event.emit).not.toHaveBeenCalled();
     });
+
+    // error: reject comment that doesn't exist or already confirmed
+    it('should throw NotFoundException when rejecting non-existent or already confirmed comment', async () => {
+      const prismaError = new Error('Record not found');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
+
+      prisma.comment.delete.mockRejectedValue(prismaError);
+
+      await expect(service.moderateComment(mockCommentId, 'reject'))
+        .rejects
+        .toThrow(NotFoundException);
+
+      await expect(service.moderateComment(mockCommentId, 'reject'))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: 'comment not found in database, or already is confirmed',
+            error: 'comment not found'
+          }
+        });
+    });
   });
 });
