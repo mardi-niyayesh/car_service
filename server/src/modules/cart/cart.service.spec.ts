@@ -1,6 +1,6 @@
 import * as CartDto from "./dto";
 import type {PrismaMock, UserAccess} from "@/types";
-import {CarRent, Cart} from "@/modules/prisma/generated/client";
+import {CarRent, Cart, Prisma} from "@/modules/prisma/generated/client";
 import {CartService} from "@/modules/cart/cart.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
@@ -625,6 +625,31 @@ describe('CartService', (): void => {
         where: {user_id: mockUserId},
         data: {total_price: {decrement: 400000}}
       });
+    });
+
+    // error: rent not found in user's cart
+    it('should throw NotFoundException when rent does not belong to user or does not exist', async () => {
+      const prismaError = new Error('Record not found');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
+
+      prisma.carRent.delete.mockRejectedValue(prismaError);
+
+      await expect(service.removeFromCart(mockUserId, mockRentId))
+        .rejects
+        .toThrow(NotFoundException);
+
+      await expect(service.removeFromCart(mockUserId, mockRentId))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: 'Car Rent not found in your cart, please check later.',
+            error: 'Car Rent not found'
+          }
+        });
+
+      // Verify cart.update was NOT called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.cart.update).not.toHaveBeenCalled();
     });
   });
 });
