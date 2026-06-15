@@ -1,5 +1,5 @@
 import * as CartDto from "./dto";
-import {NotFoundException} from "@nestjs/common";
+import {ConflictException, NotFoundException} from "@nestjs/common";
 import type {PrismaMock, UserAccess} from "@/types";
 import {Cart} from "@/modules/prisma/generated/client";
 import {CartService} from "@/modules/cart/cart.service";
@@ -373,6 +373,41 @@ describe('CartService', (): void => {
           response: {
             message: 'This car slug does not exist in database',
             error: 'Car slug not found.'
+          }
+        });
+    });
+
+    // error: date conflict (car already rented in period)
+    it('should throw ConflictException when car has overlapping rental dates', async () => {
+      const conflictingCar = {
+        ...mockCar,
+        carRents: [
+          {
+            id: 'existing-rent',
+            start_date: new Date('2024-12-21'),
+            end_date: new Date('2024-12-23'),
+          },
+        ],
+      };
+
+      prisma.$transaction.mockImplementation(async (fn) => {
+        const tx = {
+          car: { findUnique: vi.fn().mockResolvedValue(conflictingCar) },
+        } as unknown as PrismaService;
+
+        return fn(tx);
+      });
+
+      await expect(service.addToCart(mockUserId, mockAddToCartInput))
+        .rejects
+        .toThrow(ConflictException);
+
+      await expect(service.addToCart(mockUserId, mockAddToCartInput))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: 'The selected car is already rented for all or part of the requested period. Please choose different dates or another car.',
+            error: 'Car Rental Conflict'
           }
         });
     });
