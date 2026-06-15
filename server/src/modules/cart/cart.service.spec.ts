@@ -443,5 +443,21 @@ describe('CartService', (): void => {
           }
         });
     });
+
+    // error: user not found
+    it('should throw NotFoundException when user does not exist', async () => {
+      prisma.$transaction.mockImplementation(async (fn) => {
+        const tx = {
+          car: {findUnique: vi.fn().mockResolvedValue(mockCar)},
+          user: {findUnique: vi.fn().mockResolvedValue(null)},
+        } as unknown as PrismaService;
+
+        return fn(tx);
+      });
+
+      await expect(service.addToCart(mockUserId, mockAddToCartInput))
+        .rejects
+        .toThrow(NotFoundException);
+    });
   });
 });
