@@ -4,6 +4,7 @@ import {CartService} from "@/modules/cart/cart.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {afterEach, beforeEach, describe, it, expect} from "vitest";
+import {NotFoundException} from "@nestjs/common";
 
 describe('CartService', (): void => {
   let prisma: PrismaMock;
@@ -167,6 +168,44 @@ describe('CartService', (): void => {
       expect(result.data.cart.carRents).toEqual([]);
       expect(result.data.cart.total_price).toBe(0);
       expect(result.message).toBe('Cart successfully found');
+    });
+
+    // error: cart not found
+    it('should throw NotFoundException when cart does not exist for user', async () => {
+      prisma.cart.findUnique.mockResolvedValue(null);
+
+      await expect(service.getCart(mockUserId, mockUserAccess))
+        .rejects
+        .toThrow(NotFoundException);
+
+      await expect(service.getCart(mockUserId, mockUserAccess))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: 'Cart not found in database, please contact to administrator',
+            error: 'Cart not found.'
+          }
+        });
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.cart.findUnique).toHaveBeenCalledWith({
+        where: {user_id: mockUserId},
+        include: {
+          carRents: {
+            include: {
+              car: {
+                select: {
+                  name: true,
+                  slug: true,
+                  image: true,
+                  company: true,
+                  price_per_day: true,
+                }
+              }
+            }
+          }
+        }
+      });
     });
   });
 });
