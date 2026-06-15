@@ -775,4 +775,32 @@ describe('CommentService', (): void => {
       expect(result.data.comments).toEqual([]);
     });
   });
+
+  /** ================================================
+   * Moderate Comment (Confirm/Reject)
+   * ================================================
+   */
+  describe("moderateComment()", (): void => {
+    const mockCommentId = 'comment-456';
+    const mockCarId = 'car-789';
+    const mockDate = new Date();
+
+    const mockUnconfirmedComment = {
+      id: mockCommentId,
+      content: 'This car is amazing!',
+      rate: 5,
+      parent_id: null,
+      creator_id: 'user-123',
+      car_id: mockCarId,
+      is_confirmed: false,
+      created_at: mockDate,
+      updated_at: mockDate,
+    };
+
+    const mockConfirmedComment = {
+      ...mockUnconfirmedComment,
+      is_confirmed: true,
+      updated_at: new Date(),
+    };
+  });
 });
