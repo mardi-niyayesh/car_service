@@ -973,5 +973,29 @@ describe('CommentService', (): void => {
         .rejects
         .toThrow(NotFoundException);
     });
+
+    // edge case: confirm comment with parent_id = null but car doesn't exist (event still emits)
+    it('should emit event even if car_id is invalid (event emitter handles it)', async () => {
+      const commentWithInvalidCar = {
+        ...mockUnconfirmedComment,
+        car_id: 'invalid-car-id',
+      };
+
+      const confirmedWithInvalidCar = {
+        ...commentWithInvalidCar,
+        is_confirmed: true,
+      };
+
+      prisma.comment.update.mockResolvedValue(confirmedWithInvalidCar as unknown as Comment);
+      redis.deletePrefix.mockResolvedValue(1);
+
+      await service.moderateComment(mockCommentId, 'confirm');
+
+      // Event should still be emitted (service doesn't validate car existence)
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(event.emit).toHaveBeenCalledWith(eventsEmitter.UPDATE_CAR_RATE, {
+        car_id: 'invalid-car-id'
+      });
+    });
   });
 });
