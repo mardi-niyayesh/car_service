@@ -1,11 +1,11 @@
 import * as CartDto from "./dto";
 import type {PrismaMock, UserAccess} from "@/types";
-import {CarRent, Cart, Prisma} from "@/modules/prisma/generated/client";
 import {CartService} from "@/modules/cart/cart.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, NotFoundException} from "@nestjs/common";
 import {afterEach, beforeEach, describe, it, expect, vi} from "vitest";
+import type {CarRent, Cart, Prisma} from "@/modules/prisma/generated/client";
 
 describe('CartService', (): void => {
   let prisma: PrismaMock;
