@@ -679,5 +679,20 @@ describe('CartService', (): void => {
         .rejects
         .toThrow(NotFoundException);
     });
+
+    // edge case: cart exists but rent_id is valid and belongs to user
+    it('should successfully remove rent when cart exists and rent belongs to user', async () => {
+      prisma.carRent.delete.mockResolvedValue(mockCarRent as unknown as CarRent);
+      prisma.cart.update.mockResolvedValue({} as unknown as Cart);
+
+      const result = await service.removeFromCart(mockUserId, mockRentId);
+
+      expect(result.message).toBe('car rent successfully removed from the cart');
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.carRent.delete).toHaveBeenCalledTimes(1);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.cart.update).toHaveBeenCalledTimes(1);
+    });
   });
 });
