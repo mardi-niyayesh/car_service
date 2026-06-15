@@ -1,6 +1,6 @@
 import * as CartDto from "./dto";
 import type {PrismaMock, UserAccess} from "@/types";
-import {Cart} from "@/modules/prisma/generated/client";
+import {CarRent, Cart} from "@/modules/prisma/generated/client";
 import {CartService} from "@/modules/cart/cart.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
@@ -558,5 +558,51 @@ describe('CartService', (): void => {
       created_at: mockDate,
       updated_at: mockDate,
     };
+
+    // success
+    it('should remove car rent from cart and decrement total_price', async () => {
+      prisma.carRent.delete.mockResolvedValue(mockCarRent as unknown as CarRent);
+      prisma.cart.update.mockResolvedValue({} as unknown as Cart);
+
+      const result = await service.removeFromCart(mockUserId, mockRentId);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('carRent');
+
+      // 2. Test message
+      expect(result.message).toBe('car rent successfully removed from the cart');
+
+      // 3. Test returned carRent data
+      const {carRent} = result.data;
+      expect(carRent.id).toBe(mockRentId);
+      expect(carRent.price).toBe(400000);
+      expect(carRent.status).toBe('PENDING');
+
+      // 4. Verify delete call with correct where clause
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.carRent.delete).toHaveBeenCalledWith({
+        where: {
+          id: mockRentId,
+          cart: {
+            user_id: mockUserId
+          }
+        }
+      });
+
+      // 5. Verify cart update with decrement
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.cart.update).toHaveBeenCalledWith({
+        where: {
+          user_id: mockUserId
+        },
+        data: {
+          total_price: {
+            decrement: mockCarRent.price
+          }
+        }
+      });
+    });
   });
 });
