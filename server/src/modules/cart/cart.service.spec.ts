@@ -487,5 +487,25 @@ describe('CartService', (): void => {
 
       expect(result.data.carRent.description).toBeNull();
     });
+
+    // verify price calculation
+    it('should calculate price correctly as daysCount * car.price_per_day', async () => {
+      const expectedPrice = mockAddToCartInput.daysCount * mockCar.price_per_day; // 2 * 200000 = 400000
+
+      prisma.$transaction.mockImplementation(async (fn) => {
+        const tx = {
+          car: { findUnique: vi.fn().mockResolvedValue(mockCar) },
+          user: { findUnique: vi.fn().mockResolvedValue(mockUserWithCart) },
+          carRent: { create: vi.fn().mockResolvedValue(mockCreatedCarRent) },
+          cart: { update: vi.fn().mockResolvedValue({}) },
+        } as unknown as PrismaService;
+
+        return fn(tx);
+      });
+
+      const result = await service.addToCart(mockUserId, mockAddToCartInput);
+
+      expect(result.data.carRent.price).toBe(expectedPrice);
+    });
   });
 });
