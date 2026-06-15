@@ -1,10 +1,10 @@
 import * as CartDto from "./dto";
-import {ConflictException, NotFoundException} from "@nestjs/common";
 import type {PrismaMock, UserAccess} from "@/types";
 import {Cart} from "@/modules/prisma/generated/client";
 import {CartService} from "@/modules/cart/cart.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {ConflictException, NotFoundException} from "@nestjs/common";
 import {afterEach, beforeEach, describe, it, expect, vi} from "vitest";
 
 describe('CartService', (): void => {
