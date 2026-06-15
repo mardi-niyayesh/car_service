@@ -1,5 +1,5 @@
-import {afterEach, beforeEach, describe} from "vitest";
 import type {PrismaMock} from "@/types";
+import {afterEach, beforeEach, describe} from "vitest";
 import {CartService} from "@/modules/cart/cart.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
