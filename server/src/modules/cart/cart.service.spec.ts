@@ -459,5 +459,33 @@ describe('CartService', (): void => {
         .rejects
         .toThrow(NotFoundException);
     });
+
+    // success: without description
+    it('should add car to cart without description when not provided', async () => {
+      const inputWithoutDesc = {
+        ...mockAddToCartInput,
+        description: undefined,
+      };
+
+      const createdRentWithoutDesc = {
+        ...mockCreatedCarRent,
+        description: null,
+      };
+
+      prisma.$transaction.mockImplementation(async (fn) => {
+        const tx = {
+          car: {findUnique: vi.fn().mockResolvedValue(mockCar)},
+          user: {findUnique: vi.fn().mockResolvedValue(mockUserWithCart)},
+          carRent: {create: vi.fn().mockResolvedValue(createdRentWithoutDesc)},
+          cart: {update: vi.fn().mockResolvedValue({})},
+        } as unknown as PrismaService;
+
+        return fn(tx);
+      });
+
+      const result = await service.addToCart(mockUserId, inputWithoutDesc);
+
+      expect(result.data.carRent.description).toBeNull();
+    });
   });
 });
