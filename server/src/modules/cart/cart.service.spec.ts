@@ -1,3 +1,4 @@
+import * as CartDto from "./dto";
 import {NotFoundException} from "@nestjs/common";
 import type {PrismaMock, UserAccess} from "@/types";
 import {Cart} from "@/modules/prisma/generated/client";
@@ -244,6 +245,63 @@ describe('CartService', (): void => {
    * ================================================
    */
   describe('addToCart()', (): void => {
+    const mockUserId = 'user-123';
+    const mockCartId = 'cart-456';
+    const mockCarId = 'car-789';
+    const mockDate = new Date();
 
+    const mockAddToCartInput: CartDto.AddToCartType = {
+      car_slug: 'bmw-x5',
+      start_date: '2024-12-20',
+      end_date: '2024-12-22',
+      description: 'Need car for business trip',
+      daysCount: 2,
+    };
+
+    const mockCar = {
+      id: mockCarId,
+      name: 'BMW X5',
+      slug: 'bmw-x5',
+      company: 'BMW',
+      price_per_day: 200000,
+      description: 'Luxury SUV',
+      rate: 5,
+      can_rent: true,
+      in_rent: false,
+      image: 'bmw-x5.png',
+      category_id: 'cat-123',
+      creator_id: 'user-creator',
+      created_at: mockDate,
+      updated_at: mockDate,
+      category: {
+        id: 'cat-123',
+        name: 'SUV',
+        slug: 'suv',
+        description: 'SUV category',
+      },
+      carRents: [], // no conflicting rents
+    };
+
+    const mockUserWithCart = {
+      id: mockUserId,
+      email: 'john@example.com',
+      display_name: 'John Doe',
+      cart: {
+        id: mockCartId,
+      },
+    };
+
+    const mockCreatedCarRent = {
+      id: 'rent-789',
+      price: 400000, // 2 days * 200000
+      description: 'Need car for business trip',
+      car_id: mockCarId,
+      end_date: new Date('2024-12-22'),
+      start_date: new Date('2024-12-20'),
+      cart_id: mockCartId,
+      status: 'PENDING',
+      created_at: mockDate,
+      updated_at: mockDate,
+    };
   });
 });
