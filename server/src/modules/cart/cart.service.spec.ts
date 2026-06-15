@@ -352,5 +352,29 @@ describe('CartService', (): void => {
       expect(carRent.car).not.toHaveProperty('creator_id');
       expect(carRent.car.category).not.toHaveProperty('creator_id');
     });
+
+    // error: car not found
+    it('should throw NotFoundException when car slug does not exist', async () => {
+      prisma.$transaction.mockImplementation(async (fn) => {
+        const tx = {
+          car: {findUnique: vi.fn().mockResolvedValue(null)},
+        } as unknown as PrismaService;
+
+        return fn(tx);
+      });
+
+      await expect(service.addToCart(mockUserId, mockAddToCartInput))
+        .rejects
+        .toThrow(NotFoundException);
+
+      await expect(service.addToCart(mockUserId, mockAddToCartInput))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: 'This car slug does not exist in database',
+            error: 'Car slug not found.'
+          }
+        });
+    });
   });
 });
