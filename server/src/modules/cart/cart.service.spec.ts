@@ -651,5 +651,20 @@ describe('CartService', (): void => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.cart.update).not.toHaveBeenCalled();
     });
+
+    // error: rent belongs to different user
+    it('should throw NotFoundException when rent belongs to another user', async () => {
+      // The where clause includes cart.user_id, so Prisma won't find it
+      const prismaError = new Error('Record not found');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
+
+      prisma.carRent.delete.mockRejectedValue(prismaError);
+
+      const differentUserId = 'user-456';
+
+      await expect(service.removeFromCart(differentUserId, mockRentId))
+        .rejects
+        .toThrow(NotFoundException);
+    });
   });
 });
