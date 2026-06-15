@@ -17,11 +17,9 @@ const CommentItem = ({
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-blue-600">
               <FaUser size={14} />
             </div>
-            <h1 className="font-medium text-gray-800 text-sm md:text-base">
-              {comment.user.display_name}
-            </h1>
+            <h1 className=" text-gray-800  ">{comment.user.display_name}</h1>
           </div>
-          <p className="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-full">
+          <p className=" text-gray-400 bg-gray-50 px-2 py-1 rounded-full">
             {new Date(comment.created_at).toLocaleDateString("fa-IR")}
           </p>
         </div>
@@ -36,34 +34,31 @@ const CommentItem = ({
           ))}
         </div>
 
-        <p className="text-gray-700 mb-4 leading-relaxed text-sm md:text-base">
-          {comment.content}
-        </p>
+        <p className="text-gray-700 mb-4 leading-relaxed ">{comment.content}</p>
 
         <div className="flex justify-between items-center border-t border-gray-50 pt-3 mt-1">
           <div className="flex gap-4 text-gray-500">
-            <button className="flex items-center gap-1 hover:text-blue-500 transition-colors duration-200 cursor-pointer">
+            <button className="flex items-center justify-center gap-1 hover:text-blue-500 transition-colors duration-200 cursor-pointer">
               <FaThumbsUp size={18} />
-              <span className="text-xs">لایک</span>
+              <span className="text-[18px]">لایک</span>
             </button>
-            <button className="flex items-center gap-1 hover:text-red-500 transition-colors duration-200 cursor-pointer">
-              <FaThumbsDown size={18} />
-              <span className="text-xs">دیسلایک</span>
+            <button className="flex items-center justify-center gap-1 hover:text-red-500 transition-colors duration-200 cursor-pointer">
+              <FaThumbsDown size={18}  />
+              <span className="text-[18px]">دیسلایک</span>
             </button>
           </div>
           {onReply && (
             <button
               onClick={() => onReply(comment.id)}
-              className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800 px-3 py-1.5 rounded-full transition-all duration-200 flex items-center gap-1"
+              className=" bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800 px-3 py-1.5 rounded-full transition-all duration-200 flex items-center gap-1"
             >
-              <FaReply size={15}/>
-              <span className="font-bold">پاسخ</span>
+              <FaReply size={15} />
+              <span >پاسخ</span>
             </button>
           )}
         </div>
       </div>
 
-    
       {comment.replies && comment.replies.length > 0 && (
         <div className="mr-6 border-r-2 border-blue-100 pr-4 mt-2 space-y-4">
           {comment.replies.map((reply) => (

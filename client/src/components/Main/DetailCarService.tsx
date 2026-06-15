@@ -83,7 +83,7 @@ const DetailCarService = () => {
           <div className="border-b-2 border-gray-200 my-3"></div>
           <div
             onClick={() => openModal(item)}
-            className="flex font-medium items-center justify-between text-sm  text-gray-500 hover:text-blue-800 cursor-pointer"
+            className="flex font-medium items-center justify-between   text-gray-500 hover:text-blue-800 cursor-pointer"
           >
             <div>جزئیات بیشتر</div>
             <FaArrowLeft size={24} opacity={0.8} />
