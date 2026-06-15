@@ -392,7 +392,7 @@ describe('CartService', (): void => {
 
       prisma.$transaction.mockImplementation(async (fn) => {
         const tx = {
-          car: { findUnique: vi.fn().mockResolvedValue(conflictingCar) },
+          car: {findUnique: vi.fn().mockResolvedValue(conflictingCar)},
         } as unknown as PrismaService;
 
         return fn(tx);
@@ -408,6 +408,38 @@ describe('CartService', (): void => {
           response: {
             message: 'The selected car is already rented for all or part of the requested period. Please choose different dates or another car.',
             error: 'Car Rental Conflict'
+          }
+        });
+    });
+
+    // error: user cart not found
+    it('should throw NotFoundException when user has no cart', async () => {
+      const userWithoutCart = {
+        id: mockUserId,
+        email: 'john@example.com',
+        display_name: 'John Doe',
+        cart: null,
+      };
+
+      prisma.$transaction.mockImplementation(async (fn) => {
+        const tx = {
+          car: {findUnique: vi.fn().mockResolvedValue(mockCar)},
+          user: {findUnique: vi.fn().mockResolvedValue(userWithoutCart)},
+        } as unknown as PrismaService;
+
+        return fn(tx);
+      });
+
+      await expect(service.addToCart(mockUserId, mockAddToCartInput))
+        .rejects
+        .toThrow(NotFoundException);
+
+      await expect(service.addToCart(mockUserId, mockAddToCartInput))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: 'User Cart does not exist in database, please contact to administrator',
+            error: 'User Cart not found.'
           }
         });
     });
