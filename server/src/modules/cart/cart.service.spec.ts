@@ -541,6 +541,22 @@ describe('CartService', (): void => {
    *  ================================================
    */
   describe('removeFromCart()', (): void => {
+    const mockUserId = 'user-123';
+    const mockRentId = 'rent-789';
+    const mockCartId = 'cart-456';
+    const mockDate = new Date();
 
+    const mockCarRent = {
+      id: mockRentId,
+      price: 400000,
+      description: 'Need car for business trip',
+      car_id: 'car-789',
+      end_date: new Date('2024-12-22'),
+      start_date: new Date('2024-12-20'),
+      cart_id: mockCartId,
+      status: 'PENDING',
+      created_at: mockDate,
+      updated_at: mockDate,
+    };
   });
 });
