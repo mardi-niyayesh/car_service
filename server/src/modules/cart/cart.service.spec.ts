@@ -148,5 +148,25 @@ describe('CartService', (): void => {
         }
       });
     });
+
+    // success: empty cart (no carRents)
+    it('should return empty cart when user has no items in cart', async () => {
+      const emptyCart = {
+        id: 'cart-456',
+        user_id: mockUserId,
+        total_price: 0,
+        created_at: mockDate,
+        updated_at: mockDate,
+        carRents: [],
+      };
+
+      prisma.cart.findUnique.mockResolvedValue(emptyCart as unknown as Cart);
+
+      const result = await service.getCart(mockUserId, mockUserAccess);
+
+      expect(result.data.cart.carRents).toEqual([]);
+      expect(result.data.cart.total_price).toBe(0);
+      expect(result.message).toBe('Cart successfully found');
+    });
   });
 });
