@@ -1,9 +1,9 @@
-import type {PrismaMock} from "@/types";
+import type {ApiResponse, CreateCommentResponse, PrismaMock} from "@/types";
 import {CommentService} from "./comment.service";
 import {NotFoundException} from "@nestjs/common";
 import * as CommentDto from "@/modules/comment/dto";
 import {EventEmitter2} from "@nestjs/event-emitter";
-import type {PaginationValidatorType} from "@/common";
+import {eventsEmitter, PaginationValidatorType} from "@/common";
 import {RedisService} from "@/modules/redis/redis.service";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {afterEach, beforeEach, describe, it, expect} from "vitest";
@@ -802,5 +802,49 @@ describe('CommentService', (): void => {
       is_confirmed: true,
       updated_at: new Date(),
     };
+
+    // success: confirm comment (top-level, triggers rate update)
+    it('should confirm comment and emit UPDATE_CAR_RATE event when comment has no parent', async () => {
+      prisma.comment.update.mockResolvedValue(mockConfirmedComment as unknown as Comment);
+      redis.deletePrefix.mockResolvedValue(1);
+
+      const result = await service.moderateComment(mockCommentId, 'confirm') as unknown as ApiResponse<CreateCommentResponse>;
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('comment');
+
+      // 2. Test success message
+      expect(result.message).toBe('comment successfully confirmed.');
+
+      // 3. Test comment is confirmed
+      const {comment} = result.data;
+      expect(comment.id).toBe(mockCommentId);
+      expect(comment.is_confirmed).toBe(true);
+
+      // 4. Verify update call with correct where clause (requires is_confirmed: false)
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.update).toHaveBeenCalledWith({
+        where: {
+          id: mockCommentId,
+          is_confirmed: false
+        },
+        data: {
+          is_confirmed: true
+        },
+      });
+
+
+      // 5. Verify event emitted for top-level comment (parent_id === null)
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(event.emit).toHaveBeenCalledWith(eventsEmitter.UPDATE_CAR_RATE, {
+        car_id: mockCarId
+      });
+
+      // 6. Verify cache invalidation
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(redis.deletePrefix).toHaveBeenCalled();
+    });
   });
 });
