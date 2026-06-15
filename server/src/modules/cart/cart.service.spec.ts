@@ -604,5 +604,27 @@ describe('CartService', (): void => {
         }
       });
     });
+
+    // success: rent removed and cart total_price updated correctly
+    it('should decrement cart total_price by exact rent price', async () => {
+      prisma.carRent.delete.mockResolvedValue(mockCarRent as unknown as CarRent);
+
+      const updateSpy = vi.fn().mockResolvedValue({
+        id: mockCartId,
+        user_id: mockUserId,
+        total_price: 150000,
+        created_at: mockDate,
+        updated_at: mockDate,
+      });
+
+      prisma.cart.update.mockImplementation(updateSpy);
+
+      await service.removeFromCart(mockUserId, mockRentId);
+
+      expect(updateSpy).toHaveBeenCalledWith({
+        where: {user_id: mockUserId},
+        data: {total_price: {decrement: 400000}}
+      });
+    });
   });
 });
