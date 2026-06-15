@@ -880,8 +880,39 @@ describe('CommentService', (): void => {
           id: 'reply-789',
           is_confirmed: false
         },
-        data: { is_confirmed: true },
+        data: {is_confirmed: true},
       });
+    });
+
+    // success: reject comment (delete)
+    it('should reject comment by deleting it', async () => {
+      prisma.comment.delete.mockResolvedValue(mockUnconfirmedComment as unknown as Comment);
+
+      const result = await service.moderateComment(mockCommentId, 'reject') as unknown as ApiResponse;
+
+      // 1. Test response (no data)
+      expect(result).toHaveProperty('message');
+      expect(result.message).toBe('comment successfully deleted.');
+      expect((result as ApiResponse & {
+        data: unknown;
+      }).data).toBeUndefined();
+
+      // 2. Verify delete call with correct where (requires is_confirmed: false)
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.comment.delete).toHaveBeenCalledWith({
+        where: {
+          id: mockCommentId,
+          is_confirmed: false
+        }
+      });
+
+      // 3. Verify event NOT emitted for rejection
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(event.emit).not.toHaveBeenCalled();
+
+      // 4. Verify cache NOT invalidated for rejection
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(redis.deletePrefix).not.toHaveBeenCalled();
     });
   });
 });
