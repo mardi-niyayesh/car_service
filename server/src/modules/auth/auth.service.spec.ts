@@ -3,7 +3,7 @@ import {exampleDate} from "@/lib";
 import {JwtService} from "@nestjs/jwt";
 import {ConfigService} from "@nestjs/config";
 import {EventEmitter2} from "@nestjs/event-emitter";
-import {NotFoundException, UnauthorizedException} from "@nestjs/common";
+import {ConflictException, NotFoundException, UnauthorizedException} from "@nestjs/common";
 import {AuthService} from "@/modules/auth/auth.service";
 import {EmailService} from "@/modules/email/email.service";
 import {PERMISSIONS, ROLES, eventsEmitter} from "@/common";
@@ -752,6 +752,47 @@ describe(AuthService.name, (): void => {
         });
 
       // Verify token was NOT created
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.passwordToken.create).not.toHaveBeenCalled();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(email.forgotPassword).not.toHaveBeenCalled();
+    });
+
+    // error: active token already exists
+    it('should throw ConflictException when user already has an active password token', async () => {
+      const userWithActiveToken = {
+        ...mockUser,
+        passwordToken: {
+          id: 'token-123',
+          token: 'existing_hashed_token',
+          expires_at: new Date(Date.now() + 15 * 60 * 1000),
+          created_at: new Date(),
+          updated_at: new Date(),
+          user_id: mockUser.id,
+        },
+      };
+
+      prisma.$transaction.mockImplementation(async (fn) => {
+        const tx = {
+          user: { findUnique: vi.fn().mockResolvedValue(userWithActiveToken) },
+        } as unknown as PrismaService;
+        return fn(tx);
+      });
+
+      await expect(service.forgotPassword(mockEmail, mockClientInfo))
+        .rejects
+        .toThrow(ConflictException);
+
+      await expect(service.forgotPassword(mockEmail, mockClientInfo))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: expect.stringContaining('A password reset token is already active'),
+            error: 'Email Already Send'
+          }
+        });
+
+      // Verify new token was NOT created
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.passwordToken.create).not.toHaveBeenCalled();
       // eslint-disable-next-line @typescript-eslint/unbound-method
