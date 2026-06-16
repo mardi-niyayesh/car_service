@@ -14,6 +14,7 @@ import {afterEach, beforeEach, describe, expect, it, vi, type Mock} from "vitest
 import type {ConfigMock, NormalizedClientInfo, PrismaMock, RefreshTokenPayload} from "@/types";
 import type {Prisma__RefreshTokenClient} from "@/modules/prisma/generated/models/RefreshToken";
 import {PermissionType, RefreshToken, Role, RoleType, User, UserRole} from "@/modules/prisma/generated/client";
+import {UUID} from "node:crypto";
 
 vi.mock('@/lib/utils/crypto', () => ({
   compareSecret: vi.fn(),
@@ -482,6 +483,7 @@ describe(AuthService.name, (): void => {
 
       service.refresh(payloadWithManyPermissions);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(jwt.sign).toHaveBeenCalledWith(
         expect.objectContaining({
           roles: ['self', 'user_manager', 'role_manager'],
@@ -489,6 +491,34 @@ describe(AuthService.name, (): void => {
         }),
         expect.anything()
       );
+    });
+
+    // ======================================================
+    // Logout
+    // ======================================================
+    describe("logout", () => {
+      const mockRefreshPayload: RefreshTokenPayload = {
+        user: {
+          id: 'user-123',
+          email: 'john@example.com',
+          display_name: 'John Doe',
+          age: 25,
+          roles: ['self'],
+          permissions: ['user.self'],
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        refreshRecord: {
+          id: 'refresh-token-456',
+          token: 'hashed_refresh_token',
+          expires_at: new Date(),
+          revoked_at: null,
+          remember: false,
+          user_id: 'user-123',
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+      };
     });
   });
 });
