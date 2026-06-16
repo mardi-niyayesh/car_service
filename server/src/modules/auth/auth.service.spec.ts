@@ -14,6 +14,7 @@ import {compareSecret, generateRandomToken, hashSecretToken} from "@/lib";
 import {afterEach, beforeEach, describe, expect, it, vi, type Mock} from "vitest";
 import type {Prisma__RefreshTokenClient} from "@/modules/prisma/generated/models/RefreshToken";
 import {PermissionType, RefreshToken, Role, RoleType, User, UserRole} from "@/modules/prisma/generated/client";
+import {UUID} from "node:crypto";
 
 vi.mock('@/lib/utils/crypto', () => ({
   compareSecret: vi.fn(),
@@ -21,6 +22,15 @@ vi.mock('@/lib/utils/crypto', () => ({
   hashSecretToken: vi.fn(),
   hashSecret: vi.fn(),
 }));
+
+vi.mock('node:crypto', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('node:crypto')>();
+  // noinspection JSUnusedGlobalSymbols
+  return {
+    ...actual,
+    randomUUID: () => 'fixed-uuid-for-test',
+  };
+});
 
 const fakeAuthUser = {
   id: "existing_user_uuid",
@@ -378,14 +388,6 @@ describe(AuthService.name, (): void => {
   // ======================================================
   describe("refresh", () => {
     const mockRefreshPayload: RefreshTokenPayload = {
-      id: 'user-123',
-      email: 'john@example.com',
-      display_name: 'John Doe',
-      age: 25,
-      roles: ['self', 'admin'],
-      permissions: ['user.self', 'user.view', 'user.edit'],
-      created_at: new Date(),
-      updated_at: new Date(),
       refreshRecord: {
         id: 'refresh-token-456',
         token: 'hashed_refresh_token',
@@ -396,8 +398,55 @@ describe(AuthService.name, (): void => {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      user: {
+        id: 'user-123',
+        email: 'john@example.com',
+        display_name: 'John Doe',
+        age: 25,
+        roles: ['self', 'admin'],
+        permissions: ['user.self', 'user.view', 'user.edit'],
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
     };
 
     const mockAccessToken = 'new_access_token_xyz';
+    const mockUUID = 'fixed-uuid-for-test';
+
+    beforeEach((): void => {
+      vi.clearAllMocks();
+    });
+
+    // success
+    it('should generate new access token from refresh payload', () => {
+      // Mock JWT sign
+      jwt.sign.mockReturnValue(mockAccessToken);
+
+      const result = service.refresh(mockRefreshPayload);
+
+      // 1. Test returns string (access token)
+      expect(typeof result).toBe('string');
+      expect(result).toBe(mockAccessToken);
+
+      // 2. Verify JWT sign called with correct payload
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(jwt.sign).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sub: mockRefreshPayload.user.id,
+          jti: expect.stringContaining(mockUUID),
+          roles: mockRefreshPayload.user.roles,
+          permissions: mockRefreshPayload.user.permissions,
+          display_name: mockRefreshPayload.user.display_name,
+        }),
+        expect.objectContaining({
+          secret: expect.any(String),
+          expiresIn: "1h",
+        })
+      );
+
+      // 3. Verify jti format
+      const jtiArg = (jwt.sign as Mock).mock.calls[0][0].jti;
+      expect(jtiArg).toMatch(new RegExp(`^${mockUUID}\\d+$`));
+    });
   });
 });
