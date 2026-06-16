@@ -1205,8 +1205,12 @@ describe(AuthService.name, (): void => {
     it('should hash the incoming token before comparing with database', async () => {
       let hashedTokenUsed: string | null = null;
 
-      (tx.passwordToken.findFirst as Mock).mockImplementation(({where}) => {
-        hashedTokenUsed = where.token as string;
+      (tx.passwordToken.findFirst as Mock).mockImplementation(({where}: {
+        where: {
+          token: string;
+        };
+      }) => {
+        hashedTokenUsed = where.token;
         return Promise.resolve(mockValidToken);
       });
 
@@ -1218,6 +1222,29 @@ describe(AuthService.name, (): void => {
 
       expect(hashedTokenUsed).toBe(mockHashedToken);
       expect(hashSecretToken).toHaveBeenCalledWith(mockToken);
+    });
+
+    // token with valid expiry but wrong user (should still work - token includes user)
+    it('should reset password for the user associated with the token', async () => {
+      let updatedUserId: string | null = null;
+
+      (tx.passwordToken.findFirst as Mock).mockResolvedValue(mockValidToken);
+      (tx.user.update as Mock).mockImplementation(({where}: {
+        where: {
+          id: string;
+        };
+      }) => {
+        updatedUserId = where.id;
+        return Promise.resolve({});
+      });
+
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+      (hashSecret as Mock).mockResolvedValue(mockHashedNewPassword);
+      event.emit.mockImplementation(() => true);
+
+      await service.resetPassword(mockToken, mockNewPassword, mockClientInfo);
+
+      expect(updatedUserId).toBe(mockUser.id);
     });
   });
 });
