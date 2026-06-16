@@ -8,8 +8,8 @@ import {EmailService} from "@/modules/email/email.service";
 import {PERMISSIONS, ROLES, eventsEmitter} from "@/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
-import {compareSecret, generateRandomToken, hashSecretToken} from "@/lib";
 import {afterEach, beforeEach, describe, expect, it, vi, type Mock} from "vitest";
+import {compareSecret, generateRandomToken, hashSecretToken, hashSecret} from "@/lib";
 import type {Prisma__RefreshTokenClient} from "@/modules/prisma/generated/models/RefreshToken";
 import type {ConfigMock, NormalizedClientInfo, PrismaMock, RefreshTokenPayload} from "@/types";
 import {ConflictException, InternalServerErrorException, NotFoundException, UnauthorizedException} from "@nestjs/common";
@@ -925,8 +925,8 @@ describe(AuthService.name, (): void => {
   });
 
   // ======================================================
-// Reset Password
-// ======================================================
+  // Reset Password
+  // ======================================================
   describe("resetPassword", () => {
     const mockToken = 'reset_token_abc123';
     const mockHashedToken = 'hashed_reset_token_abc123';
@@ -966,5 +966,112 @@ describe(AuthService.name, (): void => {
       ...mockValidToken,
       expires_at: new Date(Date.now() - 60 * 1000), // 1 minute ago (expired)
     };
+
+    let tx: PrismaService;
+
+    beforeEach(() => {
+      tx = {
+        passwordToken: {
+          findFirst: vi.fn(),
+          delete: vi.fn().mockResolvedValue({}),
+        },
+        user: {
+          update: vi.fn().mockResolvedValue({}),
+        },
+      } as unknown as PrismaService;
+
+      prisma.$transaction.mockImplementation(async (fn) => fn(tx));
+    });
+
+    // success
+    it('should reset password successfully with valid token', async () => {
+      (tx.passwordToken.findFirst as Mock).mockResolvedValue(mockValidToken);
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+      (hashSecret as Mock).mockResolvedValue(mockHashedNewPassword);
+      event.emit.mockImplementation(() => true);
+
+      const result = await service.resetPassword(mockToken, mockNewPassword, mockClientInfo);
+
+      // 1. Test response
+      expect(result).toHaveProperty('message');
+      expect(result.message).toBe('Password reset successfully');
+
+      // 2. Verify token lookup with hashed token
+      expect(hashSecretToken).toHaveBeenCalledWith(mockToken);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(tx.passwordToken.findFirst).toHaveBeenCalledWith({
+        where: {token: mockHashedToken},
+        include: {user: true}
+      });
+
+      // 3. Verify password was hashed
+      expect(hashSecret).toHaveBeenCalledWith(mockNewPassword);
+
+      // 4. Verify user update
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(tx.user.update).toHaveBeenCalledWith({
+        where: {id: mockUser.id},
+        data: {password: mockHashedNewPassword}
+      });
+
+      // 5. Verify token was deleted
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(tx.passwordToken.delete).toHaveBeenCalledWith({
+        where: {id: mockValidToken.id}
+      });
+
+      // 6. Verify event emitted (password changed notification)
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(event.emit).toHaveBeenCalledWith(
+        eventsEmitter.PASSWORD_CHANGED,
+        expect.objectContaining({
+          email: mockUser.email,
+          html: expect.stringContaining('Your password has been changed successfully')
+        })
+      );
+    });
+
+    it('should throw NotFoundException when token not found', async () => {
+      (tx.passwordToken.findFirst as Mock).mockResolvedValue(null);
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+
+      await expect(service.resetPassword(mockToken, mockNewPassword, mockClientInfo))
+        .rejects.toThrow(NotFoundException);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(tx.user.update).not.toHaveBeenCalled();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(tx.passwordToken.delete).not.toHaveBeenCalled();
+    });
+
+    it('should throw GoneException when token is expired', async () => {
+      (tx.passwordToken.findFirst as Mock).mockResolvedValue(mockExpiredToken);
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+
+      await expect(service.resetPassword(mockToken, mockNewPassword, mockClientInfo))
+        .rejects.toThrow();
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(tx.user.update).not.toHaveBeenCalled();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(tx.passwordToken.delete).not.toHaveBeenCalled();
+    });
+
+    it('should continue if event emitter fails after password reset', async () => {
+      (tx.passwordToken.findFirst as Mock).mockResolvedValue(mockValidToken);
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+      (hashSecret as Mock).mockResolvedValue(mockHashedNewPassword);
+      event.emit.mockImplementation(() => {
+        throw new Error('Event failed');
+      });
+
+      const result = await service.resetPassword(mockToken, mockNewPassword, mockClientInfo);
+
+      expect(result.message).toBe('Password reset successfully');
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(tx.user.update).toHaveBeenCalled();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(tx.passwordToken.delete).toHaveBeenCalled();
+    });
   });
 });
