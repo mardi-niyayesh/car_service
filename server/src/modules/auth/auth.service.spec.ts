@@ -1073,5 +1073,38 @@ describe(AuthService.name, (): void => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(tx.passwordToken.delete).toHaveBeenCalled();
     });
+
+    // error: token not found
+    it('should throw NotFoundException when token does not exist', async () => {
+      prisma.$transaction.mockImplementation(async (fn) => {
+        const tx = {
+          passwordToken: { findFirst: vi.fn().mockResolvedValue(null) },
+        } as unknown as PrismaService;
+        return fn(tx);
+      });
+
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+
+      await expect(service.resetPassword(mockToken, mockNewPassword, mockClientInfo))
+        .rejects
+        .toThrow(NotFoundException);
+
+      await expect(service.resetPassword(mockToken, mockNewPassword, mockClientInfo))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: 'Reset password token is invalid or has expired.',
+            error: 'Token Not Found'
+          }
+        });
+
+      // Verify user was NOT updated
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.user.update).not.toHaveBeenCalled();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.passwordToken.delete).not.toHaveBeenCalled();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(event.emit).not.toHaveBeenCalled();
+    });
   });
 });
