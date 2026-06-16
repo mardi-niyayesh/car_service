@@ -519,6 +519,41 @@ describe(AuthService.name, (): void => {
           updated_at: new Date(),
         },
       };
+
+      it('should revoke refresh token and return success message', async () => {
+        const mockUpdatedToken = {
+          ...mockRefreshPayload.refreshRecord,
+          revoked_at: new Date(),
+        };
+
+        prisma.refreshToken.update.mockResolvedValue(mockUpdatedToken as unknown as RefreshToken);
+
+        const result = await service.logout(mockRefreshPayload);
+
+        // 1. Test response structure
+        expect(result).toHaveProperty('message');
+        expect(result.message).toBe('user logout successfully');
+
+        // 2. Verify update call with correct where and data
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        expect(prisma.refreshToken.update).toHaveBeenCalledWith({
+          where: {
+            id: mockRefreshPayload.refreshRecord.id
+          },
+          data: {
+            revoked_at: expect.any(Date)
+          }
+        });
+
+        // 3. Verify revoked_at is set to current time (close to now)
+        const updateCall = (prisma.refreshToken.update as Mock).mock.calls[0][0];
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        const revokedAt = updateCall.data.revoked_at as Date;
+        const now = new Date();
+        const diffMs = Math.abs(revokedAt.getTime() - now.getTime());
+        expect(diffMs).toBeLessThan(1000); // within 1 second
+      });
     });
   });
 });
