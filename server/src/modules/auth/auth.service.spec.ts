@@ -602,5 +602,14 @@ describe(AuthService.name, (): void => {
         }
       });
     });
+
+    it('should not return any data (only message)', async () => {
+      prisma.refreshToken.update.mockResolvedValue({} as RefreshToken);
+
+      const result = await service.logout(mockRefreshPayload);
+
+      expect(result).not.toHaveProperty('data');
+      expect(result.message).toBe('user logout successfully');
+    });
   });
 });
