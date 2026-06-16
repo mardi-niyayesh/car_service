@@ -637,7 +637,6 @@ describe(AuthService.name, (): void => {
     const mockEmail = 'john@example.com';
     const mockToken = 'random_token_abc123';
     const mockHashedToken = 'hashed_random_token_abc123';
-    const mockExpireMinutes = 15;
 
     const mockClientInfo: NormalizedClientInfo = {
       ip: '192.168.1.1',
