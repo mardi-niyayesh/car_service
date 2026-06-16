@@ -894,5 +894,34 @@ describe(AuthService.name, (): void => {
       const htmlArg = (email.forgotPassword as Mock).mock.calls[0][1];
       expect(htmlArg).toContain(`${customResetUrl}?token=${mockToken}`);
     });
+
+    // verify clientInfo passed to email builder
+    it('should pass clientInfo to email HTML builder', async () => {
+      let htmlContent: string | null = null;
+
+      customMockImplement();
+
+      (generateRandomToken as Mock).mockReturnValue(mockToken);
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+      config.get.mockImplementation((key: string) => {
+        if (key === "CLIENT_RESET_PASSWORD") return "https://example.com/reset-password";
+        return null;
+      });
+
+      // Capture the HTML passed to email service
+      email.forgotPassword.mockImplementation((_, html) => {
+        htmlContent = html;
+        return Promise.resolve();
+      });
+
+      await service.forgotPassword(mockEmail, mockClientInfo);
+
+      expect(htmlContent).toBeDefined();
+      expect(htmlContent).toContain(mockClientInfo.ip!);
+      expect(htmlContent).toContain(mockClientInfo.browser!);
+      expect(htmlContent).toContain(mockClientInfo.os!);
+      expect(htmlContent).toContain(mockClientInfo.country!);
+      expect(htmlContent).toContain(mockClientInfo.city!);
+    });
   });
 });
