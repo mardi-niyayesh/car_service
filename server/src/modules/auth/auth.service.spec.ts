@@ -659,6 +659,16 @@ describe(AuthService.name, (): void => {
       passwordToken: null,
     };
 
+    function customMockImplement() {
+      prisma.$transaction.mockImplementation(async (fn) => {
+        const tx = {
+          user: {findUnique: vi.fn().mockResolvedValue(mockUser)},
+          passwordToken: {create: vi.fn().mockResolvedValue({})},
+        } as unknown as PrismaService;
+        return fn(tx);
+      });
+    }
+
     // success
     it('should send reset password email successfully when user exists and has no active token', async () => {
       const mockResetLink = 'https://example.com/reset-password?token=random_token_abc123';
@@ -803,13 +813,7 @@ describe(AuthService.name, (): void => {
     it('should throw InternalServerErrorException when email service fails', async () => {
       const emailError = new Error('Email service unavailable');
 
-      prisma.$transaction.mockImplementation(async (fn) => {
-        const tx = {
-          user: {findUnique: vi.fn().mockResolvedValue(mockUser)},
-          passwordToken: {create: vi.fn().mockResolvedValue({})},
-        } as unknown as PrismaService;
-        return fn(tx);
-      });
+      customMockImplement();
 
       (generateRandomToken as Mock).mockReturnValue(mockToken);
       (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
@@ -869,6 +873,26 @@ describe(AuthService.name, (): void => {
       const diffMs = tokenExpiresAt!.getTime() - before.getTime();
       expect(diffMs).toBeGreaterThanOrEqual(14.5 * 60 * 1000); // ~14.5 minutes
       expect(diffMs).toBeLessThanOrEqual(15.5 * 60 * 1000); // ~15.5 minutes
+    });
+
+    // verify reset link uses config
+    it('should use CLIENT_RESET_PASSWORD from config for reset link', async () => {
+      const customResetUrl = 'https://custom.example.com/reset';
+
+      customMockImplement();
+
+      (generateRandomToken as Mock).mockReturnValue(mockToken);
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+      config.get.mockImplementation((key: string) => {
+        if (key === "CLIENT_RESET_PASSWORD") return customResetUrl;
+        return null;
+      });
+      email.forgotPassword.mockResolvedValue(undefined);
+
+      await service.forgotPassword(mockEmail, mockClientInfo);
+
+      const htmlArg = (email.forgotPassword as Mock).mock.calls[0][1];
+      expect(htmlArg).toContain(`${customResetUrl}?token=${mockToken}`);
     });
   });
 });
