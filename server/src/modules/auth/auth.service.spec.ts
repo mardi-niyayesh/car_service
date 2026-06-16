@@ -1174,5 +1174,31 @@ describe(AuthService.name, (): void => {
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(event.emit).toHaveBeenCalled(); // Called but error caught
     });
+
+    // verify clientInfo passed to email builder
+    it('should pass clientInfo to password changed email', async () => {
+      let emailHtml: string | null = null;
+
+      (tx.passwordToken.findFirst as Mock).mockResolvedValue(mockValidToken);
+
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+      (hashSecret as Mock).mockResolvedValue(mockHashedNewPassword);
+
+      event.emit.mockImplementation((_, data: {
+        html: string;
+      }) => {
+        emailHtml = data.html;
+        return true;
+      });
+
+      await service.resetPassword(mockToken, mockNewPassword, mockClientInfo);
+
+      expect(emailHtml).toBeDefined();
+      expect(emailHtml).toContain('Password Updated');
+      expect(emailHtml).toContain('Your password has been changed successfully');
+      expect(emailHtml).toContain(mockClientInfo.ip!);
+      expect(emailHtml).toContain(mockClientInfo.browser!);
+      expect(emailHtml).toContain(mockClientInfo.os!);
+    });
   });
 });
