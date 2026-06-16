@@ -12,8 +12,8 @@ import {afterEach, beforeEach, describe, expect, it, vi, type Mock} from "vitest
 import {compareSecret, generateRandomToken, hashSecretToken, hashSecret} from "@/lib";
 import type {Prisma__RefreshTokenClient} from "@/modules/prisma/generated/models/RefreshToken";
 import type {ConfigMock, NormalizedClientInfo, PrismaMock, RefreshTokenPayload} from "@/types";
-import {BadRequestException, ConflictException, HttpStatus, InternalServerErrorException, NotFoundException, UnauthorizedException} from "@nestjs/common";
 import {PermissionType, RefreshToken, Role, RoleType, User, UserRole, Prisma} from "@/modules/prisma/generated/client";
+import {BadRequestException, ConflictException, HttpStatus, InternalServerErrorException, NotFoundException, UnauthorizedException} from "@nestjs/common";
 
 vi.mock('@/lib/utils/crypto', () => ({
   compareSecret: vi.fn(),
