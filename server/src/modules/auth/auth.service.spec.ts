@@ -1111,7 +1111,7 @@ describe(AuthService.name, (): void => {
     it('should throw BadRequestException when token is expired', async () => {
       prisma.$transaction.mockImplementation(async (fn) => {
         const tx = {
-          passwordToken: { findFirst: vi.fn().mockResolvedValue(mockExpiredToken) },
+          passwordToken: {findFirst: vi.fn().mockResolvedValue(mockExpiredToken)},
         } as unknown as PrismaService;
         return fn(tx);
       });
@@ -1137,6 +1137,25 @@ describe(AuthService.name, (): void => {
       expect(prisma.user.update).not.toHaveBeenCalled();
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.passwordToken.delete).not.toHaveBeenCalled();
+    });
+
+    // verify token is deleted after successful reset (one-time use)
+    it('should delete token after successful password reset (one-time use)', async () => {
+      let tokenDeleted = false;
+
+      (tx.passwordToken.findFirst as Mock).mockResolvedValue(mockValidToken);
+      (tx.passwordToken.delete as Mock).mockImplementation(() => {
+        tokenDeleted = true;
+        return Promise.resolve({});
+      });
+
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+      (hashSecret as Mock).mockResolvedValue(mockHashedNewPassword);
+      event.emit.mockImplementation(() => true);
+
+      await service.resetPassword(mockToken, mockNewPassword, mockClientInfo);
+
+      expect(tokenDeleted).toBe(true);
     });
   });
 });
