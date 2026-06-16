@@ -3,7 +3,7 @@ import {exampleDate} from "@/lib";
 import {JwtService} from "@nestjs/jwt";
 import {ConfigService} from "@nestjs/config";
 import {EventEmitter2} from "@nestjs/event-emitter";
-import {UnauthorizedException} from "@nestjs/common";
+import {NotFoundException, UnauthorizedException} from "@nestjs/common";
 import {AuthService} from "@/modules/auth/auth.service";
 import {EmailService} from "@/modules/email/email.service";
 import {PERMISSIONS, ROLES, eventsEmitter} from "@/common";
@@ -727,6 +727,35 @@ describe(AuthService.name, (): void => {
       const htmlArg = (email.forgotPassword as Mock).mock.calls[0][1];
       expect(htmlArg).toContain(mockResetLink);
       expect(htmlArg).toContain('15');
+    });
+
+    // error: user not found
+    it('should throw NotFoundException when user does not exist', async () => {
+      prisma.$transaction.mockImplementation(async (fn) => {
+        const tx = {
+          user: {findUnique: vi.fn().mockResolvedValue(null)},
+        } as unknown as PrismaService;
+        return fn(tx);
+      });
+
+      await expect(service.forgotPassword(mockEmail, mockClientInfo))
+        .rejects
+        .toThrow(NotFoundException);
+
+      await expect(service.forgotPassword(mockEmail, mockClientInfo))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: 'User not found in database',
+            error: 'User Not Found'
+          }
+        });
+
+      // Verify token was NOT created
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.passwordToken.create).not.toHaveBeenCalled();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(email.forgotPassword).not.toHaveBeenCalled();
     });
   });
 });
