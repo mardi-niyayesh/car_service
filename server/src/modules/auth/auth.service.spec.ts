@@ -12,7 +12,7 @@ import {afterEach, beforeEach, describe, expect, it, vi, type Mock} from "vitest
 import {compareSecret, generateRandomToken, hashSecretToken, hashSecret} from "@/lib";
 import type {Prisma__RefreshTokenClient} from "@/modules/prisma/generated/models/RefreshToken";
 import type {ConfigMock, NormalizedClientInfo, PrismaMock, RefreshTokenPayload} from "@/types";
-import {ConflictException, InternalServerErrorException, NotFoundException, UnauthorizedException} from "@nestjs/common";
+import {BadRequestException, ConflictException, HttpStatus, InternalServerErrorException, NotFoundException, UnauthorizedException} from "@nestjs/common";
 import {PermissionType, RefreshToken, Role, RoleType, User, UserRole, Prisma} from "@/modules/prisma/generated/client";
 
 vi.mock('@/lib/utils/crypto', () => ({
@@ -1078,7 +1078,7 @@ describe(AuthService.name, (): void => {
     it('should throw NotFoundException when token does not exist', async () => {
       prisma.$transaction.mockImplementation(async (fn) => {
         const tx = {
-          passwordToken: { findFirst: vi.fn().mockResolvedValue(null) },
+          passwordToken: {findFirst: vi.fn().mockResolvedValue(null)},
         } as unknown as PrismaService;
         return fn(tx);
       });
@@ -1105,6 +1105,38 @@ describe(AuthService.name, (): void => {
       expect(prisma.passwordToken.delete).not.toHaveBeenCalled();
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(event.emit).not.toHaveBeenCalled();
+    });
+
+    // error: token expired
+    it('should throw BadRequestException when token is expired', async () => {
+      prisma.$transaction.mockImplementation(async (fn) => {
+        const tx = {
+          passwordToken: { findFirst: vi.fn().mockResolvedValue(mockExpiredToken) },
+        } as unknown as PrismaService;
+        return fn(tx);
+      });
+
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+
+      await expect(service.resetPassword(mockToken, mockNewPassword, mockClientInfo))
+        .rejects
+        .toThrow(BadRequestException);
+
+      await expect(service.resetPassword(mockToken, mockNewPassword, mockClientInfo))
+        .rejects
+        .toMatchObject({
+          response: {
+            statusCode: HttpStatus.BAD_REQUEST,
+            message: 'The reset password token has expired. Please request a new one.',
+            error: 'Token Expired'
+          }
+        });
+
+      // Verify user was NOT updated
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.user.update).not.toHaveBeenCalled();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.passwordToken.delete).not.toHaveBeenCalled();
     });
   });
 });
