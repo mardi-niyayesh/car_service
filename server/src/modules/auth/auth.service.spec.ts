@@ -575,5 +575,32 @@ describe(AuthService.name, (): void => {
         }
       });
     });
+
+    it('should set revoked_at even if token was already revoked', async () => {
+      const alreadyRevokedToken = {
+        ...mockRefreshPayload.refreshRecord,
+        revoked_at: new Date('2024-01-01'),
+      };
+
+      const payloadWithRevokedToken = {
+        ...mockRefreshPayload,
+        refreshRecord: alreadyRevokedToken,
+      };
+
+      prisma.refreshToken.update.mockResolvedValue(alreadyRevokedToken as unknown as RefreshToken);
+
+      await service.logout(payloadWithRevokedToken);
+
+      // Should still update (set revoked_at again)
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.refreshToken.update).toHaveBeenCalledWith({
+        where: {
+          id: alreadyRevokedToken.id
+        },
+        data: {
+          revoked_at: expect.any(Date)
+        }
+      });
+    });
   });
 });
