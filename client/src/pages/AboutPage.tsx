@@ -1,9 +1,9 @@
-import aboutbaner from "../../assets/about-banner.jpg";
-import aboutimg2 from "../../assets/about-img-2.jpg";
-import aboutimg3 from "../../assets/about-img-3.jpg";
-import aboutimg4 from "../../assets/about-img-4.jpg";
-import aboutimg5 from "../../assets/about-img-6.jpg";
-import aboutimg8 from "../../assets/about-img-8.jpg";
+import aboutbaner from "../../assets/imges/about-banner.jpg";
+import aboutimg2 from "../../assets/imges/about-img-2.jpg";
+import aboutimg3 from "../../assets/imges/about-img-3.jpg";
+import aboutimg4 from "../../assets/imges/about-img-4.jpg";
+import aboutimg5 from "../../assets/imges/about-img-6.jpg";
+import aboutimg8 from "../../assets/imges/about-img-8.jpg";
 const desAbout = [
   {
     id: 1,

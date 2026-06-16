@@ -1,16 +1,16 @@
-import BMW from "../../../assets/BMW.png";
-import Honda from "../../../assets/Honda.png";
-import Hyundai from "../../../assets/Hyundai.png";
-import KIA1 from "../../../assets/KIA (1).png";
-import Marcedes from "../../../assets/Marcedes.png";
-import Nissan from "../../../assets/Nissan.png";
-import Toyota from "../../../assets/Toyota.png";
-import lexus from "../../../assets/lexus-logo.png";
+import BMW from "../../../assets/imges/BMW.png";
+import Honda from "../../../assets/imges/Honda.png";
+import Hyundai from "../../../assets/imges/Hyundai.png";
+import KIA1 from "../../../assets/imges/KIA (1).png";
+import Marcedes from "../../../assets/imges/Marcedes.png";
+import Nissan from "../../../assets/imges/Nissan.png";
+import Toyota from "../../../assets/imges/Toyota.png";
+import lexus from "../../../assets/imges/lexus-logo.png";
 
 const CarParts = () => {
   return (
     <div className=" ">
-      <p className=  "font-bold text-blue-800 text-2xl text-center my-8">
+      <p className="font-bold text-blue-800 text-2xl text-center my-8">
         برند های همکار با ما
       </p>
       <div className="container max-auto  m-auto  grid grid-cols-4 gap-4 md:flex md:items-center md:justify-around  border border-[#EDEDED] rounded-xl mt-8 bg-white shadow-sm">

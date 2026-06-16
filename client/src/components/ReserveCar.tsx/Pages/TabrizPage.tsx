@@ -1,6 +1,6 @@
 import DesCar from "../DesCar";
 import ReserveComponent from "../ReserveComponent";
-import Tabrizimg from "../../../../assets/TABRIZ-2.png";
+import Tabrizimg from "../../../../assets/imges/TABRIZ-2.png";
 
 const TabrizPage = () => {
   return (

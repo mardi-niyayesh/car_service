@@ -1,6 +1,6 @@
-import { useLocation } from "react-router-dom"; // اضافه شود
-import profilUser from "../../../assets/Ellipse 114.png";
-import logout from "../../../assets/logout.png";
+import { useLocation } from "react-router-dom";
+import profilUser from "../../../assets/imges/Ellipse 114.png";
+import logout from "../../../assets/imges/logout.png";
 import { useUser } from "../../hooks/useUser";
 import { FaUser } from "react-icons/fa";
 import { HiOutlineHome } from "react-icons/hi";
