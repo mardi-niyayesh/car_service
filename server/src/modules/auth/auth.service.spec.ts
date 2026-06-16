@@ -629,4 +629,36 @@ describe(AuthService.name, (): void => {
       });
     });
   });
+
+  // ======================================================
+  // Forgot Password
+  // ======================================================
+  describe('forgotPassword()', (): void => {
+    const mockEmail = 'john@example.com';
+    const mockToken = 'random_token_abc123';
+    const mockHashedToken = 'hashed_random_token_abc123';
+    const mockExpireMinutes = 15;
+
+    const mockClientInfo: NormalizedClientInfo = {
+      ip: '192.168.1.1',
+      browser: 'chrome',
+      os: 'windows',
+      device: 'laptop',
+      country: 'Iran',
+      city: 'Tehran',
+      lang: 'fa',
+    };
+
+    const mockUser = {
+      id: 'user-123',
+      email: mockEmail,
+      display_name: 'John Doe',
+      password: 'hashed_password',
+      created_at: new Date(),
+      updated_at: new Date(),
+      passwordToken: null,
+    };
+
+    const mockResetLink = 'https://example.com/reset-password?token=mock_token_abc123';
+  });
 });
