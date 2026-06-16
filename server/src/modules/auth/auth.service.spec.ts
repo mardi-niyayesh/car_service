@@ -611,5 +611,22 @@ describe(AuthService.name, (): void => {
       expect(result).not.toHaveProperty('data');
       expect(result.message).toBe('user logout successfully');
     });
+
+    it('should log out user by revoking refresh token used in request', async () => {
+      prisma.refreshToken.update.mockResolvedValue({} as RefreshToken);
+
+      await service.logout(mockRefreshPayload);
+
+      // Verify it used the specific refresh token from payload
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.refreshToken.update).toHaveBeenCalledWith({
+        where: {
+          id: mockRefreshPayload.refreshRecord.id // not user_id
+        },
+        data: {
+          revoked_at: expect.any(Date)
+        }
+      });
+    });
   });
 });
