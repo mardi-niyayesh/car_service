@@ -1200,5 +1200,24 @@ describe(AuthService.name, (): void => {
       expect(emailHtml).toContain(mockClientInfo.browser!);
       expect(emailHtml).toContain(mockClientInfo.os!);
     });
+
+    // verify hashed token comparison
+    it('should hash the incoming token before comparing with database', async () => {
+      let hashedTokenUsed: string | null = null;
+
+      (tx.passwordToken.findFirst as Mock).mockImplementation(({where}) => {
+        hashedTokenUsed = where.token as string;
+        return Promise.resolve(mockValidToken);
+      });
+
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+      (hashSecret as Mock).mockResolvedValue(mockHashedNewPassword);
+      event.emit.mockImplementation(() => true);
+
+      await service.resetPassword(mockToken, mockNewPassword, mockClientInfo);
+
+      expect(hashedTokenUsed).toBe(mockHashedToken);
+      expect(hashSecretToken).toHaveBeenCalledWith(mockToken);
+    });
   });
 });
