@@ -491,68 +491,68 @@ describe(AuthService.name, (): void => {
         expect.anything()
       );
     });
+  });
 
-    // ======================================================
-    // Logout
-    // ======================================================
-    describe("logout", () => {
-      const mockRefreshPayload: RefreshTokenPayload = {
-        user: {
-          id: 'user-123',
-          email: 'john@example.com',
-          display_name: 'John Doe',
-          age: 25,
-          roles: ['self'],
-          permissions: ['user.self'],
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
-        refreshRecord: {
-          id: 'refresh-token-456',
-          token: 'hashed_refresh_token',
-          expires_at: new Date(),
-          revoked_at: null,
-          remember: false,
-          user_id: 'user-123',
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
+  // ======================================================
+  // Logout
+  // ======================================================
+  describe("logout", () => {
+    const mockRefreshPayload: RefreshTokenPayload = {
+      user: {
+        id: 'user-123',
+        email: 'john@example.com',
+        display_name: 'John Doe',
+        age: 25,
+        roles: ['self'],
+        permissions: ['user.self'],
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      refreshRecord: {
+        id: 'refresh-token-456',
+        token: 'hashed_refresh_token',
+        expires_at: new Date(),
+        revoked_at: null,
+        remember: false,
+        user_id: 'user-123',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+    };
+
+    it('should revoke refresh token and return success message', async () => {
+      const mockUpdatedToken = {
+        ...mockRefreshPayload.refreshRecord,
+        revoked_at: new Date(),
       };
 
-      it('should revoke refresh token and return success message', async () => {
-        const mockUpdatedToken = {
-          ...mockRefreshPayload.refreshRecord,
-          revoked_at: new Date(),
-        };
+      prisma.refreshToken.update.mockResolvedValue(mockUpdatedToken as unknown as RefreshToken);
 
-        prisma.refreshToken.update.mockResolvedValue(mockUpdatedToken as unknown as RefreshToken);
+      const result = await service.logout(mockRefreshPayload);
 
-        const result = await service.logout(mockRefreshPayload);
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result.message).toBe('user logout successfully');
 
-        // 1. Test response structure
-        expect(result).toHaveProperty('message');
-        expect(result.message).toBe('user logout successfully');
-
-        // 2. Verify update call with correct where and data
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        expect(prisma.refreshToken.update).toHaveBeenCalledWith({
-          where: {
-            id: mockRefreshPayload.refreshRecord.id
-          },
-          data: {
-            revoked_at: expect.any(Date)
-          }
-        });
-
-        // 3. Verify revoked_at is set to current time (close to now)
-        const updateCall = (prisma.refreshToken.update as Mock).mock.calls[0][0];
-
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        const revokedAt = updateCall.data.revoked_at as Date;
-        const now = new Date();
-        const diffMs = Math.abs(revokedAt.getTime() - now.getTime());
-        expect(diffMs).toBeLessThan(1000); // within 1 second
+      // 2. Verify update call with correct where and data
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.refreshToken.update).toHaveBeenCalledWith({
+        where: {
+          id: mockRefreshPayload.refreshRecord.id
+        },
+        data: {
+          revoked_at: expect.any(Date)
+        }
       });
+
+      // 3. Verify revoked_at is set to current time (close to now)
+      const updateCall = (prisma.refreshToken.update as Mock).mock.calls[0][0];
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const revokedAt = updateCall.data.revoked_at as Date;
+      const now = new Date();
+      const diffMs = Math.abs(revokedAt.getTime() - now.getTime());
+      expect(diffMs).toBeLessThan(1000); // within 1 second
     });
   });
 });
