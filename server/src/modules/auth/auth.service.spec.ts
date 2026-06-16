@@ -14,7 +14,6 @@ import {afterEach, beforeEach, describe, expect, it, vi, type Mock} from "vitest
 import type {ConfigMock, NormalizedClientInfo, PrismaMock, RefreshTokenPayload} from "@/types";
 import type {Prisma__RefreshTokenClient} from "@/modules/prisma/generated/models/RefreshToken";
 import {PermissionType, RefreshToken, Role, RoleType, User, UserRole} from "@/modules/prisma/generated/client";
-import {UUID} from "node:crypto";
 
 vi.mock('@/lib/utils/crypto', () => ({
   compareSecret: vi.fn(),
