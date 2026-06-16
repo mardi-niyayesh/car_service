@@ -774,7 +774,7 @@ describe(AuthService.name, (): void => {
 
       prisma.$transaction.mockImplementation(async (fn) => {
         const tx = {
-          user: { findUnique: vi.fn().mockResolvedValue(userWithActiveToken) },
+          user: {findUnique: vi.fn().mockResolvedValue(userWithActiveToken)},
         } as unknown as PrismaService;
         return fn(tx);
       });
@@ -805,8 +805,8 @@ describe(AuthService.name, (): void => {
 
       prisma.$transaction.mockImplementation(async (fn) => {
         const tx = {
-          user: { findUnique: vi.fn().mockResolvedValue(mockUser) },
-          passwordToken: { create: vi.fn().mockResolvedValue({}) },
+          user: {findUnique: vi.fn().mockResolvedValue(mockUser)},
+          passwordToken: {create: vi.fn().mockResolvedValue({})},
         } as unknown as PrismaService;
         return fn(tx);
       });
@@ -832,6 +832,43 @@ describe(AuthService.name, (): void => {
             error: 'Error'
           }
         });
+    });
+
+
+    // verify token expiration
+    it('should set token expiration to 15 minutes from now', async () => {
+      let tokenExpiresAt: Date | null = null;
+
+      prisma.$transaction.mockImplementation(async (fn) => {
+        const tx = {
+          user: {findUnique: vi.fn().mockResolvedValue(mockUser)},
+          passwordToken: {
+            create: vi.fn().mockImplementation(({data}: {
+              data: { expires_at: Date; };
+            }) => {
+              tokenExpiresAt = data.expires_at;
+              return Promise.resolve({});
+            })
+          },
+        } as unknown as PrismaService;
+        return fn(tx);
+      });
+
+      (generateRandomToken as Mock).mockReturnValue(mockToken);
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+      config.get.mockImplementation((key: string) => {
+        if (key === "CLIENT_RESET_PASSWORD") return "https://example.com/reset-password";
+        return null;
+      });
+      email.forgotPassword.mockResolvedValue(undefined);
+
+      const before = new Date();
+      await service.forgotPassword(mockEmail, mockClientInfo);
+
+      expect(tokenExpiresAt).not.toBeNull();
+      const diffMs = tokenExpiresAt!.getTime() - before.getTime();
+      expect(diffMs).toBeGreaterThanOrEqual(14.5 * 60 * 1000); // ~14.5 minutes
+      expect(diffMs).toBeLessThanOrEqual(15.5 * 60 * 1000); // ~15.5 minutes
     });
   });
 });
