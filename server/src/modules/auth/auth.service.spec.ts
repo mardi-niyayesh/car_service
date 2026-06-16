@@ -467,5 +467,28 @@ describe(AuthService.name, (): void => {
         expect.anything()
       );
     });
+
+    it('should include all roles and permissions in JWT payload', () => {
+      const payloadWithManyPermissions = {
+        ...mockRefreshPayload,
+        user: {
+          ...mockRefreshPayload.user,
+          roles: ['self', 'user_manager', 'role_manager'],
+          permissions: ['user.self', 'user.view', 'user.delete', 'role.create', 'role.delete'],
+        },
+      };
+
+      jwt.sign.mockReturnValue(mockAccessToken);
+
+      service.refresh(payloadWithManyPermissions);
+
+      expect(jwt.sign).toHaveBeenCalledWith(
+        expect.objectContaining({
+          roles: ['self', 'user_manager', 'role_manager'],
+          permissions: ['user.self', 'user.view', 'user.delete', 'role.create', 'role.delete'],
+        }),
+        expect.anything()
+      );
+    });
   });
 });
