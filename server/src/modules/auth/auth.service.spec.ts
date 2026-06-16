@@ -8,13 +8,12 @@ import {AuthService} from "@/modules/auth/auth.service";
 import {EmailService} from "@/modules/email/email.service";
 import {PERMISSIONS, ROLES, eventsEmitter} from "@/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {ConfigMock, NormalizedClientInfo, PrismaMock, RefreshTokenPayload} from "@/types";
 import {DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
 import {compareSecret, generateRandomToken, hashSecretToken} from "@/lib";
 import {afterEach, beforeEach, describe, expect, it, vi, type Mock} from "vitest";
+import type {ConfigMock, NormalizedClientInfo, PrismaMock, RefreshTokenPayload} from "@/types";
 import type {Prisma__RefreshTokenClient} from "@/modules/prisma/generated/models/RefreshToken";
 import {PermissionType, RefreshToken, Role, RoleType, User, UserRole} from "@/modules/prisma/generated/client";
-import {UUID} from "node:crypto";
 
 vi.mock('@/lib/utils/crypto', () => ({
   compareSecret: vi.fn(),
@@ -445,6 +444,7 @@ describe(AuthService.name, (): void => {
       );
 
       // 3. Verify jti format
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const jtiArg = (jwt.sign as Mock).mock.calls[0][0].jti;
       expect(jtiArg).toMatch(new RegExp(`^${mockUUID}\\d+$`));
     });
