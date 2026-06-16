@@ -923,4 +923,48 @@ describe(AuthService.name, (): void => {
       expect(htmlContent).toContain(mockClientInfo.city!);
     });
   });
+
+  // ======================================================
+// Reset Password
+// ======================================================
+  describe("resetPassword", () => {
+    const mockToken = 'reset_token_abc123';
+    const mockHashedToken = 'hashed_reset_token_abc123';
+    const mockNewPassword = 'NewPassword123!';
+    const mockHashedNewPassword = 'hashed_new_password_123';
+
+    const mockClientInfo: NormalizedClientInfo = {
+      ip: '192.168.1.1',
+      browser: 'chrome',
+      os: 'windows',
+      device: 'laptop',
+      country: 'Iran',
+      city: 'Tehran',
+      lang: 'fa',
+    };
+
+    const mockUser = {
+      id: 'user-123',
+      email: 'john@example.com',
+      display_name: 'John Doe',
+      password: 'old_hashed_password',
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
+
+    const mockValidToken = {
+      id: 'token-456',
+      token: mockHashedToken,
+      user_id: mockUser.id,
+      expires_at: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes from now
+      created_at: new Date(),
+      updated_at: new Date(),
+      user: mockUser,
+    };
+
+    const mockExpiredToken = {
+      ...mockValidToken,
+      expires_at: new Date(Date.now() - 60 * 1000), // 1 minute ago (expired)
+    };
+  });
 });
