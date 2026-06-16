@@ -13,7 +13,7 @@ import {compareSecret, generateRandomToken, hashSecretToken} from "@/lib";
 import {afterEach, beforeEach, describe, expect, it, vi, type Mock} from "vitest";
 import type {ConfigMock, NormalizedClientInfo, PrismaMock, RefreshTokenPayload} from "@/types";
 import type {Prisma__RefreshTokenClient} from "@/modules/prisma/generated/models/RefreshToken";
-import {PermissionType, RefreshToken, Role, RoleType, User, UserRole} from "@/modules/prisma/generated/client";
+import {PermissionType, RefreshToken, Role, RoleType, User, UserRole, Prisma} from "@/modules/prisma/generated/client";
 
 vi.mock('@/lib/utils/crypto', () => ({
   compareSecret: vi.fn(),
@@ -553,6 +553,27 @@ describe(AuthService.name, (): void => {
       const now = new Date();
       const diffMs = Math.abs(revokedAt.getTime() - now.getTime());
       expect(diffMs).toBeLessThan(1000); // within 1 second
+    });
+
+    it('should throw error if refresh token not found', async () => {
+      const prismaError = new Error('Record not found');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
+
+      prisma.refreshToken.update.mockRejectedValue(prismaError);
+
+      await expect(service.logout(mockRefreshPayload))
+        .rejects
+        .toThrow();
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.refreshToken.update).toHaveBeenCalledWith({
+        where: {
+          id: mockRefreshPayload.refreshRecord.id
+        },
+        data: {
+          revoked_at: expect.any(Date)
+        }
+      });
     });
   });
 });
