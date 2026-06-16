@@ -3,7 +3,6 @@ import {exampleDate} from "@/lib";
 import {JwtService} from "@nestjs/jwt";
 import {ConfigService} from "@nestjs/config";
 import {EventEmitter2} from "@nestjs/event-emitter";
-import {ConflictException, InternalServerErrorException, NotFoundException, UnauthorizedException} from "@nestjs/common";
 import {AuthService} from "@/modules/auth/auth.service";
 import {EmailService} from "@/modules/email/email.service";
 import {PERMISSIONS, ROLES, eventsEmitter} from "@/common";
@@ -11,8 +10,9 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 import {DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
 import {compareSecret, generateRandomToken, hashSecretToken} from "@/lib";
 import {afterEach, beforeEach, describe, expect, it, vi, type Mock} from "vitest";
-import type {ConfigMock, NormalizedClientInfo, PrismaMock, RefreshTokenPayload} from "@/types";
 import type {Prisma__RefreshTokenClient} from "@/modules/prisma/generated/models/RefreshToken";
+import type {ConfigMock, NormalizedClientInfo, PrismaMock, RefreshTokenPayload} from "@/types";
+import {ConflictException, InternalServerErrorException, NotFoundException, UnauthorizedException} from "@nestjs/common";
 import {PermissionType, RefreshToken, Role, RoleType, User, UserRole, Prisma} from "@/modules/prisma/generated/client";
 
 vi.mock('@/lib/utils/crypto', () => ({
