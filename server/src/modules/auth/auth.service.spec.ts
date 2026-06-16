@@ -659,6 +659,74 @@ describe(AuthService.name, (): void => {
       passwordToken: null,
     };
 
-    const mockResetLink = 'https://example.com/reset-password?token=mock_token_abc123';
+    // success
+    it('should send reset password email successfully when user exists and has no active token', async () => {
+      const mockResetLink = 'https://example.com/reset-password?token=random_token_abc123';
+
+      const tx = {
+        user: {findUnique: vi.fn().mockResolvedValue(mockUser)},
+        passwordToken: {create: vi.fn().mockResolvedValue({token: 'mock-token'})},
+      } as unknown as PrismaService;
+
+      prisma.$transaction.mockImplementation(async (fn) => fn(tx));
+
+      email.forgotPassword.mockResolvedValue(true);
+
+      (generateRandomToken as Mock).mockReturnValue('random_token_abc123');
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+
+      config.get.mockImplementation((key: string) => {
+        if (key === "JWT_SECRET") return "test_secret";
+        if (key === "JWT_EXPIRES") return "1h";
+        if (key === "CLIENT_RESET_PASSWORD") return "https://example.com/reset-password";
+        return null;
+      });
+
+      const result = await service.forgotPassword(mockEmail, mockClientInfo);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('email');
+      expect(result.data).toHaveProperty('time');
+      expect(result.data).toHaveProperty('timeNumber');
+
+      // 2. Test message
+      expect(result.message).toBe('Email sent successfully, Please check your inbox');
+
+      // 3. Test data
+      expect(result.data.email).toBe(mockEmail);
+      expect(result.data.time).toBe('15 minutes left');
+      expect(result.data.timeNumber).toBe(15);
+
+      // 4. Verify user lookup
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(tx.user.findUnique).toHaveBeenCalledWith({
+        where: {email: mockEmail},
+        include: {passwordToken: true}
+      });
+
+      // 5. Verify token creation
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(tx.passwordToken.create).toHaveBeenCalledWith({
+        data: {
+          user_id: mockUser.id,
+          token: mockHashedToken,
+          expires_at: expect.any(Date)
+        }
+      });
+
+      // 6. Verify email service called
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(email.forgotPassword).toHaveBeenCalledWith(
+        mockEmail,
+        expect.stringContaining(mockResetLink)
+      );
+
+      // 7. Verify email HTML contains reset link
+      const htmlArg = (email.forgotPassword as Mock).mock.calls[0][1];
+      expect(htmlArg).toContain(mockResetLink);
+      expect(htmlArg).toContain('15');
+    });
   });
 });
