@@ -16,10 +16,10 @@ const DashboardSidebar = () => {
         border-2 border-gray-300 flex-col items-start p-4 overflow-y-auto shadow-sm z-40"
         >
           <div className="flex m-auto">
-            <span className="text-[18px] md:text-[22px] lg:text-[35px] font-bold text-[#194BF0]">
+            <span className=" md:text-[22px] lg:text-[35px] font-bold text-[#194BF0]">
               اُتــو
             </span>
-            <span className="text-[18px] md:text-[22px] lg:text-[35px] font-bold text-[#FDB713]">
+            <span className=" md:text-[22px] lg:text-[35px] font-bold text-[#FDB713]">
               رِنت
             </span>
           </div>
@@ -43,7 +43,7 @@ const DashboardSidebar = () => {
                 ) : (
                   item.icon
                 )}
-                <p className="text-[11px] font-medium">{item.label}</p>
+                <p className=" font-medium">{item.label}</p>
               </div>
             </Link>
           ))}
@@ -65,7 +65,7 @@ const MenuItems = () => {
               ) : (
                 item.icon
               )}
-              <p className="text-[12px] md:text-[13px] font-medium text-[#494949] group-hover:text-white">
+              <p className=" font-medium text-[#494949] group-hover:text-white">
                 {item.label}
               </p>
             </div>

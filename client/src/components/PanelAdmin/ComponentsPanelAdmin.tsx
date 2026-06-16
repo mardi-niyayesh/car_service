@@ -69,16 +69,16 @@ const ComponentsPanelAdmin = () => {
   return (
     <>
       <div>
-        {/* Desktop and tablet */}
+       
         <div
           className="hidden md:flex fixed top-0 right-0 h-full w-72 bg-[#F6F6F6]
           border-2 border-gray-300 flex-col items-start p-4 overflow-y-auto shadow-sm z-40"
         >
           <div className="flex m-auto">
-            <span className="text-[18px] md:text-[22px] lg:text-[35px] font-bold text-[#194BF0]">
+            <span className="text-[20px] md:text-[22px] lg:text-[35px] font-bold text-[#194BF0]">
               اُتــو
             </span>
-            <span className="text-[18px] md:text-[22px] lg:text-[35px] font-bold text-[#FDB713]">
+            <span className="text-[20px] md:text-[22px] lg:text-[35px] font-bold text-[#FDB713]">
               رِنت
             </span>
           </div>
@@ -86,7 +86,7 @@ const ComponentsPanelAdmin = () => {
           <MenuItems items={filteredMenu} />
         </div>
 
-        {/* Mobile */}
+
         <div
           className="md:hidden fixed bottom-0 right-0 left-0 bg-[#EDEDED] border-t border-gray-200
           flex justify-around items-center p-2 z-50 shadow-inner"
@@ -103,7 +103,7 @@ const ComponentsPanelAdmin = () => {
                 ) : (
                   item.icon
                 )}
-                <p className="text-[11px] font-medium">{item.label}</p>
+                <p className="text-[13px] font-medium">{item.label}</p>
               </div>
             </Link>
           ))}
@@ -125,7 +125,7 @@ const MenuItems = ({ items }: { items: typeof Menu }) => {
               ) : (
                 item.icon
               )}
-              <p className="text-[12px] md:text-[13px] font-medium text-[#494949] group-hover:text-white">
+              <p className="text-[13px] md:text-[13px] font-medium text-[#494949] group-hover:text-white">
                 {item.label}
               </p>
             </div>
