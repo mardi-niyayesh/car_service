@@ -372,4 +372,11 @@ describe(AuthService.name, (): void => {
       expect(event.emit).toHaveBeenCalled();
     });
   });
+
+  // ======================================================
+  // Refresh
+  // ======================================================
+  describe("refresh", () => {
+
+  });
 });
