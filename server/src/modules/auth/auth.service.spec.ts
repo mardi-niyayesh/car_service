@@ -3,7 +3,7 @@ import {exampleDate} from "@/lib";
 import {JwtService} from "@nestjs/jwt";
 import {ConfigService} from "@nestjs/config";
 import {EventEmitter2} from "@nestjs/event-emitter";
-import {ConflictException, NotFoundException, UnauthorizedException} from "@nestjs/common";
+import {ConflictException, InternalServerErrorException, NotFoundException, UnauthorizedException} from "@nestjs/common";
 import {AuthService} from "@/modules/auth/auth.service";
 import {EmailService} from "@/modules/email/email.service";
 import {PERMISSIONS, ROLES, eventsEmitter} from "@/common";
@@ -797,6 +797,41 @@ describe(AuthService.name, (): void => {
       expect(prisma.passwordToken.create).not.toHaveBeenCalled();
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(email.forgotPassword).not.toHaveBeenCalled();
+    });
+
+    // error: email service fails (InternalServerError)
+    it('should throw InternalServerErrorException when email service fails', async () => {
+      const emailError = new Error('Email service unavailable');
+
+      prisma.$transaction.mockImplementation(async (fn) => {
+        const tx = {
+          user: { findUnique: vi.fn().mockResolvedValue(mockUser) },
+          passwordToken: { create: vi.fn().mockResolvedValue({}) },
+        } as unknown as PrismaService;
+        return fn(tx);
+      });
+
+      (generateRandomToken as Mock).mockReturnValue(mockToken);
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+      config.get.mockImplementation((key: string) => {
+        if (key === "CLIENT_RESET_PASSWORD") return "https://example.com/reset-password";
+        return null;
+      });
+
+      email.forgotPassword.mockRejectedValue(emailError);
+
+      await expect(service.forgotPassword(mockEmail, mockClientInfo))
+        .rejects
+        .toThrow(InternalServerErrorException);
+
+      await expect(service.forgotPassword(mockEmail, mockClientInfo))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: 'Email service unavailable',
+            error: 'Error'
+          }
+        });
     });
   });
 });
