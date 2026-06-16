@@ -1157,5 +1157,22 @@ describe(AuthService.name, (): void => {
 
       expect(tokenDeleted).toBe(true);
     });
+
+    // event emission failure doesn't break the flow
+    it('should not throw error when event emission fails', async () => {
+      (tx.passwordToken.findFirst as Mock).mockResolvedValue(mockValidToken);
+
+      (hashSecret as Mock).mockResolvedValue(mockHashedNewPassword);
+      (hashSecretToken as Mock).mockReturnValue(mockHashedToken);
+      event.emit.mockImplementation(() => {
+        throw new Error('Event failed');
+      });
+
+      const result = await service.resetPassword(mockToken, mockNewPassword, mockClientInfo);
+
+      expect(result.message).toBe('Password reset successfully');
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(event.emit).toHaveBeenCalled(); // Called but error caught
+    });
   });
 });
