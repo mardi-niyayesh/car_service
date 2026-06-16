@@ -8,7 +8,7 @@ import {AuthService} from "@/modules/auth/auth.service";
 import {EmailService} from "@/modules/email/email.service";
 import {PERMISSIONS, ROLES, eventsEmitter} from "@/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {ConfigMock, NormalizedClientInfo, PrismaMock} from "@/types";
+import {ConfigMock, NormalizedClientInfo, PrismaMock, RefreshTokenPayload} from "@/types";
 import {DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
 import {compareSecret, generateRandomToken, hashSecretToken} from "@/lib";
 import {afterEach, beforeEach, describe, expect, it, vi, type Mock} from "vitest";
@@ -377,6 +377,27 @@ describe(AuthService.name, (): void => {
   // Refresh
   // ======================================================
   describe("refresh", () => {
+    const mockRefreshPayload: RefreshTokenPayload = {
+      id: 'user-123',
+      email: 'john@example.com',
+      display_name: 'John Doe',
+      age: 25,
+      roles: ['self', 'admin'],
+      permissions: ['user.self', 'user.view', 'user.edit'],
+      created_at: new Date(),
+      updated_at: new Date(),
+      refreshRecord: {
+        id: 'refresh-token-456',
+        token: 'hashed_refresh_token',
+        expires_at: new Date(),
+        revoked_at: null,
+        remember: false,
+        user_id: 'user-123',
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+    };
 
+    const mockAccessToken = 'new_access_token_xyz';
   });
 });
