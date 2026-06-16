@@ -448,5 +448,24 @@ describe(AuthService.name, (): void => {
       const jtiArg = (jwt.sign as Mock).mock.calls[0][0].jti;
       expect(jtiArg).toMatch(new RegExp(`^${mockUUID}\\d+$`));
     });
+
+    it('should use empty string for display_name when not provided', () => {
+      const payloadWithoutDisplayName = {
+        ...mockRefreshPayload,
+        display_name: undefined as unknown as string,
+      };
+
+      jwt.sign.mockReturnValue(mockAccessToken);
+
+      service.refresh(payloadWithoutDisplayName);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(jwt.sign).toHaveBeenCalledWith(
+        expect.objectContaining({
+          display_name: mockRefreshPayload.user.display_name,
+        }),
+        expect.anything()
+      );
+    });
   });
 });
