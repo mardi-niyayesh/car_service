@@ -1,4 +1,9 @@
-import {Controller} from "@nestjs/common";
+import {Controller, Get} from "@nestjs/common";
 
 @Controller("favorites")
-export class FavoriteController {}
+export class FavoriteController {
+  @Get()
+  get(): string {
+    return "get favorites successfully.";
+  }
+}
