@@ -1,6 +1,7 @@
-import {Controller, Get, Post} from "@nestjs/common";
 import * as FavoriteDecorator from "./decorators";
+import {Controller, Get, Post, Req} from "@nestjs/common";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import type {AccessRequest} from "@/types";
 
 /**
  * Favorite management controller for handling user's favorite cars.
@@ -30,7 +31,11 @@ export class FavoriteController {
   }
 
   @Post()
-  create() {
+  @FavoriteDecorator.CreateDecorator()
+  create(
+    @Req() req: AccessRequest
+  ) {
+    console.log(req);
     return "create favorite successfully.";
   }
 }
