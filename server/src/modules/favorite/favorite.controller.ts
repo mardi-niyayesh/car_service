@@ -25,12 +25,28 @@ import {Controller, Get, Param, Post, Req} from "@nestjs/common";
 @ApiBearerAuth("accessToken")
 export class FavoriteController {
 
+  /**
+   * Retrieve all favorite cars for the authenticated user.
+   *
+   * @returns List of favorite cars with full details (id, name, slug, company, price, image)
+   *
+   * @example GET /favorites
+   */
   @Get()
   @FavoriteDecorator.GetListDecorators()
   get() {
     return "get favorites successfully.";
   }
 
+  /**
+   * Add a car to the authenticated user's favorites list.
+   *
+   * @param req - Express request with user payload
+   * @param id - UUID of the car to be favorite
+   * @returns Created favorite record with car details
+   *
+   * @example POST /favorites/550e8400-e29b-41d4-a716-446655440000
+   */
   @Post(":id")
   @FavoriteDecorator.CreateDecorator()
   create(
