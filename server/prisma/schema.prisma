@@ -260,10 +260,10 @@ model Favorite {
   updated_at DateTime @updatedAt
 
   user_id String @db.Uuid
-  user    User   @relation(name: "UserFavorites", fields: [user_id], references: [id])
+  user    User   @relation(name: "UserFavorites", fields: [user_id], references: [id], onDelete: Cascade)
 
   car_id String @db.Uuid
-  car    Car    @relation(name: "CarFavorites", fields: [car_id], references: [id])
+  car    Car    @relation(name: "CarFavorites", fields: [car_id], references: [id], onDelete: Cascade)
 
   @@unique([car_id, user_id])
   @@index([user_id])
