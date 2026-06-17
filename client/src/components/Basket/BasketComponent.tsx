@@ -3,15 +3,16 @@ import axiosClient from "../../services/axiosClient";
 import SuccessModal from "../../Modal/SuccessModal";
 import WarningModal from "../../Modal/WarningModal ";
 
-type Car = {
+export type Car = {
   name: string;
   company: string;
   price_per_day: number;
   image: string;
   description: string;
+  id?: string;
 };
 
-type CarRent = {
+export type CarRent = {
   id: string;
   price: number;
   status: string;
