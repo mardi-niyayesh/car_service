@@ -16,4 +16,5 @@ export const CreateDecorator =  () => applyDecorators(
     permissions: [PERMISSIONS.USER_SELF],
   }),
   HttpCode(HttpStatus.CREATED),
+  ApiOperation(FavoriteDto.favoriteCreateOperation)
 );
