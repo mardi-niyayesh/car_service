@@ -1,8 +1,8 @@
 import type {AccessRequest} from "@/types";
 import * as FavoriteDecorator from "./decorators";
+import {UUIDv4Validator, ZodPipe} from "@/common";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {Controller, Get, Param, Post, Req} from "@nestjs/common";
-import {UUIDv4Validator, ZodPipe} from "@/common";
 
 /**
  * Favorite management controller for handling user's favorite cars.
