@@ -1,4 +1,4 @@
-import {Controller, Get} from "@nestjs/common";
+import {Controller, Get, Post} from "@nestjs/common";
 import * as FavoriteDecorator from "./decorators";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 
@@ -27,5 +27,10 @@ export class FavoriteController {
   @FavoriteDecorator.GetListDecorators()
   get(){
     return "get favorites successfully.";
+  }
+
+  @Post()
+  create() {
+    return "create favorite successfully.";
   }
 }
