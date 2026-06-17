@@ -10,3 +10,10 @@ export const GetListDecorators = () => applyDecorators(
   HttpCode(HttpStatus.OK),
   ApiOperation(FavoriteDto.favoriteFindAllOperation)
 );
+
+export const CreateDecorator =  () => applyDecorators(
+  Permission({
+    permissions: [PERMISSIONS.USER_SELF],
+  }),
+  HttpCode(HttpStatus.CREATED),
+);
