@@ -1,7 +1,7 @@
-import * as FavoriteDecorator from "./decorators";
-import {Controller, Get, Post, Req} from "@nestjs/common";
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import type {AccessRequest} from "@/types";
+import * as FavoriteDecorator from "./decorators";
+import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {Controller, Get, Post, Req} from "@nestjs/common";
 
 /**
  * Favorite management controller for handling user's favorite cars.
