@@ -1,8 +1,8 @@
 import DescriptionComponent from "../Main/DesctiptionComponent";
-import station1 from "../../../assets/st1.jpg";
-import station2 from "../../../assets/st2.jpg";
-import station3 from "../../../assets/st3.jpg";
-import station4 from "../../../assets/st4.jpg";
+import station1 from "../../../assets/imges/st1.jpg";
+import station2 from "../../../assets/imges/st2.jpg";
+import station3 from "../../../assets/imges/st3.jpg";
+import station4 from "../../../assets/imges/st4.jpg";
 
 const ItemDes = [
   {

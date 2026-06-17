@@ -1,11 +1,11 @@
-import blog1 from "../../../../assets/blog.png";
-import blog2 from "../../../../assets/blog2.png";
-import blog3 from "../../../../assets/blog3.png";
-import blog4 from "../../../../assets/blog4.png";
-import des1 from "../../../../assets/des1.png";
-import des2 from "../../../../assets/des2.png";
-import des3 from "../../../../assets/des3.png";
-import des6 from "../../../../assets/des6.png";
+import blog1 from "../../../../assets/imges/blog.png";
+import blog2 from "../../../../assets/imges/blog2.png";
+import blog3 from "../../../../assets/imges/blog3.png";
+import blog4 from "../../../../assets/imges/blog4.png";
+import des1 from "../../../../assets/imges/des1.png";
+import des2 from "../../../../assets/imges/des2.png";
+import des3 from "../../../../assets/imges/des3.png";
+import des6 from "../../../../assets/imges/des6.png";
 
 export const allBlogs = [
   {

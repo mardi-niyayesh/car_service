@@ -1,6 +1,6 @@
 import DesCar from "../DesCar";
 import ReserveComponent from "../ReserveComponent";
-import yazd from "../../../../assets/yazd-2.png";
+import yazd from "../../../../assets/imges/yazd-2.png";
 
 const YazdPage = () => {
   return (

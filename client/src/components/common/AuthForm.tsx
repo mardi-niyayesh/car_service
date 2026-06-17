@@ -1,12 +1,8 @@
-//icon img
-import imgLogin from "../../../assets/imglogin.png";
+import imgLogin from "../../../assets/imges/imglogin.png";
 import FormInput from "./FormInput";
-//hooks
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useSearchParams } from "react-router-dom";
-
-//types
 import { type AuthFormProps } from "../../types/auth.types";
 
 // pattern Email
@@ -61,7 +57,7 @@ function AuthForm({
         ? { email: "", password: "", rememberMe: true }
         : isResetPassword
           ? { password: "" }
-          : { email: "" }, //forgot password
+          : { email: "" },
   });
   useEffect(() => {
     if (resetForm) {
@@ -101,7 +97,6 @@ function AuthForm({
           </h1>
 
           <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-            {/*Email form*/}
             {!isResetPassword && (
               <FormInput
                 label="ایمیل"
@@ -120,8 +115,7 @@ function AuthForm({
               />
             )}
 
-            {/*Password form*/}
-            {(isLogin || isRegister || isResetPassword) && (
+          {(isLogin || isRegister || isResetPassword) && (
               <FormInput
                 label="رمز عبور"
                 name="password"
@@ -146,7 +140,7 @@ function AuthForm({
                 }}
               />
             )}
-            {/* forgat password and remember me*/}
+
             {isLogin && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -179,7 +173,7 @@ function AuthForm({
                 رمز عبور جدید خود را وارد کنید
               </p>
             )}
-            {/*FirstName form*/}
+
             {isRegister && (
               <>
                 <FormInput
@@ -202,7 +196,6 @@ function AuthForm({
                   }}
                 />
 
-                {/*Age form*/}
                 <FormInput
                   label="سن"
                   name="age"
@@ -224,7 +217,6 @@ function AuthForm({
                   }}
                 />
 
-                {/*check bos roles*/}
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -253,19 +245,16 @@ function AuthForm({
               </>
             )}
 
-            {/* statuse mutation*/}
             {isPending && (
               <div className="text-blue-500 text-sm text-center">
                 در حال ارسال اطلاعات...
               </div>
             )}
 
-            {/* Errore */}
             {error && (
               <div className="text-red-500 text-sm text-center">{error}</div>
             )}
 
-            {/*submit button */}
             <button
               type="submit"
               disabled={!isValid || isPending}

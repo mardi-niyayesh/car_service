@@ -1,6 +1,6 @@
 import DesCar from "../DesCar";
 import ReserveComponent from "../ReserveComponent";
-import shirazimg from "../../../../assets/shiraz-2.png";
+import shirazimg from "../../../../assets/imges/shiraz-2.png";
 
 const ShirazPage = () => {
   return (

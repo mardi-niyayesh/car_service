@@ -1,6 +1,6 @@
 import ReserveComponent from "../ReserveComponent";
 import DesCar from "../DesCar";
-import Maddhad from "../../../../assets/mashhad-2.png";
+import Maddhad from "../../../../assets/imges/mashhad-2.png";
 
 const MashhadPage = () => {
   return (
