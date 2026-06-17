@@ -1,7 +1,8 @@
 import type {AccessRequest} from "@/types";
 import * as FavoriteDecorator from "./decorators";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
-import {Controller, Get, Post, Req} from "@nestjs/common";
+import {Controller, Get, Param, Post, Req} from "@nestjs/common";
+import {UUIDv4Validator, ZodPipe} from "@/common";
 
 /**
  * Favorite management controller for handling user's favorite cars.
@@ -26,16 +27,18 @@ export class FavoriteController {
 
   @Get()
   @FavoriteDecorator.GetListDecorators()
-  get(){
+  get() {
     return "get favorites successfully.";
   }
 
-  @Post()
+  @Post(":id")
   @FavoriteDecorator.CreateDecorator()
   create(
-    @Req() req: AccessRequest
+    @Req() req: AccessRequest,
+    @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
   ) {
-    console.log(req);
+    console.log(req.user);
+    console.log(id);
     return "create favorite successfully.";
   }
 }
