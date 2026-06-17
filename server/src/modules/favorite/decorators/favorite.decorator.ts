@@ -1,6 +1,6 @@
 import * as FavoriteDto from "../dto";
-import {ApiOperation} from "@nestjs/swagger";
-import {Permission, PERMISSIONS} from "@/common";
+import {ApiOperation, ApiParam} from "@nestjs/swagger";
+import {Permission, PERMISSIONS, UUID4Dto} from "@/common";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 
 export const GetListDecorators = () => applyDecorators(
@@ -15,6 +15,7 @@ export const CreateDecorator =  () => applyDecorators(
   Permission({
     permissions: [PERMISSIONS.USER_SELF],
   }),
+  ApiParam(UUID4Dto("id")),
   HttpCode(HttpStatus.CREATED),
   ApiOperation(FavoriteDto.favoriteCreateOperation)
 );
