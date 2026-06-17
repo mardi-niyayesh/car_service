@@ -51,6 +51,12 @@ const BasketComponent = () => {
   }, []);
 
   if (loading) return <div>در حال بارگذاری سبد خرید...</div>;
+  if (!dataReserve.length)
+    return (
+      <div className="bg-amber-100 text-center rounded  mt-3">
+        سبد خرید خالی است...!
+      </div>
+    );
   const handleBillReserev = () => {
     setIsSuccessOpen(true);
     setSuccessMessage(`پرداخت شما با موفقیت انجام شد خودرو ی شما آماده ی تحویل می باشد و
