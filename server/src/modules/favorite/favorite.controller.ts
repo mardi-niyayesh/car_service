@@ -1,6 +1,6 @@
-import {Public} from "@/common";
-import {ApiTags} from "@nestjs/swagger";
 import {Controller, Get} from "@nestjs/common";
+import * as FavoriteDecorator from "./decorators";
+import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 
 /**
  * Favorite management controller for handling user's favorite cars.
@@ -18,12 +18,14 @@ import {Controller, Get} from "@nestjs/common";
  * GET /favorites
  * // Response: { message: "Favorites retrieved successfully." }
  */
-@Public()
 @ApiTags("Favorites")
 @Controller("favorites")
+@ApiBearerAuth("accessToken")
 export class FavoriteController {
+
   @Get()
-  get(): string {
+  @FavoriteDecorator.GetListDecorators()
+  get(){
     return "get favorites successfully.";
   }
 }
