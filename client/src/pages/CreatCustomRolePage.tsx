@@ -155,6 +155,7 @@ const CreateCustomRolePage = () => {
     (p) =>
       !p.name.startsWith("role.") &&
       !p.name.startsWith("user.") &&
+      p.name !== "permission.view" &&
       p.name !== "owner.all",
   );
 
@@ -162,6 +163,7 @@ const CreateCustomRolePage = () => {
     (p) =>
       p.name.startsWith("role.") ||
       p.name.startsWith("user.") ||
+      p.name === "permission.view" ||
       p.name === "owner.all",
   );
 
