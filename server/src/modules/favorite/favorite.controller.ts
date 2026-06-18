@@ -1,4 +1,4 @@
-import type {AccessRequest} from "@/types";
+import type {AccessRequest, ApiResponse, FavoriteResponse} from "@/types";
 import * as FavoriteDecorator from "./decorators";
 import {UUIDv4Validator, ZodPipe} from "@/common";
 import {FavoriteService} from "./favorite.service";
@@ -54,7 +54,7 @@ export class FavoriteController {
   create(
     @Req() req: AccessRequest,
     @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
-  ) {
+  ): Promise<ApiResponse<FavoriteResponse>> {
     return this.favoriteService.create(req.user.userId, id);
   }
 }
