@@ -7,6 +7,14 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 export class FavoriteService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * Adds a car to the user's favorites list.
+   *
+   * @param user_id - The ID of the authenticated user
+   * @param car_id - The ID of the car to be favorite
+   * @returns A promise containing the API response with the created favorite record
+   *
+   */
   async create(user_id: string, car_id: string): Promise<ApiResponse<FavoriteResponse>> {
     try {
       const favorite = await this.prisma.favorite.create({
