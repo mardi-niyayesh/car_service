@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axiosClient from "../../services/axiosClient";
 import SuccessModal from "../../Modal/SuccessModal";
 import WarningModal from "../../Modal/WarningModal ";
+import { FiTrash } from "react-icons/fi";
 
 export type Car = {
   name: string;
@@ -35,9 +36,9 @@ const BasketComponent = () => {
     try {
       const response = await axiosClient.get(`/carts`);
       const allReserve = response.data.response.data.cart.carRents;
-      setDataReserve(allReserve);
-
       const TotalPrice = response.data.response.data.cart.total_price;
+
+      setDataReserve(allReserve);
       setCartTotal(TotalPrice);
     } catch (err) {
       console.log("Error in get basket :", err);
@@ -51,12 +52,7 @@ const BasketComponent = () => {
   }, []);
 
   if (loading) return <div>در حال بارگذاری سبد خرید...</div>;
-  if (!dataReserve.length)
-    return (
-      <div className="bg-amber-100 text-center rounded  mt-3">
-        سبد خرید خالی است...!
-      </div>
-    );
+
   const handleBillReserev = () => {
     setIsSuccessOpen(true);
     setSuccessMessage(`پرداخت شما با موفقیت انجام شد خودرو ی شما آماده ی تحویل می باشد و
@@ -72,6 +68,7 @@ const BasketComponent = () => {
         setSuccessMessage("ماشین مورد نظر با موفیت از سبد خرید شما حذف شد");
       }
       await fetchAllReserve();
+      window.dispatchEvent(new Event("cart-updated"));
     } catch (err: any) {
       console.log("Error in deleat car ", err);
       if (err.response?.status === 400) {
@@ -90,9 +87,14 @@ const BasketComponent = () => {
 
   return (
     <>
+      <div className=" border border-[#EDEDED] rounded-xl bg-blue-100 shadow-sm sm:gap-0 p-2 sm:p-3  ">
+        <h2 className="text-blue-800 text-[30px]  text-center">سبد خرید</h2>
+      </div>
       <div className="max-w-2xl mx-auto p-4 space-y-4">
         {dataReserve.length === 0 ? (
-          <p className="text-center text-gray-500 py-8">سبد خرید خالی است</p>
+          <p className="bg-amber-100 text-center rounded  mt-3">
+            سبد خرید خالی است
+          </p>
         ) : (
           <>
             {dataReserve.map((rent) => (
@@ -121,7 +123,10 @@ const BasketComponent = () => {
                   </p>
                   <p className="text-gray-600">
                     <span className="font-semibold">قیمت روزانه:</span>
-                    {rent.car.price_per_day} تومان
+                    {Number(rent.car.price_per_day).toLocaleString(
+                      "fa-IR",
+                    )}
+                    تومان
                   </p>
                   <p className="text-gray-600">
                     <span className="font-semibold">تاریخ شروع:</span>
@@ -133,9 +138,9 @@ const BasketComponent = () => {
                   </p>
                   <button
                     onClick={() => handleDeletItemBasket(rent.id)}
-                    className=" mt-4 bg-red-500 text-white py-2 px-2 rounded-lg  hover:bg-red-600 transition"
+                    className=" mt-4 border-2 flex items-center border-red-500 text-red-600 hover:bg-red-500 hover:text-white  px-2 rounded-lg transition"
                   >
-                    حذف از سبد خرید
+                    <FiTrash className="" /> حذف
                   </button>
                 </div>
               </div>
