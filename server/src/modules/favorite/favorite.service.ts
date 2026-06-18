@@ -1,8 +1,7 @@
 import {checkPrismaError} from "@/lib";
 import {Injectable} from "@nestjs/common";
+import {ApiResponse, FavoriteResponse} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {ApiResponse} from "@/types";
-import {FavoriteResponse} from "@/types/favorite.types";
 
 @Injectable()
 export class FavoriteService {
