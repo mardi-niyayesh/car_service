@@ -1,5 +1,5 @@
 import * as FavoriteDto from "../dto";
-import {ApiOperation, ApiParam} from "@nestjs/swagger";
+import {ApiNotFoundResponse, ApiOperation, ApiParam} from "@nestjs/swagger";
 import {Permission, PERMISSIONS, UUID4Dto} from "@/common";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 
@@ -17,5 +17,6 @@ export const CreateDecorator =  () => applyDecorators(
   }),
   ApiParam(UUID4Dto("id")),
   HttpCode(HttpStatus.CREATED),
-  ApiOperation(FavoriteDto.favoriteCreateOperation)
+  ApiOperation(FavoriteDto.favoriteCreateOperation),
+  ApiNotFoundResponse({type: FavoriteDto.CreateNotFoundRes})
 );
