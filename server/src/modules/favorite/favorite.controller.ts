@@ -54,7 +54,7 @@ export class FavoriteController {
   create(
     @Req() req: AccessRequest,
     @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
-  ): string {
+  ) {
     return this.favoriteService.create(req.user.userId, id);
   }
 }
