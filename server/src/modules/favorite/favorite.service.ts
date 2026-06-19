@@ -2,6 +2,8 @@ import {checkPrismaError} from "@/lib";
 import {Injectable} from "@nestjs/common";
 import {ApiResponse, FavoriteResponse} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {PaginationValidatorType} from "@/common";
+import {FavoriteWhereInput} from "@/modules/prisma/generated/models/Favorite";
 
 @Injectable()
 export class FavoriteService {
@@ -41,11 +43,23 @@ export class FavoriteService {
     }
   }
 
-  async get(user_id: string, car_id: string) {
+  async get(user_id: string, car_id: string, pagination: PaginationValidatorType) {
+    const {orderByLower, limit, offset} = pagination;
+    const where: FavoriteWhereInput = {
+      user_id,
+      car_id,
+    };
+
+    const count: number = await this.prisma.favorite.count({
+      where
+    });
+
     const favorites = await this.prisma.favorite.findMany({
-      where: {
-        user_id,
-        car_id
+      where,
+      take: limit,
+      skip: offset,
+      orderBy: {
+        created_at: orderByLower
       }
     });
 
