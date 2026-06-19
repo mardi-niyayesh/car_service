@@ -68,7 +68,7 @@ export class FavoriteController {
   @Get()
   @FavoriteDecorator.GetListDecorators()
   get() {
-    return "get favorites successfully.";
+    return this.favoriteService.get();
   }
 
   /**

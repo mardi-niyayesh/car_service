@@ -40,4 +40,8 @@ export class FavoriteService {
       });
     }
   }
+
+  get() {
+    return 'get all favorites successfully.';
+  }
 }
