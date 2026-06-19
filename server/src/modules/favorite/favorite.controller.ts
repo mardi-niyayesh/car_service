@@ -65,7 +65,7 @@ export class FavoriteController {
    *   }
    * }
    */
-  @Get()
+  @Get(":id")
   @FavoriteDecorator.GetListDecorators()
   get(
     @Req() req: AccessRequest,
