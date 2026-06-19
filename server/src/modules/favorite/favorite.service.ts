@@ -1,7 +1,7 @@
 import {checkPrismaError} from "@/lib";
 import {Injectable} from "@nestjs/common";
 import {PaginationValidatorType} from "@/common";
-import type {ApiResponse, FavoriteResponse} from "@/types";
+import type {ApiResponse, FavoriteResponse, ListFavoriteResponse} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {FavoriteWhereInput} from "@/modules/prisma/generated/models/Favorite";
 
@@ -43,7 +43,7 @@ export class FavoriteService {
     }
   }
 
-  async get(user_id: string, car_id: string, pagination: PaginationValidatorType) {
+  async get(user_id: string, car_id: string, pagination: PaginationValidatorType): Promise<ApiResponse<ListFavoriteResponse>> {
     const {orderByLower, limit, offset} = pagination;
     const where: FavoriteWhereInput = {
       user_id,
@@ -66,6 +66,12 @@ export class FavoriteService {
     console.log(count);
     console.log(favorites);
 
-    return 'get all favorites successfully.';
+    return {
+      message: "get favorites successfully.",
+      data: {
+        count,
+        favorites
+      }
+    };
   }
 }

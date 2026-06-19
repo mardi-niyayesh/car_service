@@ -2,7 +2,7 @@ import * as FavoriteDecorator from "./decorators";
 import {FavoriteService} from "./favorite.service";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {Controller, Get, Param, Post, Query, Req} from "@nestjs/common";
-import type {AccessRequest, ApiResponse, FavoriteResponse} from "@/types";
+import type {AccessRequest, ApiResponse, FavoriteResponse, ListFavoriteResponse} from "@/types";
 import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
 
 /**
@@ -71,7 +71,7 @@ export class FavoriteController {
     @Req() req: AccessRequest,
     @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
-  ) {
+  ): Promise<ApiResponse<ListFavoriteResponse>> {
     return this.favoriteService.get(req.user.userId, id, pagination);
   }
 
