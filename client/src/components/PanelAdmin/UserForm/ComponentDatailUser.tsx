@@ -211,21 +211,21 @@ const ComponentDatailUser = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-gray-500 font-medium">ایمیل:</p>
-              <p className="text-base text-gray-700">{alluser.email}</p>
+              <p className=" text-gray-500 font-medium">ایمیل:</p>
+              <p className=" text-gray-700">{alluser.email}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 font-medium">اسم:</p>
-              <p className="text-base text-gray-600 font-medium">
+              <p className=" text-gray-500 font-medium">اسم:</p>
+              <p className=" text-gray-600 font-medium">
                 {alluser.display_name}
               </p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 font-medium">سن :</p>
-              <p className="text-base text-gray-700">{alluser.age}</p>
+              <p className=" text-gray-500 font-medium">سن :</p>
+              <p className=" text-gray-700">{alluser.age}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500 font-medium">
+              <p className=" text-gray-500 font-medium">
                 نقش های فعلی :
               </p>
               <p className="text-base text-green-600 font-medium">

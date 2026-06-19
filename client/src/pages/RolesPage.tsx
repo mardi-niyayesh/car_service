@@ -223,7 +223,7 @@ const RolesPage = () => {
         <h2 className="font-medium text-blue-800 mb-2">
           نکاتی در مورد حذف نقش :
         </h2>
-        <ul className="list-disc pr-5 space-y-1 text-sm text-gray-700 ">
+        <ul className="list-disc pr-5 space-y-1 text-[18px] text-gray-500 ">
           <li>حتی مالک سیستم نمی‌تواند نقش‌های پایه‌ای سیستم را حذف کند.</li>
           <li>
             حتی با مجوز role.delete هم نمی‌توانید نقش‌های حساس (شروع با user. یا

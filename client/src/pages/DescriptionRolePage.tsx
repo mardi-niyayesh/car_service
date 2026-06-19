@@ -51,18 +51,12 @@ const DescriptionRolePage = () => {
       ) : (
         <>
           <div className="rounded-lg shadow-sm border border-gray-200 bg-white">
-            <table className="min-w-full text-right text-sm text-gray-700">
+            <table className="min-w-full text-right  text-gray-700">
               <thead className="bg-gray-100 text-gray-700">
                 <tr>
-                  <th className="px-4 py-3 font-medium hidden sm:table-cell">
-                    ردیف
-                  </th>
-                  <th className="px-4 py-3 font-medium sm:table-cell">
-                    اسم نقش
-                  </th>
-                  <th className="px-4 py-3 font-medium sm:table-cell">
-                    توضیحات
-                  </th>
+                  <th className="px-4 py-3 font-medium hidden ">ردیف</th>
+                  <th className="px-4 py-3 font-medium ">اسم نقش</th>
+                  <th className="px-4 py-3 font-medium">توضیحات</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -78,13 +72,13 @@ const DescriptionRolePage = () => {
                       key={rol.id}
                       className="hover:bg-gray-50 transition-colors border-b border-gray-100"
                     >
-                      <td className="px-4 py-3 hidden sm:table-cell">
+                      <td className="px-4 py-3 hidden ">
                         {(page - 1) * 10 + index + 1}
                       </td>
-                      <td className="px-4 py-3 text-green-600 sm:table-cell">
+                      <td className="px-4 py-3 text-green-600 text-[16px]">
                         {rol.name}
                       </td>
-                      <td className="px-4 py-3 text-blue-400">
+                      <td className="px-4 py-3 text-blue-400 text-[16px]">
                         {rol.description}
                       </td>
                     </tr>

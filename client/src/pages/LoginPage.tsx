@@ -1,23 +1,16 @@
-//hooks
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-//context
 import { useUser } from "../hooks/useUser";
-//components
 import AuthForm from "../components/common/AuthForm";
-//api
 import { loginUser } from "../services/api";
-//types
 import { type LoginFormData } from "../types/auth.types";
-//Modal
 import SuccessModal from "../Modal/SuccessModal";
 import ErrorModal from "../Modal/ErrorModal";
 import WarningModal from "../Modal/WarningModal ";
 
 function LoginPage() {
   const navigate = useNavigate();
-  //use az context for send infomation user to context
   const { setUser, setToken } = useUser();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,7 +25,7 @@ function LoginPage() {
   const mutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      // console.log("data:", data);
+      console.log("data:", data);
 
       if (data.success === false) {
         setWarningMessage("ایمیل یا رمز عبور اشتباه است");
@@ -73,17 +66,15 @@ function LoginPage() {
     mutation.mutate(data);
   };
 
-  //SuccessModal
   const handleCloseModal = () => {
     setIsModalOpen(false);
     navigate("/");
   };
 
-  //ErrorModal
   const handleCloseErrorModal = () => {
     setIsErrorModalOpen(false);
   };
-  // WarningModal
+
   const handleCloseWarningModal = () => {
     setIsWarningModalOpen(false);
   };
