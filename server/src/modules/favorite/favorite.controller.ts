@@ -1,9 +1,9 @@
 import * as FavoriteDecorator from "./decorators";
-import {PaginationValidator, PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
 import {FavoriteService} from "./favorite.service";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {Controller, Get, Param, Post, Query, Req} from "@nestjs/common";
 import type {AccessRequest, ApiResponse, FavoriteResponse} from "@/types";
+import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
 
 /**
  * Controller for managing authenticated user's favorite cars.
