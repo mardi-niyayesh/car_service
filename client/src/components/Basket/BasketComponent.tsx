@@ -84,6 +84,10 @@ const BasketComponent = () => {
       }
     }
   };
+  const toPersianDigits = (num: number): string => {
+    const persian = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+    return num.toString().replace(/\d/g, (d) => persian[parseInt(d)]);
+  };
 
   return (
     <>
@@ -123,9 +127,7 @@ const BasketComponent = () => {
                   </p>
                   <p className="text-gray-600">
                     <span className="font-semibold">قیمت روزانه:</span>
-                    {Number(rent.car.price_per_day).toLocaleString(
-                      "fa-IR",
-                    )}
+                    {Number(rent.car.price_per_day).toLocaleString("fa-IR")}
                     تومان
                   </p>
                   <p className="text-gray-600">
@@ -136,6 +138,21 @@ const BasketComponent = () => {
                     <span className="font-semibold">تاریخ پایان:</span>
                     {new Date(rent.end_date).toLocaleDateString("fa-IR")}
                   </p>
+
+                  <div className=" md:text-[18px] ">
+                    <span className="text-gray-600 ml-1">مدت زمان اجاره :</span>
+                    <span className="text-[#494949]">
+                      {(() => {
+                        const start = +new Date(rent.start_date);
+                        const end = +new Date(rent.end_date);
+                        const diffTime = end - start;
+                        const diffDays = Math.ceil(
+                          diffTime / (1000 * 60 * 60 * 24),
+                        );
+                        return `${toPersianDigits(diffDays)} روز`;
+                      })()}
+                    </span>
+                  </div>
                   <button
                     onClick={() => handleDeletItemBasket(rent.id)}
                     className=" mt-4 border-2 flex items-center border-red-500 text-red-600 hover:bg-red-500 hover:text-white  px-2 rounded-lg transition"
