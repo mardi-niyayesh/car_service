@@ -63,6 +63,9 @@ export class FavoriteService {
       }
     });
 
+    console.log(count);
+    console.log(favorites);
+
     return 'get all favorites successfully.';
   }
 }
