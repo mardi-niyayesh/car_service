@@ -11,7 +11,7 @@ export const GetListDecorators = () => applyDecorators(
   ApiOperation(FavoriteDto.favoriteFindAllOperation)
 );
 
-export const CreateDecorator =  () => applyDecorators(
+export const CreateDecorator = () => applyDecorators(
   Permission({
     permissions: [PERMISSIONS.USER_SELF],
   }),
