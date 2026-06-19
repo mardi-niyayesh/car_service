@@ -41,7 +41,14 @@ export class FavoriteService {
     }
   }
 
-  get() {
+  async get(user_id: string, car_id: string) {
+    const favorites = await this.prisma.favorite.findMany({
+      where: {
+        user_id,
+        car_id
+      }
+    });
+
     return 'get all favorites successfully.';
   }
 }
