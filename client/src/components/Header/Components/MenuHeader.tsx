@@ -50,7 +50,6 @@ const MenuHeader = () => {
   };
   return (
     <>
-      {/* Desktop Menu  */}
       <div className="bg-white py-4 ">
         <nav className=" hidden md:flex container mx-auto px-4 flexed items-center justify-between">
           <ul className="flex items-center space-x-6 ">
@@ -101,8 +100,6 @@ const MenuHeader = () => {
           </ul>
         </nav>
       </div>
-
-      {/* Mobile Menu */}
       <div
         className="md:hidden fixed bottom-0 right-0 left-0 bg-[#EDEDED] border-t border-gray-200
               flex justify-around items-center p-2 z-50 shadow-inner h-16"

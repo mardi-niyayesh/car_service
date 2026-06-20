@@ -10,7 +10,7 @@ const Des4Car = () => {
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 mb-2 ">
       <div className="p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex-wrap   items-center justify-center gap-2.5">
-          <h1 className="text-blue-700 font-bold  mb-4">
+          <h1 className="text-gray-700 font-bold  mb-4">
             {findProduct?.name}
           </h1>
           <div className="flex ">

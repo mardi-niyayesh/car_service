@@ -12,14 +12,13 @@ const ContainerHeader = () => {
   return (
     <header className="bg-white shadow-sm sticky top-0 z-40">
       <nav className="container mx-auto pt-4 px-3">
-        {/* Mobile and Tablet*/}
         <div className="flex justify-between items-center md:hidden">
           <Logo />
           <div className="flex items-center gap-3">
             {user ? (
               user.roles.length === 1 && user.roles[0] === "self" ? (
                 <Link to="/dashboard">
-                  <span className="text-lg font-semibold border-2 p-3 rounded-lg bg-blue-600 hover:bg-blue-800 text-white">
+                  <span className="text-lg font-semibold border-2 p-3 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white">
                     {user.display_name}
                     <IoChevronDown
                       size={18}
@@ -29,7 +28,7 @@ const ContainerHeader = () => {
                 </Link>
               ) : (
                 <Link to="/panel">
-                  <span className="text-lg font-semibold text-blue-600 border-2 p-3 rounded-lg bg-blue-600 text-white">
+                  <span className="text-lg font-semibold border-2 p-3 rounded-lg bg-yellow-500 text-white">
                     {user.display_name}
                     <IoChevronDown
                       size={18}
@@ -52,8 +51,6 @@ const ContainerHeader = () => {
             <MenuHeader />
           </div>
         </div>
-
-        {/* Desktop  */}
         <div className="hidden md:flex items-center justify-between w-full">
           <div className="flex items-center gap-6">
             <Logo />

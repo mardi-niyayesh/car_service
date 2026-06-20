@@ -2,10 +2,10 @@ const ContactPage = () => {
   return (
     <>
       <div className="bg-[url('../../assets/imges/page.png')] bg-cover bg-center bg-no-repeat w-full min-h-[250px] md:min-h-[400px] lg:min-h-[550px] xl:h-[683px] relative"></div>
-      <div className="container rounded-2xl mx-auto px-4 sm:px-6 lg:px-8 max-w-[1200px]  mt-10 mb-10 bg-[#EDEDED] ">
+      <div className="container rounded-2xl mx-auto px-4 sm:px-6 lg:px-8 max-w-[1200px]  mt-10 mb-10 bg-yellow-50 ">
         <div className="flex flex-col lg:flex-row items-stretch gap-8 lg:gap-12 py-8 md:py-12 lg:py-16">
           <div className="w-full lg:w-1/2 flex flex-col justify-center space-y-6 md:space-y-8">
-            <h2 className="text-blue-800 font-bold text-lg sm:text-xl md:text-2xl lg:text-[24px] pb-2 mb-4">
+            <h2 className="text-yellow-600 font-bold text-lg sm:text-xl md:text-2xl lg:text-[24px] pb-2 mb-4">
               ارتباط با دفتر مرکزی اتورنت
             </h2>
             <div className="flex flex-wrap items-start gap-1">
@@ -55,7 +55,7 @@ const ContactPage = () => {
           </div>
 
           <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-            <h1 className="text-blue-800 font-bold text-lg sm:text-xl md:text-2xl text-center lg:text-[24px] pb-2 mb-4">
+            <h1 className="text-yellow-600 font-bold text-lg sm:text-xl md:text-2xl text-center lg:text-[24px] pb-2 mb-4">
               فرم تماس با ما
             </h1>
             <p className="text-gray-500 mb-6 ">
@@ -121,7 +121,7 @@ const ContactPage = () => {
                 <div>
                   <button
                     type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     ارسال
                   </button>

@@ -46,7 +46,7 @@ const ProductComponent = () => {
   }
   return (
     <>
-      <div className="text-blue-600 text-3xl items-center font-bold justify-center flex">
+      <div className="text-[#FDB713] text-3xl items-center font-bold justify-center flex">
         <span>{categoryName}</span>
       </div>
 

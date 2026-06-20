@@ -91,7 +91,7 @@ const AboutPage = () => {
 
       {desAbout.map((item) => (
         <div key={item.id} className="mb-12 md:mb-16 lg:mb-20">
-          <p className="text-blue-800 font-bold text-xl sm:text-2xl md:text-3xl lg:text-[32px] pb-3 mb-6  inline-block">
+          <p className="text-yellow-600 font-bold text-xl sm:text-2xl md:text-3xl lg:text-[32px] pb-3 mb-6  inline-block">
             {item.title}
           </p>
           <div className="text-gray-500 text-base md:text-lg lg:text-xl leading-relaxed text-justify">

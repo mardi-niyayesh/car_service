@@ -10,7 +10,7 @@ const BoxComponentQuestion = (props: BoxComponentType) => {
   const [showFullText, setShowFullText] = useState(false);
   return (
     <div className="w-full px-2 py-2">
-     <div className="bg-white rounded-xl border  border-blue-100 shadow-lg overflow-hidden">
+     <div className="bg-white rounded-xl border  border-yellow-200 shadow-lg overflow-hidden">
 
         <div className="block sm:hidden">
           {props.image && (
@@ -34,7 +34,7 @@ const BoxComponentQuestion = (props: BoxComponentType) => {
               <div
                 className={`
                 flex-shrink-0 w-7 h-7 flex items-center justify-center 
-                rounded-lg bg-gray-100 text-gray-600 font-bold text-xl
+                rounded-lg bg-yellow-100 text-gray-600 font-bold text-2xl
                 transition-all duration-300 
                 ${showFullText ? "rotate-180" : "rotate-0"}
               `}
@@ -67,7 +67,7 @@ const BoxComponentQuestion = (props: BoxComponentType) => {
               <div
                 className={`
                 flex-shrink-0 w-8 h-8 md:w-9 md:h-9 flex items-center justify-center 
-                rounded-lg bg-gray-100 group-hover:bg-gray-200 text-gray-600 
+                rounded-lg bg-yellow-100 group-hover:bg-yellow-200 text-gray-600 
                 font-bold text-xl md:text-2xl transition-all duration-300
                 ${showFullText ? "rotate-180" : "rotate-0"}
               `}
