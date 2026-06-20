@@ -22,7 +22,7 @@ const ComponentArticleCar = () => {
           </p>
 
           <Link to={`/articles/${item.id}`}>
-            <button className="cursor-pointer w-full text-center bg-blue-600 text-white p-3 rounded-lg mt-4 hover:bg-blue-800">
+            <button className="cursor-pointer w-full text-center bg-[#FDB713] text-white p-3 rounded-lg mt-4 hover:bg-yellow-600">
               اطلاعات بیشتر
             </button>
           </Link>

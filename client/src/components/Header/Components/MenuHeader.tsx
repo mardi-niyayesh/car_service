@@ -90,7 +90,7 @@ const MenuHeader = () => {
                   >
                     <Link
                       to={item.path}
-                      className="text-gray-700 hover:text-blue-600 font-medium transition duration-300 ease-in-out px-3 py-2"
+                      className="text-gray-700 hover:text-yellow-600 font-medium transition duration-300 ease-in-out px-3 py-2"
                     >
                       {item.label}
                     </Link>
