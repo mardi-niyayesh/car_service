@@ -7,7 +7,7 @@ const BanerHeader = () => {
         <div className="container max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8 relative z-10 pt-8 md:pt-12 lg:pt-16">
           <div className="max-w-2xl">
             <h2 className="text-[#FDB713] font-bold text-[28px] sm:text-[30px] md:text-[44px] lg:text-[48px] xl:text-[52px] leading-tight mb-4 md:mb-6">
-              اُتـــو رِنت؛ سریع، آسان و به صرفه
+              کارسرویس سریع، آسان و به صرفه
             </h2>
 
             <p className="text-[#F9F9F9]  text-justify md:text-right mb-6 md:mb-8 max-w-lg">

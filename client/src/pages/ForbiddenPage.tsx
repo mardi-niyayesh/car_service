@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 
 
-const ErrorPage = () => {
+const ForbiddenPage = () => {
   return (
     <div className="flex flex-col items-center justify-start">
-      <div className="bg-[url('../../assets/imges/notfound.png')] bg-cover bg-center bg-no-repeat w-full min-h-[200px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[500px] xl:h-[600px] 2xl:h-[683px] relative"></div>
+      <div className="bg-[url('../../assets/imges/error.png')] bg-cover bg-center bg-no-repeat w-full min-h-[200px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[500px] xl:h-[600px] 2xl:h-[683px] relative"></div>
 
       <p className="text-center font-bold text-yellow-600 text-2xl mt-4">صفحه مورد نظر یافت نشد</p>
       
@@ -26,4 +26,4 @@ const ErrorPage = () => {
   );
 };
 
-export default ErrorPage;
+export default ForbiddenPage;
