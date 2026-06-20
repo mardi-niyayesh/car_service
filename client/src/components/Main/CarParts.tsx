@@ -7,54 +7,33 @@ import Nissan from "../../../assets/imges/Nissan.png";
 import Toyota from "../../../assets/imges/Toyota.png";
 import lexus from "../../../assets/imges/lexus-logo.png";
 
+const icons = [
+  { id: 1, icon: BMW },
+  { id: 2, icon: Honda },
+  { id: 3, icon: Hyundai },
+  { id: 4, icon: KIA1 },
+  { id: 5, icon: Marcedes },
+  { id: 6, icon: Nissan },
+  { id: 7, icon: Toyota },
+  { id: 8, icon: lexus },
+];
+
 const CarParts = () => {
   return (
-    <div className=" ">
-      <p className="font-bold text-blue-800 text-2xl text-center my-8">
+    <div>
+      <p className="font-bold text-[#FDB713] text-2xl text-center my-8">
         برند های همکار با ما
       </p>
-      <div className="container max-auto  m-auto  grid grid-cols-4 gap-4 md:flex md:items-center md:justify-around  border border-[#EDEDED] rounded-xl mt-8 bg-white shadow-sm">
-        <img
-          src={BMW}
-          alt="BMW"
-          className="w-12 h-12 md:w-auto md:h-auto mx-auto"
-        />
-        <img
-          src={Honda}
-          alt="Honda"
-          className="w-12 h-12 md:w-auto md:h-auto mx-auto"
-        />
-        <img
-          src={Hyundai}
-          alt="Hyundai"
-          className="w-12 h-12 md:w-auto md:h-auto mx-auto"
-        />
-        <img
-          src={KIA1}
-          alt="KIA1"
-          className="w-12 h-12 md:w-auto md:h-auto mx-auto"
-        />
-
-        <img
-          src={Marcedes}
-          alt="Marcedes"
-          className="w-12 h-12 md:w-auto md:h-auto mx-auto"
-        />
-        <img
-          src={Nissan}
-          alt="Nissan"
-          className="w-12 h-12 md:w-auto md:h-auto mx-auto"
-        />
-        <img
-          src={Toyota}
-          alt="Toyota"
-          className="w-12 h-12 md:w-auto md:h-auto mx-auto"
-        />
-        <img
-          src={lexus}
-          alt="lexus"
-          className="w-12 h-12 md:w-auto md:h-auto mx-auto"
-        />
+      <div className="container mx-auto grid grid-cols-4 gap-4 md:flex md:items-center md:justify-around shadow-2xl rounded-xl mt-8 bg-white  p-4">
+        {icons.map((i) => (
+          <div key={i.id} className="flex justify-center">
+            <img
+              src={i.icon}
+              alt={`brand-${i.id}`}
+              className="w-12 h-12 md:w-auto md:h-auto object-contain"
+            />
+          </div>
+        ))}
       </div>
     </div>
   );
