@@ -156,7 +156,7 @@ const CommentForm = ({ replyToId, onSuccess }: CommentProps) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full px-6 py-3 bg-indigo-500 text-white font-medium rounded-md shadow-sm hover:bg-indigo-700 disabled:opacity-50"
+            className="w-full px-6 py-3 bg-yellow-500 text-white font-medium rounded-md shadow-sm hover:bg-yellow-600 disabled:opacity-50"
           >
             {loading ? "در حال ارسال..." : "فرستادن دیدگاه"}
           </button>

@@ -5,13 +5,13 @@ const AuthButton = () => {
   return (
     <div
       className="inline-flex cursor-pointer items-center justify-between py-3 w-auto rounded-lg
-                    md:bg-[#137cfd] transition duration-300 ease-in-out text-white
+                    md:bg-[#FDB713] transition duration-300 ease-in-out text-white
                    group
                    sm:justify-center sm:px-2
-                   md:hover:bg-[#105ab4]"
+                   md:hover:bg-yellow-600"
     >
       <Link to="/login" className="flex items-center px-3">
-        <FaUser size={20} className="md:block text-blue-900 mr-2" />
+        <FaUser size={20} className="md:block text-yellow-800 mr-2 pl-1" />
         <button className="hidden md:block font-medium ">ورود | ثبت نام</button>
       </Link>
     </div>

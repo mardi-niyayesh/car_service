@@ -17,10 +17,10 @@ const DashboardSidebar = () => {
         >
           <div className="flex m-auto">
             <span className=" md:text-[22px] lg:text-[35px] font-bold text-[#194BF0]">
-              اُتــو
+              کار
             </span>
             <span className=" md:text-[22px] lg:text-[35px] font-bold text-[#FDB713]">
-              رِنت
+              سرویس
             </span>
           </div>
 

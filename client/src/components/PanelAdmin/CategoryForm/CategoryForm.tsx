@@ -67,7 +67,7 @@ const CategoryForm = ({
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="p-6 bg-white">
-        <p className="text-[#4b33b5] text-[18px] sm:text-[20px] md:text-[20px]  mb-4">
+        <p className="text-yellow-500   md:text-[20px]  mb-4">
           {mode === "create" ? "ایجاد دسته بندی " : "ویرایش دسته بندی"}
         </p>
 
@@ -84,7 +84,7 @@ const CategoryForm = ({
             <input
               type="text"
               placeholder="نام..."
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ${
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-300 ${
                 errors.name ? "border-red-500" : "border-gray-300"
               }`}
               {...register("name", {
@@ -118,7 +118,7 @@ const CategoryForm = ({
             <input
               type="text"
               placeholder="توضیحات..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-300"
               {...register("description", {
                 validate: (value) => {
                   if (!value || value.trim() === "") return true;
@@ -149,7 +149,7 @@ const CategoryForm = ({
             <input
               type="text"
               placeholder="لینک..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-300"
               value={watchSlug}
               onChange={handleSlugChange}
             />
@@ -180,7 +180,7 @@ const CategoryForm = ({
         <div className="flex items-center gap-2 mb-3">
           <input
             type="checkbox"
-            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-yellow-500"
             {...register("ownership")}
           />
           <label className="block text-[17px] font-medium text-gray-700">
@@ -190,7 +190,7 @@ const CategoryForm = ({
         <button
           type="submit"
           disabled={isLoading}
-          className={`py-1 px-4 bg-blue-600 text-white  rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ${
+          className={`py-1 px-4 bg-yellow-500 text-white  rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 ${
             isLoading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >

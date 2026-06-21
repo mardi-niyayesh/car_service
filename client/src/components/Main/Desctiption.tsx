@@ -1,11 +1,9 @@
-//img car
 import caratoo from "../../../assets/imges/ceratoo.png";
 import hunda from "../../../assets/imges/hunda.png";
 import sorena from "../../../assets/imges/sorentoo.png";
 import tigoo from "../../../assets/imges/tigoo.png";
 
-//img city
-import carshiraz from "../../../assets/imges/carshiraz.png"
+import carshiraz from "../../../assets/imges/carshiraz.png";
 import caresfahan from "../../../assets/imges/caresfahan.png";
 import cartehran from "../../../assets/imges/cartehran.png";
 import carmashhad from "../../../assets/imges/carmashhad.png";
@@ -101,7 +99,7 @@ const Desctiption = () => {
     <div className=" container mx-auto">
       {Description1.map((item) => (
         <div className="p-4 m-auto" key={item.id}>
-          <h2 className="font-bold text-blue-800 text-3xl my-5">
+          <h2 className="font-bold text-[#FDB713] text-3xl my-5">
             {item.title}
           </h2>
           <p className="text-gray-600">{item.text}</p>
@@ -109,14 +107,14 @@ const Desctiption = () => {
       ))}
 
       <div className="py-10">
-        <h2 className="font-bold text-blue-800 text-2xl text-center my-8">
+        <h2 className="font-bold text-[#FDB713] text-2xl text-center my-8">
           ماشین های لوکس و اقتصادی
         </h2>
         <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-4">
           {Listcar.map((item) => (
             <div key={item.id} className="bg-white   overflow-hidden ">
               <div className="p-5">
-                <h2 className="font-bold text-xl text-blue-800 text-center mb-2">
+                <h2 className="font-bold text-xl text-gray-800 text-center mb-2">
                   {item.title}
                 </h2>
                 <p className="text-gray-600 text-center mb-4">{item.namecar}</p>
@@ -137,7 +135,7 @@ const Desctiption = () => {
 
       {Description2.map((item) => (
         <div className="p-4 m-auto" key={item.id}>
-          <h2 className="font-bold text-blue-800 text-3xl my-5">
+          <h2 className="font-bold text-[#FDB713] text-3xl my-5">
             {item.title}
           </h2>
           <p className="text-gray-600">{item.text}</p>
@@ -145,7 +143,7 @@ const Desctiption = () => {
       ))}
 
       <div className="py-10">
-        <h2 className="font-bold text-blue-800 text-2xl my-8 text-center">
+        <h2 className="font-bold text-[#FDB713] text-2xl my-8 text-center">
           اجاره ی ماشین در شهر های ایران
         </h2>
         <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-4">
@@ -171,7 +169,7 @@ const Desctiption = () => {
       </div>
 
       <div className="p-4 m-auto">
-        <h2 className="font-bold text-blue-800 text-3xl my-5">
+        <h2 className="font-bold text-[#FDB713] text-3xl my-5">
           پوشش طلایی کارسرویس برای کاهش تعهد خسارات مشتری
         </h2>
         <p className="text-gray-600">

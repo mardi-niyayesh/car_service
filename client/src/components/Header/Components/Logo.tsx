@@ -1,16 +1,11 @@
-import logoCircle from "../../../../assets/imges/default.png";
+import logo from "../../../../assets/imges/logo21.png";
 const Logo = () => {
   return (
-    <div className="  flex items-center gap-2  ">
-      <img src={logoCircle} alt="logo" className="w-11 h-9 flex-start" />
-      <div className="  flex ">
-        <span className="text-[18px] md:text-[22px] lg:text-[24px] font-bold text-[#194BF0]">
-          اُتــو
-        </span>
-        <span className="text-[18px] md:text-[22px] lg:text-[24px] font-bold text-[#FDB713]">
-          رِنت
-        </span>
-      </div>
+    <div className="  flex items-center ">
+      <img src={logo} alt="" className="w-[100px]" />
+      <span className="text-[18px] md:text-[22px] lg:text-[24px] font-bold text-[#FDB713]">
+        کار سرویس
+      </span>
     </div>
   );
 };

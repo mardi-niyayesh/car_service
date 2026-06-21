@@ -7,9 +7,9 @@ import AllProductMain from "./AllProductMain";
 const ShowProductMain = () => {
   return (
     <>
-      <div className="text-3xl font-bold items-center flex mt-5 mb-5 justify-center">
-        <span>رزو خودرو در</span>
-        <span className="text-yellow-500">اتورنت</span>
+      <div className="text-2xl font-bold items-center flex mt-5 mb-5 justify-center ">
+        <span className="text-[#FDB713]">رزو خودرو در کارسرویس</span>
+
         <FaCar size={25} opacity={0.7} className="mr-2" />
       </div>
 
@@ -18,7 +18,7 @@ const ShowProductMain = () => {
         <div className="mt-10 ">
           <Link
             to="/reservcar"
-            className="flex items-center justify-end gap-2 text-blue-500 hover:text-blue-700 font-semibold  "
+            className="flex items-center justify-end gap-2 hover:text-yellow-600 text-[#FDB713] font-semibold  "
           >
             <span> مشاهده ی همه </span>
             <FiArrowLeft className="text-lg" />

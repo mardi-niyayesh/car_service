@@ -7,7 +7,7 @@ import { useState } from "react";
 
 const detail = [
   {
-    icon: <GiTowTruck size={100} className="text-gray-600" />,
+    icon: <GiTowTruck size={100} className="text-yellow-600" />,
     title: "امداد رسانی در کمتر از 30 دقیقه در هر جای ایران ",
     text: `
    شبکه تحت پوشش کارسرویس که با همکاری شرکای تجاری در خدمت مشتریان قرار گرفته است، شامل 2000 نقطه در سراسر
@@ -17,7 +17,7 @@ const detail = [
             `,
   },
   {
-    icon: <AiFillCar size={100} className="text-gray-600" />,
+    icon: <AiFillCar size={100} className="text-yellow-600" />,
     title: "ارائه ماشین های همیشه تمیز و نو",
     text: `
     یکی از دلایل موفقیت و محبوبیت خودروهای کارسرویس نو و تمیز بودن خودروهاست، هر خودرو بعد از هر اجاره سرویس
@@ -32,7 +32,7 @@ const detail = [
             `,
   },
   {
-    icon: <GiDart size={100} className="text-gray-600" />,
+    icon: <GiDart size={100} className="text-yellow-600" />,
     title: "رزرو رایگان با امتیاز",
     text: `
     مشترکین کارسرویس می‌توانند با انجام رزرو برای دوستان و همکاران خود، امتیاز رزروهای ایشان را در کاربر خود
@@ -42,7 +42,7 @@ const detail = [
             `,
   },
   {
-    icon: <FaFileInvoiceDollar size={100} className="text-gray-600" />,
+    icon: <FaFileInvoiceDollar size={100} className="text-yellow-600" />,
     title: "ارائه فاکتور رسمی",
     text: `
     پرداخت مالیات ، ارائه فاکتور رسمی و عملکرد صحیح طبق قوانین جاری کشور وظیفه‌ای دو‌طرفه می‌باشد و مشتریان
@@ -73,17 +73,17 @@ const DetailCarService = () => {
       {detail.map((item, index) => (
         <div
           key={index}
-          className="flex flex-col justify-between bg-white rounded-lg shadow-md p-4"
+          className="flex flex-col justify-between bg-white rounded-lg shadow-2xl p-4"
         >
           <div className="flex items-center mb-2">
             {item.icon}
-            <div className="ml-2 text-gray-500">{item.title}</div>
+            <div className="ml-2 text-yellow-600">{item.title}</div>
           </div>
 
-          <div className="border-b-2 border-gray-200 my-3"></div>
+          <div className="border-b-2 border-gray-300 my-3"></div>
           <div
             onClick={() => openModal(item)}
-            className="flex font-medium items-center justify-between   text-gray-500 hover:text-blue-800 cursor-pointer"
+            className="flex font-medium items-center justify-between   text-yellow-700 hover:text-yellow-600 cursor-pointer"
           >
             <div>جزئیات بیشتر</div>
             <FaArrowLeft size={24} opacity={0.8} />

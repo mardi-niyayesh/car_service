@@ -36,13 +36,13 @@ const Basket = () => {
     <Link to="/basket">
       <div
         className="relative inline-flex cursor-pointer items-center justify-between py-2 w-auto rounded-lg
-                   bg-white md:hover:bg-[#137cfd] transition duration-300 ease-in-out group
-                   sm:justify-center sm:px-2 md:border-2 md:border-blue-600"
+                   bg-white md:hover:bg-[#FDB713] transition duration-300 ease-in-out group
+                   sm:justify-center sm:px-2 md:border-2 md:border-[#FDB713]"
       >
         <div className="relative">
           <MdOutlineShoppingCart
             size={30}
-            className="text-blue-600 md:group-hover:text-white transition duration-300 ease-in-out
+            className="text-[#FDB713] md:group-hover:text-white transition duration-300 ease-in-out
                        sm:size={24}"
           />
 
@@ -57,7 +57,7 @@ const Basket = () => {
           )}
         </div>
 
-        <button className="text-blue-600 hidden md:block md:px-1 font-medium group-hover:text-white transition duration-300 ease-in-out">
+        <button className="text-yellow-600 font-bold hidden md:block md:px-1 font-medium group-hover:text-white transition duration-300 ease-in-out">
           سبد خرید
         </button>
       </div>

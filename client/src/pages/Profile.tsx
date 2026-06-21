@@ -7,7 +7,7 @@ const Profile = () => {
     <div className="w-full max-w-3xl m-auto  p-4 sm:p-6">
       <div className="bg-white border border-gray-200 rounded-2xl shadow-sm">
         <div className="p-5 sm:p-6 border-b border-gray-200">
-          <h1 className="text-xl sm:text-2xl font-bold text-blue-700">
+          <h1 className="text-xl sm:text-2xl font-bold text-yellow-600">
             اطلاعات پروفایل کاربر
           </h1>
         </div>
@@ -21,7 +21,7 @@ const Profile = () => {
               type="text"
               value={user?.display_name}
               readOnly
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none focus:border-yellow-600  focus:ring-2 focus:ring-yellow-200"
             />
           </div>
 
@@ -33,7 +33,7 @@ const Profile = () => {
               type="email"
               value={user?.email}
               readOnly
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200"
             />
           </div>
 
@@ -45,7 +45,7 @@ const Profile = () => {
               type="text"
               value={user?.age ?? ""}
               readOnly
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200"
             />
           </div>
 
@@ -57,18 +57,22 @@ const Profile = () => {
               type="text"
               value={user?.roles}
               readOnly
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 outline-none focus:border-yellow-600 focus:ring-2 focus:ring-yellow-200"
             />
           </div>
 
           <Link to="/dashboard/updateUser">
             <div className="flex items-center justify-end gap-5 cursor-pointer">
-              <p className="text-blue-600">ویرایش اطلاعات پروفایل </p>
+              <p className="text-yellow-500 hover:text-yellow-600">
+                ویرایش اطلاعات پروفایل
+              </p>
             </div>
           </Link>
           <Link to="/dashboard/updatePassword">
             <div className="flex items-center justify-end gap-5 cursor-pointer">
-              <p className="text-blue-600">ویرایش رمز عبور </p>
+              <p className="text-yellow-500 hover:text-yellow-600">
+                ویرایش رمز عبور
+              </p>
             </div>
           </Link>
         </div>
