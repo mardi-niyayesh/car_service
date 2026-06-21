@@ -1,6 +1,6 @@
 import ReserveComponent from "../ReserveComponent";
 import DesCar from "../DesCar";
-import qeshm from "../../../../assets/qeshm-3.png";
+import qeshm from "../../../../assets/imges/qeshm-3.png";
 
 const QeshmPage = () => {
   return (

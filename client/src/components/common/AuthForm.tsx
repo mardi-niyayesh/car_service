@@ -1,19 +1,9 @@
-//icon img
-import imgLogin from "../../../assets/imglogin.png";
+import imgLogin from "../../../assets/imges/imglogin.png";
 import FormInput from "./FormInput";
-//hooks
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useSearchParams } from "react-router-dom";
-
-//types
 import { type AuthFormProps } from "../../types/auth.types";
-
-// pattern Email
-const emailPattern =
-  /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/;
-// pattern Password
-const patternPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/;
 
 function AuthForm({
   type,
@@ -61,7 +51,7 @@ function AuthForm({
         ? { email: "", password: "", rememberMe: true }
         : isResetPassword
           ? { password: "" }
-          : { email: "" }, //forgot password
+          : { email: "" },
   });
   useEffect(() => {
     if (resetForm) {
@@ -84,11 +74,32 @@ function AuthForm({
       }
     }
   }, [reset, isRegister, isLogin, resetForm]);
+
   const handleFormSubmit = (data: any) => {
+    let submitData = data;
+
+    if (isRegister) {
+      const cleaned = { ...data };
+
+      if (!cleaned.display_name) {
+        delete cleaned.display_name;
+      }
+
+      if (
+        cleaned.age === undefined ||
+        cleaned.age === null ||
+        cleaned.age === ""
+      ) {
+        delete cleaned.age;
+      }
+
+      submitData = cleaned;
+    }
+
     if (isResetPassword) {
-      onSubmit({ ...data, token });
+      onSubmit({ ...submitData, token });
     } else {
-      onSubmit(data);
+      onSubmit(submitData);
     }
   };
 
@@ -101,7 +112,6 @@ function AuthForm({
           </h1>
 
           <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-            {/*Email form*/}
             {!isResetPassword && (
               <FormInput
                 label="ایمیل"
@@ -113,14 +123,14 @@ function AuthForm({
                 validation={{
                   required: "ایمیل نمی‌تواند خالی باشد",
                   pattern: {
-                    value: emailPattern,
+                    value:
+                      /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/,
                     message: "ایمیل وارد شده معتبر نمی‌باشد",
                   },
                 }}
               />
             )}
 
-            {/*Password form*/}
             {(isLogin || isRegister || isResetPassword) && (
               <FormInput
                 label="رمز عبور"
@@ -140,13 +150,14 @@ function AuthForm({
                     message: "رمز عبور باید حداکثر ۲۰ کاراکتر باشد",
                   },
                   pattern: {
-                    value: patternPassword,
-                    message: "رمز عبور باید شامل حداقل یک حرف و یک عدد باشد",
+                    value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]+$/,
+                    message:
+                      "رمز عبور باید شامل حداقل یک حرف، یک عدد و می‌تواند شامل !@#$%^&* باشد",
                   },
                 }}
               />
             )}
-            {/* forgat password and remember me*/}
+
             {isLogin && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -155,13 +166,13 @@ function AuthForm({
                     id="rememberMe"
                     {...register("rememberMe")}
                   />
-                  <label className="text-sm text-gray-600">
+                  <label className="text-[18px] text-gray-600">
                     مرا به خاطر بسپار
                   </label>
                 </div>
                 <Link
                   to="/forgot-password"
-                  className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                  className="text-[18px] text-blue-600 hover:text-blue-800 font-medium"
                 >
                   رمز عبور را فراموش کرده‌اید؟
                 </Link>
@@ -179,7 +190,7 @@ function AuthForm({
                 رمز عبور جدید خود را وارد کنید
               </p>
             )}
-            {/*FirstName form*/}
+
             {isRegister && (
               <>
                 <FormInput
@@ -190,7 +201,6 @@ function AuthForm({
                   register={register}
                   error={errors.display_name}
                   validation={{
-                    required: "نام کاربری نمی‌تواند خالی باشد",
                     minLength: {
                       value: 3,
                       message: "نام کاربری باید حداقل ۳ کاراکتر باشد",
@@ -202,7 +212,6 @@ function AuthForm({
                   }}
                 />
 
-                {/*Age form*/}
                 <FormInput
                   label="سن"
                   name="age"
@@ -211,20 +220,22 @@ function AuthForm({
                   register={register}
                   error={errors.age}
                   validation={{
-                    required: "سن نمی‌تواند خالی باشد",
-                    min: {
-                      value: 0,
-                      message: "سن حداقل ۰ سال است",
+                    validate: (value) => {
+                      if (
+                        value === "" ||
+                        value === undefined ||
+                        value === null
+                      ) {
+                        return true;
+                      }
+                      const num = Number(value);
+                      if (isNaN(num)) return "سن باید یک عدد باشد";
+                      if (num < 0) return "سن حداقل ۰ سال است";
+                      if (num > 120) return "سن حداکثر ۱۲۰ سال است";
+                      return true;
                     },
-                    max: {
-                      value: 120,
-                      message: "سن حداکثر ۱۲۰ سال است",
-                    },
-                    valueAsNumber: true,
                   }}
                 />
-
-                {/*check bos roles*/}
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -234,7 +245,7 @@ function AuthForm({
                     })}
                     className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
-                  <label htmlFor="rules" className="text-sm text-gray-600">
+                  <label htmlFor="rules" className="text-[17px] text-gray-600">
                     با
                     <Link
                       to="/roles"
@@ -253,19 +264,16 @@ function AuthForm({
               </>
             )}
 
-            {/* statuse mutation*/}
             {isPending && (
               <div className="text-blue-500 text-sm text-center">
                 در حال ارسال اطلاعات...
               </div>
             )}
 
-            {/* Errore */}
             {error && (
               <div className="text-red-500 text-sm text-center">{error}</div>
             )}
 
-            {/*submit button */}
             <button
               type="submit"
               disabled={!isValid || isPending}
@@ -292,7 +300,7 @@ function AuthForm({
                       : "ارسال لینک بازیابی"}
             </button>
 
-            <p className="text-center text-sm text-gray-600 mt-4">
+            <p className="text-center text-[18px] text-gray-600 mt-4">
               {isRegister ? (
                 <>
                   قبلاً ثبت‌نام کرده‌اید؟

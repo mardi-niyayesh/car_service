@@ -1,6 +1,6 @@
 import ReserveComponent from "../ReserveComponent";
 import DesCar from "../DesCar";
-import saryimg from "../../../../assets/sari.png";
+import saryimg from "../../../../assets/imges/sari.png";
 
 const SaryPage = () => {
   return (

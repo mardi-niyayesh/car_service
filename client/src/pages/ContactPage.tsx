@@ -1,7 +1,7 @@
 const ContactPage = () => {
   return (
     <>
-      <div className="bg-[url('../../assets/page.png')] bg-cover bg-center bg-no-repeat w-full min-h-[250px] md:min-h-[400px] lg:min-h-[550px] xl:h-[683px] relative"></div>
+      <div className="bg-[url('../../assets/imges/page.png')] bg-cover bg-center bg-no-repeat w-full min-h-[250px] md:min-h-[400px] lg:min-h-[550px] xl:h-[683px] relative"></div>
       <div className="container rounded-2xl mx-auto px-4 sm:px-6 lg:px-8 max-w-[1200px]  mt-10 mb-10 bg-[#EDEDED] ">
         <div className="flex flex-col lg:flex-row items-stretch gap-8 lg:gap-12 py-8 md:py-12 lg:py-16">
           <div className="w-full lg:w-1/2 flex flex-col justify-center space-y-6 md:space-y-8">

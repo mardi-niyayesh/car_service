@@ -13,7 +13,7 @@ const ComponentTableCategory = (): React.ReactElement => {
   const { hasRole, hasPermission } = useUser();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  
+
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [isWarningOpen, setIsWarningOpen] = useState(false);
@@ -68,22 +68,16 @@ const ComponentTableCategory = (): React.ReactElement => {
         <table className="min-w-full  text-right text-sm text-gray-700">
           <thead className="bg-gray-100 text-gray-700 ">
             <tr>
-              <th className="w-12 px-4 py-3 font-medium hidden sm:table-cell ">
-                ردیف
-              </th>
-              <th className="w-32 px-4 py-3 font-medium"> دسته بندی </th>
-              <th className="w-56 px-4 py-3 font-medium hidden sm:table-cell">
-                توضیحات
-              </th>
-              <th className="w-56 px-4 py-3 font-medium">ایدی</th>
-              {hasDeletePermission && (
-                <th className="w-56 px-4 py-3 font-medium">حذف</th>
-              )}
+              <th className="w-12 px-4 py-3  hidden sm:table-cell ">ردیف</th>
+              <th className="w-32 px-4 py-3 "> دسته بندی </th>
+              <th className="w-56 px-4 py-3 hidden sm:table-cell">توضیحات</th>
+
+              {hasDeletePermission && <th className="w-56 px-4 py-3 ">حذف</th>}
               {hasUpdatePermission && (
-                <th className="w-56 px-4 py-3 font-medium">آپدیت</th>
+                <th className="w-56 px-4 py-3 ">آپدیت</th>
               )}
 
-              <th className="w-56 px-4 py-3 font-medium">لینک</th>
+              <th className="w-56 px-4 py-3 ">لینک</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -94,7 +88,6 @@ const ComponentTableCategory = (): React.ReactElement => {
                 <td className="px-4 py-3 font-medium hidden sm:table-cell">
                   {cat.description ? cat.description : "____"}
                 </td>
-                <td className="px-4 py-3 text-blue-700 text-xs">{cat.id}</td>
                 {hasDeletePermission && (
                   <td>
                     {

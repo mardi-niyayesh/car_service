@@ -58,7 +58,7 @@ const ComponentTableUser = () => {
           </p>
         ) : (
           <>
-            <table className="min-w-full text-right text-sm text-gray-700">
+            <table className="min-w-full text-right text-[17px] text-gray-700">
               <thead className="bg-gray-100 text-gray-700">
                 <tr>
                   <th className="px-4 py-3 font-medium hidden sm:table-cell">

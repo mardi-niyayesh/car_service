@@ -17,7 +17,7 @@ const CategoryPage = () => {
           </div>
           {hasCreatPermession && (
             <Link to="/panel/category/CreatCategory">
-              <p className="text-[#194BF0] hover:bg-blue-200 bg-blue-100 p-2 rounded-xl text-[14px] md:text-[16px] font-medium whitespace-nowrap">
+              <p className="text-[#194BF0] hover:bg-blue-200 bg-blue-100 p-2 rounded-xl sm:text-[18px] md:text-[18px] font-medium whitespace-nowrap">
                 + ساختن دسته بندی جدید
               </p>
             </Link>

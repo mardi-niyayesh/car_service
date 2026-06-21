@@ -80,12 +80,12 @@ const ProductFormComponent = ({
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-8">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-[18px] font-medium text-gray-700 mb-1">
                 اسم ماشین
                 {mode === "create" ? (
                   <span className="text-red-500"> *</span>
                 ) : (
-                  <span className="text-gray-400 text-xs">(اختیاری)</span>
+                  <span className="text-gray-400 ">(اختیاری)</span>
                 )}
               </label>
               <input
@@ -120,7 +120,7 @@ const ProductFormComponent = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-[18px] font-medium text-gray-700 mb-1">
                 توضیحات ماشین <span className="text-gray-400">(اختیاری)</span>
               </label>
               <input
@@ -148,12 +148,12 @@ const ProductFormComponent = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-[18px] font-medium text-gray-700 mb-1">
                 تگ‌ها
                 {mode === "create" ? (
                   <span className="text-red-500"> *</span>
                 ) : (
-                  <span className="text-gray-400 text-xs">(اختیاری)</span>
+                  <span className="text-gray-400 ">(اختیاری)</span>
                 )}
               </label>
               <Controller
@@ -181,12 +181,12 @@ const ProductFormComponent = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-[18px] font-medium text-gray-700 mb-1">
                 کمپانی ماشین
                 {mode === "create" ? (
                   <span className="text-red-500"> *</span>
                 ) : (
-                  <span className="text-gray-400 text-xs">(اختیاری)</span>
+                  <span className="text-gray-400 ">(اختیاری)</span>
                 )}
               </label>
               <input
@@ -222,12 +222,12 @@ const ProductFormComponent = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-[18px] font-medium text-gray-700 mb-1">
                 لینک ماشین
                 {mode === "create" ? (
                   <span className="text-red-500"> *</span>
                 ) : (
-                  <span className="text-gray-400 text-xs">(اختیاری)</span>
+                  <span className="text-gray-400 ">(اختیاری)</span>
                 )}
               </label>
               <input
@@ -262,12 +262,12 @@ const ProductFormComponent = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-[18px] font-medium text-gray-700 mb-1">
                 قیمت ماشین
                 {mode === "create" ? (
                   <span className="text-red-500"> *</span>
                 ) : (
-                  <span className="text-gray-400 text-xs">(اختیاری)</span>
+                  <span className="text-gray-400 ">(اختیاری)</span>
                 )}
               </label>
               <input
@@ -297,12 +297,12 @@ const ProductFormComponent = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-[18px] font-medium text-gray-700 mb-1">
                 دسته بندی ماشین
                 {mode === "create" ? (
                   <span className="text-red-500"> *</span>
                 ) : (
-                  <span className="text-gray-400 text-xs">(اختیاری)</span>
+                  <span className="text-gray-400 ">(اختیاری)</span>
                 )}
               </label>
 
@@ -339,7 +339,7 @@ const ProductFormComponent = ({
                 {...register("can_rent")}
                 defaultChecked={true}
               />
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-[18px] font-medium text-gray-700">
                 آیا ماشین قابل اجاره است؟
               </label>
             </div>
@@ -350,7 +350,7 @@ const ProductFormComponent = ({
                 className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 {...register("ownership")}
               />
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-[18px] text-gray-700">
                 مالکیت (Ownership)
               </label>
             </div>

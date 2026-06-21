@@ -1,7 +1,7 @@
-import call from "../../../assets/call-calling.png";
-import email from "../../../assets/sms.png";
-import map from "../../../assets/map.png";
-import logocar from "../../../assets/logoo.png";
+import call from "../../../assets/imges/call-calling.png";
+import email from "../../../assets/imges/sms.png";
+import map from "../../../assets/imges/map.png";
+import logocar from "../../../assets/imges/logoo.png";
 import { Link } from "react-router-dom";
 
 const Footer = () => {

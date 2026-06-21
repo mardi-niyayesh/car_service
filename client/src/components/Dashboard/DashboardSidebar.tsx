@@ -1,6 +1,6 @@
-import ArrowLeft from "../../../assets/Arrowleft.png";
-import card from "../../../assets/card-pos.png";
-import reserv from "../../../assets/reserve.png";
+import ArrowLeft from "../../../assets/imges/Arrowleft.png";
+import card from "../../../assets/imges/card-pos.png";
+import reserv from "../../../assets/imges/reserve.png";
 import { Link } from "react-router-dom";
 
 const Menu = [

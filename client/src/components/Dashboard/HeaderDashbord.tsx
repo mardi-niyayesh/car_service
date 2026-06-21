@@ -1,6 +1,6 @@
-import { useLocation } from "react-router-dom"; // اضافه شود
-import profilUser from "../../../assets/Ellipse 114.png";
-import logout from "../../../assets/logout.png";
+import { useLocation } from "react-router-dom";
+import profilUser from "../../../assets/imges/Ellipse 114.png";
+import logout from "../../../assets/imges/logout.png";
 import { useUser } from "../../hooks/useUser";
 import { FaUser } from "react-icons/fa";
 import { HiOutlineHome } from "react-icons/hi";
@@ -24,10 +24,10 @@ const HeaderDashbord = () => {
             className="w-12 h-12 rounded-full"
           />
           <div className="flex-1">
-            <p className="font-bold text-[16px] text-[#353535] max-w-[200px]">
+            <p className="font-bold  text-[#353535] max-w-[200px]">
               {user?.display_name || "کاربر "}
             </p>
-            <p className="text-[#727272] font-medium text-[13px] max-w-[200px]">
+            <p className="text-[#727272] font-medium text-[14px] max-w-[200px]">
               {user?.email || "example@email.com"}
             </p>
           </div>

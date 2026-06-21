@@ -1,6 +1,6 @@
 import ReserveComponent from "../ReserveComponent";
 import DesCar from "../DesCar";
-import Nayshabbor from "../../../../assets/neydhaboor.png";
+import Nayshabbor from "../../../../assets/imges/neydhaboor.png";
 
 const Nayshaboor = () => {
   return (

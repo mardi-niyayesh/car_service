@@ -8,5 +8,6 @@ export * from "./user.types";
 export * from "./request.types";
 export * from "./comment.types";
 export * from "./category.types";
+export * from "./favorite.types";
 export * from "./response.types";
 export * from "./permission.types";

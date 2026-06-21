@@ -12,7 +12,12 @@ function FormInput({
   return (
     <div>
       <label className="block text-gray-700 text-sm font-medium mb-1">
-        {label} :
+        {label}
+        {validation?.required ? (
+          <span className="text-red-500 mr-1 text-[20px]">*</span>
+        ) : (
+          <span className="text-gray-500 mr-1 text-[16px]">(اختیاری )</span>
+        )}
       </label>
 
       <input
