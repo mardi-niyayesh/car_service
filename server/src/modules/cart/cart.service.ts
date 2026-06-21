@@ -143,15 +143,6 @@ export class CartService {
         }
       });
 
-      await tx.cart.update({
-        where: {id: user.cart.id},
-        data: {
-          total_price: {
-            increment: price
-          }
-        }
-      });
-
       return {
         message: 'car rent successfully add to your cart',
         data: {
