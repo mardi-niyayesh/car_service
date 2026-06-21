@@ -17,7 +17,6 @@ export class CartService {
   async create(data: CreateCartSignup) {
     await this.prisma.cart.create({
       data: {
-        total_price: 0,
         user_id: data.id,
       }
     });
