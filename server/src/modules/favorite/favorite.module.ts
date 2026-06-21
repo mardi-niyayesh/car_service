@@ -3,6 +3,7 @@ import {FavoriteService} from "./favorite.service";
 import {FavoriteController} from "./favorite.controller";
 
 @Module({
+  exports: [FavoriteService],
   providers: [FavoriteService],
   controllers: [FavoriteController],
 })
