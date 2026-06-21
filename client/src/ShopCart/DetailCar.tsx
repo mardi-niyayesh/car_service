@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useState } from "react"; // اضافه کردن import useState
+import { useState } from "react";
 import { useProduct } from "../hooks/useProduct";
 import Des1Car from "./Des1Car";
 import Des2Car from "./Des2Car";
@@ -60,7 +60,7 @@ const DetailCar = () => {
               <Des3Car />
               <button
                 onClick={handleClick}
-                className="bg-gray-200 w-full hover:bg-gray-300 cursor-pointer  text-center text-gray-600 p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto"
+                className="bg-yellow-500 w-full hover:bg-yellow-600 cursor-pointer  text-center text-whitep p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto"
               >
                 {showbtn ? "نمایش قوانین رزو" : "مخفی کردن قوانین رزو"}
               </button>
@@ -79,7 +79,7 @@ const DetailCar = () => {
         </div>
         <button
           onClick={openNewCommentModal}
-          className="bg-blue-600 text-white px-4 py-2 rounded mt-4"
+          className="bg-yellow-500 text-white px-4 py-2 rounded mt-4"
         >
           ثبت دیدگاه جدید
         </button>

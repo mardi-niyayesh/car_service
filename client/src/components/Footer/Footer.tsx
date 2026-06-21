@@ -1,7 +1,7 @@
 import call from "../../../assets/imges/call-calling.png";
 import email from "../../../assets/imges/sms.png";
 import map from "../../../assets/imges/map.png";
-import logocar from "../../../assets/imges/logoo.png";
+import logocar from "../../../assets/imges/logo21.png"
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -51,15 +51,15 @@ const Footer = () => {
 
       <div className="flex flex-col lg:flex-row items-start justify-between gap-8 md:gap-10 pb-6 md:pb-8 border-b-2 border-[#9A9A9A]">
         <div className="w-full lg:w-2/5">
-          <div className="flex items-center gap-3 md:gap-4 mb-4">
+          <div className="flex items-center mb-4">
             <img
               src={logocar}
               alt="logocar"
-              className="w-10 h-10 md:w-12 md:h-12"
+              className="w-[100px]"
             />
             <div className="font-bold text-2xl md:text-[24px]">
-              <span className="text-[#FFFFFF]">اُتــو</span>
-              <span className="text-[#FDB713]">رِنت</span>
+              <span className="text-[#FFFFFF]">کار</span>
+              <span className="text-[#FDB713]">سرویس</span>
             </div>
           </div>
 

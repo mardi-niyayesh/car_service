@@ -16,7 +16,7 @@ const BlogDetail = () => {
         </h2>
         <button
           onClick={() => navigate("/blog")}
-          className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+          className="mt-4 bg-yellow-600 text-white px-4 py-2 rounded"
         >
           بازگشت به صفحه بلاگ
         </button>

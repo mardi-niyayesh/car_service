@@ -14,7 +14,7 @@ const BlogPage = () => {
   return (
     <>
       <div className="py-10">
-        <h2 className="font-bold text-blue-800 text-2xl text-center">
+        <h2 className="font-bold text-yellow-600 text-2xl text-center">
           مقاله های شرکت کارسرویس
         </h2>
         <div className="container mx-auto grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6 p-4">
@@ -40,7 +40,7 @@ const BlogPage = () => {
       </div>
 
       <div>
-        <h1 className="font-bold text-blue-800 text-2xl my-8 text-center">
+        <h1 className="font-bold text-yellow-600 text-2xl my-8 text-center">
           جدیدترین مطالب
         </h1>
         <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-4">

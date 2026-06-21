@@ -8,6 +8,7 @@ export * from "./email";
 export * from "./redis";
 export * from "./prisma";
 export * from "./comment";
+export * from "./favorite";
 export * from "./category";
 export * from "./scheduler";
 export * from "./permission";

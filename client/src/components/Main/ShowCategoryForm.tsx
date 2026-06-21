@@ -29,7 +29,7 @@ const ShowCategoryForm = () => {
         {categories.map((cat) => (
           <button
             key={cat.id}
-            className="inline-block px-5 py-2 bg-blue-400 hover:bg-blue-600 text-white hover:text-white rounded transition-all duration-200 shadow-sm text-sm font-medium cursor-pointer"
+            className="inline-block px-5 py-2 bg-yellow-500 hover:bg-yellow-600 text-white hover:text-white rounded transition-all duration-200 shadow-sm  cursor-pointer"
             onClick={() => hadleCategory(cat.slug)}
           >
             {cat.name}

@@ -127,14 +127,14 @@ const HeroBaner = () => {
             </div>
           </div>
 
-          <button className="bg-blue-500 w-full hover:bg-blue-700  text-center text-white p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto">
+          <button className="bg-yellow-500 w-full hover:bg-yellow-700  text-center text-white p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto">
             ثبت درخواست
           </button>
           <div className="flex">
             <div className="mt-10 flex justify-end">
               <Link
                 to="/"
-                className="flex items-center gap-2 text-blue-500 hover:text-blue-700 font-semibold  "
+                className="flex items-center gap-2 text-yellow-500 hover:text-yellow-600 font-semibold  "
               >
                 <span>انتقال به رزرو بعدی</span>
                 <FiArrowLeft className="text-lg" />

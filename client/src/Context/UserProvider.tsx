@@ -1,12 +1,7 @@
-// hooks
 import { type ReactNode, useState, useEffect, useCallback } from "react";
-// types
 import type { UserContextType, User } from "../types/auth.types";
-// context
 import UserContext from "./UserContext";
-//refreshToken
 import { refreshAuth } from "../services/authService";
-//axioseClient
 import { setAxiosToken, initializeTokenRefresh } from "../services/axiosClient";
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
@@ -17,9 +12,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   console.log("user:", user);
   console.log("token:", token);
 
-  // fuction for bazyabi infomation user
   const fetchUserAndToken = useCallback(async () => {
-    //start loding
     setIsLoading(true);
     try {
       const ResponseData = await refreshAuth();
@@ -35,27 +28,25 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
 
         setTokenState(accessToken);
         setUserState(user);
-        // Set token in axios client for requests
         setAxiosToken(accessToken);
       } else {
-        console.log("Token or user not found in the response.");
+        console.log(" Token or user not found in the response.");
+      }
+    } catch (error: any) {
+      // console.error("Error to rest information user to refresh token:", error);
+
+      if (error?.response?.status === 401) {
+        // console.log(" Unauthorized: logging out...");
         setUserState(null);
         setTokenState(null);
         setAxiosToken(null);
+      } else {
+        console.log(" Temporary error, keeping user data.");
       }
-    } catch (error) {
-      console.error(
-        "  Error to rest information user to refresh token:",
-        error,
-      );
-      setUserState(null);
-      setTokenState(null);
-      setAxiosToken(null);
     } finally {
-      // finish loading
       setIsLoading(false);
     }
-  }, [setIsLoading, setTokenState, setUserState, setAxiosToken]);
+  }, []);
 
   const handleAuthUpdate = useCallback(
     (newToken: string | null, newUser: User | null) => {
@@ -70,22 +61,19 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     initializeTokenRefresh(handleAuthUpdate);
   }, [handleAuthUpdate]);
 
-  // start loading or refrash page
   useEffect(() => {
     fetchUserAndToken();
   }, [fetchUserAndToken]);
 
-  //update function setuser
   const setUser = useCallback((userData: User | null) => {
     setUserState(userData);
   }, []);
 
-  //update function token
   const setToken = useCallback((newToken: string | null) => {
     setTokenState(newToken);
     setAxiosToken(newToken);
   }, []);
-  //if logout => deleat information context
+
   const logout = useCallback(() => {
     setUserState(null);
     setTokenState(null);

@@ -96,7 +96,6 @@ async function bootstrap() {
       
       await tx.cart.create({
         data: {
-          total_price: 0,
           user_id: owner.id,
         }
       });

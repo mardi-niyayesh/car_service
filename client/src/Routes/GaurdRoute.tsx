@@ -10,7 +10,7 @@ type GaurdRouteType = {
 export const GaurdRoute = ({
   children,
   requiredPermission,
-  fallbackPath = "/",
+  fallbackPath = "/403",
 }: GaurdRouteType) => {
   const { hasPermission, isLoading } = useUser();
 

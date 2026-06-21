@@ -30,6 +30,7 @@ model User {
   carsCreator   Car[]          @relation("carsCreator")
   cart          Cart?
   comments      Comment[]      @relation("UserCommnet")
+  favorites     Favorite[]     @relation("UserFavorites")
 
   @@map("users")
 }
@@ -198,19 +199,19 @@ model Car {
   creator_id String? @db.Uuid
   creator    User?   @relation("carsCreator", fields: [creator_id], references: [id], onDelete: SetNull)
 
-  carRents CarRent[] @relation("carRents")
-  comments Comment[] @relation("CarComment")
+  carRents        CarRent[]  @relation("carRents")
+  comments        Comment[]  @relation("CarComment")
+  users_favorites Favorite[] @relation("CarFavorites")
 
   @@index([category_id])
   @@map("cars")
 }
 
+// Cart Model
 model Cart {
   id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-
-  total_price Int @db.Integer
 
   user_id String @unique @db.Uuid
   user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -226,6 +227,7 @@ enum RentStatus {
   COMPLETED
 }
 
+// Car Rental Model
 model CarRent {
   id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())
@@ -250,8 +252,25 @@ model CarRent {
   @@map("car_rents")
 }
 
+model Favorite {
+  id         String   @id @default(uuid(4)) @db.Uuid
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user_id String @db.Uuid
+  user    User   @relation(name: "UserFavorites", fields: [user_id], references: [id], onDelete: Cascade)
+
+  car_id String @db.Uuid
+  car    Car    @relation(name: "CarFavorites", fields: [car_id], references: [id], onDelete: Cascade)
+
+  @@unique([car_id, user_id])
+  @@index([user_id])
+  @@map("favorites")
+}
+
 // <=== Comment Schema ===>
 
+// Comment Model
 model Comment {
   id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())

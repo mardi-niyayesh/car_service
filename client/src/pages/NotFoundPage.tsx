@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
 
-const NotFoundPage = () => {
+
+const ErrorPage = () => {
   return (
     <div className="flex flex-col items-center justify-start">
-      <div className="bg-[url('../../assets/notfound.png')] bg-cover bg-center bg-no-repeat w-full min-h-[200px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[500px] xl:h-[600px] 2xl:h-[683px] relative"></div>
+      <div className="bg-[url('../../assets/imges/notfound.png')] bg-cover bg-center bg-no-repeat w-full min-h-[200px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[500px] xl:h-[600px] 2xl:h-[683px] relative"></div>
 
-      <p className="text-center font-bold text-blue-600 text-2xl mt-4">صفحه مورد نظر یافت نشد</p>
+      <p className="text-center font-bold text-yellow-600 text-2xl mt-4">صفحه مورد نظر یافت نشد</p>
       
       <Link
         to="/"
-        className="inline-block bg-blue-500 hover:bg-blue-600 mt-10 text-white 
+        className="inline-block bg-yellow-500 hover:bg-yellow-600 mt-10 text-white 
                    text-sm sm:text-base md:text-lg
                    px-4 sm:px-6 md:px-8 
                    py-2 sm:py-3 
@@ -25,4 +26,4 @@ const NotFoundPage = () => {
   );
 };
 
-export default NotFoundPage;
+export default ErrorPage;

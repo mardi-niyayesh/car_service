@@ -107,7 +107,7 @@ function AuthForm({
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl mt-10 overflow-hidden max-w-4xl w-full flex flex-col md:flex-row">
         <div className="w-full md:w-1/2 p-6 sm:p-8 lg:p-10">
-          <h1 className="text-2xl sm:text-3xl font-bold text-blue-600 mb-6 text-center">
+          <h1 className="text-2xl sm:text-3xl font-bold text-yellow-600 mb-6 text-center">
             {isRegister ? "ثبت نام" : isLogin ? "ورود" : "فراموشی رمز عبور"}
           </h1>
 
@@ -172,7 +172,7 @@ function AuthForm({
                 </div>
                 <Link
                   to="/forgot-password"
-                  className="text-[18px] text-blue-600 hover:text-blue-800 font-medium"
+                  className="text-[18px] text-yellow-600 hover:text-yellow-700 font-medium"
                 >
                   رمز عبور را فراموش کرده‌اید؟
                 </Link>
@@ -249,7 +249,7 @@ function AuthForm({
                     با
                     <Link
                       to="/roles"
-                      className="mx-1 text-blue-600 hover:text-blue-800 font-medium"
+                      className="mx-1 text-yellow-500 hover:text-yellow-600 font-medium"
                     >
                       قوانین و مقررات سایت
                     </Link>
@@ -279,7 +279,7 @@ function AuthForm({
               disabled={!isValid || isPending}
               className={`w-full font-medium py-2.5 rounded-lg transition duration-300 ${
                 isValid && !isPending
-                  ? "bg-blue-600 hover:bg-blue-700 text-white"
+                  ? "bg-yellow-500 hover:bg-yellow-600 text-white"
                   : "bg-gray-300 cursor-not-allowed text-gray-500"
               }`}
             >
@@ -306,7 +306,7 @@ function AuthForm({
                   قبلاً ثبت‌نام کرده‌اید؟
                   <Link
                     to="/login"
-                    className="text-blue-600 hover:text-blue-800 font-medium mr-1"
+                    className="text-yellow-500 hover:text-yellow-600 font-medium mr-1"
                   >
                     وارد شوید
                   </Link>
@@ -316,7 +316,7 @@ function AuthForm({
                   حساب کاربری ندارید؟
                   <Link
                     to="/register"
-                    className="text-blue-600 hover:text-blue-800 font-medium mr-1"
+                    className="text-yellow-500 hover:text-yellow-00 font-medium mr-1"
                   >
                     ثبت‌نام کنید
                   </Link>
