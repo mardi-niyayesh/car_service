@@ -51,6 +51,14 @@ export class CartService {
       error: 'Cart not found.'
     } as BaseException);
 
+    const total = await this.prisma.carRent.aggregate({
+      where: {
+        cart_id: cart.id,
+        status: RentStatus.PENDING,
+      },
+      _sum: {price: true}
+    });
+
     return {
       message: `Cart successfully found`,
       data: {
@@ -58,7 +66,7 @@ export class CartService {
           id: cart.id,
           created_at: cart.created_at,
           updated_at: cart.updated_at,
-          total_price: cart.total_price,
+          total_price: total._sum.price || 0,
           carRents: cart.carRents,
           user: {
             id: user.userId,
