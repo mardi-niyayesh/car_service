@@ -50,8 +50,8 @@ const MenuHeader = () => {
   };
   return (
     <>
-      <div className="bg-white py-4 ">
-        <nav className=" hidden md:flex container mx-auto px-4 flexed items-center justify-between">
+      <div className="bg-white ">
+        <nav className=" hidden md:flex container mx-auto  flexed items-center justify-between">
           <ul className="flex items-center space-x-6 ">
             {menuItems.map((item) => {
               if (item.dropdownItems) {

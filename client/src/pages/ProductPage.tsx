@@ -10,13 +10,11 @@ const ProductPage = () => {
       <div className="flex-1 ">
         <div className="flex flex-col sm:flex-row mb-10 items-start sm:items-center justify-between gap-3 sm:gap-0 p-3 sm:p-4 border border-[#EDEDED] rounded-xl bg-white shadow-sm">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between  p-3 sm:p-4">
-            <p className="text-[#4b33b5] text-[20px]  sm:text-[20px] md:text-[20px] font-bold">
-              محصولات
-            </p>
+            <p className="text-yellow-500 font-bold">محصولات</p>
           </div>
           {hasCreatProductPerm && (
             <Link to="/panel/product/creatproduct">
-              <p className="text-[#194BF0] hover:bg-blue-200 bg-blue-100 p-2 rounded-xl text-[14px] md:text-[16px] font-medium whitespace-nowrap">
+              <p className="text-yellow-500 hover:bg-yellow-100 bg-yellow-50 p-2 rounded-xl  whitespace-nowrap">
                 + ایجاد محصول جدید
               </p>
             </Link>

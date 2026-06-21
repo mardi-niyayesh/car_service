@@ -11,13 +11,13 @@ const CategoryPage = () => {
       <div className="flex-1">
         <div className="flex flex-col sm:flex-row mb-10 items-start sm:items-center justify-between gap-3 sm:gap-0 p-3 sm:p-4 border border-[#EDEDED] rounded-xl bg-white shadow-sm">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between  p-3 sm:p-4">
-            <p className="text-[#4b33b5] text-[20px]  sm:text-[20px] md:text-[20px] font-bold">
+            <p className="text-yellow-500 text-[20px] font-bold">
               دسته بندی
             </p>
           </div>
           {hasCreatPermession && (
             <Link to="/panel/category/CreatCategory">
-              <p className="text-[#194BF0] hover:bg-blue-200 bg-blue-100 p-2 rounded-xl sm:text-[18px] md:text-[18px] font-medium whitespace-nowrap">
+              <p className="text-yellow-500 hover:bg-yellow-100 bg-yellow-50 p-2 rounded-xl  font-medium whitespace-nowrap">
                 + ساختن دسته بندی جدید
               </p>
             </Link>

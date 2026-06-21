@@ -75,7 +75,7 @@ const ProductFormComponent = ({
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="p-6 bg-white">
-          <p className="text-[#4b33b5] text-[20px] font-bold mb-4">
+          <p className="text-yellow-500 text-[20px] font-bold mb-4">
             {mode === "create" ? "ساختن ماشین جدید " : "ویرایش ماشین"}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-8">
@@ -91,7 +91,7 @@ const ProductFormComponent = ({
               <input
                 type="text"
                 placeholder="عنوان..."
-                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ${
+                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-300 ${
                   errors.name ? "border-red-500" : "border-gray-300"
                 }`}
                 {...register("name", {
@@ -126,7 +126,7 @@ const ProductFormComponent = ({
               <input
                 type="text"
                 placeholder="توضیحات..."
-                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ${
+                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-300 ${
                   errors.description ? "border-red-500" : "border-gray-300"
                 }`}
                 {...register("description", {
@@ -192,7 +192,7 @@ const ProductFormComponent = ({
               <input
                 type="text"
                 placeholder="کمپانی..."
-                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ${
+                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-300 ${
                   errors.company ? "border-red-500" : "border-gray-300"
                 }`}
                 {...register("company", {
@@ -233,7 +233,7 @@ const ProductFormComponent = ({
               <input
                 type="text"
                 placeholder="لینک..."
-                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ${
+                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-300 ${
                   errors.slug ? "border-red-500" : "border-gray-300"
                 }`}
                 {...register("slug", {
@@ -273,7 +273,7 @@ const ProductFormComponent = ({
               <input
                 type="number"
                 placeholder="قیمت..."
-                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ${
+                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-300 ${
                   errors.price_per_day ? "border-red-500" : "border-gray-300"
                 }`}
                 {...register("price_per_day", {
@@ -307,7 +307,7 @@ const ProductFormComponent = ({
               </label>
 
               <select
-                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ${
+                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition duration-300 ${
                   errors.category_id ? "border-red-500" : "border-gray-300"
                 }`}
                 {...register("category_id", {
@@ -335,7 +335,7 @@ const ProductFormComponent = ({
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500"
                 {...register("can_rent")}
                 defaultChecked={true}
               />
@@ -347,7 +347,7 @@ const ProductFormComponent = ({
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500"
                 {...register("ownership")}
               />
               <label className="block text-[18px] text-gray-700">
@@ -359,7 +359,7 @@ const ProductFormComponent = ({
           <button
             type="submit"
             disabled={isLoading}
-            className="py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 disabled:opacity-50"
+            className="py-3 px-4 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 disabled:opacity-50"
           >
             {isLoading ? "در حال ارسال..." : submitButtonText}
           </button>

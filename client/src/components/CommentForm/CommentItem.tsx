@@ -14,7 +14,7 @@ const CommentItem = ({
       <div className="p-5 rounded-xl border border-gray-200">
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-blue-600">
+            <div className="w-8 h-8 rounded-full bg-yellow-100 from-blue-100 to-blue-200 flex items-center justify-center text-yellow-600">
               <FaUser size={14} />
             </div>
             <h1 className=" text-gray-800  ">{comment.user.display_name}</h1>
@@ -43,7 +43,7 @@ const CommentItem = ({
               <span className="text-[18px]">لایک</span>
             </button>
             <button className="flex items-center justify-center gap-1 hover:text-red-500 transition-colors duration-200 cursor-pointer">
-              <FaThumbsDown size={18}  />
+              <FaThumbsDown size={18}/>
               <span className="text-[18px]">دیسلایک</span>
             </button>
           </div>
