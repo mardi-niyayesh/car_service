@@ -213,8 +213,6 @@ model Cart {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  total_price Int @db.Integer
-
   user_id String @unique @db.Uuid
   user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
