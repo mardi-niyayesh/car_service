@@ -2,11 +2,16 @@ import {Injectable} from '@nestjs/common';
 import {Cron, CronExpression} from "@nestjs/schedule";
 import {RentStatus} from "@/modules/prisma/generated/enums";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {RedisService} from "@/modules/redis/redis.service";
+import {RedisKey} from "@/lib";
 
 /** revoked all tokens when expiresAt <= now */
 @Injectable()
 export class CleanerJobs {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly redis: RedisService,
+  ) {}
 
   @Cron(CronExpression.EVERY_5_MINUTES) // five minutes
   async cleanExpiresToken(): Promise<void> {
@@ -32,13 +37,19 @@ export class CleanerJobs {
     const now: Date = new Date();
     const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
 
-    await this.prisma.carRent.deleteMany({
+    const result = await this.prisma.carRent.deleteMany({
       where: {
         status: RentStatus.PENDING,
         created_at: {
-          gte: twoHoursAgo
+          lte: twoHoursAgo
         }
       }
     });
+
+    if (result.count > 0) {
+      const key = RedisKey.build("cart", 'self_cart');
+      const finalKey = `*${key}*`;
+      await this.redis.deletePrefix(finalKey);
+    }
   }
 }
