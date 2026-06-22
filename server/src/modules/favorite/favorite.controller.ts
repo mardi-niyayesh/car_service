@@ -4,7 +4,6 @@ import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {Controller, Get, Param, Post, Query, Req} from "@nestjs/common";
 import type {AccessRequest, ApiResponse, FavoriteResponse, ListFavoriteResponse} from "@/types";
 import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
-import {CarSlugValidator} from "@/modules/car/dto";
 
 /**
  * Controller for managing authenticated user's favorite cars.

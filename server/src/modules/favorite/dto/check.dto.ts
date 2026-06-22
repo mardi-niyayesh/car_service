@@ -1,5 +1,5 @@
+import type {FavoriteCheck} from "@/types";
 import {getBaseOkResponseSchema} from "@/common";
-import {FavoriteCheck} from "@/types";
 
 export class OkCheckRes extends getBaseOkResponseSchema<FavoriteCheck>({
   path: 'favorites/check/car_id',
