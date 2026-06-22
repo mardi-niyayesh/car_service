@@ -43,11 +43,10 @@ export class FavoriteService {
     }
   }
 
-  async get(user_id: string, car_id: string, pagination: PaginationValidatorType): Promise<ApiResponse<ListFavoriteResponse>> {
+  async get(user_id: string, pagination: PaginationValidatorType): Promise<ApiResponse<ListFavoriteResponse>> {
     const {orderByLower, limit, offset} = pagination;
     const where: FavoriteWhereInput = {
       user_id,
-      car_id,
     };
 
     const count: number = await this.prisma.favorite.count({

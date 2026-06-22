@@ -65,14 +65,13 @@ export class FavoriteController {
    *   }
    * }
    */
-  @Get(":id")
+  @Get()
   @FavoriteDecorator.GetListDecorators()
   get(
     @Req() req: AccessRequest,
-    @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
   ): Promise<ApiResponse<ListFavoriteResponse>> {
-    return this.favoriteService.get(req.user.userId, id, pagination);
+    return this.favoriteService.get(req.user.userId, pagination);
   }
 
   /**

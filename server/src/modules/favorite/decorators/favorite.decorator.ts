@@ -9,7 +9,6 @@ export const GetListDecorators = () => applyDecorators(
   }),
   HttpCode(HttpStatus.OK),
   ApiOperation(FavoriteDto.favoriteFindAllOperation),
-  ApiParam(UUID4Dto("id")),
   PaginationDecoratorQueries(),
 );
 
