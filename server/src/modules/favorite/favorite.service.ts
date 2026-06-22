@@ -2,7 +2,7 @@ import {checkPrismaError} from "@/lib";
 import {Injectable} from "@nestjs/common";
 import {PaginationValidatorType} from "@/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import type {ApiResponse, FavoriteResponse, ListFavoriteResponse} from "@/types";
+import type {ApiResponse, FavoriteCheck, FavoriteResponse, ListFavoriteResponse} from "@/types";
 import type {FavoriteWhereInput} from "@/modules/prisma/generated/models/Favorite";
 
 @Injectable()
@@ -80,9 +80,8 @@ export class FavoriteService {
    * @param car_id
    * @returns A promise containing the API response with isFavorite boolean
    *
-   * @throws {NotFoundException} If the car does not exist
    */
-  async checkByID(user_id: string, car_id: string): Promise<ApiResponse<{ isFavorite: boolean }>> {
+  async checkByID(user_id: string, car_id: string): Promise<ApiResponse<FavoriteCheck>> {
     // 1. Check if favorite exists
     const favorite = await this.prisma.favorite.findUnique({
       where: {

@@ -12,3 +12,5 @@ export type FavoriteWithCar = Omit<Favorite, 'user_id'> & {
 export type ListFavoriteResponse = ListWithCount<{
   favorites: FavoriteWithCar[];
 }>;
+
+export type FavoriteCheck = { isFavorite: boolean };
