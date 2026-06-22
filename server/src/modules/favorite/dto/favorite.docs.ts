@@ -47,12 +47,12 @@ export const favoriteCheckOperation: ApiOperationOptions = {
   Checks whether a specific car is in the authenticated user's favorites list using the car slug.
   **Access restricted to users with permission: (user.self) only.**
   
-  - Returns \`true\` if the car is in the user's favorites.
-  - Returns \`false\` if the car is not in the user's favorites.
+  - Returns **true** if the car is in the user's favorites.
+  - Returns **false** if the car is not in the user's favorites.
   - Validates that the car exists before checking.
   - This endpoint only checks the current user's own favorites and cannot be used 
     to check other users' favorites.
   
-  The response includes a boolean \`isFavorite\` field indicating the favorite status.`,
+  The response includes a boolean **isFavorite** field indicating the favorite status.`,
   operationId: 'check_user_favorite_by_slug'
 };
