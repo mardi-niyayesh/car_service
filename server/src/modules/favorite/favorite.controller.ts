@@ -132,7 +132,7 @@ export class FavoriteController {
   @FavoriteDecorator.CheckDecorator()
   checkByID(
     @Req() req: AccessRequest,
-    @Param("id", new ZodPipe(CarSlugValidator)) id: string,
+    @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
   ) {
     return this.favoriteService.checkByID(req.user.userId, id);
   }

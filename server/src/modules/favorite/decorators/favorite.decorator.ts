@@ -33,5 +33,6 @@ export const CheckDecorator = () => applyDecorators(
   }),
   HttpCode(HttpStatus.OK),
   ApiParam(UUID4Dto('id')),
-  ApiOperation(FavoriteDto.favoriteCheckOperation)
+  ApiOperation(FavoriteDto.favoriteCheckOperation),
+  ApiOkResponse({type: FavoriteDto.OkCheckRes}),
 );
