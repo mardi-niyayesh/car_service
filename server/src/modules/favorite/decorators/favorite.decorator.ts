@@ -2,7 +2,6 @@ import * as FavoriteDto from "../dto";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 import {PaginationDecoratorQueries, Permission, PERMISSIONS, UUID4Dto} from "@/common";
 import {ApiConflictResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam} from "@nestjs/swagger";
-import {OkGetFavoriteRes} from "../dto";
 
 export const GetListDecorators = () => applyDecorators(
   Permission({
