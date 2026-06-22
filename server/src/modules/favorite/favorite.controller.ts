@@ -129,6 +129,7 @@ export class FavoriteController {
    * }
    */
   @Get("check/:slug")
+  @FavoriteDecorator.CheckDecorator()
   checkBySlug(
     @Req() req: AccessRequest,
     @Param("slug", new ZodPipe(CarSlugValidator)) slug: string,
