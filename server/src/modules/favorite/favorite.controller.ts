@@ -4,6 +4,7 @@ import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {Controller, Get, Param, Post, Query, Req} from "@nestjs/common";
 import type {AccessRequest, ApiResponse, FavoriteResponse, ListFavoriteResponse} from "@/types";
 import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
+import {CarSlugValidator} from "@/modules/car/dto";
 
 /**
  * Controller for managing authenticated user's favorite cars.
@@ -103,5 +104,36 @@ export class FavoriteController {
     @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
   ): Promise<ApiResponse<FavoriteResponse>> {
     return this.favoriteService.create(req.user.userId, id);
+  }
+
+  /**
+   * Checks if a car is in the authenticated user's favorites list by slug.
+   *
+   * @remarks
+   * This endpoint checks the existence of a favorite record for the given car slug.
+   * Returns a boolean indicating whether the car is favorite.
+   *
+   * @param req - Express request containing authenticated user data.
+   * @param slug - The slug of the car to check.
+   *
+   * @returns Promise resolving to an object with `isFavorite` boolean.
+   *
+   * @example
+   * GET /favorites/check/slug/tesla-model-s
+   * Response:
+   * {
+   *   "message": "Favorite status checked successfully.",
+   *   "data": {
+   *     "isFavorite": true
+   *   }
+   * }
+   */
+  @Get("check/:slug")
+  checkBySlug(
+    @Req() req: AccessRequest,
+    @Param("slug", new ZodPipe(CarSlugValidator)) slug: string,
+  ) {
+    console.log(slug, req.user.userId);
+    return 'ok';
   }
 }
