@@ -35,4 +35,5 @@ export const CheckDecorator = () => applyDecorators(
   ApiParam(UUID4Dto('id')),
   ApiOperation(FavoriteDto.favoriteCheckOperation),
   ApiOkResponse({type: FavoriteDto.OkCheckRes}),
+  ApiUnauthorizedResponse({type: getUnauthorizedResponse('favorites/check/id')}),
 );
