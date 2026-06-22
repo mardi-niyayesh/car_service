@@ -1,6 +1,6 @@
-import {ListFavoriteResponse} from "@/types";
 import {favoriteExample} from "./create.dto";
 import {getBaseOkResponseSchema} from "@/common";
+import type {ListFavoriteResponse} from "@/types";
 import {exampleCarRecord} from "@/modules/car/dto/create.dto";
 
 const {user_id, ...othersFavoriteData} = favoriteExample;
