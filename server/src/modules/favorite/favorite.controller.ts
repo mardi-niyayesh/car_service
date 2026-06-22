@@ -134,7 +134,6 @@ export class FavoriteController {
     @Req() req: AccessRequest,
     @Param("slug", new ZodPipe(CarSlugValidator)) slug: string,
   ) {
-    console.log(slug, req.user.userId);
-    return 'ok';
+    return this.favoriteService.checkBySlug(req.user.userId, slug);
   }
 }

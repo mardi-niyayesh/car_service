@@ -73,7 +73,15 @@ export class FavoriteService {
     };
   }
 
-
+  /**
+   * Checks if a car is in the user's favorites list by slug.
+   *
+   * @param user_id - The ID of the authenticated user
+   * @param slug - The slug of the car to check
+   * @returns A promise containing the API response with isFavorite boolean
+   *
+   * @throws {NotFoundException} If the car does not exist
+   */
   async checkBySlug(user_id: string, slug: string): Promise<ApiResponse<{ isFavorite: boolean }>> {
     // 1. First, find the car by slug
     const car = await this.prisma.car.findUnique({
