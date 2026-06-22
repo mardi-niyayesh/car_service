@@ -1,5 +1,5 @@
 import {checkPrismaError} from "@/lib";
-import {Injectable} from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import {PaginationValidatorType} from "@/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {ApiResponse, FavoriteResponse, ListFavoriteResponse} from "@/types";
@@ -69,6 +69,40 @@ export class FavoriteService {
       data: {
         count,
         favorites
+      }
+    };
+  }
+
+
+  async checkBySlug(user_id: string, slug: string): Promise<ApiResponse<{ isFavorite: boolean }>> {
+    // 1. First, find the car by slug
+    const car = await this.prisma.car.findUnique({
+      where: {slug},
+      select: {id: true}
+    });
+
+    if (!car) {
+      throw new NotFoundException({
+        message: 'Car not found with the provided slug',
+        error: 'Car not found'
+      });
+    }
+
+    // 2. Check if favorite exists
+    const favorite = await this.prisma.favorite.findUnique({
+      where: {
+        car_id_user_id: {
+          user_id,
+          car_id: car.id
+        }
+      },
+      select: {id: true}
+    });
+
+    return {
+      message: "Favorite status checked successfully.",
+      data: {
+        isFavorite: !!favorite
       }
     };
   }
