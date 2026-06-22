@@ -3,6 +3,7 @@ import {carSlugSwaggerParam} from "@/modules/car/decorators";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 import {getUnauthorizedResponse, PaginationDecoratorQueries, Permission, PERMISSIONS, UUID4Dto} from "@/common";
 import {ApiConflictResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {favoriteCheckOperation} from "../dto";
 
 export const GetListDecorators = () => applyDecorators(
   Permission({
@@ -34,4 +35,5 @@ export const CheckDecorator = () => applyDecorators(
   }),
   HttpCode(HttpStatus.OK),
   ApiParam(carSlugSwaggerParam),
+  ApiOperation(FavoriteDto.favoriteCheckOperation)
 );
