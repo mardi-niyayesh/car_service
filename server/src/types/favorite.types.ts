@@ -5,7 +5,7 @@ export type FavoriteResponse = {
   favorite: Favorite;
 };
 
-type FavoriteWithCar = Omit<Favorite, 'user_id'> & {
+export type FavoriteWithCar = Omit<Favorite, 'user_id'> & {
   car: Car;
 };
 
