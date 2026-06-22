@@ -74,34 +74,21 @@ export class FavoriteService {
   }
 
   /**
-   * Checks if a car is in the user's favorites list by slug.
+   * Checks if a car is in the user's favorites list by id.
    *
    * @param user_id - The ID of the authenticated user
-   * @param slug - The slug of the car to check
+   * @param car_id
    * @returns A promise containing the API response with isFavorite boolean
    *
    * @throws {NotFoundException} If the car does not exist
    */
-  async checkBySlug(user_id: string, slug: string): Promise<ApiResponse<{ isFavorite: boolean }>> {
-    // 1. First, find the car by slug
-    const car = await this.prisma.car.findUnique({
-      where: {slug},
-      select: {id: true}
-    });
-
-    if (!car) {
-      throw new NotFoundException({
-        message: 'Car not found with the provided slug',
-        error: 'Car not found'
-      });
-    }
-
-    // 2. Check if favorite exists
+  async checkByID(user_id: string, car_id: string): Promise<ApiResponse<{ isFavorite: boolean }>> {
+    // 1. Check if favorite exists
     const favorite = await this.prisma.favorite.findUnique({
       where: {
         car_id_user_id: {
           user_id,
-          car_id: car.id
+          car_id
         }
       },
       select: {id: true}

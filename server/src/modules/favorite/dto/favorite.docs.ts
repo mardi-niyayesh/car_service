@@ -40,11 +40,11 @@ export const favoriteCreateOperation: ApiOperationOptions = {
 };
 
 export const favoriteCheckOperation: ApiOperationOptions = {
-  summary: 'check if car is favorite by slug',
+  summary: 'check if car is favorite by id',
   description: `
   - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_SELF}\`\n
   
-  Checks whether a specific car is in the authenticated user's favorites list using the car slug.
+  Checks whether a specific car is in the authenticated user's favorites list using the car id.
   **Access restricted to users with permission: (user.self) only.**
   
   - Returns **true** if the car is in the user's favorites.
@@ -54,5 +54,5 @@ export const favoriteCheckOperation: ApiOperationOptions = {
     to check other users' favorites.
   
   The response includes a boolean **isFavorite** field indicating the favorite status.`,
-  operationId: 'check_user_favorite_by_slug'
+  operationId: 'check_user_favorite_by_id'
 };

@@ -33,6 +33,6 @@ export const CheckDecorator = () => applyDecorators(
     permissions: [PERMISSIONS.USER_SELF],
   }),
   HttpCode(HttpStatus.OK),
-  ApiParam(carSlugSwaggerParam),
+  ApiParam(UUID4Dto('id')),
   ApiOperation(FavoriteDto.favoriteCheckOperation)
 );

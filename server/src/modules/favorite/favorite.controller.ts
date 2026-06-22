@@ -107,19 +107,19 @@ export class FavoriteController {
   }
 
   /**
-   * Checks if a car is in the authenticated user's favorites list by slug.
+   * Checks if a car is in the authenticated user's favorites list by id.
    *
    * @remarks
-   * This endpoint checks the existence of a favorite record for the given car slug.
+   * This endpoint checks the existence of a favorite record for the given car id.
    * Returns a boolean indicating whether the car is favorite.
    *
    * @param req - Express request containing authenticated user data.
-   * @param slug - The slug of the car to check.
+   * @param id
    *
    * @returns Promise resolving to an object with `isFavorite` boolean.
    *
    * @example
-   * GET /favorites/check/slug/tesla-model-s
+   * GET /favorites/check/uuid
    * Response:
    * {
    *   "message": "Favorite status checked successfully.",
@@ -128,12 +128,12 @@ export class FavoriteController {
    *   }
    * }
    */
-  @Get("check/:slug")
+  @Get("check/:id")
   @FavoriteDecorator.CheckDecorator()
-  checkBySlug(
+  checkByID(
     @Req() req: AccessRequest,
-    @Param("slug", new ZodPipe(CarSlugValidator)) slug: string,
+    @Param("id", new ZodPipe(CarSlugValidator)) id: string,
   ) {
-    return this.favoriteService.checkBySlug(req.user.userId, slug);
+    return this.favoriteService.checkByID(req.user.userId, id);
   }
 }
