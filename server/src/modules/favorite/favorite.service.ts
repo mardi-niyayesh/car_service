@@ -2,8 +2,8 @@ import {checkPrismaError} from "@/lib";
 import {Injectable} from "@nestjs/common";
 import {PaginationValidatorType} from "@/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import type {ApiResponse, FavoriteCheck, FavoriteResponse, ListFavoriteResponse} from "@/types";
 import type {FavoriteWhereInput} from "@/modules/prisma/generated/models/Favorite";
+import type {ApiResponse, FavoriteCheck, FavoriteResponse, ListFavoriteResponse} from "@/types";
 
 @Injectable()
 export class FavoriteService {
