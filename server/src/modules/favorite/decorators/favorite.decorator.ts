@@ -1,5 +1,4 @@
 import * as FavoriteDto from "../dto";
-import {carSlugSwaggerParam} from "@/modules/car/decorators";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 import {getUnauthorizedResponse, PaginationDecoratorQueries, Permission, PERMISSIONS, UUID4Dto} from "@/common";
 import {ApiConflictResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
