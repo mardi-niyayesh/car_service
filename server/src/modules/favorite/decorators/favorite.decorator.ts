@@ -1,7 +1,7 @@
 import * as FavoriteDto from "../dto";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
-import {PaginationDecoratorQueries, Permission, PERMISSIONS, UUID4Dto} from "@/common";
-import {ApiConflictResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam} from "@nestjs/swagger";
+import {getUnauthorizedResponse, PaginationDecoratorQueries, Permission, PERMISSIONS, UUID4Dto} from "@/common";
+import {ApiConflictResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 export const GetListDecorators = () => applyDecorators(
   Permission({
@@ -10,7 +10,8 @@ export const GetListDecorators = () => applyDecorators(
   HttpCode(HttpStatus.OK),
   ApiOperation(FavoriteDto.favoriteFindAllOperation),
   PaginationDecoratorQueries(),
-  ApiOkResponse(({type: FavoriteDto.OkGetFavoriteRes}))
+  ApiOkResponse(({type: FavoriteDto.OkGetFavoriteRes})),
+  ApiUnauthorizedResponse({type: getUnauthorizedResponse('favorites')})
 );
 
 export const CreateDecorator = () => applyDecorators(
@@ -21,6 +22,7 @@ export const CreateDecorator = () => applyDecorators(
   HttpCode(HttpStatus.CREATED),
   ApiOperation(FavoriteDto.favoriteCreateOperation),
   ApiOkResponse({type: FavoriteDto.CreateOkRes}),
+  ApiUnauthorizedResponse({type: getUnauthorizedResponse('favorites')}),
   ApiNotFoundResponse({type: FavoriteDto.CreateNotFoundRes}),
   ApiConflictResponse({type: FavoriteDto.CreateConflictRes}),
 );
