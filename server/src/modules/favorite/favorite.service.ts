@@ -1,5 +1,5 @@
 import {checkPrismaError} from "@/lib";
-import {Injectable, NotFoundException} from "@nestjs/common";
+import {Injectable} from "@nestjs/common";
 import {PaginationValidatorType} from "@/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {ApiResponse, FavoriteResponse, ListFavoriteResponse} from "@/types";
