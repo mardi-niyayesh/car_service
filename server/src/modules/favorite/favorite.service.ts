@@ -55,15 +55,14 @@ export class FavoriteService {
 
     const favorites = await this.prisma.favorite.findMany({
       where,
+      include: {car: true},
+      omit: {user_id: true},
       take: limit,
       skip: offset,
       orderBy: {
         created_at: orderByLower
       }
     });
-
-    console.log(count);
-    console.log(favorites);
 
     return {
       message: "get favorites successfully.",
