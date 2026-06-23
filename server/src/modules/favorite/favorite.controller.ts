@@ -164,7 +164,7 @@ export class FavoriteController {
   delete(
     @Req() req: AccessRequest,
     @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
-  ) {
+  ): Promise<ApiResponse<FavoriteResponse>> {
     return this.favoriteService.delete(req.user.userId, id);
   }
 }
