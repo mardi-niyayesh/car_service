@@ -14,15 +14,28 @@ export function checkPrismaError(data: CheckPrismaErrorParams): never {
   const {conflictField, notFoundField, notFoundResource, mainResource, e} = data;
 
   if (e instanceof Prisma.PrismaClientKnownRequestError) {
-    if (e.code === 'P2002') throw new ConflictException({
-      message: `${mainResource} already exists in database, please change ${conflictField}`,
-      error: `${mainResource} already exists`
-    } as BaseException);
+    switch (e.code) {
+      case 'P2002': {
+        throw new ConflictException({
+          message: `${mainResource} already exists in database, please change ${conflictField}`,
+          error: `${mainResource} already exists`
+        } as BaseException);
+      }
 
-    if (e.code === 'P2003') throw new NotFoundException({
-      message: `${notFoundResource} not exist exists in database, please change ${notFoundField}`,
-      error: `${notFoundResource} not exists`
-    } as BaseException);
+      case 'P2003': {
+        throw new NotFoundException({
+          message: `${notFoundResource} not exist exists in database, please change ${notFoundField}`,
+          error: `${notFoundResource} not exists`
+        } as BaseException);
+      }
+
+      case 'P2025': {
+        throw new NotFoundException({
+          message: `${notFoundResource || mainResource} not found in database, please check ${notFoundField || 'id'}`,
+          error: `${notFoundResource || mainResource} not found`
+        } as BaseException);
+      }
+    }
   }
 
   throw e;
