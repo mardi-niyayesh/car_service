@@ -45,5 +45,6 @@ export const DeleteDecorator = () => applyDecorators(
   HttpCode(HttpStatus.OK),
   ApiParam(UUID4Dto('id')),
   ApiOperation(FavoriteDto.favoriteDeleteOperation),
+  ApiOkResponse({type: FavoriteDto.OkDeleteRes}),
   ApiUnauthorizedResponse({type: getUnauthorizedResponse('favorites/id')}),
 );
