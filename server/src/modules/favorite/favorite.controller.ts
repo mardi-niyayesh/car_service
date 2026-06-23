@@ -136,11 +136,36 @@ export class FavoriteController {
     return this.favoriteService.checkByID(req.user.userId, id);
   }
 
+  /**
+   * Removes a car from the authenticated user's favorites list by ID.
+   *
+   * @remarks
+   * This endpoint deletes a favorite record for the authenticated user.
+   * The car must exist in the user's favorites list.
+   * Only the owner of the favorite can delete it.
+   *
+   * @param req - Express request containing authenticated user data.
+   * @param id - UUID of the car to be removed from favorites.
+   *
+   * @returns Promise resolving to a success message.
+   *
+   * @example
+   * DELETE /favorites/550e8400-e29b-41d4-a716-446655440000
+   * Response:
+   * {
+   *   "message": "Favorite removed successfully.",
+   *   "data": {
+   *     "id": "550e8400-e29b-41d4-a716-446655440000"
+   *   }
+   * }
+   */
   @Delete(':id')
   delete(
+    @Req() req: AccessRequest,
     @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
   ) {
     console.log(id);
+    console.log(req.user.userId);
     return 'delete successfully.';
   }
 }
