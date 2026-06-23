@@ -60,7 +60,7 @@ export class RedisKey {
         error: `in ${this.keyPrefix.name} function. when create a cache key`,
       } as BaseException);
 
-      parts.push(`id=${selfId}`);
+      parts.push(`user-id=${selfId}`);
     }
 
     if (paramsKey !== undefined && paramsKey.length) {

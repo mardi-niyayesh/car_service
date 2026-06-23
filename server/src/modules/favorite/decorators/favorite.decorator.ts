@@ -12,7 +12,8 @@ export const GetListDecorators = () => applyDecorators(
   Cacheable({
     resource: 'favorite',
     pagination: true,
-    extraKeys: getListCacheableExtraKeys
+    extraKeys: getListCacheableExtraKeys,
+    self: true
   }),
   HttpCode(HttpStatus.OK),
   ApiOperation(FavoriteDto.favoriteFindAllOperation),
