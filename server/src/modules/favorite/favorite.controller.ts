@@ -165,8 +165,6 @@ export class FavoriteController {
     @Req() req: AccessRequest,
     @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
   ) {
-    console.log(id);
-    console.log(req.user.userId);
-    return 'delete successfully.';
+    return this.favoriteService.delete(req.user.userId, id);
   }
 }

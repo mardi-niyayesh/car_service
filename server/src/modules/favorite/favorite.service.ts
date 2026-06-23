@@ -100,4 +100,40 @@ export class FavoriteService {
       }
     };
   }
+
+  /**
+   * Removes a car from the user's favorites list.
+   *
+   * @param user_id - The ID of the authenticated user
+   * @param car_id - The ID of the car to be removed from favorites
+   * @returns A promise containing the API response with the deleted favorite record
+   *
+   */
+  async delete(user_id: string, car_id: string): Promise<ApiResponse<FavoriteResponse>> {
+    try {
+      const favorite = await this.prisma.favorite.delete({
+        where: {
+          car_id_user_id: {
+            user_id,
+            car_id
+          }
+        }
+      });
+
+      return {
+        message: "The car successfully removed from user favorites",
+        data: {
+          favorite
+        }
+      };
+    } catch (e) {
+      checkPrismaError({
+        e: e as Error,
+        conflictField: "favorite",
+        mainResource: 'favorite',
+        notFoundField: 'car_id_user_id',
+        notFoundResource: 'favorite'
+      });
+    }
+  }
 }
