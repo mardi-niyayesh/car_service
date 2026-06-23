@@ -1,7 +1,7 @@
 import * as FavoriteDecorator from "./decorators";
 import {FavoriteService} from "./favorite.service";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
-import {Controller, Get, Param, Post, Query, Req} from "@nestjs/common";
+import {Controller, Delete, Get, Param, Post, Query, Req} from "@nestjs/common";
 import type {AccessRequest, ApiResponse, FavoriteResponse, ListFavoriteResponse} from "@/types";
 import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
 
@@ -134,5 +134,13 @@ export class FavoriteController {
     @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
   ) {
     return this.favoriteService.checkByID(req.user.userId, id);
+  }
+
+  @Delete(':id')
+  delete(
+    @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
+  ) {
+    console.log(id);
+    return 'delete successfully.';
   }
 }
