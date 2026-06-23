@@ -1,6 +1,6 @@
 import * as FavoriteDto from "../dto";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
-import {Cacheable, getUnauthorizedResponse, PaginationDecoratorQueries, Permission, PERMISSIONS, UUID4Dto} from "@/common";
+import {Cacheable, CacheEvict, getUnauthorizedResponse, PaginationDecoratorQueries, Permission, PERMISSIONS, UUID4Dto} from "@/common";
 import {ApiConflictResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 const getListCacheableExtraKeys: string[] = ['self-favorite'];
@@ -49,6 +49,12 @@ export const CheckDecorator = () => applyDecorators(
 export const DeleteDecorator = () => applyDecorators(
   Permission({
     permissions: [PERMISSIONS.USER_SELF],
+  }),
+  CacheEvict({
+    self: true,
+    resource: 'favorite',
+    prefixAfterBuildKey: true,
+    extraKeys: getListCacheableExtraKeys,
   }),
   HttpCode(HttpStatus.OK),
   ApiParam(UUID4Dto('id')),
