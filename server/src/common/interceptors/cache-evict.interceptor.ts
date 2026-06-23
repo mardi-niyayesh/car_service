@@ -49,7 +49,11 @@ export class CacheEvictInterceptor implements NestInterceptor {
           });
 
           try {
-            await this.redisService.delete(key);
+            if (cacheParams.prefixAfterBuildKey) {
+              await this.redisService.deletePrefix(`*${key}*`);
+            } else {
+              await this.redisService.delete(key);
+            }
           } catch (e) {
             throw new InternalServerErrorException({
               message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a cache key',
