@@ -61,7 +61,6 @@ export class RedisKey {
       } as BaseException);
 
       parts.push(`id=${selfId}`);
-      return RedisKey.build(resource, ...parts);
     }
 
     if (paramsKey !== undefined && paramsKey.length) {
