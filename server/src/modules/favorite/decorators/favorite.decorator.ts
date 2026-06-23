@@ -1,9 +1,16 @@
 import * as FavoriteDto from "../dto";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
-import {Cacheable, CacheEvict, getUnauthorizedResponse, PaginationDecoratorQueries, Permission, PERMISSIONS, UUID4Dto} from "@/common";
+import {Cacheable, CacheEvict, CacheEvictDecorator, getUnauthorizedResponse, PaginationDecoratorQueries, Permission, PERMISSIONS, UUID4Dto} from "@/common";
 import {ApiConflictResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 const getListCacheableExtraKeys: string[] = ['self-favorite'];
+
+const cacheEvictParams: CacheEvictDecorator = {
+  self: true,
+  resource: 'favorite',
+  prefixAfterBuildKey: true,
+  extraKeys: getListCacheableExtraKeys,
+};
 
 export const GetListDecorators = () => applyDecorators(
   Permission({
@@ -26,6 +33,7 @@ export const CreateDecorator = () => applyDecorators(
   Permission({
     permissions: [PERMISSIONS.USER_SELF],
   }),
+  CacheEvict(cacheEvictParams),
   ApiParam(UUID4Dto("id")),
   HttpCode(HttpStatus.CREATED),
   ApiOperation(FavoriteDto.favoriteCreateOperation),
@@ -50,12 +58,7 @@ export const DeleteDecorator = () => applyDecorators(
   Permission({
     permissions: [PERMISSIONS.USER_SELF],
   }),
-  CacheEvict({
-    self: true,
-    resource: 'favorite',
-    prefixAfterBuildKey: true,
-    extraKeys: getListCacheableExtraKeys,
-  }),
+  CacheEvict(cacheEvictParams),
   HttpCode(HttpStatus.OK),
   ApiParam(UUID4Dto('id')),
   ApiOperation(FavoriteDto.favoriteDeleteOperation),
