@@ -160,6 +160,7 @@ export class FavoriteController {
    * }
    */
   @Delete(':id')
+  @FavoriteDecorator.DeleteDecorator()
   delete(
     @Req() req: AccessRequest,
     @Param("id", new ZodPipe(UUIDv4Validator)) id: string,

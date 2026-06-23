@@ -37,3 +37,11 @@ export const CheckDecorator = () => applyDecorators(
   ApiOkResponse({type: FavoriteDto.OkCheckRes}),
   ApiUnauthorizedResponse({type: getUnauthorizedResponse('favorites/check/id')}),
 );
+
+export const DeleteDecorator = () => applyDecorators(
+  Permission({
+    permissions: [PERMISSIONS.USER_SELF],
+  }),
+  HttpCode(HttpStatus.OK),
+  ApiParam(UUID4Dto('id')),
+);
