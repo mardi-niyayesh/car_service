@@ -44,4 +44,5 @@ export const DeleteDecorator = () => applyDecorators(
   }),
   HttpCode(HttpStatus.OK),
   ApiParam(UUID4Dto('id')),
+  ApiOperation(FavoriteDto.favoriteDeleteOperation)
 );
