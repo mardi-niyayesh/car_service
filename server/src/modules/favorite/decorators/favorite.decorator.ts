@@ -1,8 +1,8 @@
+import {ONE_HOUR_MS} from "@/lib";
 import * as FavoriteDto from "../dto";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
-import {Cacheable, CacheEvict, CacheEvictDecorator, getUnauthorizedResponse, PaginationDecoratorQueries, Permission, PERMISSIONS, UUID4Dto} from "@/common";
 import {ApiConflictResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
-import {ONE_HOUR_MS} from "@/lib";
+import {Cacheable, CacheEvict, CacheEvictDecorator, getUnauthorizedResponse, PaginationDecoratorQueries, Permission, PERMISSIONS, UUID4Dto} from "@/common";
 
 const getListCacheableExtraKeys: string[] = ['self-favorite'];
 
