@@ -50,7 +50,8 @@ export class CacheEvictInterceptor implements NestInterceptor {
 
           try {
             if (cacheParams.prefixAfterBuildKey) {
-              await this.redisService.deletePrefix(`*${key}*`);
+              const finalKey = `*${key}*`;
+              await this.redisService.deletePrefix(finalKey);
             } else {
               await this.redisService.delete(key);
             }
