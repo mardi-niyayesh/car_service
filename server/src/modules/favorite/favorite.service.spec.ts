@@ -369,5 +369,16 @@ describe('FavoriteService', (): void => {
         select: {id: true}
       });
     });
+
+
+    // edge case: user_id or car_id empty strings (validation should handle this, but test behavior)
+    it('should return isFavorite: false when favorite not found with given IDs', async (): Promise<void> => {
+      prisma.favorite.findUnique.mockResolvedValue(null);
+
+      const result = await service.checkByID('non-existent-user', 'non-existent-car');
+
+      expect(result.data.isFavorite).toBe(false);
+      expect(result.message).toBe('Favorite status checked successfully.');
+    });
   });
 });
