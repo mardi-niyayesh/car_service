@@ -325,5 +325,26 @@ describe('FavoriteService', (): void => {
         select: {id: true}
       });
     });
+
+    // success: car is not in favorites
+    it('should return isFavorite: false when car does not exist in user favorites', async (): Promise<void> => {
+      prisma.favorite.findUnique.mockResolvedValue(null);
+
+      const result = await service.checkByID(mockUserId, mockCarId);
+
+      expect(result.data.isFavorite).toBe(false);
+      expect(result.message).toBe('Favorite status checked successfully.');
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.favorite.findUnique).toHaveBeenCalledWith({
+        where: {
+          car_id_user_id: {
+            user_id: mockUserId,
+            car_id: mockCarId
+          }
+        },
+        select: {id: true}
+      });
+    });
   });
 });
