@@ -1,6 +1,6 @@
 import type {PrismaMock} from "@/types";
 import {FavoriteService} from "./favorite.service";
-import {describe, afterEach, beforeEach} from "vitest";
+import {describe, afterEach, beforeEach, it, expect} from "vitest";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {Favorite} from "@/modules/prisma/generated/client";
@@ -35,6 +35,36 @@ describe('FavoriteService', (): void => {
    * ================================================
    */
   describe('create()', (): void => {
+    // success
+    it('should add a car to user favorites successfully', async (): Promise<void> => {
+      prisma.favorite.create.mockResolvedValue(mockFavorite);
 
+      const result = await service.create(mockUserId, mockCarId);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('favorite');
+
+      // 2. Test message
+      expect(result.message).toBe('The car successfully add to user favorites');
+
+      // 3. Test favorite data
+      const {favorite} = result.data;
+      expect(favorite.id).toBe(mockFavorite.id);
+      expect(favorite.user_id).toBe(mockUserId);
+      expect(favorite.car_id).toBe(mockCarId);
+      expect(favorite.created_at).toBe(mockDate);
+      expect(favorite.updated_at).toBe(mockDate);
+
+      // 4. Verify Prisma create call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.favorite.create).toHaveBeenCalledWith({
+        data: {
+          user_id: mockUserId,
+          car_id: mockCarId,
+        }
+      });
+    });
   });
 });
