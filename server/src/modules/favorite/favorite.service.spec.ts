@@ -346,5 +346,28 @@ describe('FavoriteService', (): void => {
         select: {id: true}
       });
     });
+
+    // success: different user and car combination
+    it('should return correct status for different user-car combinations', async (): Promise<void> => {
+      const differentUserId = 'user-456';
+      const differentCarId = 'car-456';
+
+      prisma.favorite.findUnique.mockResolvedValue({id: 'fav-789'} as unknown as Favorite);
+
+      const result = await service.checkByID(differentUserId, differentCarId);
+
+      expect(result.data.isFavorite).toBe(true);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.favorite.findUnique).toHaveBeenCalledWith({
+        where: {
+          car_id_user_id: {
+            user_id: differentUserId,
+            car_id: differentCarId
+          }
+        },
+        select: {id: true}
+      });
+    });
   });
 });
