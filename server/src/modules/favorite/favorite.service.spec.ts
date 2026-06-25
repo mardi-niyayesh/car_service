@@ -381,4 +381,23 @@ describe('FavoriteService', (): void => {
       expect(result.message).toBe('Favorite status checked successfully.');
     });
   });
+
+  /** ================================================
+   * Delete (Remove from favorites)
+   * ================================================
+   */
+  describe('delete()', (): void => {
+    const mockUserId = 'user-123';
+    const mockCarId = 'car-789';
+    const mockDate = new Date();
+
+    const mockFavorite: Favorite = {
+      id: 'fav-456',
+      created_at: mockDate,
+      updated_at: mockDate,
+      user_id: mockUserId,
+      car_id: mockCarId,
+    };
+
+  });
 });
