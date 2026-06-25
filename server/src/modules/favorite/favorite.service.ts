@@ -1,9 +1,9 @@
 import {checkPrismaError} from "@/lib";
 import {Injectable} from "@nestjs/common";
 import {PaginationValidatorType} from "@/common";
-import type {ApiResponse, FavoriteResponse, ListFavoriteResponse} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {FavoriteWhereInput} from "@/modules/prisma/generated/models/Favorite";
+import type {ApiResponse, FavoriteCheck, FavoriteResponse, ListFavoriteResponse} from "@/types";
 
 @Injectable()
 export class FavoriteService {
@@ -43,11 +43,10 @@ export class FavoriteService {
     }
   }
 
-  async get(user_id: string, car_id: string, pagination: PaginationValidatorType): Promise<ApiResponse<ListFavoriteResponse>> {
+  async get(user_id: string, pagination: PaginationValidatorType): Promise<ApiResponse<ListFavoriteResponse>> {
     const {orderByLower, limit, offset} = pagination;
     const where: FavoriteWhereInput = {
       user_id,
-      car_id,
     };
 
     const count: number = await this.prisma.favorite.count({
@@ -56,15 +55,14 @@ export class FavoriteService {
 
     const favorites = await this.prisma.favorite.findMany({
       where,
+      include: {car: true},
+      omit: {user_id: true},
       take: limit,
       skip: offset,
       orderBy: {
         created_at: orderByLower
       }
     });
-
-    console.log(count);
-    console.log(favorites);
 
     return {
       message: "get favorites successfully.",
@@ -73,5 +71,69 @@ export class FavoriteService {
         favorites
       }
     };
+  }
+
+  /**
+   * Checks if a car is in the user's favorites list by id.
+   *
+   * @param user_id - The ID of the authenticated user
+   * @param car_id
+   * @returns A promise containing the API response with isFavorite boolean
+   *
+   */
+  async checkByID(user_id: string, car_id: string): Promise<ApiResponse<FavoriteCheck>> {
+    // 1. Check if favorite exists
+    const favorite = await this.prisma.favorite.findUnique({
+      where: {
+        car_id_user_id: {
+          user_id,
+          car_id
+        }
+      },
+      select: {id: true}
+    });
+
+    return {
+      message: "Favorite status checked successfully.",
+      data: {
+        isFavorite: !!favorite
+      }
+    };
+  }
+
+  /**
+   * Removes a car from the user's favorites list.
+   *
+   * @param user_id - The ID of the authenticated user
+   * @param car_id - The ID of the car to be removed from favorites
+   * @returns A promise containing the API response with the deleted favorite record
+   *
+   */
+  async delete(user_id: string, car_id: string): Promise<ApiResponse<FavoriteResponse>> {
+    try {
+      const favorite = await this.prisma.favorite.delete({
+        where: {
+          car_id_user_id: {
+            user_id,
+            car_id
+          }
+        }
+      });
+
+      return {
+        message: "The car successfully removed from user favorites",
+        data: {
+          favorite
+        }
+      };
+    } catch (e) {
+      checkPrismaError({
+        e: e as Error,
+        conflictField: "favorite",
+        mainResource: 'favorite',
+        notFoundField: 'car_id_user_id',
+        notFoundResource: 'favorite'
+      });
+    }
   }
 }
