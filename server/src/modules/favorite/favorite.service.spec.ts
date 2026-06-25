@@ -471,6 +471,21 @@ describe('FavoriteService', (): void => {
         }
       });
     });
+
+    // error: trying to delete non-existent car from user favorites
+    it('should throw NotFoundException when car is not in user favorites', async (): Promise<void> => {
+      const prismaError = new Error('Record to delete does not exist');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
+
+      prisma.favorite.delete.mockRejectedValue(prismaError);
+
+      const differentCarId = 'car-456';
+
+      // noinspection ES6RedundantAwait
+      await expect(service.delete(mockUserId, differentCarId))
+        .rejects
+        .toThrow();
+    });
   });
 });
 
