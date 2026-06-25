@@ -1,10 +1,9 @@
 import type {PrismaMock} from "@/types";
 import {FavoriteService} from "./favorite.service";
-import {describe, afterEach, beforeEach, it, expect} from "vitest";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {Favorite, Prisma} from "@/modules/prisma/generated/client";
-import {ConflictException} from "@nestjs/common";
+import {describe, afterEach, beforeEach, it, expect} from "vitest";
+import {type Favorite, Prisma} from "@/modules/prisma/generated/client";
 
 describe('FavoriteService', (): void => {
   let prisma: PrismaMock;
