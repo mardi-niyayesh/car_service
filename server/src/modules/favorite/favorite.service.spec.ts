@@ -1,11 +1,10 @@
 import type {PrismaMock} from "@/types";
+import {PaginationValidatorType} from "@/common";
 import {FavoriteService} from "./favorite.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {describe, afterEach, beforeEach, it, expect} from "vitest";
-import {Car, type Favorite, Prisma} from "@/modules/prisma/generated/client";
-import {PaginationValidatorType} from "@/common";
-import {NotFoundException} from "@nestjs/common";
+import {type Favorite, Prisma} from "@/modules/prisma/generated/client";
 
 describe('FavoriteService', (): void => {
   let prisma: PrismaMock;
