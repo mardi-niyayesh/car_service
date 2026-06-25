@@ -3,7 +3,8 @@ import {FavoriteService} from "./favorite.service";
 import {describe, afterEach, beforeEach, it, expect} from "vitest";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {Favorite} from "@/modules/prisma/generated/client";
+import {Favorite, Prisma} from "@/modules/prisma/generated/client";
+import {ConflictException} from "@nestjs/common";
 
 describe('FavoriteService', (): void => {
   let prisma: PrismaMock;
@@ -65,6 +66,19 @@ describe('FavoriteService', (): void => {
           car_id: mockCarId,
         }
       });
+    });
+
+    // error: duplicate favorite (user already has this car in favorite list)
+    it('should throw ConflictException when user already has this car in favorites', async (): Promise<void> => {
+      const prismaError = new Error('Unique constraint failed');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2002';
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = {target: ['user_id_car_id']};
+
+      prisma.favorite.create.mockRejectedValue(prismaError);
+
+      await expect(service.create(mockUserId, mockCarId))
+        .rejects
+        .toThrow();
     });
   });
 });
