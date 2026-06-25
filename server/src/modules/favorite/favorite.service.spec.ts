@@ -133,7 +133,6 @@ describe('FavoriteService', (): void => {
       rate: 5,
       description: 'A luxurious BMW X5',
       category_id: 'cat-456',
-      creator_id: 'user-123',
     };
 
     const mockFavorites = [
@@ -169,5 +168,58 @@ describe('FavoriteService', (): void => {
       orderByUpper: 'DESC',
     };
 
+    // success
+    it('should return paginated list of user favorites with car details', async (): Promise<void> => {
+      prisma.favorite.count.mockResolvedValue(2);
+      prisma.favorite.findMany.mockResolvedValue(mockFavorites as unknown as Favorite[]);
+
+      const result = await service.get(mockUserId, mockPaginationInput);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('count');
+      expect(result.data).toHaveProperty('favorites');
+
+      // 2. Test message
+      expect(result.message).toBe('get favorites successfully.');
+
+      // 3. Test count and favorites array
+      expect(result.data.count).toBe(2);
+      expect(Array.isArray(result.data.favorites)).toBe(true);
+      expect(result.data.favorites.length).toBe(2);
+
+      // 4. Test favorite structure (user_id should be omitted)
+      const [firstFavorite] = result.data.favorites;
+      expect(firstFavorite.id).toBe(mockFavorites[0].id);
+      expect(firstFavorite.car_id).toBe(mockFavorites[0].car_id);
+      expect(firstFavorite).not.toHaveProperty('user_id');
+
+      // 5. Test car inclusion
+      expect(firstFavorite.car).toBeDefined();
+      expect(firstFavorite.car.id).toBe(mockCar.id);
+      expect(firstFavorite.car.name).toBe(mockCar.name);
+      expect(firstFavorite.car.slug).toBe(mockCar.slug);
+      expect(firstFavorite.car).not.toHaveProperty('creator_id');
+
+      // 6. Verify count call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.favorite.count).toHaveBeenCalledWith({
+        where: {user_id: mockUserId}
+      });
+
+      // 7. Verify findMany call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.favorite.findMany).toHaveBeenCalledWith({
+        where: {user_id: mockUserId},
+        include: {car: true},
+        omit: {user_id: true},
+        take: mockPaginationInput.limit,
+        skip: mockPaginationInput.offset,
+        orderBy: {
+          created_at: mockPaginationInput.orderByLower
+        }
+      });
+    });
   });
 });
