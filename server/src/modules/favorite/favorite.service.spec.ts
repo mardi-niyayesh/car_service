@@ -221,5 +221,22 @@ describe('FavoriteService', (): void => {
         }
       });
     });
+
+    // success: empty favorites
+    it('should return count 0 and empty array when user has no favorites', async (): Promise<void> => {
+      prisma.favorite.count.mockResolvedValue(0);
+      prisma.favorite.findMany.mockResolvedValue([]);
+
+      const result = await service.get(mockUserId, mockPaginationInput);
+
+      expect(result.data.count).toBe(0);
+      expect(result.data.favorites).toEqual([]);
+      expect(result.message).toBe('get favorites successfully.');
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.favorite.count).toHaveBeenCalledWith({
+        where: {user_id: mockUserId}
+      });
+    });
   });
 });
