@@ -4,7 +4,6 @@ import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {describe, afterEach, beforeEach, it, expect} from "vitest";
 import {type Favorite, Prisma} from "@/modules/prisma/generated/client";
-import {NotFoundException} from "@nestjs/common";
 
 describe('FavoriteService', (): void => {
   let prisma: PrismaMock;
@@ -86,6 +85,20 @@ describe('FavoriteService', (): void => {
       const prismaError = new Error('Foreign key constraint failed');
       (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2003';
       (prismaError as Prisma.PrismaClientKnownRequestError).meta = {field_name: 'car_id'};
+
+      prisma.favorite.create.mockRejectedValue(prismaError);
+
+      // noinspection ES6RedundantAwait
+      await expect(service.create(mockUserId, mockCarId))
+        .rejects
+        .toThrow();
+    });
+
+    // error: user not found (optional - if user_id foreign key exists)
+    it('should throw NotFoundException when user_id does not exist', async (): Promise<void> => {
+      const prismaError = new Error('Foreign key constraint failed');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2003';
+      (prismaError as Prisma.PrismaClientKnownRequestError).meta = {field_name: 'user_id'};
 
       prisma.favorite.create.mockRejectedValue(prismaError);
 
