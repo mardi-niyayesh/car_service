@@ -446,6 +446,31 @@ describe('FavoriteService', (): void => {
         }
       });
     });
+
+    // error: trying to delete non-existent favorite for different user
+    it('should throw NotFoundException when trying to delete favorite that belongs to another user', async (): Promise<void> => {
+      const prismaError = new Error('Record to delete does not exist');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
+
+      prisma.favorite.delete.mockRejectedValue(prismaError);
+
+      const differentUserId = 'user-456';
+
+      // noinspection ES6RedundantAwait
+      await expect(service.delete(differentUserId, mockCarId))
+        .rejects
+        .toThrow();
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.favorite.delete).toHaveBeenCalledWith({
+        where: {
+          car_id_user_id: {
+            user_id: differentUserId,
+            car_id: mockCarId
+          }
+        }
+      });
+    });
   });
 });
 
