@@ -287,4 +287,43 @@ describe('FavoriteService', (): void => {
       expect(car.name).toBe(mockCar.name);
     });
   });
+
+  /** ================================================
+   * Check By ID (Check if car is in favorites)
+   * ================================================
+   */
+  describe('checkByID()', (): void => {
+    const mockUserId = 'user-123';
+    const mockCarId = 'car-789';
+
+    // success: car is in favorites
+    it('should return isFavorite: true when car exists in user favorites', async (): Promise<void> => {
+      prisma.favorite.findUnique.mockResolvedValue({id: 'fav-456'} as unknown as Favorite);
+
+      const result = await service.checkByID(mockUserId, mockCarId);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('isFavorite');
+
+      // 2. Test message
+      expect(result.message).toBe('Favorite status checked successfully.');
+
+      // 3. Test isFavorite value
+      expect(result.data.isFavorite).toBe(true);
+
+      // 4. Verify Prisma findUnique call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.favorite.findUnique).toHaveBeenCalledWith({
+        where: {
+          car_id_user_id: {
+            user_id: mockUserId,
+            car_id: mockCarId
+          }
+        },
+        select: {id: true}
+      });
+    });
+  });
 });
