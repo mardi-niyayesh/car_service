@@ -238,5 +238,53 @@ describe('FavoriteService', (): void => {
         where: {user_id: mockUserId}
       });
     });
+
+    // success: with custom pagination
+    it('should apply correct pagination and sorting parameters', async (): Promise<void> => {
+      const customPagination: PaginationValidatorType = {
+        limit: 5,
+        offset: 10,
+        page: 3,
+        orderByLower: 'asc',
+        orderByUpper: 'ASC',
+      };
+
+      prisma.favorite.count.mockResolvedValue(12);
+      prisma.favorite.findMany.mockResolvedValue([mockFavorites[0]] as unknown as Favorite[]);
+
+      await service.get(mockUserId, customPagination);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.favorite.findMany).toHaveBeenCalledWith({
+        where: {user_id: mockUserId},
+        include: {car: true},
+        omit: {user_id: true},
+        take: 5,
+        skip: 10,
+        orderBy: {
+          created_at: 'asc'
+        }
+      });
+    });
+
+    // success: verify car doesn't have creator_id
+    it('should return car without creator_id field', async (): Promise<void> => {
+      const favoriteWithCar = {
+        ...mockFavorites[0],
+        car: {
+          ...mockCar,
+        },
+      };
+
+      prisma.favorite.count.mockResolvedValue(1);
+      prisma.favorite.findMany.mockResolvedValue([favoriteWithCar] as unknown as Favorite[]);
+
+      const result = await service.get(mockUserId, mockPaginationInput);
+
+      const {car} = result.data.favorites[0];
+      expect(car).not.toHaveProperty('creator_id');
+      expect(car.id).toBe(mockCar.id);
+      expect(car.name).toBe(mockCar.name);
+    });
   });
 });
