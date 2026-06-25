@@ -3,7 +3,7 @@ import {FavoriteService} from "./favorite.service";
 import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {describe, afterEach, beforeEach, it, expect} from "vitest";
-import {type Favorite, Prisma} from "@/modules/prisma/generated/client";
+import {Car, type Favorite, Prisma} from "@/modules/prisma/generated/client";
 import {PaginationValidatorType} from "@/common";
 
 describe('FavoriteService', (): void => {
@@ -51,12 +51,7 @@ describe('FavoriteService', (): void => {
       expect(result.message).toBe('The car successfully add to user favorites');
 
       // 3. Test favorite data
-      const {favorite} = result.data;
-      expect(favorite.id).toBe(mockFavorite.id);
-      expect(favorite.user_id).toBe(mockUserId);
-      expect(favorite.car_id).toBe(mockCarId);
-      expect(favorite.created_at).toBe(mockDate);
-      expect(favorite.updated_at).toBe(mockDate);
+      checkFavoriteFields({favorite: result.data.favorite, mockFavorite, mockCarId, mockDate, mockUserId});
 
       // 4. Verify Prisma create call
       // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -399,5 +394,57 @@ describe('FavoriteService', (): void => {
       car_id: mockCarId,
     };
 
+    // success
+    it('should remove a car from user favorites successfully', async (): Promise<void> => {
+      prisma.favorite.delete.mockResolvedValue(mockFavorite);
+
+      const result = await service.delete(mockUserId, mockCarId);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('favorite');
+
+      // 2. Test message
+      expect(result.message).toBe('The car successfully removed from user favorites');
+
+      // 3. Test deleted favorite data
+      checkFavoriteFields({favorite: result.data.favorite, mockFavorite, mockCarId, mockDate, mockUserId});
+
+      // 4. Verify Prisma delete call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.favorite.delete).toHaveBeenCalledWith({
+        where: {
+          car_id_user_id: {
+            user_id: mockUserId,
+            car_id: mockCarId
+          }
+        }
+      });
+    });
   });
 });
+
+interface CheckFavoriteFieldsType {
+  favorite: Favorite;
+  mockFavorite: Favorite;
+  mockCarId: string;
+  mockDate: Date;
+  mockUserId: string;
+}
+
+const checkFavoriteFields = (
+  {
+    favorite,
+    mockFavorite,
+    mockCarId,
+    mockDate,
+    mockUserId,
+  }: CheckFavoriteFieldsType
+) => {
+  expect(favorite.id).toBe(mockFavorite.id);
+  expect(favorite.user_id).toBe(mockUserId);
+  expect(favorite.car_id).toBe(mockCarId);
+  expect(favorite.created_at).toBe(mockDate);
+  expect(favorite.updated_at).toBe(mockDate);
+};
