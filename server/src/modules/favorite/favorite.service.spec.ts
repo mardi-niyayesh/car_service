@@ -4,6 +4,7 @@ import {mockDeep, mockReset} from "vitest-mock-extended";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {describe, afterEach, beforeEach, it, expect} from "vitest";
 import {type Favorite, Prisma} from "@/modules/prisma/generated/client";
+import {PaginationValidatorType} from "@/common";
 
 describe('FavoriteService', (): void => {
   let prisma: PrismaMock;
@@ -107,5 +108,66 @@ describe('FavoriteService', (): void => {
         .rejects
         .toThrow();
     });
+  });
+
+  /** ================================================
+   * Get Favorites (List)
+   * ================================================
+   */
+  describe('get()', (): void => {
+    const mockUserId = 'user-123';
+    const mockDate = new Date();
+
+    const mockCar = {
+      id: 'car-789',
+      created_at: mockDate,
+      updated_at: mockDate,
+      name: 'BMW X5',
+      slug: 'bmw-x5-2024',
+      company: 'BMW',
+      price_per_day: 200000,
+      tags: ['luxury', 'suv'],
+      image: 'car-789.png',
+      in_rent: false,
+      can_rent: true,
+      rate: 5,
+      description: 'A luxurious BMW X5',
+      category_id: 'cat-456',
+      creator_id: 'user-123',
+    };
+
+    const mockFavorites = [
+      {
+        id: 'fav-1',
+        created_at: mockDate,
+        updated_at: mockDate,
+        car_id: 'car-789',
+        car: mockCar,
+      },
+      {
+        id: 'fav-2',
+        created_at: new Date(Date.now() - 86400000), // yesterday
+        updated_at: new Date(Date.now() - 86400000),
+        car_id: 'car-456',
+        car: {
+          ...mockCar,
+          id: 'car-456',
+          name: 'Mercedes GLE',
+          slug: 'mercedes-gle',
+          company: 'Mercedes',
+          price_per_day: 300000,
+          image: 'car-456.png',
+        },
+      },
+    ];
+
+    const mockPaginationInput: PaginationValidatorType = {
+      limit: 10,
+      offset: 0,
+      page: 1,
+      orderByLower: 'desc',
+      orderByUpper: 'DESC',
+    };
+
   });
 });
