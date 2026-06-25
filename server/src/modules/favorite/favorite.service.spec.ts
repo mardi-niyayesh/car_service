@@ -7,22 +7,16 @@ import {describe, afterEach, beforeEach, it, expect} from "vitest";
 import {type Favorite, Prisma} from "@/modules/prisma/generated/client";
 
 interface CheckFavoriteFieldsType {
+  mockDate: Date;
+  mockCarId: string;
+  mockUserId: string;
   favorite: Favorite;
   mockFavorite: Favorite;
-  mockCarId: string;
-  mockDate: Date;
-  mockUserId: string;
 }
 
-const checkFavoriteFields = (
-  {
-    favorite,
-    mockFavorite,
-    mockCarId,
-    mockDate,
-    mockUserId,
-  }: CheckFavoriteFieldsType
-) => {
+const checkFavoriteFields = (params: CheckFavoriteFieldsType) => {
+  const {favorite, mockFavorite, mockCarId, mockDate, mockUserId} = params;
+
   expect(favorite.id).toBe(mockFavorite.id);
   expect(favorite.user_id).toBe(mockUserId);
   expect(favorite.car_id).toBe(mockCarId);
