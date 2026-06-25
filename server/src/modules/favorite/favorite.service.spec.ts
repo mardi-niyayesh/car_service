@@ -5,6 +5,7 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 import {describe, afterEach, beforeEach, it, expect} from "vitest";
 import {Car, type Favorite, Prisma} from "@/modules/prisma/generated/client";
 import {PaginationValidatorType} from "@/common";
+import {NotFoundException} from "@nestjs/common";
 
 describe('FavoriteService', (): void => {
   let prisma: PrismaMock;
@@ -412,6 +413,29 @@ describe('FavoriteService', (): void => {
       checkFavoriteFields({favorite: result.data.favorite, mockFavorite, mockCarId, mockDate, mockUserId});
 
       // 4. Verify Prisma delete call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.favorite.delete).toHaveBeenCalledWith({
+        where: {
+          car_id_user_id: {
+            user_id: mockUserId,
+            car_id: mockCarId
+          }
+        }
+      });
+    });
+
+    // error: favorite not found
+    it('should throw NotFoundException when favorite does not exist', async (): Promise<void> => {
+      const prismaError = new Error('Record to delete does not exist');
+      (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
+
+      prisma.favorite.delete.mockRejectedValue(prismaError);
+
+      // noinspection ES6RedundantAwait
+      await expect(service.delete(mockUserId, mockCarId))
+        .rejects
+        .toThrow();
+
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.favorite.delete).toHaveBeenCalledWith({
         where: {
