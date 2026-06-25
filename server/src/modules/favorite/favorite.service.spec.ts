@@ -6,6 +6,30 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 import {describe, afterEach, beforeEach, it, expect} from "vitest";
 import {type Favorite, Prisma} from "@/modules/prisma/generated/client";
 
+interface CheckFavoriteFieldsType {
+  favorite: Favorite;
+  mockFavorite: Favorite;
+  mockCarId: string;
+  mockDate: Date;
+  mockUserId: string;
+}
+
+const checkFavoriteFields = (
+  {
+    favorite,
+    mockFavorite,
+    mockCarId,
+    mockDate,
+    mockUserId,
+  }: CheckFavoriteFieldsType
+) => {
+  expect(favorite.id).toBe(mockFavorite.id);
+  expect(favorite.user_id).toBe(mockUserId);
+  expect(favorite.car_id).toBe(mockCarId);
+  expect(favorite.created_at).toBe(mockDate);
+  expect(favorite.updated_at).toBe(mockDate);
+};
+
 describe('FavoriteService', (): void => {
   let prisma: PrismaMock;
   let service: FavoriteService;
@@ -487,27 +511,3 @@ describe('FavoriteService', (): void => {
     });
   });
 });
-
-interface CheckFavoriteFieldsType {
-  favorite: Favorite;
-  mockFavorite: Favorite;
-  mockCarId: string;
-  mockDate: Date;
-  mockUserId: string;
-}
-
-const checkFavoriteFields = (
-  {
-    favorite,
-    mockFavorite,
-    mockCarId,
-    mockDate,
-    mockUserId,
-  }: CheckFavoriteFieldsType
-) => {
-  expect(favorite.id).toBe(mockFavorite.id);
-  expect(favorite.user_id).toBe(mockUserId);
-  expect(favorite.car_id).toBe(mockCarId);
-  expect(favorite.created_at).toBe(mockDate);
-  expect(favorite.updated_at).toBe(mockDate);
-};
