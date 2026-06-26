@@ -25,17 +25,17 @@ export class CartService {
   /** get self cart
    * - **only roles with permission (user.self) can accessibility to this route**
    */
-  async getCart(user_id: string, user: UserAccess, paginate: PaginationValidatorType): Promise<ApiResponse<CartResponse>> {
-    const {limit, offset, orderByLower} = paginate;
+  async getCart(user_id: string, user: UserAccess, paginate?: PaginationValidatorType): Promise<ApiResponse<CartResponse>> {
+    // const {limit, offset, orderByLower} = paginat;
 
     const cart = await this.prisma.cart.findUnique({
       where: {user_id},
       include: {
         carRents: {
-          take: limit,
-          skip: offset,
+          take: paginate?.limit,
+          skip: paginate?.offset,
           orderBy: {
-            created_at: orderByLower
+            created_at: paginate?.orderByLower
           },
           include: {
             car: {
@@ -71,6 +71,7 @@ export class CartService {
     return {
       message: `Cart successfully found`,
       data: {
+        count: total._count.cart_id,
         cart: {
           id: cart.id,
           created_at: cart.created_at,

@@ -63,8 +63,7 @@ export class CartController {
     @Req() req: AccessRequest,
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
   ): Promise<ApiResponse<CartResponse>> {
-    console.log(pagination);
-    return this.cartService.getCart(req.user.userId, req.user);
+    return this.cartService.getCart(req.user.userId, req.user, pagination);
   }
 
   /** add rent of car to cart
