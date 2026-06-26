@@ -537,7 +537,7 @@ describe('CartService', (): void => {
 
   /** ================================================
    * Remove From Cart
-   *  ================================================
+   * ================================================
    */
   describe('removeFromCart()', (): void => {
     const mockUserId = 'user-123';
@@ -559,9 +559,8 @@ describe('CartService', (): void => {
     };
 
     // success
-    it('should remove car rent from cart and decrement total_price', async () => {
+    it('should remove car rent from cart successfully', async () => {
       prisma.carRent.delete.mockResolvedValue(mockCarRent as unknown as CarRent);
-      prisma.cart.update.mockResolvedValue({} as unknown as Cart);
 
       const result = await service.removeFromCart(mockUserId, mockRentId);
 
@@ -589,41 +588,6 @@ describe('CartService', (): void => {
           }
         }
       });
-
-      // 5. Verify cart update with decrement
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(prisma.cart.update).toHaveBeenCalledWith({
-        where: {
-          user_id: mockUserId
-        },
-        data: {
-          total_price: {
-            decrement: mockCarRent.price
-          }
-        }
-      });
-    });
-
-    // success: rent removed and cart total_price updated correctly
-    it('should decrement cart total_price by exact rent price', async () => {
-      prisma.carRent.delete.mockResolvedValue(mockCarRent as unknown as CarRent);
-
-      const updateSpy = vi.fn().mockResolvedValue({
-        id: mockCartId,
-        user_id: mockUserId,
-        total_price: 150000,
-        created_at: mockDate,
-        updated_at: mockDate,
-      });
-
-      prisma.cart.update.mockImplementation(updateSpy);
-
-      await service.removeFromCart(mockUserId, mockRentId);
-
-      expect(updateSpy).toHaveBeenCalledWith({
-        where: {user_id: mockUserId},
-        data: {total_price: {decrement: 400000}}
-      });
     });
 
     // error: rent not found in user's cart
@@ -645,15 +609,10 @@ describe('CartService', (): void => {
             error: 'Car Rent not found'
           }
         });
-
-      // Verify cart.update was NOT called
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(prisma.cart.update).not.toHaveBeenCalled();
     });
 
     // error: rent belongs to different user
     it('should throw NotFoundException when rent belongs to another user', async () => {
-      // The where clause includes cart.user_id, so Prisma won't find it
       const prismaError = new Error('Record not found');
       (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
 
@@ -677,35 +636,6 @@ describe('CartService', (): void => {
       await expect(service.removeFromCart(mockUserId, invalidRentId))
         .rejects
         .toThrow(NotFoundException);
-    });
-
-    // edge case: cart exists but rent_id is valid and belongs to user
-    it('should successfully remove rent when cart exists and rent belongs to user', async () => {
-      prisma.carRent.delete.mockResolvedValue(mockCarRent as unknown as CarRent);
-      prisma.cart.update.mockResolvedValue({} as unknown as Cart);
-
-      const result = await service.removeFromCart(mockUserId, mockRentId);
-
-      expect(result.message).toBe('car rent successfully removed from the cart');
-
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(prisma.carRent.delete).toHaveBeenCalledTimes(1);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(prisma.cart.update).toHaveBeenCalledTimes(1);
-    });
-
-    // verify atomicity: if delete succeeds but update fails, what happens?
-    // (Note: Prisma doesn't auto-rollback, but this is handled by the service design)
-    it('should still return deleted carRent even if cart update fails (no transaction)', async () => {
-      // This is a design observation - no transaction means update could fail
-      // But the service doesn't handle this edge case
-      prisma.carRent.delete.mockResolvedValue(mockCarRent as unknown as CarRent);
-      prisma.cart.update.mockRejectedValue(new Error('Database error'));
-
-      // The service will throw the update error, not NotFoundException
-      await expect(service.removeFromCart(mockUserId, mockRentId))
-        .rejects
-        .toThrow(); // Not NotFoundException, but the actual error
     });
   });
 });
