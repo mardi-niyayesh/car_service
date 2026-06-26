@@ -1,7 +1,7 @@
 import * as CartDto from "../dto";
 import {ONE_HOUR_MS} from "@/lib";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
-import {Cacheable, CacheEvict, getUnauthorizedResponse, PaginationDecoratorQueries, UUID4Dto} from "@/common";
+import {Cacheable, CacheEvict, CacheEvictDecorator, getUnauthorizedResponse, PaginationDecoratorQueries, UUID4Dto} from "@/common";
 import {ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 const cartCacheKey = ['self_cart'];
@@ -12,8 +12,8 @@ export const GetCartDecorators = () => applyDecorators(
     self: true,
     ttl: ONE_HOUR_MS,
     resource: 'cart',
+    pagination: true,
     extraKeys: cartCacheKey,
-    pagination: true
   }),
   PaginationDecoratorQueries(),
   ApiOperation(CartDto.getCartOperation),
@@ -21,13 +21,16 @@ export const GetCartDecorators = () => applyDecorators(
   ApiUnauthorizedResponse({type: getUnauthorizedResponse('carts')})
 );
 
+const cacheEvictOptions: CacheEvictDecorator = {
+  self: true,
+  resource: 'cart',
+  extraKeys: cartCacheKey,
+  prefixAfterBuildKey: true,
+};
+
 export const AddToCartDecorators = () => applyDecorators(
   HttpCode(HttpStatus.CREATED),
-  CacheEvict({
-    self: true,
-    resource: 'cart',
-    extraKeys: cartCacheKey
-  }),
+  CacheEvict(cacheEvictOptions),
   ApiOperation(CartDto.addToCartOperation),
   ApiBody({type: CartDto.AddToCartDto}),
   ApiCreatedResponse({type: CartDto.AddToCartOk}),
@@ -38,11 +41,7 @@ export const AddToCartDecorators = () => applyDecorators(
 
 export const RemoveFromCartDecorators = () => applyDecorators(
   HttpCode(HttpStatus.OK),
-  CacheEvict({
-    self: true,
-    resource: 'cart',
-    extraKeys: cartCacheKey
-  }),
+  CacheEvict(cacheEvictOptions),
   ApiOperation(CartDto.removeFromCartOperation),
   ApiParam(UUID4Dto('id')),
   ApiOkResponse({type: CartDto.RemoveFromCartOk}),
