@@ -1,4 +1,4 @@
-import type {UserAccess, SafeCarNCategory} from "./";
+import type {UserAccess, SafeCarNCategory, ListWithCount} from "./";
 import type {CarRent, Prisma} from "@/modules/prisma/generated/client";
 
 type CartIncludeResponseType = Prisma.CartGetPayload<{
@@ -28,14 +28,14 @@ export interface CreateCartSignup {
 }
 
 /** cart api response */
-export interface CartResponse {
+export type CartResponse = ListWithCount<{
   cart: CartIncludeResponseType & {
     total_price: number;
     user: Pick<UserAccess, 'permissions' | 'roles' | 'display_name'> & {
       id: string;
     }
   };
-}
+}>;
 
 /** typeof car rent response */
 export interface CarRentResponse {

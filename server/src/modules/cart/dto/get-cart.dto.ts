@@ -8,6 +8,7 @@ export class GetCartOk extends getBaseOkResponseSchema<CartResponse>({
   response: {
     message: 'Cart successfully found',
     data: {
+      count: 1,
       cart: {
         id: "33d944e3-480b-49d5-82d9-644d288347b0",
         created_at: exampleDate,

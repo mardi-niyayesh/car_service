@@ -1,8 +1,8 @@
 import * as CartDto from "./dto";
-import {eventsEmitter} from "@/common";
 import {OnEvent} from "@nestjs/event-emitter";
 import {RentStatus} from "@/modules/prisma/generated/enums";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {eventsEmitter, PaginationValidatorType} from "@/common";
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import type {ApiResponse, BaseException, CartResponse, CreateCartSignup, UserAccess, CarRentResponse, RemoveCarRentResponse} from "@/types";
 
@@ -25,11 +25,18 @@ export class CartService {
   /** get self cart
    * - **only roles with permission (user.self) can accessibility to this route**
    */
-  async getCart(user_id: string, user: UserAccess): Promise<ApiResponse<CartResponse>> {
+  async getCart(user_id: string, user: UserAccess, paginate: PaginationValidatorType): Promise<ApiResponse<CartResponse>> {
+    const {limit, offset, orderByLower} = paginate;
+
     const cart = await this.prisma.cart.findUnique({
       where: {user_id},
       include: {
         carRents: {
+          take: limit,
+          skip: offset,
+          orderBy: {
+            created_at: orderByLower
+          },
           include: {
             car: {
               select: {
@@ -55,12 +62,16 @@ export class CartService {
         cart_id: cart.id,
         status: RentStatus.PENDING,
       },
-      _sum: {price: true}
+      _sum: {price: true},
+      _count: {
+        cart_id: true
+      }
     });
 
     return {
       message: `Cart successfully found`,
       data: {
+        count: total._count.cart_id,
         cart: {
           id: cart.id,
           created_at: cart.created_at,

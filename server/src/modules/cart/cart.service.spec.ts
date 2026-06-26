@@ -6,6 +6,7 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 import {ConflictException, NotFoundException} from "@nestjs/common";
 import {afterEach, beforeEach, describe, it, expect, vi} from "vitest";
 import type {CarRent, Cart, Prisma} from "@/modules/prisma/generated/client";
+import {PaginationValidatorType} from "@/common";
 
 describe('CartService', (): void => {
   let prisma: PrismaMock;
@@ -31,6 +32,15 @@ describe('CartService', (): void => {
     const mockUserId = 'user-123';
     const mockDate = new Date();
 
+    // Mock pagination params
+    const mockPagination: PaginationValidatorType = {
+      limit: 10,
+      offset: 0,
+      orderByLower: 'desc',
+      orderByUpper: 'ASC',
+      page: 1
+    };
+
     const mockUserAccess: UserAccess = {
       userId: mockUserId,
       roles: ['user'],
@@ -48,7 +58,7 @@ describe('CartService', (): void => {
           id: 'rent-1',
           cart_id: 'cart-456',
           car_id: 'car-789',
-          price: 400000, // changed from total_price to price
+          price: 400000,
           created_at: mockDate,
           updated_at: mockDate,
           status: 'PENDING',
@@ -64,7 +74,7 @@ describe('CartService', (): void => {
           id: 'rent-2',
           cart_id: 'cart-456',
           car_id: 'car-101',
-          price: 150000, // changed from total_price to price
+          price: 150000,
           created_at: mockDate,
           updated_at: mockDate,
           status: 'PENDING',
@@ -83,11 +93,12 @@ describe('CartService', (): void => {
     it('should return cart with carRents and car details for authenticated user', async () => {
       prisma.cart.findUnique.mockResolvedValue(mockCart as unknown as Cart);
       prisma.carRent.aggregate.mockResolvedValue({
-        _avg: undefined, _count: undefined, _max: undefined, _min: undefined,
-        _sum: {price: 550000}
+        _avg: undefined, _max: undefined, _min: undefined,
+        _sum: {price: 550000},
+        _count: {cart_id: 2}
       });
 
-      const result = await service.getCart(mockUserId, mockUserAccess);
+      const result = await service.getCart(mockUserId, mockUserAccess, mockPagination);
 
       // 1. Test response structure
       expect(result).toHaveProperty('message');
@@ -139,6 +150,11 @@ describe('CartService', (): void => {
         where: {user_id: mockUserId},
         include: {
           carRents: {
+            take: mockPagination.limit,
+            skip: mockPagination.offset,
+            orderBy: {
+              created_at: mockPagination.orderByLower,
+            },
             include: {
               car: {
                 select: {
@@ -160,7 +176,8 @@ describe('CartService', (): void => {
           cart_id: mockCart.id,
           status: 'PENDING',
         },
-        _sum: {price: true}
+        _sum: {price: true},
+        _count: {cart_id: true}
       });
     });
 
@@ -176,11 +193,14 @@ describe('CartService', (): void => {
 
       prisma.cart.findUnique.mockResolvedValue(emptyCart as unknown as Cart);
       prisma.carRent.aggregate.mockResolvedValue({
-        _avg: undefined, _count: undefined, _max: undefined, _min: undefined,
-        _sum: {price: 0}
+        _sum: {price: 0},
+        _count: {cart_id: 0},
+        _avg: undefined,
+        _min: undefined,
+        _max: undefined
       });
 
-      const result = await service.getCart(mockUserId, mockUserAccess);
+      const result = await service.getCart(mockUserId, mockUserAccess, mockPagination);
 
       expect(result.data.cart.carRents).toEqual([]);
       expect(result.data.cart.total_price).toBe(0);
@@ -192,7 +212,8 @@ describe('CartService', (): void => {
           cart_id: emptyCart.id,
           status: 'PENDING',
         },
-        _sum: {price: true}
+        _sum: {price: true},
+        _count: {cart_id: true}
       });
     });
 
@@ -200,11 +221,11 @@ describe('CartService', (): void => {
     it('should throw NotFoundException when cart does not exist for user', async () => {
       prisma.cart.findUnique.mockResolvedValue(null);
 
-      await expect(service.getCart(mockUserId, mockUserAccess))
+      await expect(service.getCart(mockUserId, mockUserAccess, mockPagination))
         .rejects
         .toThrow(NotFoundException);
 
-      await expect(service.getCart(mockUserId, mockUserAccess))
+      await expect(service.getCart(mockUserId, mockUserAccess, mockPagination))
         .rejects
         .toMatchObject({
           response: {
@@ -218,6 +239,11 @@ describe('CartService', (): void => {
         where: {user_id: mockUserId},
         include: {
           carRents: {
+            take: mockPagination.limit,
+            skip: mockPagination.offset,
+            orderBy: {
+              created_at: mockPagination.orderByLower,
+            },
             include: {
               car: {
                 select: {
@@ -240,7 +266,7 @@ describe('CartService', (): void => {
 
       prisma.cart.findUnique.mockResolvedValue(null);
 
-      await expect(service.getCart(invalidUserId, mockUserAccess))
+      await expect(service.getCart(invalidUserId, mockUserAccess, mockPagination))
         .rejects
         .toThrow(NotFoundException);
     });
@@ -259,11 +285,12 @@ describe('CartService', (): void => {
 
       prisma.cart.findUnique.mockResolvedValue(cartWithNullCar as unknown as Cart);
       prisma.carRent.aggregate.mockResolvedValue({
-        _avg: undefined, _count: undefined, _max: undefined, _min: undefined,
-        _sum: {price: 400000}
+        _avg: undefined, _max: undefined, _min: undefined,
+        _sum: {price: 400000},
+        _count: {cart_id: 1}
       });
 
-      const result = await service.getCart(mockUserId, mockUserAccess);
+      const result = await service.getCart(mockUserId, mockUserAccess, mockPagination);
 
       expect(result.data.cart.carRents[0].car).toBeNull();
     });
