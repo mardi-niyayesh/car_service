@@ -43,6 +43,7 @@ import LogoutPage from "./pages/LogoutPage";
 import ComponentFormUpdateUser from "./components/Dashboard/ComponentFormUpdateUser";
 import ComponnetUpdetePassword from "./components/Dashboard/ComponnetUpdetePassword";
 import Profile from "./pages/Profile";
+import FavoriteCarPage from "./components/Dashboard/FavoriteCarPage";
 
 // Admin panel pages
 import DetalisUserPage from "./pages/DetalisUserPage";
@@ -103,6 +104,7 @@ function App() {
           <Route path="Profile" element={<Profile />} />
           <Route path="updatePassword" element={<ComponnetUpdetePassword />} />
           <Route path="updateUser" element={<ComponentFormUpdateUser />} />
+          <Route path="favorite_cars" element={<FavoriteCarPage />} />
         </Route>
 
         {/* ------- Panel Admin Layout ------- */}
@@ -133,7 +135,6 @@ function App() {
             }
           />
 
-          {/* Category */}
           <Route
             path="category"
             element={
@@ -201,7 +202,6 @@ function App() {
             }
           />
 
-          {/* Roles & Custom Roles */}
           <Route
             path="roles"
             element={
@@ -227,7 +227,6 @@ function App() {
             }
           />
 
-          {/* Comments */}
           <Route
             path="Comment"
             element={
@@ -237,7 +236,6 @@ function App() {
             }
           />
 
-          {/* Profile & Logout (بدون گارد یا با گارد ساده) */}
           <Route path="logout" element={<LogoutPage />} />
           <Route path="Profile" element={<Profile />} />
           <Route
