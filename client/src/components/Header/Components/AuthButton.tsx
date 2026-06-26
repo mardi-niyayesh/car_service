@@ -11,7 +11,7 @@ const AuthButton = () => {
                    md:hover:bg-yellow-600"
     >
       <Link to="/login" className="flex items-center px-3">
-        <FaUser size={20} className="md:block text-yellow-800 mr-2 pl-1" />
+        <FaUser size={20} className="md:block text-white mr-2 pl-1" />
         <button className="hidden md:block font-medium ">ورود | ثبت نام</button>
       </Link>
     </div>
