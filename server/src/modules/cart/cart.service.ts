@@ -132,9 +132,6 @@ export class CartService {
       const {description, daysCount} = data;
       const price: number = daysCount * car.price_per_day;
 
-      console.log(price);
-      console.log(daysCount);
-
       const user = await tx.user.findUnique({
         where: {id: user_id},
         include: {
