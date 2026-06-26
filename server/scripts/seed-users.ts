@@ -89,7 +89,6 @@ async function bootstrap(): Promise<void> {
       skipDuplicates: true,
       data: users_id.map(u => ({
         user_id: u.id,
-        total_price: 0,
       }))
     });
 

@@ -17,7 +17,6 @@ export class CartService {
   async create(data: CreateCartSignup) {
     await this.prisma.cart.create({
       data: {
-        total_price: 0,
         user_id: data.id,
       }
     });
@@ -51,6 +50,14 @@ export class CartService {
       error: 'Cart not found.'
     } as BaseException);
 
+    const total = await this.prisma.carRent.aggregate({
+      where: {
+        cart_id: cart.id,
+        status: RentStatus.PENDING,
+      },
+      _sum: {price: true}
+    });
+
     return {
       message: `Cart successfully found`,
       data: {
@@ -58,7 +65,7 @@ export class CartService {
           id: cart.id,
           created_at: cart.created_at,
           updated_at: cart.updated_at,
-          total_price: cart.total_price,
+          total_price: total._sum.price || 0,
           carRents: cart.carRents,
           user: {
             id: user.userId,
@@ -115,6 +122,9 @@ export class CartService {
       const {description, daysCount} = data;
       const price: number = daysCount * car.price_per_day;
 
+      console.log(price);
+      console.log(daysCount);
+
       const user = await tx.user.findUnique({
         where: {id: user_id},
         include: {
@@ -143,15 +153,6 @@ export class CartService {
         }
       });
 
-      await tx.cart.update({
-        where: {id: user.cart.id},
-        data: {
-          total_price: {
-            increment: price
-          }
-        }
-      });
-
       return {
         message: 'car rent successfully add to your cart',
         data: {
@@ -174,17 +175,6 @@ export class CartService {
           id: rent_id,
           cart: {
             user_id
-          }
-        }
-      });
-
-      await this.prisma.cart.update({
-        where: {
-          user_id
-        },
-        data: {
-          total_price: {
-            decrement: carRent.price
           }
         }
       });

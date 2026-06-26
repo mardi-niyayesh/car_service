@@ -6,6 +6,7 @@ export const CACHE_EVICT_KEY = "CACHE_EVICT_KEY";
 type CacheEvictDecoratorForce = Omit<ParamCacheKeyType, "ctx"> & {
   force?: boolean;
   prefix?: never;
+  prefixAfterBuildKey?: boolean;
 };
 
 type CacheEvictDecoratorPrefix = Omit<ParamCacheKeyType, "resource" | 'ctx'> & {

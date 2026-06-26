@@ -23,6 +23,7 @@ import {
   ApiOkResponse,
   ApiConflictResponse,
   ApiNotFoundResponse,
+  type ApiParamOptions,
   ApiForbiddenResponse,
   ApiNoContentResponse,
   ApiBadRequestResponse,
@@ -37,6 +38,20 @@ import {Prisma} from "@/modules/prisma/generated/client";
 import {FileInterceptor} from "@nestjs/platform-express";
 import {applyDecorators, HttpCode, HttpStatus, UseInterceptors} from "@nestjs/common";
 
+export const carSlugSwaggerParam: ApiParamOptions = {
+  name: 'slug',
+  type: 'string',
+  required: true,
+  description: 'car slug',
+  example: 'car',
+  schema: {
+    type: 'string',
+    required: ['slug'],
+    description: 'car slug',
+    example: 'car',
+  }
+};
+
 export const FindOneDecorators = () => {
   return applyDecorators(
     Public(),
@@ -45,19 +60,7 @@ export const FindOneDecorators = () => {
       paramsKey: ['slug'],
       ttl: ONE_HOUR_MS,
     }),
-    ApiParam({
-      name: 'slug',
-      type: 'string',
-      required: true,
-      description: 'car slug',
-      example: 'car',
-      schema: {
-        type: 'string',
-        required: ['slug'],
-        description: 'car slug',
-        example: 'car',
-      }
-    }),
+    ApiParam(carSlugSwaggerParam),
     HttpCode(HttpStatus.OK),
     ApiOperation(CarDto.findOneCarOperation),
     ApiOkResponse({type: CarDto.FindOneCarOkRes}),

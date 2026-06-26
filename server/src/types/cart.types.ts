@@ -30,6 +30,7 @@ export interface CreateCartSignup {
 /** cart api response */
 export interface CartResponse {
   cart: CartIncludeResponseType & {
+    total_price: number;
     user: Pick<UserAccess, 'permissions' | 'roles' | 'display_name'> & {
       id: string;
     }

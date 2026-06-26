@@ -1,9 +1,9 @@
 import * as FavoriteDecorator from "./decorators";
-import {UUIDv4Validator, ZodPipe} from "@/common";
 import {FavoriteService} from "./favorite.service";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
-import {Controller, Get, Param, Post, Req} from "@nestjs/common";
-import type {AccessRequest, ApiResponse, FavoriteResponse} from "@/types";
+import {Controller, Delete, Get, Param, Post, Query, Req} from "@nestjs/common";
+import type {AccessRequest, ApiResponse, FavoriteResponse, ListFavoriteResponse} from "@/types";
+import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
 
 /**
  * Controller for managing authenticated user's favorite cars.
@@ -67,8 +67,11 @@ export class FavoriteController {
    */
   @Get()
   @FavoriteDecorator.GetListDecorators()
-  get() {
-    return "get favorites successfully.";
+  get(
+    @Req() req: AccessRequest,
+    @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
+  ): Promise<ApiResponse<ListFavoriteResponse>> {
+    return this.favoriteService.get(req.user.userId, pagination);
   }
 
   /**
@@ -100,5 +103,68 @@ export class FavoriteController {
     @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
   ): Promise<ApiResponse<FavoriteResponse>> {
     return this.favoriteService.create(req.user.userId, id);
+  }
+
+  /**
+   * Checks if a car is in the authenticated user's favorites list by id.
+   *
+   * @remarks
+   * This endpoint checks the existence of a favorite record for the given car id.
+   * Returns a boolean indicating whether the car is favorite.
+   *
+   * @param req - Express request containing authenticated user data.
+   * @param id
+   *
+   * @returns Promise resolving to an object with `isFavorite` boolean.
+   *
+   * @example
+   * GET /favorites/check/uuid
+   * Response:
+   * {
+   *   "message": "Favorite status checked successfully.",
+   *   "data": {
+   *     "isFavorite": true
+   *   }
+   * }
+   */
+  @Get("check/:id")
+  @FavoriteDecorator.CheckDecorator()
+  checkByID(
+    @Req() req: AccessRequest,
+    @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
+  ) {
+    return this.favoriteService.checkByID(req.user.userId, id);
+  }
+
+  /**
+   * Removes a car from the authenticated user's favorites list by ID.
+   *
+   * @remarks
+   * This endpoint deletes a favorite record for the authenticated user.
+   * The car must exist in the user's favorites list.
+   * Only the owner of the favorite can delete it.
+   *
+   * @param req - Express request containing authenticated user data.
+   * @param id - UUID of the car to be removed from favorites.
+   *
+   * @returns Promise resolving to a success message.
+   *
+   * @example
+   * DELETE /favorites/550e8400-e29b-41d4-a716-446655440000
+   * Response:
+   * {
+   *   "message": "Favorite removed successfully.",
+   *   "data": {
+   *     "id": "550e8400-e29b-41d4-a716-446655440000"
+   *   }
+   * }
+   */
+  @Delete(':id')
+  @FavoriteDecorator.DeleteDecorator()
+  delete(
+    @Req() req: AccessRequest,
+    @Param("id", new ZodPipe(UUIDv4Validator)) id: string,
+  ): Promise<ApiResponse<FavoriteResponse>> {
+    return this.favoriteService.delete(req.user.userId, id);
   }
 }
