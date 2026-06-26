@@ -49,7 +49,7 @@ const Basket = () => {
           {countitem > 0 && (
             <span
               className="absolute -top-2 -right-2 flex items-center justify-center
-                         bg-blue-600 text-white text-xs font-bold rounded-full
+                         bg-yellow-600 text-white text-xs font-bold rounded-full
                          w-5 h-5"
             >
               {countitem}
