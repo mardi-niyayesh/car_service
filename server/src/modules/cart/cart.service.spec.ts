@@ -83,6 +83,7 @@ describe('CartService', (): void => {
     it('should return cart with carRents and car details for authenticated user', async () => {
       prisma.cart.findUnique.mockResolvedValue(mockCart as unknown as Cart);
       prisma.carRent.aggregate.mockResolvedValue({
+        _avg: undefined, _count: undefined, _max: undefined, _min: undefined,
         _sum: {price: 550000}
       });
 
@@ -175,6 +176,7 @@ describe('CartService', (): void => {
 
       prisma.cart.findUnique.mockResolvedValue(emptyCart as unknown as Cart);
       prisma.carRent.aggregate.mockResolvedValue({
+        _avg: undefined, _count: undefined, _max: undefined, _min: undefined,
         _sum: {price: 0}
       });
 
@@ -257,6 +259,7 @@ describe('CartService', (): void => {
 
       prisma.cart.findUnique.mockResolvedValue(cartWithNullCar as unknown as Cart);
       prisma.carRent.aggregate.mockResolvedValue({
+        _avg: undefined, _count: undefined, _max: undefined, _min: undefined,
         _sum: {price: 400000}
       });
 
