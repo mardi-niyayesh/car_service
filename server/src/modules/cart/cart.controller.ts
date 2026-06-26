@@ -2,8 +2,8 @@ import * as CartDto from "./dto";
 import {CartService} from "./cart.service";
 import {ApiBearerAuth} from "@nestjs/swagger";
 import * as CartDecorator from "./decorators";
-import {Permission, PERMISSIONS, UUIDv4Validator, ZodPipe} from "@/common";
-import {Body, Controller, Delete, Get, Param, Post, Req} from '@nestjs/common';
+import {PaginationValidator, type PaginationValidatorType, Permission, PERMISSIONS, UUIDv4Validator, ZodPipe} from "@/common";
+import {Body, Controller, Delete, Get, Param, Post, Query, Req} from '@nestjs/common';
 import type {AccessRequest, ApiResponse, CarRentResponse, CartResponse, RemoveCarRentResponse} from "@/types";
 
 /**
@@ -47,6 +47,7 @@ export class CartController {
    * Retrieves the current user's cart with all active rental items.
    *
    * @param req - Authenticated request object containing user info
+   * @param pagination
    * @returns Promise containing cart details with all rental items
    *
    * @example
@@ -59,8 +60,10 @@ export class CartController {
   @Get()
   @CartDecorator.GetCartDecorators()
   getCart(
-    @Req() req: AccessRequest
+    @Req() req: AccessRequest,
+    @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
   ): Promise<ApiResponse<CartResponse>> {
+    console.log(pagination);
     return this.cartService.getCart(req.user.userId, req.user);
   }
 
