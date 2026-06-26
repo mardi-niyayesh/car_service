@@ -41,7 +41,6 @@ describe('CartService', (): void => {
     const mockCart = {
       id: 'cart-456',
       user_id: mockUserId,
-      total_price: 550_000,
       created_at: mockDate,
       updated_at: mockDate,
       carRents: [
@@ -49,34 +48,32 @@ describe('CartService', (): void => {
           id: 'rent-1',
           cart_id: 'cart-456',
           car_id: 'car-789',
-          days: 2,
-          price_per_day: 200_000,
-          total_price: 400_000,
+          price: 400000, // changed from total_price to price
           created_at: mockDate,
           updated_at: mockDate,
+          status: 'PENDING',
           car: {
             name: 'BMW X5',
             slug: 'bmw-x5',
             image: 'bmw-x5.png',
             company: 'BMW',
-            price_per_day: 200_000,
+            price_per_day: 200000,
           },
         },
         {
           id: 'rent-2',
           cart_id: 'cart-456',
           car_id: 'car-101',
-          days: 1,
-          price_per_day: 150_000,
-          total_price: 150_000,
+          price: 150000, // changed from total_price to price
           created_at: mockDate,
           updated_at: mockDate,
+          status: 'PENDING',
           car: {
             name: 'Tesla Model 3',
             slug: 'tesla-model-3',
             image: 'tesla.png',
             company: 'Tesla',
-            price_per_day: 150_000,
+            price_per_day: 150000,
           },
         },
       ],
@@ -85,6 +82,10 @@ describe('CartService', (): void => {
     // success
     it('should return cart with carRents and car details for authenticated user', async () => {
       prisma.cart.findUnique.mockResolvedValue(mockCart as unknown as Cart);
+      prisma.carRent.aggregate.mockResolvedValue({
+        _avg: undefined, _count: undefined, _max: undefined, _min: undefined,
+        _sum: {price: 550000}
+      });
 
       const result = await service.getCart(mockUserId, mockUserAccess);
 
@@ -99,7 +100,7 @@ describe('CartService', (): void => {
       // 3. Test cart data
       const {cart} = result.data;
       expect(cart.id).toBe(mockCart.id);
-      expect(cart.total_price).toBe(550_000);
+      expect(cart.total_price).toBe(550000);
       expect(cart.created_at).toBe(mockDate);
       expect(cart.updated_at).toBe(mockDate);
 
@@ -117,7 +118,7 @@ describe('CartService', (): void => {
       // 6. Test each carRent structure
       const [firstRent] = cart.carRents;
       expect(firstRent.id).toBe('rent-1');
-      expect(firstRent.car.price_per_day).toBe(200_000);
+      expect(firstRent.price).toBe(400000);
 
       // 7. Test car details in each rent
       expect(firstRent.car).toBeDefined();
@@ -125,14 +126,14 @@ describe('CartService', (): void => {
       expect(firstRent.car.slug).toBe('bmw-x5');
       expect(firstRent.car.image).toBe('bmw-x5.png');
       expect(firstRent.car.company).toBe('BMW');
-      expect(firstRent.car.price_per_day).toBe(200_000);
+      expect(firstRent.car.price_per_day).toBe(200000);
 
       // 8. Test car does NOT have extra fields
       expect(firstRent.car).not.toHaveProperty('category_id');
       expect(firstRent.car).not.toHaveProperty('description');
       expect(firstRent.car).not.toHaveProperty('rate');
 
-      // 9. Verify Prisma call
+      // 9. Verify Prisma calls
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.cart.findUnique).toHaveBeenCalledWith({
         where: {user_id: mockUserId},
@@ -152,6 +153,15 @@ describe('CartService', (): void => {
           }
         }
       });
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.carRent.aggregate).toHaveBeenCalledWith({
+        where: {
+          cart_id: mockCart.id,
+          status: 'PENDING',
+        },
+        _sum: {price: true}
+      });
     });
 
     // success: empty cart (no carRents)
@@ -159,19 +169,31 @@ describe('CartService', (): void => {
       const emptyCart = {
         id: 'cart-456',
         user_id: mockUserId,
-        total_price: 0,
         created_at: mockDate,
         updated_at: mockDate,
         carRents: [],
       };
 
       prisma.cart.findUnique.mockResolvedValue(emptyCart as unknown as Cart);
+      prisma.carRent.aggregate.mockResolvedValue({
+        _avg: undefined, _count: undefined, _max: undefined, _min: undefined,
+        _sum: {price: 0}
+      });
 
       const result = await service.getCart(mockUserId, mockUserAccess);
 
       expect(result.data.cart.carRents).toEqual([]);
       expect(result.data.cart.total_price).toBe(0);
       expect(result.message).toBe('Cart successfully found');
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.carRent.aggregate).toHaveBeenCalledWith({
+        where: {
+          cart_id: emptyCart.id,
+          status: 'PENDING',
+        },
+        _sum: {price: true}
+      });
     });
 
     // error: cart not found
@@ -236,6 +258,10 @@ describe('CartService', (): void => {
       };
 
       prisma.cart.findUnique.mockResolvedValue(cartWithNullCar as unknown as Cart);
+      prisma.carRent.aggregate.mockResolvedValue({
+        _avg: undefined, _count: undefined, _max: undefined, _min: undefined,
+        _sum: {price: 400000}
+      });
 
       const result = await service.getCart(mockUserId, mockUserAccess);
 
@@ -507,38 +533,11 @@ describe('CartService', (): void => {
 
       expect(result.data.carRent.price).toBe(expectedPrice);
     });
-
-    // verify cart total_price increment
-    it('should increment cart total_price by rent price', async () => {
-      let cartUpdateCalledWith: null | object = null;
-
-      prisma.$transaction.mockImplementation(async (fn) => {
-        const tx = {
-          car: {findUnique: vi.fn().mockResolvedValue(mockCar)},
-          user: {findUnique: vi.fn().mockResolvedValue(mockUserWithCart)},
-          carRent: {create: vi.fn().mockResolvedValue(mockCreatedCarRent)},
-          cart: {
-            update: vi.fn().mockImplementation(({data}: { data: object; }) => {
-              cartUpdateCalledWith = data;
-              return Promise.resolve({});
-            })
-          },
-        } as unknown as PrismaService;
-
-        return fn(tx);
-      });
-
-      await service.addToCart(mockUserId, mockAddToCartInput);
-
-      expect(cartUpdateCalledWith).toEqual({
-        total_price: {increment: 400000}
-      });
-    });
   });
 
   /** ================================================
    * Remove From Cart
-   *  ================================================
+   * ================================================
    */
   describe('removeFromCart()', (): void => {
     const mockUserId = 'user-123';
@@ -560,9 +559,8 @@ describe('CartService', (): void => {
     };
 
     // success
-    it('should remove car rent from cart and decrement total_price', async () => {
+    it('should remove car rent from cart successfully', async () => {
       prisma.carRent.delete.mockResolvedValue(mockCarRent as unknown as CarRent);
-      prisma.cart.update.mockResolvedValue({} as unknown as Cart);
 
       const result = await service.removeFromCart(mockUserId, mockRentId);
 
@@ -590,41 +588,6 @@ describe('CartService', (): void => {
           }
         }
       });
-
-      // 5. Verify cart update with decrement
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(prisma.cart.update).toHaveBeenCalledWith({
-        where: {
-          user_id: mockUserId
-        },
-        data: {
-          total_price: {
-            decrement: mockCarRent.price
-          }
-        }
-      });
-    });
-
-    // success: rent removed and cart total_price updated correctly
-    it('should decrement cart total_price by exact rent price', async () => {
-      prisma.carRent.delete.mockResolvedValue(mockCarRent as unknown as CarRent);
-
-      const updateSpy = vi.fn().mockResolvedValue({
-        id: mockCartId,
-        user_id: mockUserId,
-        total_price: 150000,
-        created_at: mockDate,
-        updated_at: mockDate,
-      });
-
-      prisma.cart.update.mockImplementation(updateSpy);
-
-      await service.removeFromCart(mockUserId, mockRentId);
-
-      expect(updateSpy).toHaveBeenCalledWith({
-        where: {user_id: mockUserId},
-        data: {total_price: {decrement: 400000}}
-      });
     });
 
     // error: rent not found in user's cart
@@ -646,15 +609,10 @@ describe('CartService', (): void => {
             error: 'Car Rent not found'
           }
         });
-
-      // Verify cart.update was NOT called
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(prisma.cart.update).not.toHaveBeenCalled();
     });
 
     // error: rent belongs to different user
     it('should throw NotFoundException when rent belongs to another user', async () => {
-      // The where clause includes cart.user_id, so Prisma won't find it
       const prismaError = new Error('Record not found');
       (prismaError as Prisma.PrismaClientKnownRequestError).code = 'P2025';
 
@@ -678,35 +636,6 @@ describe('CartService', (): void => {
       await expect(service.removeFromCart(mockUserId, invalidRentId))
         .rejects
         .toThrow(NotFoundException);
-    });
-
-    // edge case: cart exists but rent_id is valid and belongs to user
-    it('should successfully remove rent when cart exists and rent belongs to user', async () => {
-      prisma.carRent.delete.mockResolvedValue(mockCarRent as unknown as CarRent);
-      prisma.cart.update.mockResolvedValue({} as unknown as Cart);
-
-      const result = await service.removeFromCart(mockUserId, mockRentId);
-
-      expect(result.message).toBe('car rent successfully removed from the cart');
-
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(prisma.carRent.delete).toHaveBeenCalledTimes(1);
-      // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(prisma.cart.update).toHaveBeenCalledTimes(1);
-    });
-
-    // verify atomicity: if delete succeeds but update fails, what happens?
-    // (Note: Prisma doesn't auto-rollback, but this is handled by the service design)
-    it('should still return deleted carRent even if cart update fails (no transaction)', async () => {
-      // This is a design observation - no transaction means update could fail
-      // But the service doesn't handle this edge case
-      prisma.carRent.delete.mockResolvedValue(mockCarRent as unknown as CarRent);
-      prisma.cart.update.mockRejectedValue(new Error('Database error'));
-
-      // The service will throw the update error, not NotFoundException
-      await expect(service.removeFromCart(mockUserId, mockRentId))
-        .rejects
-        .toThrow(); // Not NotFoundException, but the actual error
     });
   });
 });
