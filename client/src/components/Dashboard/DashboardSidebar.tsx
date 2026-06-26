@@ -2,10 +2,12 @@ import ArrowLeft from "../../../assets/imges/Arrowleft.png";
 import card from "../../../assets/imges/card-pos.png";
 import reserv from "../../../assets/imges/reserve.png";
 import { Link } from "react-router-dom";
+import { AiFillHeart } from "react-icons/ai";
 
 const Menu = [
   { to: "reserve", label: "رزروها", icon: reserv },
   { to: "card", label: "پرداخت", icon: card },
+  { to: "favorite_cars", label: "علاقه مندی", icon: <AiFillHeart opacity={0.5}/> },
 ];
 const DashboardSidebar = () => {
   return (
