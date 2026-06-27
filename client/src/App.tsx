@@ -109,7 +109,6 @@ function App() {
 
         {/* ------- Panel Admin Layout ------- */}
         <Route path="/panel" element={<PanelAdminLayout />}>
-          {/* Users */}
           <Route
             path="users"
             element={
@@ -160,7 +159,6 @@ function App() {
             }
           />
 
-          {/* Product */}
           <Route
             path="product"
             element={
