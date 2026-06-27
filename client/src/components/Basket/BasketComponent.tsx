@@ -38,13 +38,13 @@ const BasketComponent = () => {
   const fetchAllReserve = async () => {
     try {
       const response = await axiosClient.get(
-        `carts?page=${page}&limit=1&order=asc`,
+        `carts?page=${page}&limit=5&order=asc`,
       );
       const DataShop = response.data.response.data;
       const allReserve = DataShop.cart.carRents;
       const TotalPrice = DataShop.cart.total_price;
       const DataCount = DataShop.count;
-      const calculatedTotalPages = Math.ceil(DataCount / 1);
+      const calculatedTotalPages = Math.ceil(DataCount / 5);
       setTotalPages(calculatedTotalPages);
 
       setDataReserve(allReserve);
