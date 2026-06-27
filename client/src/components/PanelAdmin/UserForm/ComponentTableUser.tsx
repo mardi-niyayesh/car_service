@@ -13,9 +13,7 @@ type User = {
 
 const ComponentTableUser = () => {
   const [users, setUsers] = useState<User[]>([]);
-  //now page
   const [page, setPage] = useState(1);
-  //All page
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
 
@@ -26,13 +24,10 @@ const ComponentTableUser = () => {
         `users?order=desc&limit=5&page=${page}`,
       );
       const data = response.data.response.data;
-      console.log("data", data);
-      console.log("all users:", data.users);
+      // console.log("data", data);
+      // console.log("all users:", data.users);
       setUsers(data.users);
-
-      // count all items
       const totalItems = response.data.response.data.count;
-      //count items in page
       const calculatedTotalPages = Math.ceil(totalItems / 5);
 
       setTotalPages(calculatedTotalPages);
