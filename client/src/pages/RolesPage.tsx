@@ -60,7 +60,7 @@ const RolesPage = () => {
         setRoles((prevRoles) => prevRoles.filter((role) => role.id !== roleId));
         fetchGetRoles();
       }
-    } catch (err) {
+    } catch (err:any) {
       console.error("خطا در حذف نقش:", err.message);
 
       if (err.response) {
