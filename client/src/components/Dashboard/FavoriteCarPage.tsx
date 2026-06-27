@@ -1,6 +1,8 @@
 import axiosClient from "../../services/axiosClient";
 import { useState, useEffect } from "react";
 import { type Car } from "../Basket/BasketComponent";
+import ComponentPaginat from "../../Paginate/ComponentPaginat";
+import { useCallback } from "react";
 
 type FavoriteCarTipe = {
   id: string;
@@ -9,13 +11,18 @@ type FavoriteCarTipe = {
 
 const FavoriteCarPage = () => {
   const [favoriteCar, setFavoriteCar] = useState<FavoriteCarTipe[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const GetAllFavorit = async () => {
+  const GetAllFavorit = useCallback(async () => {
     try {
       const response = await axiosClient.get(
-        `favorites?page=1&limit=10&order=desc`,
+        `favorites?page=${page}&limit=1&order=desc`,
       );
       const DataCar = response.data.response.data;
+      const DataCount = DataCar.count;
+      const calculatedTotalPages = Math.ceil(DataCount / 5);
+      setTotalPages(calculatedTotalPages);
 
       const favoritesArray = DataCar?.favorites || [];
       console.log("response all favorite :", favoritesArray);
@@ -23,11 +30,11 @@ const FavoriteCarPage = () => {
     } catch (err) {
       console.log("Error in get all list favorite:", err);
     }
-  };
+  }, [page]);
 
   useEffect(() => {
     GetAllFavorit();
-  }, []);
+  }, [page, GetAllFavorit]);
 
   return (
     <>
@@ -73,6 +80,11 @@ const FavoriteCarPage = () => {
           ))
         )}
       </div>
+      <ComponentPaginat
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </>
   );
 };
