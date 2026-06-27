@@ -81,6 +81,11 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
 
     const cars = await this.prisma.car.findMany({
       include: {
+        _count: {
+          select: {
+            users_favorites: true
+          }
+        },
         category: {
           omit: {creator_id: true}
         }
