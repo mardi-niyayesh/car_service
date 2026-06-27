@@ -20,7 +20,11 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
       include: {
         _count: {
           select: {
-            comments: true,
+            comments: {
+              where: {
+                is_confirmed: true
+              }
+            },
             users_favorites: true,
           }
         },
@@ -84,7 +88,11 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
       include: {
         _count: {
           select: {
-            comments: true,
+            comments: {
+              where: {
+                is_confirmed: true
+              }
+            },
             users_favorites: true,
           }
         },

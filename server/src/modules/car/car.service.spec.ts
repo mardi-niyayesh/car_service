@@ -68,7 +68,10 @@ describe('CarService', (): void => {
     it('should find car by slug and return with category (without creator_id fields)', async () => {
       prisma.car.findUnique.mockResolvedValue({
         ...mockCarWithCategory,
-        _count: {users_favorites: 5}
+        _count: {
+          comments: 12,
+          users_favorites: 5,
+        }
       } as unknown as Car);
 
       const result = await service.findOne(mockSlug);
@@ -84,6 +87,7 @@ describe('CarService', (): void => {
       expect(car.category).not.toHaveProperty('creator_id');
       expect(result.data.car._count).toBeDefined();
       expect(result.data.car._count.users_favorites).toBe(5);
+      expect(result.data.car._count.comments).toBe(12);
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.car.findUnique).toHaveBeenCalledWith({
@@ -93,7 +97,14 @@ describe('CarService', (): void => {
             omit: {creator_id: true}
           },
           _count: {
-            select: {users_favorites: true}
+            select: {
+              comments: {
+                where: {
+                  is_confirmed: true
+                }
+              },
+              users_favorites: true,
+            }
           }
         },
         omit: {creator_id: true}
@@ -150,7 +161,10 @@ describe('CarService', (): void => {
     it('should return paginated list of cars with filters applied', async () => {
       const mockCarsWithCount = mockCars.map(car => ({
         ...car,
-        _count: {users_favorites: 3}
+        _count: {
+          users_favorites: 3,
+          comments: 8
+        }
       }));
 
       prisma.car.count.mockResolvedValue(2);
@@ -181,6 +195,7 @@ describe('CarService', (): void => {
       for (const car of result.data.cars) {
         expect(car._count).toBeDefined();
         expect(car._count.users_favorites).toBe(3);
+        expect(car._count.comments).toBe(8);
       }
 
       // 5. Verify count call
@@ -207,7 +222,12 @@ describe('CarService', (): void => {
             omit: {creator_id: true}
           },
           _count: {
-            select: {users_favorites: true}
+            select: {
+              users_favorites: true,
+              comments: {
+                where: {is_confirmed: true}
+              }
+            }
           }
         },
         where: {
