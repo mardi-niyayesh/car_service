@@ -66,7 +66,10 @@ describe('CarService', (): void => {
 
     // success
     it('should find car by slug and return with category (without creator_id fields)', async () => {
-      prisma.car.findUnique.mockResolvedValue(mockCarWithCategory as unknown as Car);
+      prisma.car.findUnique.mockResolvedValue({
+        ...mockCarWithCategory,
+        _count: {users_favorites: 5}
+      } as unknown as Car);
 
       const result = await service.findOne(mockSlug);
 
@@ -79,6 +82,8 @@ describe('CarService', (): void => {
       expect(car).not.toHaveProperty('creator_id');
       expect(car.category).toBeDefined();
       expect(car.category).not.toHaveProperty('creator_id');
+      expect(result.data.car._count).toBeDefined();
+      expect(result.data.car._count.users_favorites).toBe(5);
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.car.findUnique).toHaveBeenCalledWith({
@@ -86,6 +91,9 @@ describe('CarService', (): void => {
         include: {
           category: {
             omit: {creator_id: true}
+          },
+          _count: {
+            select: {users_favorites: true}
           }
         },
         omit: {creator_id: true}
@@ -140,8 +148,13 @@ describe('CarService', (): void => {
 
     // success
     it('should return paginated list of cars with filters applied', async () => {
+      const mockCarsWithCount = mockCars.map(car => ({
+        ...car,
+        _count: {users_favorites: 3}
+      }));
+
       prisma.car.count.mockResolvedValue(2);
-      prisma.car.findMany.mockResolvedValue(mockCars as unknown as Car[]);
+      prisma.car.findMany.mockResolvedValue(mockCarsWithCount as unknown as Car[]);
 
       const result = await service.findAll(mockPaginationInput as FindAllCarValidatorType);
 
@@ -163,6 +176,11 @@ describe('CarService', (): void => {
       for (const car of result.data.cars) {
         expect(car).not.toHaveProperty('creator_id');
         expect(car.category).not.toHaveProperty('creator_id');
+      }
+
+      for (const car of result.data.cars) {
+        expect(car._count).toBeDefined();
+        expect(car._count.users_favorites).toBe(3);
       }
 
       // 5. Verify count call
@@ -187,6 +205,9 @@ describe('CarService', (): void => {
         include: {
           category: {
             omit: {creator_id: true}
+          },
+          _count: {
+            select: {users_favorites: true}
           }
         },
         where: {
