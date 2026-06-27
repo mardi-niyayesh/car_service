@@ -17,7 +17,7 @@ const FavoriteCarPage = () => {
   const GetAllFavorit = useCallback(async () => {
     try {
       const response = await axiosClient.get(
-        `favorites?page=${page}&limit=1&order=desc`,
+        `favorites?page=${page}&limit=5&order=desc`,
       );
       const DataCar = response.data.response.data;
       const DataCount = DataCar.count;
