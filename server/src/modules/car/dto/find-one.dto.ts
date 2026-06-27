@@ -8,8 +8,11 @@ const {creator_id, category, ...car} = exampleCarRecord;
 void category;
 void creator_id;
 
-export const exampleSafeCarRecord = {
+export const exampleSafeCarRecord: SafeCarNCategory['car'] = {
   ...car,
+  _count: {
+    users_favorites: 5
+  },
   category: safeCategoryExampleRes
 };
 

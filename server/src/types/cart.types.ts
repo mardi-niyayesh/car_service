@@ -37,9 +37,13 @@ export type CartResponse = ListWithCount<{
   };
 }>;
 
+type SafeCarNCategoryForCart = Omit<SafeCarNCategory['car'], '_count'>;
+
 /** typeof car rent response */
 export interface CarRentResponse {
-  carRent: CarRent & SafeCarNCategory;
+  carRent: CarRent & {
+    car: SafeCarNCategoryForCart
+  };
 }
 
 /** typeof remove car rent response */

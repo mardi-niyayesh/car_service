@@ -109,7 +109,7 @@ export class CreateCarOkRes extends getBaseOkResponseSchema<CarResponse>({
   create: true,
   path: 'cars',
   response: {
-    message: '',
+    message: 'cat successfully created.',
     data: {
       car: exampleCarRecord
     }
