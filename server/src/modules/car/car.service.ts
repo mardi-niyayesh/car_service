@@ -18,9 +18,14 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
     const car = await this.prisma.car.findUnique({
       where: {slug},
       include: {
+        _count: {
+          select: {
+            users_favorites: true
+          }
+        },
         category: {
           omit: {creator_id: true}
-        }
+        },
       },
       omit: {creator_id: true}
     });

@@ -14,6 +14,9 @@ export type CarAndCategory = Car & {
 export interface SafeCarNCategory {
   car: SafeCar & {
     category: SafeCategory;
+    _count: {
+      users_favorites: number;
+    }
   };
 }
 
