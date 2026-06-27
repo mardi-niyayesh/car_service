@@ -3,6 +3,7 @@ import axiosClient from "../../services/axiosClient";
 import SuccessModal from "../../Modal/SuccessModal";
 import WarningModal from "../../Modal/WarningModal ";
 import { FiTrash } from "react-icons/fi";
+import ComponentPaginat from "../../Paginate/ComponentPaginat";
 
 export type Car = {
   name: string;
@@ -31,12 +32,20 @@ const BasketComponent = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const fetchAllReserve = async () => {
     try {
-      const response = await axiosClient.get(`/carts`);
-      const allReserve = response.data.response.data.cart.carRents;
-      const TotalPrice = response.data.response.data.cart.total_price;
+      const response = await axiosClient.get(
+        `carts?page=${page}&limit=1&order=asc`,
+      );
+      const DataShop = response.data.response.data;
+      const allReserve = DataShop.cart.carRents;
+      const TotalPrice = DataShop.cart.total_price;
+      const DataCount = DataShop.count;
+      const calculatedTotalPages = Math.ceil(DataCount / 1);
+      setTotalPages(calculatedTotalPages);
 
       setDataReserve(allReserve);
       setCartTotal(TotalPrice);
@@ -49,7 +58,7 @@ const BasketComponent = () => {
 
   useEffect(() => {
     fetchAllReserve();
-  }, []);
+  }, [page]);
 
   if (loading) return <div>در حال بارگذاری سبد خرید...</div>;
 
@@ -91,8 +100,8 @@ const BasketComponent = () => {
 
   return (
     <>
-      <div className=" border border-[#EDEDED] rounded-xl bg-blue-100 shadow-sm sm:gap-0 p-2 sm:p-3  ">
-        <h2 className="text-blue-800 text-[30px]  text-center">سبد خرید</h2>
+      <div className=" border border-[#EDEDED] rounded-xl bg-yellow-100 shadow-sm sm:gap-0 p-2 sm:p-3  ">
+        <h2 className="text-yellow-500 text-[30px]  text-center">سبد خرید</h2>
       </div>
       <div className="max-w-2xl mx-auto p-4 space-y-4">
         {dataReserve.length === 0 ? (
@@ -162,20 +171,25 @@ const BasketComponent = () => {
                 </div>
               </div>
             ))}
+            <ComponentPaginat
+              currentPage={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
 
             <div className="bg-gray-50 p-4 rounded-lg mt-6 border border-gray-200">
               <div className="flex justify-between items-center">
                 <p className="text-xl font-bold text-gray-800">
                   جمع کل پرداختی:
                 </p>
-                <p className="text-2xl font-bold text-blue-600">
+                <p className="text-2xl font-bold text-yellow-600">
                   {cartTotal} تومان
                 </p>
               </div>
 
               <button
                 onClick={handleBillReserev}
-                className="w-full mt-4 bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition"
+                className="w-full mt-4 bg-yellow-500 text-white py-3 rounded-lg font-bold hover:bg-yellow-600 transition"
               >
                 پرداخت نهایی
               </button>
