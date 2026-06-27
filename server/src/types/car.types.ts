@@ -1,5 +1,5 @@
 import type {ListWithCount} from "./response.types";
-import {SafeCategory} from "@/types/category.types";
+import type {SafeCategory} from "@/types/category.types";
 import type {Car, Category} from "@/modules/prisma/generated/client";
 
 /** car without creator_id */

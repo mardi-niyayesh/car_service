@@ -11,7 +11,8 @@ void creator_id;
 export const exampleSafeCarRecord: SafeCarNCategory['car'] = {
   ...car,
   _count: {
-    users_favorites: 5
+    comments: 3,
+    users_favorites: 5,
   },
   category: safeCategoryExampleRes
 };
