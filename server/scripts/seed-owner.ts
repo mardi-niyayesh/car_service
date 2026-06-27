@@ -4,12 +4,12 @@ dotenv.config();
 
 import {ROLES} from "@/common";
 import "tsconfig-paths/register";
-import {hashSecret} from "@/lib";
+import {formatZodError, hashSecret} from "@/lib";
 import {NestFactory} from "@nestjs/core";
 import {CliModule} from "@/modules/cli/cli.module";
 import * as readline from "node:readline/promises";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {BaseUserSchema} from "@/modules/user/dto/validators.dto";
+import {BaseUserSchema, BaseUserSchemaType} from "@/modules/user/dto/validators.dto";
 
 async function ask<T extends keyof typeof BaseUserSchema.shape>(
   rl: readline.Interface,
@@ -64,26 +64,57 @@ async function bootstrap() {
         console.log("Owner already exists");
         console.log(exist.user);
         await app.close();
-        return process.exit(0);
+        process.exit(0);
       }
 
       console.log(`creating owner...`);
 
-      const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-      });
+      let display_name = process.env.OWNER_NAME;
+      let email = process.env.OWNER_EMAIL;
+      let password = process.env.OWNER_PASSWORD;
 
-      const email: string = await ask(rl, "enter email: ", "email");
-      const password: string = await ask(rl, "enter password: ", "password");
+      if (password && email) {
+        const ownerData: BaseUserSchemaType = {
+          email,
+          password,
+          display_name,
+        };
+
+        const validate = BaseUserSchema.safeParse(ownerData);
+
+        if (!validate.success) {
+          console.log(formatZodError(validate.error));
+          console.log("Invalid Data!!");
+          await app.close();
+          process.exit(1);
+        }
+      }
+
+      if (!email || !password) {
+        const rl = readline.createInterface({
+          input: process.stdin,
+          output: process.stdout,
+        });
+
+        display_name = await ask(rl, "enter name: ", "display_name");
+        email = await ask(rl, "enter email: ", "email");
+        password = await ask(rl, "enter password: ", "password");
+      }
 
       const hashedPassword: string = await hashSecret(password);
 
-      const owner = await tx.user.create({
-        data: {
+      const owner = await tx.user.upsert({
+        create: {
           email,
           password: hashedPassword,
-          display_name: "owner",
+          display_name: display_name || "owner",
+        },
+        where: {
+          email
+        },
+        update: {
+          display_name,
+          password: hashedPassword,
         }
       });
 
@@ -91,13 +122,18 @@ async function bootstrap() {
         data: [
           {role_id: ownerRole.id, user_id: owner.id},
           {role_id: selfRole.id, user_id: owner.id},
-        ]
+        ],
+        skipDuplicates: true
       });
-      
-      await tx.cart.create({
-        data: {
+
+      await tx.cart.upsert({
+        create: {
           user_id: owner.id,
-        }
+        },
+        where: {
+          user_id: owner.id,
+        },
+        update: {}
       });
 
       console.log(`✅ owner created:\nemail: ${owner.email}\nid: ${owner.id}\nrole: ${ownerRole.name}`);
@@ -113,5 +149,5 @@ async function bootstrap() {
 }
 
 bootstrap()
-  .then(() => console.log("running owner script"))
+  .then(() => console.log("running owner script..."))
   .catch(e => console.error(e));

@@ -16,3 +16,5 @@ export const BaseUserSchema = z.object({
 
   age: z.number().min(0).max(120).optional(),
 });
+
+export type BaseUserSchemaType = z.infer<typeof BaseUserSchema>;
