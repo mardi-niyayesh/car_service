@@ -77,6 +77,9 @@ services:
       EMAIL_FROM: ${EMAIL_FROM}
       EMAIL_REPLAY: ${EMAIL_REPLAY}
       EMAIL_HOST: ${EMAIL_HOST}
+      OWNER_EMAIL: ${OWNER_EMAIL}
+      OWNER_PASSWORD: ${OWNER_PASSWORD}
+      OWNER_NAME: ${OWNER_NAME}
     volumes:
       - ./server:/app
       - /app/node_modules
