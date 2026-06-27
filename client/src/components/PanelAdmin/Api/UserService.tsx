@@ -1,6 +1,6 @@
-import axiosClient from "../../services/axiosClient";
+import axiosClient from "../../../services/axiosClient";
 
- const UserService= {
+const UserService = {
   // fetch information user
   getUserById: async (userId: string) => {
     const response = await axiosClient.get(`/users/find?id=${userId}`);
@@ -25,4 +25,4 @@ import axiosClient from "../../services/axiosClient";
     });
   },
 };
-export default UserService
+export default UserService;
