@@ -16,6 +16,7 @@ export interface SafeCarNCategory {
     category: SafeCategory;
     _count: {
       users_favorites: number;
+      comments: number;
     }
   };
 }
