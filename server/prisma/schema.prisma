@@ -246,12 +246,37 @@ model CarRent {
   cart_id String @db.Uuid
   cart    Cart   @relation("carRentCart", fields: [cart_id], references: [id], onDelete: Cascade)
 
+  payment Payment?
+
   @@unique([car_id, start_date, end_date])
   @@index([cart_id])
   @@index([status, created_at])
   @@map("car_rents")
 }
 
+// Paymenet Status
+enum PaymentStatus {
+  SUCCESS
+  FAILED
+}
+
+// Payment Mode
+model Payment {
+  id         String   @id @default(uuid(4)) @db.Uuid
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  status         PaymentStatus
+  amount         Int           @db.Integer
+  transaction_id String?       @db.VarChar(120)
+
+  car_rent_id String  @unique @db.Uuid
+  car_rent    CarRent @relation(fields: [car_rent_id], references: [id], onDelete: Restrict)
+
+  @@map("payments")
+}
+
+// Favorite Model
 model Favorite {
   id         String   @id @default(uuid(4)) @db.Uuid
   created_at DateTime @default(now())
