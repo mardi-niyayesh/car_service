@@ -273,6 +273,7 @@ model Payment {
   car_rent_id String  @unique @db.Uuid
   car_rent    CarRent @relation(fields: [car_rent_id], references: [id], onDelete: Restrict)
 
+  @@index([status])
   @@map("payments")
 }
 
