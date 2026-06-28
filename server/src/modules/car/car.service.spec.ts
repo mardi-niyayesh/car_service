@@ -28,7 +28,6 @@ const mockCarWithCategory = {
     "test"
   ],
   image: "car-1.png",
-  in_rent: false,
   can_rent: true,
   category_id: "ef85d0db-e822-4ec9-8009-da7925c965bd",
   description: "a test car",
@@ -137,7 +136,6 @@ describe('CarService', (): void => {
         company: "benz",
         price_per_day: 350000,
         tags: ["electric", "sedan"],
-        in_rent: true,
         can_rent: true,
         category_id: "cat-2",
         description: "Electric sedan",
@@ -148,7 +146,6 @@ describe('CarService', (): void => {
     const mockPaginationInput = {
       limit: 10,
       offset: 0,
-      in_rent: false,
       can_rent: true,
       category: "suv",
       orderByLower: "asc",
@@ -203,7 +200,6 @@ describe('CarService', (): void => {
       expect(prisma.car.count).toHaveBeenCalledWith({
         where: {
           can_rent: mockPaginationInput.can_rent,
-          in_rent: mockPaginationInput.in_rent,
           price_per_day: {
             gte: mockPaginationInput.price_per_day_gte,
             lte: mockPaginationInput.price_per_day_lte,
@@ -232,7 +228,6 @@ describe('CarService', (): void => {
         },
         where: {
           can_rent: mockPaginationInput.can_rent,
-          in_rent: mockPaginationInput.in_rent,
           price_per_day: {
             gte: mockPaginationInput.price_per_day_gte,
             lte: mockPaginationInput.price_per_day_lte,
@@ -269,7 +264,6 @@ describe('CarService', (): void => {
       expect(prisma.car.count).toHaveBeenCalledWith({
         where: {
           can_rent: undefined,
-          in_rent: undefined,
           price_per_day: {
             gte: undefined,
             lte: undefined,
@@ -311,7 +305,6 @@ describe('CarService', (): void => {
       price_per_day: 200000,
       tags: ['luxury', 'suv', '2024'],
       image: null,
-      in_rent: false,
       can_rent: true,
       rate: 5,
       description: 'A luxurious BMW X5 for rent',
@@ -353,7 +346,6 @@ describe('CarService', (): void => {
       expect(car.description).toBe(mockCreateCarInput.description);
       expect(car.can_rent).toBe(mockCreateCarInput.can_rent);
       expect(car.rate).toBe(5);
-      expect(car.in_rent).toBe(false);
       expect(car.creator_id).toBe(mockUserId);
       expect(car.category_id).toBe(mockCreateCarInput.category_id);
 
@@ -374,7 +366,6 @@ describe('CarService', (): void => {
           description: mockCreateCarInput.description,
           category_id: mockCreateCarInput.category_id,
           price_per_day: mockCreateCarInput.price_per_day,
-          in_rent: false,
           creator_id: mockUserId,
         },
         include: {
@@ -413,7 +404,6 @@ describe('CarService', (): void => {
           description: inputWithoutOwnership.description,
           category_id: inputWithoutOwnership.category_id,
           price_per_day: inputWithoutOwnership.price_per_day,
-          in_rent: false,
           creator_id: null,
         },
         include: {
@@ -466,7 +456,6 @@ describe('CarService', (): void => {
       price_per_day: 200000,
       tags: ['luxury', 'suv'],
       image: null,
-      in_rent: false,
       can_rent: true,
       rate: 5,
       description: 'A luxurious BMW X5',
@@ -668,7 +657,6 @@ describe('CarService', (): void => {
       price_per_day: 200000,
       tags: ['luxury', 'suv'],
       image: 'car-789.png',
-      in_rent: false,
       can_rent: true,
       rate: 5,
       description: 'A luxurious BMW X5',
