@@ -84,7 +84,6 @@ export const FindAllDecorators = () => {
     PaginationDecoratorQueries(),
     ApiQuery(CarDto.orderByFieldFindAllCarQuery),
     ApiQuery(CarDto.categoryFindAllCarQuery),
-    ApiQuery(CarDto.inRentFindAllCarQuery),
     ApiQuery(CarDto.canRentFindAllCarQuery),
     ApiQuery(CarDto.priceLteFindAllCarQuery),
     ApiQuery(CarDto.priceGteFindAllCarQuery),
