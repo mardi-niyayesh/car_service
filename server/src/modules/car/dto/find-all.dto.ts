@@ -31,11 +31,6 @@ export const FindAllCarValidator = getSafePaginationValidator(z.object({
     .optional()
     .catch(maxPriceAtDayCar),
 
-  in_rent: z
-    .string()
-    .optional()
-    .transform(v => checkStringBoolean(v)),
-
   can_rent: z
     .string()
     .optional()
@@ -52,7 +47,6 @@ export type FindAllCarValidatorType = z.infer<typeof FindAllCarValidator>;
 
 export const findAllCarsQuery = [
   'category',
-  'in_rent',
   'can_rent',
   'order_by_field',
   'price_per_day_gte',
@@ -101,16 +95,6 @@ export const priceLteFindAllCarQuery: ApiQueryOptions = {
   ...priceGteFindAllCarQuery,
   description: 'Filter cars with price per hour less than or equal to this value',
   name: 'price_per_day_lte',
-};
-
-export const inRentFindAllCarQuery: ApiQueryOptions = {
-  type: 'boolean',
-  required: false,
-  name: 'in_rent',
-  description: 'Filter cars by rental status (currently rented or not)',
-  schema: {
-    type: 'boolean',
-  }
 };
 
 export const canRentFindAllCarQuery: ApiQueryOptions = {

@@ -59,7 +59,6 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
     const {
       limit,
       offset,
-      in_rent,
       can_rent,
       category,
       orderByLower,
@@ -70,7 +69,6 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
 
     const where: Prisma.CarWhereInput = {
       can_rent,
-      in_rent,
       price_per_day: {
         gte: price_per_day_gte,
         lte: price_per_day_lte,
@@ -146,7 +144,6 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
           description,
           category_id,
           price_per_day,
-          in_rent: false,
           creator_id: ownership ? userId : null,
         },
         include: {
