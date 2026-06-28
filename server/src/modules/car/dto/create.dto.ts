@@ -95,7 +95,6 @@ export const exampleCarRecord: CarResponse['car'] = {
     "test"
   ],
   image: "c8217255-b4b2-4734-a10c-76a1b752693b.png",
-  in_rent: false,
   can_rent: true,
   category_id: "ef85d0db-e822-4ec9-8009-da7925c965bd",
   creator_id: "c9e2d14b-c0ff-4d91-8cf5-999eded02757",

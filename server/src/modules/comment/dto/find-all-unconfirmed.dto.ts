@@ -44,7 +44,6 @@ export const unconfirmedComment: CommentNUserNCar = {
     ],
     description: "string of test-car",
     rate: 5,
-    in_rent: false,
     can_rent: true,
     category_id: "895f4c9a-85c8-455e-8251-96ca7afae987",
     creator_id: null

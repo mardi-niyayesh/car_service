@@ -26,7 +26,6 @@ export const findAllCarOperation: ApiOperationOptions = {
   | \`category\` | string | Filter by category slug (e.g., "shiraz", "tehran") |
   | \`price_per_day_gte\` | integer | Minimum price per day (inclusive) |
   | \`price_per_day_lte\` | integer | Maximum price per day (inclusive) |
-  | \`in_rent\` | boolean | Filter cars currently being rented |
   | \`can_rent\` | boolean | Filter cars available for rent |
 
   ### 📈 Sorting
