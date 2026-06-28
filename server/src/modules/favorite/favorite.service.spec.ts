@@ -141,7 +141,6 @@ describe('FavoriteService', (): void => {
       price_per_day: 200000,
       tags: ['luxury', 'suv'],
       image: 'car-789.png',
-      in_rent: false,
       can_rent: true,
       rate: 5,
       description: 'A luxurious BMW X5',

@@ -323,7 +323,6 @@ describe('CartService', (): void => {
       description: 'Luxury SUV',
       rate: 5,
       can_rent: true,
-      in_rent: false,
       image: 'bmw-x5.png',
       category_id: 'cat-123',
       created_at: mockDate,
