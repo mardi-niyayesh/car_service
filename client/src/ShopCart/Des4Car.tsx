@@ -1,6 +1,8 @@
 import { useProduct } from "../hooks/useProduct";
 import { useParams } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
+import { AiOutlineHeart } from "react-icons/ai";
+import { FaRegComment } from "react-icons/fa";
 const Des4Car = () => {
   const { allProduct } = useProduct();
   const { slug } = useParams();
@@ -10,13 +12,21 @@ const Des4Car = () => {
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 mb-2 ">
       <div className="p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div className="flex-wrap   items-center justify-center gap-2.5">
-          <h1 className="text-gray-700 font-bold  mb-4">
-            {findProduct?.name}
-          </h1>
+          <h1 className="text-gray-700 font-bold  mb-4">{findProduct?.name}</h1>
           <div className="flex ">
             {Array.from({ length: findProduct?.rate }, (_, index) => (
               <FaStar key={index} color="gold" size={18} />
             ))}
+          </div>
+          <div className="flex gap-4 mt-4">
+            <div className="flex items-center text-[15px] justify-center">
+              <AiOutlineHeart color="red" size={18} />
+              <span>{findProduct?._count.users_favorites}</span>
+            </div>
+            <div className="flex items-center text-[15px] gap-0.5">
+              <FaRegComment opacity={0.7} size={17} />
+              <span>{findProduct?._count.comments}</span>
+            </div>
           </div>
         </div>
         <img
