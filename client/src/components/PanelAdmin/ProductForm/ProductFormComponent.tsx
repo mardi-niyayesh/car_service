@@ -3,6 +3,11 @@ import TagInput from "./TagInput";
 import { useEffect, useState } from "react";
 import { useCategories } from "../../../hooks/useCategories";
 
+type Count = {
+  comments: number;
+  users_favorites: number;
+};
+
 export type ProductFormType = {
   name: string;
   slug: string;
@@ -16,6 +21,7 @@ export type ProductFormType = {
   id: string;
   image: string;
   rate: number;
+  _count: Count;
 };
 
 type ProductFormProps = {
