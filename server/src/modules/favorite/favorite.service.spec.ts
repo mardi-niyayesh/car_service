@@ -302,7 +302,7 @@ describe('FavoriteService', (): void => {
 
   /** ================================================
    * Check By ID (Check if car is in favorites)
-   * ================================================
+   * =================================================
    */
   describe('checkByID()', (): void => {
     const mockUserId = 'user-123';
