@@ -69,20 +69,11 @@ async function bootstrap(): Promise<void> {
       process.exit(1);
     }
 
-    await tx.user.createMany({
+    const users_id = await tx.user.createManyAndReturn({
       data: users,
-      skipDuplicates: true
+      skipDuplicates: true,
+      select: {id: true}
     });
-
-    const users_id = await tx.user.findMany({
-      where: {
-        email: {
-          in: users.map(u => u.email)
-        }
-      },
-    });
-
-    console.log(users_id);
 
     await tx.userRole.createMany({
       data: users_id.map(({id}) => ({
@@ -101,9 +92,10 @@ async function bootstrap(): Promise<void> {
 
     console.log(`✅ ${users_id.length} users seeded with 'self' role.`);
     console.log("all users password is: ", rawPassword);
-    await app.close();
-    process.exit(0);
   });
+
+  await app.close();
+  process.exit(0);
 }
 
 bootstrap()
