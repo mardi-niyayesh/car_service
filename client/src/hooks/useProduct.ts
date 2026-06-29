@@ -1,27 +1,10 @@
 import { useState, useEffect } from "react";
 import axiosClient from "../services/axiosClient";
-type Category = {
-  name: string;
-};
-type ProductType = {
-  id: string;
-  name: string;
-  price_per_day: number;
-  description: string;
-  can_rent: boolean;
-  tags: string[];
-  company: string;
-  slug: string;
-  image: string;
-  rate: number;
-  category_id: string;
-  category: Category;
-  created_at: string;
-  updated_at: string;
-};
+import { type ProductFormType } from "../components/PanelAdmin/ProductForm/ProductFormComponent";
+
 export const useProduct = (page = 1, limit = 10) => {
   const [totalPage, setTotalPage] = useState(5);
-  const [allProduct, setAllProduct] = useState<ProductType[]>([]);
+  const [allProduct, setAllProduct] = useState<ProductFormType[]>([]);
   const [loading, setLoading] = useState(false);
   const fetchAllProduct = async () => {
     setLoading(true);
@@ -29,11 +12,12 @@ export const useProduct = (page = 1, limit = 10) => {
       const response = await axiosClient.get(
         `cars?page=${page}&limit=${limit}&order=desc&order_by_field=created_at`,
       );
-      const AllProduct = response.data.response.data.cars;
+      const DataCar = response.data.response.data;
+      const AllProduct = DataCar.cars;
       console.log("responst to get All Products :", AllProduct);
       setAllProduct(AllProduct);
 
-      const totlalItem = response.data.response.data.count;
+      const totlalItem = DataCar.count;
       console.log("total items product", totlalItem);
 
       const CountItem = Math.ceil(totlalItem / 5);
