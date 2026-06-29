@@ -307,23 +307,26 @@ describe('FavoriteService', (): void => {
   describe('checkByID()', (): void => {
     const mockUserId = 'user-123';
     const mockCarId = 'car-789';
+    const mockFavoriteId = 'fav-456';
 
     // success: car is in favorites
-    it('should return isFavorite: true when car exists in user favorites', async (): Promise<void> => {
-      prisma.favorite.findUnique.mockResolvedValue({id: 'fav-456'} as unknown as Favorite);
+    it('should return is_favorite: true and favorite_id when car exists in user favorites', async (): Promise<void> => {
+      prisma.favorite.findUnique.mockResolvedValue({id: mockFavoriteId} as unknown as Favorite);
 
       const result = await service.checkByID(mockUserId, mockCarId);
 
       // 1. Test response structure
       expect(result).toHaveProperty('message');
       expect(result).toHaveProperty('data');
-      expect(result.data).toHaveProperty('isFavorite');
+      expect(result.data).toHaveProperty('is_favorite');
+      expect(result.data).toHaveProperty('favorite_id');
 
       // 2. Test message
       expect(result.message).toBe('Favorite status checked successfully.');
 
-      // 3. Test isFavorite value
-      expect(result.data.isFavorite).toBe(true);
+      // 3. Test values
+      expect(result.data.is_favorite).toBe(true);
+      expect(result.data.favorite_id).toBe(mockFavoriteId);
 
       // 4. Verify Prisma findUnique call
       // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -339,12 +342,13 @@ describe('FavoriteService', (): void => {
     });
 
     // success: car is not in favorites
-    it('should return isFavorite: false when car does not exist in user favorites', async (): Promise<void> => {
+    it('should return is_favorite: false and favorite_id: undefined when car does not exist in user favorites', async (): Promise<void> => {
       prisma.favorite.findUnique.mockResolvedValue(null);
 
       const result = await service.checkByID(mockUserId, mockCarId);
 
-      expect(result.data.isFavorite).toBe(false);
+      expect(result.data.is_favorite).toBe(false);
+      expect(result.data.favorite_id).toBeUndefined();
       expect(result.message).toBe('Favorite status checked successfully.');
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -363,12 +367,14 @@ describe('FavoriteService', (): void => {
     it('should return correct status for different user-car combinations', async (): Promise<void> => {
       const differentUserId = 'user-456';
       const differentCarId = 'car-456';
+      const differentFavoriteId = 'fav-789';
 
-      prisma.favorite.findUnique.mockResolvedValue({id: 'fav-789'} as unknown as Favorite);
+      prisma.favorite.findUnique.mockResolvedValue({id: differentFavoriteId} as unknown as Favorite);
 
       const result = await service.checkByID(differentUserId, differentCarId);
 
-      expect(result.data.isFavorite).toBe(true);
+      expect(result.data.is_favorite).toBe(true);
+      expect(result.data.favorite_id).toBe(differentFavoriteId);
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(prisma.favorite.findUnique).toHaveBeenCalledWith({
@@ -382,14 +388,14 @@ describe('FavoriteService', (): void => {
       });
     });
 
-
     // edge case: user_id or car_id empty strings (validation should handle this, but test behavior)
-    it('should return isFavorite: false when favorite not found with given IDs', async (): Promise<void> => {
+    it('should return is_favorite: false and favorite_id: undefined when favorite not found with given IDs', async (): Promise<void> => {
       prisma.favorite.findUnique.mockResolvedValue(null);
 
       const result = await service.checkByID('non-existent-user', 'non-existent-car');
 
-      expect(result.data.isFavorite).toBe(false);
+      expect(result.data.is_favorite).toBe(false);
+      expect(result.data.favorite_id).toBeUndefined();
       expect(result.message).toBe('Favorite status checked successfully.');
     });
   });
