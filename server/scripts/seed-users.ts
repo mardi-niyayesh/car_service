@@ -69,13 +69,20 @@ async function bootstrap(): Promise<void> {
       process.exit(1);
     }
 
-    const users_id = await tx.user.createManyAndReturn({
+    await tx.user.createMany({
       data: users,
-      skipDuplicates: true,
-      select: {
-        id: true
-      }
+      skipDuplicates: true
     });
+
+    const users_id = await tx.user.findMany({
+      where: {
+        email: {
+          in: users.map(u => u.email)
+        }
+      },
+    });
+
+    console.log(users_id);
 
     await tx.userRole.createMany({
       data: users_id.map(({id}) => ({
