@@ -13,4 +13,7 @@ export type ListFavoriteResponse = ListWithCount<{
   favorites: FavoriteWithCar[];
 }>;
 
-export type FavoriteCheck = { isFavorite: boolean };
+export type FavoriteCheck = {
+  favorite_id?: string;
+  is_favorite: boolean;
+};
