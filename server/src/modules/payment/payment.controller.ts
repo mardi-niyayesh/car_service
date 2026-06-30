@@ -1,4 +1,11 @@
-import {Controller} from "@nestjs/common";
+import {Public} from "@/common";
+import {Controller, Post} from "@nestjs/common";
 
+@Public()
 @Controller('payments')
-export class PaymentController {}
+export class PaymentController {
+  @Post()
+  test() {
+    return "test payment.";
+  }
+}
