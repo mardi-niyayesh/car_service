@@ -7,6 +7,7 @@ export * from "./cart";
 export * from "./email";
 export * from "./redis";
 export * from "./prisma";
+export * from "./payment";
 export * from "./comment";
 export * from "./favorite";
 export * from "./category";
