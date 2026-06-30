@@ -10,12 +10,12 @@ import ErrorModal from "../../../Modal/ErrorModal";
 import { useNavigate } from "react-router-dom";
 import { useProduct } from "../../../hooks/useProduct";
 import { FaEye } from "react-icons/fa";
-
 const ComponentTableProduct = () => {
   const { loading, allProduct, refetch, totalPage } = useProduct();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const { hasRole, hasPermission } = useUser();
+
 
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -73,8 +73,8 @@ const ComponentTableProduct = () => {
   const handleShowComment = async (id: string) => {
     navigate(`commentoneproduct/${id}`);
   };
-  const handleShowDetailCar = async (id: string) => {
-    navigate(`/detailcar/niyayesh`);
+  const handleShowDetailCar = async (slug:string) => {
+    navigate(`/detailcar/${slug}`);
   };
   return (
     <>
@@ -153,7 +153,7 @@ const ComponentTableProduct = () => {
                             color="blue"
                             opacity={0.5}
                             className="cursor-pointer"
-                            onClick={() => handleupdatProduct(product.slug)}
+                            onClick={() => handleupdatProduct}
                           />
                         }
                       </td>
@@ -188,7 +188,7 @@ const ComponentTableProduct = () => {
                         <FaEye
                           size={18}
                           className="cursor-pointer"
-                          onClick={() => handleShowDetailCar(product.id)}
+                          onClick={() => handleShowDetailCar(product.slug)}
                         />
                       }
                     </td>
