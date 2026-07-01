@@ -1,11 +1,15 @@
 import {Public} from "@/common";
-import {Controller, Post} from "@nestjs/common";
+import type {Request} from "express";
+import {Controller, Post, Req} from "@nestjs/common";
 
 @Public()
 @Controller('payments')
 export class PaymentController {
   @Post()
-  test() {
+  test(
+    @Req() req: Request
+  ) {
+    console.log(req.clientInfo);
     return "test payment.";
   }
 }
