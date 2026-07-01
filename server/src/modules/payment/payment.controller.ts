@@ -1,9 +1,10 @@
-import {Public} from "@/common";
 import type {Request} from "express";
 import {Controller, Post, Req} from "@nestjs/common";
+import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 
-@Public()
+@ApiTags("Payments")
 @Controller('payments')
+@ApiBearerAuth("accessToken")
 export class PaymentController {
   @Post()
   test(
