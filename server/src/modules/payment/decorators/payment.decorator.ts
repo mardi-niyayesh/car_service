@@ -1,5 +1,5 @@
-import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 import {Permission, PERMISSIONS} from "@/common";
+import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 
 export const PaymentDecorator = () => applyDecorators(
   Permission({
