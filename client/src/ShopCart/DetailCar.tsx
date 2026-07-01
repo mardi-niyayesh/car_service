@@ -21,9 +21,7 @@ const DetailCar = () => {
   const [showbtn, setShowbtn] = useState(false);
 
   const findProduct = allProduct.find((pro) => pro.slug === slug);
-  console.log("findddddddd : ", findProduct);
-  console.log("all prooooooooduct :", allProduct);
-
+ 
   const productId = findProduct?.id;
 
   const openReplyModal = (commentId: string) => {
