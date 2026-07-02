@@ -1,7 +1,8 @@
+import type {AccessRequest} from "@/types";
 import {PaymentDecorator} from "./decorators";
 import {UUIDv4Validator, ZodPipe} from "@/common";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
-import {Controller, Param, Post} from "@nestjs/common";
+import {Controller, Param, Post, Req} from "@nestjs/common";
 import {PaymentService} from "@/modules/payment/payment.service";
 
 /**
@@ -39,8 +40,9 @@ export class PaymentController {
   @Post()
   @PaymentDecorator()
   payment(
+    @Req() req: AccessRequest,
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
   ) {
-    return this.paymentService.payment(id);
+    return this.paymentService.payment(req.user.userId, id);
   }
 }

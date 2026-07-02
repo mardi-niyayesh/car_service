@@ -5,7 +5,7 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 export class PaymentService {
   constructor(private readonly prisma: PrismaService) {}
 
-  payment(payment_id: string) {
+  payment(user_id: string, payment_id: string) {
 
   }
 }
