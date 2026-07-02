@@ -25,6 +25,7 @@ const GetAllProduct = ({ product }: ProductProps) => {
   const [isErrorOpen, setIsErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [favoriteId, setFavoriteId] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
 
   if (!product) {
@@ -43,52 +44,75 @@ const GetAllProduct = ({ product }: ProductProps) => {
     const checkFavorite = async () => {
       if (!user) {
         setIsLiked(false);
+        setFavoriteId(null);
         return;
       }
-
       try {
         const response = await axiosClient.get(`favorites/check/${product.id}`);
-        const isFav = response.data.response.data.isFavorite;
+        const data = response.data.response.data;
+        const isFav = data.is_favorite;
+        const favId = data.favorite_id || null;
+
         setIsLiked(isFav);
-      } catch (error: any) {
-        if (error.response?.status === 401) {
-          setIsLiked(false);
-        } else {
-          setIsLiked(false);
-        }
+        setFavoriteId(isFav ? favId : null);
+      } catch (err: any) {
+        console.log("Error in checked favorit car :", err);
+
+        setIsLiked(false);
+        setFavoriteId(null);
       }
     };
-
     checkFavorite();
   }, [product.id, user]);
 
-  const handleLikeCar = async () => {
+  const handleToggleLike = async () => {
     if (!user) {
       setIsWarningOpen(true);
-      setWarningMessage("ابتدا باید وارد حساب کاربری خود شوید");
+      setWarningMessage("ابتدا وارد حساب کاربری خود شوید");
       return;
     }
+
     try {
-      const response = await axiosClient.post(`favorites/${product.id}`);
-      if (response.status === 201) {
+      if (!isLiked) {
+        const response = await axiosClient.post(`favorites/${product.id}`);
+        const newFav = response.data.response.data.favorite;
+        console.log("new favorite :", newFav.id);
+
+        setFavoriteId(newFav.id);
         setIsLiked(true);
         setIsSuccessOpen(true);
-        setSuccessMessage("این ماشین به لیست علاقه‌مندی‌های شما اضافه شد");
+        setSuccessMessage("این ماشین به علاقه مندی ها اضافه شد");
+      } else {
+        await axiosClient.delete(`favorites/${product.id}`);
+        console.log("favoriteId for delete:", favoriteId);
+        setFavoriteId(null);
+        setIsLiked(false);
+        setIsSuccessOpen(true);
+        setSuccessMessage("این ماشین از علاقه مندی ها حذف شد");
       }
     } catch (err: any) {
-      console.log("Error in like car:", err);
-      if (err.response?.status === 400) {
+      if (err.response?.status === 409) {
+        try {
+          const checkRes = await axiosClient.get(
+            `favorites/check/${product.id}`,
+          );
+          const checkData = checkRes.data.response.data;
+          setIsLiked(checkData.is_favorite);
+          setFavoriteId(checkData.is_favorite ? checkData.favorite_id : null);
+          setIsWarningOpen(true);
+          setWarningMessage(" :) این ماشین قبلا توسط شما لایک شده است");
+        } catch {
+          setIsWarningOpen(true);
+          setWarningMessage("خطا در دریافت اطلاعات");
+        }
+      } else if (err.response?.status === 404) {
+        setIsLiked(false);
+        setFavoriteId(null);
         setIsWarningOpen(true);
-        setWarningMessage(
-          "ماشین مورد نظر در دیتابیس وجود ندارد، لطفاً صفحه را رفرش کنید",
-        );
-      } else if (err.response?.status === 409) {
-        setIsLiked(true);
-        setIsWarningOpen(true);
-        setWarningMessage("این ماشین قبلاً لایک شده است");
+        setWarningMessage("این ماشین  در لیست علاقه‌مندی‌های شما وجود ندارد");
       } else {
         setIsErrorOpen(true);
-        setErrorMessage("خطا در سرور، لطفاً لحظاتی بعد مجدد تلاش کنید");
+        setErrorMessage("خطا در سرور");
       }
     }
   };
@@ -108,14 +132,14 @@ const GetAllProduct = ({ product }: ProductProps) => {
                   <FaHeart
                     color="#ef4444"
                     size={18}
-                    onClick={handleLikeCar}
+                    onClick={handleToggleLike}
                     className="cursor-pointer hover:scale-110 transition-transform duration-200 active:scale-90"
                   />
                 ) : (
                   <AiOutlineHeart
                     color="#ef4444"
                     size={18}
-                    onClick={handleLikeCar}
+                    onClick={handleToggleLike}
                     className="cursor-pointer hover:scale-110 transition-transform duration-200 active:scale-90"
                   />
                 )}
@@ -124,7 +148,6 @@ const GetAllProduct = ({ product }: ProductProps) => {
                 </span>
               </div>
 
-              {/* Comment Section */}
               <div className="flex items-center gap-1.5 bg-gray-50/80 px-3 py-1.5 rounded-full border border-gray-100 hover:bg-gray-100 transition-colors duration-200">
                 <FaRegComment color="#3b82f6" opacity={0.8} size={17} />
                 <span className="text-sm font-medium text-gray-700 min-w-[12px] text-center">
