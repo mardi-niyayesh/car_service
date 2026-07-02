@@ -1,6 +1,6 @@
+import type {BaseException} from "@/types";
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
-import {BaseException} from "@/types";
 
 @Injectable()
 export class PaymentService {
