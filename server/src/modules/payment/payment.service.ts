@@ -20,5 +20,9 @@ export class PaymentService {
       message: "Car rent not found in database, please try again later.",
       error: "Car Rent Not Found"
     } as BaseException);
+
+    console.log(payment);
+
+    return payment;
   }
 }
