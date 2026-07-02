@@ -1,7 +1,9 @@
 import type {Request} from "express";
 import {PaymentDecorator} from "./decorators";
-import {Controller, Post, Req} from "@nestjs/common";
+import {Controller, Param, Post, Req} from "@nestjs/common";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {UUIDv4Validator, ZodPipe} from "@/common";
+import {PaymentService} from "@/modules/payment/payment.service";
 
 /**
  * Payment processing endpoints.
@@ -33,12 +35,13 @@ import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 @Controller('payments')
 @ApiBearerAuth("accessToken")
 export class PaymentController {
+  constructor(private readonly paymentService: PaymentService) {}
+
   @Post()
   @PaymentDecorator()
   payment(
-    @Req() req: Request
+    @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
   ) {
-    console.log(req.clientInfo);
-    return "test payment.";
+    return this.paymentService.payment(id);
   }
 }
