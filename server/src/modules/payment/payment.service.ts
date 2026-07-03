@@ -6,6 +6,10 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 export class PaymentService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+  * Payment car rent with user_id and car_rent_id
+  * @params(user_id)
+  */
   async payment(user_id: string, car_rent_id: string) {
     const payment = await this.prisma.carRent.findUnique({
       where: {
@@ -26,3 +30,4 @@ export class PaymentService {
     return payment;
   }
 }
+
