@@ -46,4 +46,3 @@ export class PaymentController {
     return this.paymentService.payment(req.user.userId, id);
   }
 }
-

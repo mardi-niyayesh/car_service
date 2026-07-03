@@ -125,6 +125,8 @@ export class CartService {
 
       const {carRents, ...carData} = car;
 
+      console.log(carRents);
+
       if (carRents.length) throw new ConflictException({
         message: 'The selected car is already rented for all or part of the requested period. Please choose different dates or another car.',
         error: 'Car Rental Conflict'
@@ -161,6 +163,8 @@ export class CartService {
         }
       });
 
+      console.log("add to cart: ", carRent);
+
       return {
         message: 'car rent successfully add to your cart',
         data: {
@@ -186,6 +190,8 @@ export class CartService {
           }
         }
       });
+
+      console.log("delete: ", carRent);
 
       return {
         message: 'car rent successfully removed from the cart',
