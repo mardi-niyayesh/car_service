@@ -40,10 +40,9 @@ export class CacheEvictInterceptor implements NestInterceptor {
 
           const key: string = RedisKey.keyPrefix({
             ctx,
-            resource: cacheParams.resource,
-            pagination: cacheParams.pagination,
-            query: cacheParams.query,
             self: cacheParams.self,
+            query: cacheParams.query,
+            resource: cacheParams.resource,
             paramsKey: cacheParams.paramsKey,
             extraKeys: cacheParams.extraKeys,
           });
