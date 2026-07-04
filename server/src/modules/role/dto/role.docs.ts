@@ -1,5 +1,5 @@
 import {PERMISSIONS} from "@/common";
-import {ApiOperationOptions} from "@nestjs/swagger/dist/decorators/api-operation.decorator";
+import {ApiOperationOptions} from "@nestjs/swagger";
 
 export const findOneRoleOperation: ApiOperationOptions = {
   summary: "find one role with id or name",

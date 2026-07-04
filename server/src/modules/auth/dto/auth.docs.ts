@@ -1,4 +1,4 @@
-import {ApiOperationOptions} from "@nestjs/swagger/dist/decorators/api-operation.decorator";
+import {ApiOperationOptions} from "@nestjs/swagger";
 
 export const authRegisterOperation: ApiOperationOptions = {
   summary: 'Register a new user',

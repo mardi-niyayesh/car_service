@@ -96,7 +96,8 @@ export class FavoriteService {
     return {
       message: "Favorite status checked successfully.",
       data: {
-        isFavorite: !!favorite
+        is_favorite: !!favorite,
+        favorite_id: favorite ? favorite.id : undefined,
       }
     };
   }

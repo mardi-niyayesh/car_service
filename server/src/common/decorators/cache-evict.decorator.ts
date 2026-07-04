@@ -3,13 +3,14 @@ import {type ParamCacheKeyType} from "@/lib";
 
 export const CACHE_EVICT_KEY = "CACHE_EVICT_KEY";
 
-type CacheEvictDecoratorForce = Omit<ParamCacheKeyType, "ctx"> & {
-  force?: boolean;
+type CacheEvictDecoratorForce = Omit<ParamCacheKeyType, "ctx" | "pagination"> & {
   prefix?: never;
+  force?: boolean;
+  forcePagination?: boolean;
   prefixAfterBuildKey?: boolean;
 };
 
-type CacheEvictDecoratorPrefix = Omit<ParamCacheKeyType, "resource" | 'ctx'> & {
+type CacheEvictDecoratorPrefix = Omit<ParamCacheKeyType, "resource" | 'ctx' | 'pagination'> & {
   force?: never;
   prefix?: string;
 };
@@ -17,6 +18,8 @@ type CacheEvictDecoratorPrefix = Omit<ParamCacheKeyType, "resource" | 'ctx'> & {
 interface FindPrefix {
   param: string;
   extraKeys?: string[];
+  paramKeyReplace?: string;
+  listOrSingle?: "list" | "single";
 }
 
 type CacheEvictDecoratorFindPrefixAndList = Omit<CacheEvictDecoratorPrefix, "prefix"> & {

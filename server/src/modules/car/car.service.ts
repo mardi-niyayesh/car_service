@@ -56,25 +56,14 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
    * - **Accessible to all users (public endpoint)**
    */
   async findAll(pagination: CarDto.FindAllCarValidatorType): Promise<ApiResponse<CarsResponse>> {
-    const {
-      limit,
-      offset,
-      can_rent,
-      category,
-      orderByLower,
-      order_by_field,
-      price_per_day_lte,
-      price_per_day_gte,
-    } = pagination;
-
     const where: Prisma.CarWhereInput = {
-      can_rent,
+      can_rent: pagination.can_rent,
       price_per_day: {
-        gte: price_per_day_gte,
-        lte: price_per_day_lte,
+        gte: pagination.price_per_day_gte,
+        lte: pagination.price_per_day_lte,
       },
       category: {
-        slug: category,
+        slug: pagination.category,
       }
     };
 
@@ -99,10 +88,10 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
         }
       },
       where,
-      take: limit,
-      skip: offset,
+      take: pagination.limit,
+      skip: pagination.offset,
       orderBy: {
-        [order_by_field]: orderByLower,
+        [pagination.order_by_field]: pagination.orderByLower,
       },
       omit: {creator_id: true}
     });

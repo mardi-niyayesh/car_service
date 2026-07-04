@@ -6,7 +6,8 @@ export class OkCheckRes extends getBaseOkResponseSchema<FavoriteCheck>({
   response: {
     message: 'Favorite status checked successfully.',
     data: {
-      isFavorite: true,
+      is_favorite: true,
+      favorite_id: "UUIDv4"
     }
   }
 }) {}

@@ -13,12 +13,15 @@ import PubliModal from "../Modal/PubliModal";
 const DetailCar = () => {
   const { allProduct } = useProduct();
   const { slug } = useParams();
+  console.log("sligggggggg :", slug);
+
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [replyToId, setReplyToId] = useState<string | null>(null);
   const [refresh, setRefresh] = useState(0);
   const [showbtn, setShowbtn] = useState(false);
 
   const findProduct = allProduct.find((pro) => pro.slug === slug);
+ 
   const productId = findProduct?.id;
 
   const openReplyModal = (commentId: string) => {
