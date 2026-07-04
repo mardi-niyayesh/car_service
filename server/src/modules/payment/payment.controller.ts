@@ -37,7 +37,7 @@ import {PaymentService} from "@/modules/payment/payment.service";
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
-  @Post()
+  @Post(':id')
   @PaymentDecorator()
   payment(
     @Req() req: AccessRequest,
