@@ -80,8 +80,6 @@ export class CartService {
           carRents: cart.carRents,
           user: {
             id: user.userId,
-            roles: user.roles,
-            permissions: user.permissions,
             display_name: user.display_name,
           }
         }
