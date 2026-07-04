@@ -16,12 +16,6 @@ export class GetCartOk extends getBaseOkResponseSchema<CartResponse>({
         total_price: 40000000,
         user: {
           id: "1dbae5ed-a7bd-4d58-81b0-766e1a4191dd",
-          roles: [
-            "self"
-          ],
-          permissions: [
-            "user.self"
-          ],
           display_name: "owner"
         },
         carRents: [exampleCarRent]

@@ -118,8 +118,6 @@ describe('CartService', (): void => {
       // 4. Test user data in response
       expect(cart.user).toBeDefined();
       expect(cart.user.id).toBe(mockUserAccess.userId);
-      expect(cart.user.roles).toEqual(mockUserAccess.roles);
-      expect(cart.user.permissions).toEqual(mockUserAccess.permissions);
       expect(cart.user.display_name).toBe(mockUserAccess.display_name);
 
       // 5. Test carRents array
