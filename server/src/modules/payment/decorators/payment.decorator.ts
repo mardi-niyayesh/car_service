@@ -1,7 +1,7 @@
 import * as PaymentDto from "../dto";
-import {Permission, PERMISSIONS, UUID4Dto} from "@/common";
-import {ApiNotFoundResponse, ApiParam} from "@nestjs/swagger";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
+import {getUnauthorizedResponse, Permission, PERMISSIONS, UUID4Dto} from "@/common";
+import {ApiNotFoundResponse, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 export const PaymentDecorator = () => applyDecorators(
   Permission({
@@ -9,5 +9,6 @@ export const PaymentDecorator = () => applyDecorators(
   }),
   HttpCode(HttpStatus.OK),
   ApiParam(UUID4Dto("id")),
-  ApiNotFoundResponse({type: PaymentDto.CreateNotFoundRes})
+  ApiUnauthorizedResponse({type: getUnauthorizedResponse('payments')}),
+  ApiNotFoundResponse({type: PaymentDto.CreateNotFoundRes}),
 );
