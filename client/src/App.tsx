@@ -134,14 +134,7 @@ function App() {
             }
           />
 
-          <Route
-            path="category"
-            element={
-              <GaurdRoute requiredPermission="category.view">
-                <CategoryPage />
-              </GaurdRoute>
-            }
-          />
+          <Route path="category" element={<CategoryPage />} />
           <Route
             path="category/update/:id"
             element={
@@ -159,14 +152,7 @@ function App() {
             }
           />
 
-          <Route
-            path="product"
-            element={
-              <GaurdRoute requiredPermission="product.view">
-                <ProductPage />
-              </GaurdRoute>
-            }
-          />
+          <Route path="product" element={<ProductPage />} />
           <Route
             path="product/creatproduct"
             element={
