@@ -39,6 +39,7 @@ const Menu = [
 
 const ComponentsPanelAdmin = () => {
   const { hasPermission, hasRole } = useUser();
+  console.log("hasPermission :", hasPermission);
 
   const canUserSeeItem = (item: (typeof Menu)[0]) => {
     if (hasRole("owner")) return true;
@@ -46,11 +47,13 @@ const ComponentsPanelAdmin = () => {
     let hasRequiredPermission = true;
     if (item.permission) {
       hasRequiredPermission = hasPermission(item.permission);
+      console.log("hasRequiredPermission:", hasRequiredPermission);
     }
 
     let hasRequiredRole = true;
     if (item.role) {
       hasRequiredRole = hasRole(item.role);
+      console.log("hasRequiredRole:", hasRequiredRole);
     }
 
     if (item.permission && item.role) {
@@ -69,7 +72,6 @@ const ComponentsPanelAdmin = () => {
   return (
     <>
       <div>
-       
         <div
           className="hidden md:flex fixed top-0 right-0 h-full w-72 bg-[#F6F6F6]
           border-2 border-gray-300 flex-col items-start p-4 overflow-y-auto shadow-sm z-40"
@@ -85,7 +87,6 @@ const ComponentsPanelAdmin = () => {
 
           <MenuItems items={filteredMenu} />
         </div>
-
 
         <div
           className="md:hidden fixed bottom-0 right-0 left-0 bg-[#EDEDED] border-t border-gray-200
