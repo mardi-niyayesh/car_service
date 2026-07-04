@@ -4,8 +4,9 @@ import {type ParamCacheKeyType} from "@/lib";
 export const CACHE_EVICT_KEY = "CACHE_EVICT_KEY";
 
 type CacheEvictDecoratorForce = Omit<ParamCacheKeyType, "ctx" | "pagination"> & {
-  force?: boolean;
   prefix?: never;
+  force?: boolean;
+  forcePagination?: boolean;
   prefixAfterBuildKey?: boolean;
 };
 
