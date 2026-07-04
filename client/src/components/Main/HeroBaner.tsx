@@ -250,7 +250,7 @@ const HeroBaner = () => {
             <div className="flex items-center space-x-3">
               <div className="relative flex-grow">
                 <div className="absolute inset-y-0 right-0 flex items-center pr-4">
-                  <FaCalendarAlt size={24} className="text-blue-800" />
+                  <FaCalendarAlt size={24} className="text-yellow-600" />
                 </div>
                 <Controller
                   name="deliveryDate"
@@ -288,7 +288,7 @@ const HeroBaner = () => {
             <div className="flex items-center space-x-3">
               <div className="relative flex-grow">
                 <div className="absolute inset-y-0 right-0 flex items-center pr-4">
-                  <FaCalendarAlt size={24} className="text-blue-800" />
+                  <FaCalendarAlt size={24} className="text-yellow-600" />
                 </div>
                 <Controller
                   name="returnDate"

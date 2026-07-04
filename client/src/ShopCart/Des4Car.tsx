@@ -18,16 +18,6 @@ const Des4Car = () => {
               <FaStar key={index} color="gold" size={18} />
             ))}
           </div>
-          <div className="flex gap-4 mt-4">
-            <div className="flex items-center text-[15px] justify-center">
-              <AiOutlineHeart color="red" size={18} />
-              <span>{findProduct?._count.users_favorites}</span>
-            </div>
-            <div className="flex items-center text-[15px] gap-0.5">
-              <FaRegComment opacity={0.7} size={17} />
-              <span>{findProduct?._count.comments}</span>
-            </div>
-          </div>
         </div>
         <img
           src={`/${findProduct?.image}`}
