@@ -2,6 +2,7 @@ import type {BaseException} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {PaymentStatus, RentStatus} from "@/modules/prisma/generated/enums";
 import {Injectable, NotFoundException, ConflictException} from "@nestjs/common";
+import {Payment} from "@/modules/prisma/generated/client";
 
 @Injectable()
 export class PaymentService {
@@ -35,7 +36,7 @@ export class PaymentService {
     }
 
     // Check if already paid
-    if (carRent.payment) {
+    if (carRent.payment && carRent.payment.status === PaymentStatus.SUCCESS) {
       throw new ConflictException({
         message: "This car rent has already been paid.",
         error: "Payment Already Exists"
@@ -46,15 +47,31 @@ export class PaymentService {
     const random = Math.random() * 100; // 0 to 100
     const isSuccess = random <= successRate;
 
-    // Create payment record
-    const payment = await this.prisma.payment.create({
-      data: {
-        status: isSuccess ? PaymentStatus.SUCCESS : PaymentStatus.FAILED,
-        amount: carRent.price,
-        transaction_id: isSuccess ? `TXN-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}` : null,
-        car_rent_id: carRent.id
-      }
-    });
+    let payment: Payment;
+
+    if (carRent.payment && carRent.payment.status === PaymentStatus.FAILED) {
+      payment = await this.prisma.payment.update({
+        where: {id: carRent.payment.id},
+        data: {
+          status: isSuccess
+            ? PaymentStatus.SUCCESS
+            : PaymentStatus.FAILED,
+          transaction_id: isSuccess
+            ? `TXN-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`
+            : null,
+        }
+      });
+    } else {
+      // Create payment record
+      payment = await this.prisma.payment.create({
+        data: {
+          status: isSuccess ? PaymentStatus.SUCCESS : PaymentStatus.FAILED,
+          amount: carRent.price,
+          transaction_id: isSuccess ? `TXN-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}` : null,
+          car_rent_id: carRent.id
+        }
+      });
+    }
 
     // Optional: Update car rent status if payment is successful
     if (isSuccess) {
