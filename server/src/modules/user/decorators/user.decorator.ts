@@ -142,7 +142,12 @@ export const AssignRoleDecorators = () => {
     }),
     HttpCode(HttpStatus.OK),
     CacheEvict({
-      findPrefix: {param: 'id'}
+      resource: "user",
+      findPrefix: {
+        param: 'id',
+        listOrSingle: 'single',
+        paramKeyReplace: 'user-id',
+      }
     }),
     ApiOperation(UserDto.userRoleAssignOperation),
     ApiParam(UUID4Dto("user")),
@@ -178,7 +183,12 @@ export const RevokeRoleDecorator = () => {
     }),
     HttpCode(HttpStatus.OK),
     CacheEvict({
-      findPrefix: {param: 'id'}
+      resource: "user",
+      findPrefix: {
+        param: 'id',
+        listOrSingle: 'single',
+        paramKeyReplace: 'user-id',
+      }
     }),
     ApiOperation(UserDto.userRoleRevokeOperation),
     ApiParam(UUID4Dto("user")),

@@ -91,11 +91,22 @@ export class CacheEvictInterceptor implements NestInterceptor {
             if (cacheParams.findPrefix.extraKeys?.length) {
               const extraKeys: string = cacheParams.findPrefix.extraKeys.join(":");
 
-              const finalKey = `*${cacheParams.resource}:${extraKeys}:${keyParam}=${paramValue}:list*`;
+              const finalKey = `*${cacheParams.resource}:${extraKeys}:${keyParam}=${paramValue}*`;
               await this.deleteAction(finalKey, 'deletePrefix');
               return data;
 
             } else {
+              const replaceKey = cacheParams.findPrefix.paramKeyReplace;
+
+              if (replaceKey) {
+                const finalKey = cacheParams.findPrefix?.listOrSingle === 'single'
+                  ? `*${cacheParams.resource}:${replaceKey}=${paramValue}*`
+                  : `*${cacheParams.resource}:${replaceKey}=${paramValue}*:list`;
+
+                await this.deleteAction(finalKey, 'deletePrefix');
+                return data;
+              }
+
               const finalKey = `*${cacheParams.resource}:${paramValue}:list*`;
               await this.deleteAction(finalKey, 'deletePrefix');
               return data;
