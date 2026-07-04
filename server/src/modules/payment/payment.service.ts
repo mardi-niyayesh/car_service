@@ -1,8 +1,8 @@
-import type {BaseException} from "@/types";
+import type {ApiResponse, BaseException, PaymentResponse} from "@/types";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {PaymentStatus, RentStatus} from "@/modules/prisma/generated/enums";
 import {Injectable, NotFoundException, ConflictException} from "@nestjs/common";
-import {Payment} from "@/modules/prisma/generated/client";
+import type {Payment} from "@/modules/prisma/generated/client";
 
 @Injectable()
 export class PaymentService {
@@ -14,7 +14,7 @@ export class PaymentService {
    * @param car_rent_id - The ID of the car rent record
    * @param successRate - Percentage of success (0-100), default is 80%
    */
-  async payment(user_id: string, car_rent_id: string, successRate: number = 80) {
+  async payment(user_id: string, car_rent_id: string, successRate: number = 80): Promise<ApiResponse<PaymentResponse>> {
     // Find the car rent record
     const carRent = await this.prisma.carRent.findUnique({
       where: {
@@ -85,11 +85,10 @@ export class PaymentService {
 
     // Return response
     return {
-      success: isSuccess,
       message: isSuccess
         ? "Payment completed successfully."
         : "Payment failed. Please try again.",
-      payment
+      data: {payment}
     };
   }
 }
