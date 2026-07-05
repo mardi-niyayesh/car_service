@@ -4,7 +4,8 @@ import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 import {Cacheable, CacheEvict, CacheEvictDecorator, getUnauthorizedResponse, PaginationDecoratorQueries, UUID4Dto} from "@/common";
 import {ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
-const cartCacheKey = ['self_cart'];
+export const selfCartCacheKey = 'self-cart';
+const cartCacheKey = [selfCartCacheKey];
 
 export const GetCartDecorators = () => applyDecorators(
   HttpCode(HttpStatus.OK),

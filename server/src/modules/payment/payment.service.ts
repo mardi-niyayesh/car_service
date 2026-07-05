@@ -1,12 +1,17 @@
-import type {ApiResponse, BaseException, PaymentResponse} from "@/types";
+import {selfCartCacheKey} from "@/modules/cart/decorators";
+import {RedisService} from "@/modules/redis/redis.service";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import type {Payment} from "@/modules/prisma/generated/client";
+import type {ApiResponse, BaseException, PaymentResponse} from "@/types";
 import {PaymentStatus, RentStatus} from "@/modules/prisma/generated/enums";
 import {Injectable, NotFoundException, ConflictException} from "@nestjs/common";
-import type {Payment} from "@/modules/prisma/generated/client";
 
 @Injectable()
 export class PaymentService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly redis: RedisService,
+  ) {}
 
   /**
    * Payment car rent with user_id and car_rent_id
@@ -44,8 +49,8 @@ export class PaymentService {
     }
 
     // Simulate payment logic with success rate
-    const random = Math.random() * 100; // 0 to 100
-    const isSuccess = random <= successRate;
+    const random: number = Math.random() * 100; // 0 to 100
+    const isSuccess: boolean = random <= successRate;
 
     let payment: Payment;
 
@@ -82,6 +87,9 @@ export class PaymentService {
         }
       });
     }
+
+    const key = `*cart:${selfCartCacheKey}:user-id=${user_id}*`;
+    await this.redis.deletePrefix(key);
 
     // Return response
     return {
