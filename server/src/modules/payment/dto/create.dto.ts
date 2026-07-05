@@ -1,7 +1,7 @@
-import {PaymentResponse} from "@/types";
-import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 import {exampleDate} from "@/lib";
-import {Payment} from "@/modules/prisma/generated/client";
+import type {PaymentResponse} from "@/types";
+import type {Payment} from "@/modules/prisma/generated/client";
+import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** Example payment data for successful transaction response */
 export const paymentExample: Payment = {
