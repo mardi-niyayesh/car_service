@@ -5,6 +5,7 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 import {eventsEmitter, PaginationValidatorType} from "@/common";
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import type {ApiResponse, BaseException, CartResponse, CreateCartSignup, UserAccess, CarRentResponse, RemoveCarRentResponse} from "@/types";
+import {CarRentWhereInput} from "@/modules/prisma/generated/models/CarRent";
 
 @Injectable()
 export class CartService {
@@ -28,10 +29,15 @@ export class CartService {
   async getCart(user_id: string, user: UserAccess, paginate: PaginationValidatorType): Promise<ApiResponse<CartResponse>> {
     const {limit, offset, orderByLower} = paginate;
 
+    const whereCarRent: CarRentWhereInput = {
+      status: RentStatus.PENDING
+    };
+
     const cart = await this.prisma.cart.findUnique({
       where: {user_id},
       include: {
         carRents: {
+          where: whereCarRent,
           take: limit,
           skip: offset,
           orderBy: {
@@ -60,7 +66,7 @@ export class CartService {
     const total = await this.prisma.carRent.aggregate({
       where: {
         cart_id: cart.id,
-        status: RentStatus.PENDING,
+        ...whereCarRent,
       },
       _sum: {price: true},
       _count: {
