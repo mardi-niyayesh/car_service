@@ -4,7 +4,7 @@ import SuccessModal from "../../Modal/SuccessModal";
 import WarningModal from "../../Modal/WarningModal ";
 import { FiTrash } from "react-icons/fi";
 import ComponentPaginat from "../../Paginate/ComponentPaginat";
-import { data } from "react-router-dom";
+import { MdPayment } from "react-icons/md";
 
 export type Car = {
   name: string;
@@ -206,9 +206,9 @@ const BasketComponent = () => {
                     </button>
                     <button
                       onClick={() => handlePaymentItem(rent.id)}
-                      className=" mt-4 border-2 flex items-center border-green-500 text-green-600 hover:bg-green-500 hover:text-white  px-2 rounded-lg transition"
+                      className=" gap-1 mt-4 border-2 flex items-center border-green-500 text-green-600 hover:bg-green-500 hover:text-white  px-2 rounded-lg transition"
                     >
-                      <FiTrash className="" /> پرداخت
+                      <MdPayment /> پرداخت
                     </button>
                   </div>
                 </div>
