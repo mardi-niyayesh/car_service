@@ -1,9 +1,9 @@
 import type {AccessRequest} from "@/types";
 import * as PaymentDecorator from "./decorators";
-import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
-import {Controller, Get, Param, Post, Query, Req} from "@nestjs/common";
 import {PaymentService} from "@/modules/payment/payment.service";
+import {Controller, Get, Param, Post, Query, Req} from "@nestjs/common";
+import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
 
 /**
  * Payment processing endpoints.
