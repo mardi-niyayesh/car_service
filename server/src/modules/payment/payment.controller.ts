@@ -1,3 +1,4 @@
+import * as PaymentDto from "./dto";
 import type {AccessRequest} from "@/types";
 import * as PaymentDecorator from "./decorators";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
@@ -50,7 +51,7 @@ export class PaymentController {
   @PaymentDecorator.FindAllDecorators()
   findAll(
     @Req() req: AccessRequest,
-    @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
+    @Query(new ZodPipe(PaymentDto.FindAllValidator)) pagination: PaymentDto.FindAllValidatorType
   ) {
     console.log(req.user);
     console.log(pagination);

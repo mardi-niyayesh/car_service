@@ -1,7 +1,8 @@
 import * as PaymentDto from "../dto";
+import {PaymentStatus} from "@/modules/prisma/generated/enums";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
-import {getUnauthorizedResponse, Permission, PERMISSIONS, UUID4Dto} from "@/common";
-import {ApiConflictResponse, ApiNotFoundResponse, ApiOkResponse, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {getUnauthorizedResponse, PaginationDecoratorQueries, Permission, PERMISSIONS, UUID4Dto} from "@/common";
+import {ApiConflictResponse, ApiNotFoundResponse, ApiOkResponse, ApiParam, ApiQuery, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 export const CreateDecorators = () => applyDecorators(
   Permission({
@@ -20,4 +21,22 @@ export const FindAllDecorators = () => applyDecorators(
     permissions: [PERMISSIONS.USER_SELF],
   }),
   HttpCode(HttpStatus.OK),
+  PaginationDecoratorQueries(),
+  ApiQuery({
+    type: 'string',
+    name: 'status',
+    required: false,
+    enum: PaymentStatus,
+    anyOf: [
+      {
+        type: PaymentStatus.FAILED,
+        example: PaymentStatus.FAILED,
+      },
+      {
+        type: PaymentStatus.SUCCESS,
+        example: PaymentStatus.SUCCESS,
+      }
+    ],
+    description: 'FAILED or SUCCESS or empty for get all'
+  }),
 );
