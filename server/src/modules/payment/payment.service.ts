@@ -99,4 +99,27 @@ export class PaymentService {
       data: {payment}
     };
   }
+
+  /**
+   * Retrieve all payment transactions with optional filtering.
+   *
+   * @param cart_id - Filter payments by user ID (optional)
+   * @param pagination - Filter by payment status, page and limit
+   *
+   * @returns List of payment transactions with total count
+   *
+   * @example
+   * GET /payments?status=SUCCESS&limit=10&offset=20
+   */
+  async findAll(cart_id: string, pagination: ) {
+    const payments = await this.prisma.payment.findMany({
+      where: {
+        car_rent: {
+          cart_id
+        }
+      }
+    });
+
+    return 'payment find all';
+  }
 }
