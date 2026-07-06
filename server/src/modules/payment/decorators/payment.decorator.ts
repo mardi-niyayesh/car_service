@@ -3,7 +3,7 @@ import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 import {getUnauthorizedResponse, Permission, PERMISSIONS, UUID4Dto} from "@/common";
 import {ApiConflictResponse, ApiNotFoundResponse, ApiOkResponse, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
-export const PaymentDecorator = () => applyDecorators(
+export const CreateDecorators = () => applyDecorators(
   Permission({
     permissions: [PERMISSIONS.USER_SELF],
   }),
@@ -13,4 +13,11 @@ export const PaymentDecorator = () => applyDecorators(
   ApiUnauthorizedResponse({type: getUnauthorizedResponse('payments')}),
   ApiNotFoundResponse({type: PaymentDto.CreateNotFoundRes}),
   ApiConflictResponse({type: PaymentDto.CreateConflictRes})
+);
+
+export const FindAllDecorators = () => applyDecorators(
+  Permission({
+    permissions: [PERMISSIONS.USER_SELF],
+  }),
+  HttpCode(HttpStatus.OK),
 );

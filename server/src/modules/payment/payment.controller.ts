@@ -1,5 +1,5 @@
 import type {AccessRequest} from "@/types";
-import {PaymentDecorator} from "./decorators";
+import * as PaymentDecorator from "./decorators";
 import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {Controller, Get, Param, Post, Query, Req} from "@nestjs/common";
@@ -38,7 +38,7 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post(':id')
-  @PaymentDecorator()
+  @PaymentDecorator.CreateDecorators()
   payment(
     @Req() req: AccessRequest,
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
@@ -47,6 +47,7 @@ export class PaymentController {
   }
 
   @Get()
+  @PaymentDecorator.FindAllDecorators()
   findAll(
     @Req() req: AccessRequest,
     @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
