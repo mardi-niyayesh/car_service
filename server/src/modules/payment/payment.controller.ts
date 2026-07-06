@@ -1,8 +1,8 @@
 import type {AccessRequest} from "@/types";
 import {PaymentDecorator} from "./decorators";
-import {UUIDv4Validator, ZodPipe} from "@/common";
+import {PaginationValidator, type PaginationValidatorType, UUIDv4Validator, ZodPipe} from "@/common";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
-import {Controller, Get, Param, Post, Req} from "@nestjs/common";
+import {Controller, Get, Param, Post, Query, Req} from "@nestjs/common";
 import {PaymentService} from "@/modules/payment/payment.service";
 
 /**
@@ -49,8 +49,10 @@ export class PaymentController {
   @Get()
   findAll(
     @Req() req: AccessRequest,
+    @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
   ) {
     console.log(req.user);
+    console.log(pagination);
     return 'get all payments';
   }
 }
