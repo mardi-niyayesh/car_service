@@ -39,4 +39,5 @@ export const FindAllDecorators = () => applyDecorators(
     ],
     description: 'FAILED or SUCCESS or empty for get all'
   }),
+  ApiOkResponse({type: PaymentDto.OkFindAllPaymentRes})
 );

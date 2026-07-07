@@ -5,13 +5,13 @@ import {getBaseOkResponseSchema, getNormalErrorResponse} from "@/common";
 
 /** Example payment data for successful transaction response */
 export const paymentExample: Payment = {
-  id: "53d34a3e-a6d5-4cc1-a29f-8e96d9a336c9",
+  id: "payment_id",
   created_at: exampleDate,
   updated_at: exampleDate,
   status: "SUCCESS",
   amount: 2500000,
   transaction_id: "TXN-1783218276799-FUZWLW",
-  car_rent_id: "0190bd17-5100-4ef8-b766-c182be3b27de"
+  car_rent_id: "example_car_rent_id"
 };
 
 /** 200 OK response schema for payment endpoint */
