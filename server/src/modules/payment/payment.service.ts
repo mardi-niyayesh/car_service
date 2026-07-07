@@ -3,7 +3,7 @@ import {selfCartCacheKey} from "@/modules/cart/decorators";
 import {RedisService} from "@/modules/redis/redis.service";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {Payment} from "@/modules/prisma/generated/client";
-import type {ApiResponse, BaseException, PaymentResponse} from "@/types";
+import {ApiResponse, BaseException, ListPaymentResponse, PaymentResponse} from "@/types";
 import {PaymentStatus, RentStatus} from "@/modules/prisma/generated/enums";
 import {Injectable, NotFoundException, ConflictException} from "@nestjs/common";
 import {PaymentWhereInput} from "@/modules/prisma/generated/models/Payment";
@@ -113,7 +113,7 @@ export class PaymentService {
    * @example
    * GET /payments?status=SUCCESS&limit=10&offset=20
    */
-  async findAll(cart_id: string, pagination: PaymentDto.FindAllValidatorType) {
+  async findAll(cart_id: string, pagination: PaymentDto.FindAllValidatorType): Promise<ApiResponse<ListPaymentResponse>> {
     const where: PaymentWhereInput = {
       status: pagination.status,
       car_rent: {
@@ -123,16 +123,6 @@ export class PaymentService {
 
     const payments = await this.prisma.payment.findMany({
       where,
-      include: {
-        car_rent: {
-          include: {
-            payment: true
-          },
-          select: {
-            car_id: true,
-          }
-        }
-      },
       take: pagination.limit,
       skip: pagination.offset,
       orderBy: {
@@ -140,8 +130,16 @@ export class PaymentService {
       }
     });
 
-    console.log(payments);
+    const count: number = await this.prisma.payment.count({
+      where
+    });
 
-    return 'payment find all';
+    return {
+      message: 'Payments find successfully.',
+      data: {
+        count,
+        payments
+      }
+    };
   }
 }

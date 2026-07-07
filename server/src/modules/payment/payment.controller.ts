@@ -79,7 +79,6 @@ export class PaymentController {
     @Param('id', new ZodPipe(UUIDv4Validator)) id: string,
     @Query(new ZodPipe(PaymentDto.FindAllValidator)) pagination: PaymentDto.FindAllValidatorType
   ) {
-    console.log(pagination);
     return this.paymentService.findAll(id, pagination);
   }
 }
