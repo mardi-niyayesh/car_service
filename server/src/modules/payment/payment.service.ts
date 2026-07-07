@@ -1,3 +1,4 @@
+import * as PaymentDto from "./dto";
 import {selfCartCacheKey} from "@/modules/cart/decorators";
 import {RedisService} from "@/modules/redis/redis.service";
 import {PrismaService} from "@/modules/prisma/prisma.service";
@@ -5,6 +6,7 @@ import type {Payment} from "@/modules/prisma/generated/client";
 import type {ApiResponse, BaseException, PaymentResponse} from "@/types";
 import {PaymentStatus, RentStatus} from "@/modules/prisma/generated/enums";
 import {Injectable, NotFoundException, ConflictException} from "@nestjs/common";
+import {PaymentWhereInput} from "@/modules/prisma/generated/models/Payment";
 
 @Injectable()
 export class PaymentService {
@@ -111,14 +113,34 @@ export class PaymentService {
    * @example
    * GET /payments?status=SUCCESS&limit=10&offset=20
    */
-  async findAll(cart_id: string, pagination: ) {
+  async findAll(cart_id: string, pagination: PaymentDto.FindAllValidatorType) {
+    const where: PaymentWhereInput = {
+      status: pagination.status,
+      car_rent: {
+        cart_id
+      }
+    };
+
     const payments = await this.prisma.payment.findMany({
-      where: {
+      where,
+      include: {
         car_rent: {
-          cart_id
+          include: {
+            payment: true
+          },
+          select: {
+            car_id: true,
+          }
         }
+      },
+      take: pagination.limit,
+      skip: pagination.offset,
+      orderBy: {
+        created_at: pagination.orderByLower
       }
     });
+
+    console.log(payments);
 
     return 'payment find all';
   }
