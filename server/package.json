@@ -1,7 +1,7 @@
 {
   "name": "car-server",
-  "version": "0.0.1",
-  "description": "",
+  "version": "1.0.0",
+  "description": "Car rental system - Server side(backend) with NestJS",
   "author": "",
   "private": false,
   "license": "UNLICENSED",
