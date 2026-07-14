@@ -1,9 +1,9 @@
-import {PrismaService} from "@/modules/prisma/prisma.service";
 import type {PrismaMock} from "@/types";
 import {PaymentService} from "./payment.service";
 import {describe, beforeEach, afterEach} from "vitest";
-import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
 import {RedisService} from "@/modules/redis/redis.service";
+import {PrismaService} from "@/modules/prisma/prisma.service";
+import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
 
 describe('PaymentService', (): void => {
   let prisma: PrismaMock;
