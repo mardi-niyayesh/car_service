@@ -1,6 +1,6 @@
 import type {PrismaMock} from "@/types";
 import {PaymentService} from "./payment.service";
-import {describe, beforeEach, afterEach} from "vitest";
+import {describe, beforeEach, afterEach, expect, it, vi} from "vitest";
 import {RedisService} from "@/modules/redis/redis.service";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
@@ -58,6 +58,77 @@ describe('PaymentService', (): void => {
    * ================================================
    */
   describe('payment()', (): void => {
+    // success: payment successful
+    it('should process payment successfully when successRate is high enough', async (): Promise<void> => {
+      const carRentWithPayment = {
+        ...mockCarRent,
+        payment: null,
+      };
 
+      prisma.carRent.findUnique.mockResolvedValue(carRentWithPayment as unknown as CarRent);
+      prisma.payment.create.mockResolvedValue(mockPayment);
+      prisma.carRent.update.mockResolvedValue({
+        ...mockCarRent,
+        status: RentStatus.ACTIVE,
+      } as unknown as CarRent);
+
+      // Mock Math.random to return a value that ensures success (<= 80)
+      const mockMathRandom = vi.spyOn(Math, 'random').mockReturnValue(0.5);
+
+      const result = await service.payment(mockUserId, mockCarRentId, 80);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('payment');
+
+      // 2. Test success message
+      expect(result.message).toBe('Payment completed successfully.');
+
+      // 3. Test payment data
+      const {payment} = result.data;
+      expect(payment.id).toBe(mockPayment.id);
+      expect(payment.status).toBe(PaymentStatus.SUCCESS);
+      expect(payment.amount).toBe(mockCarRent.price);
+      expect(payment.transaction_id).toBeDefined();
+
+      // 4. Verify Prisma calls
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.carRent.findUnique).toHaveBeenCalledWith({
+        where: {
+          id: mockCarRentId,
+          cart: {
+            user_id: mockUserId
+          }
+        },
+        include: {
+          payment: true
+        }
+      });
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.payment.create).toHaveBeenCalledWith({
+        data: {
+          status: PaymentStatus.SUCCESS,
+          amount: mockCarRent.price,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          transaction_id: expect.stringContaining('TXN-'),
+          car_rent_id: mockCarRent.id
+        }
+      });
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.carRent.update).toHaveBeenCalledWith({
+        where: {id: mockCarRent.id},
+        data: {
+          status: RentStatus.ACTIVE
+        }
+      });
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(redis.deletePrefix).toHaveBeenCalledWith(expect.stringContaining('cart'));
+
+      mockMathRandom.mockRestore();
+    });
   });
 });
