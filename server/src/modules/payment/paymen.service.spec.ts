@@ -1,8 +1,8 @@
 import type {PrismaMock} from "@/types";
 import {PaymentService} from "./payment.service";
-import {describe, beforeEach, afterEach, expect, it, vi} from "vitest";
 import {RedisService} from "@/modules/redis/redis.service";
 import {PrismaService} from "@/modules/prisma/prisma.service";
+import {describe, beforeEach, afterEach, expect, it, vi} from "vitest";
 import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
 import {CarRent, Payment, PaymentStatus, RentStatus} from "@/modules/prisma/generated/client";
 
