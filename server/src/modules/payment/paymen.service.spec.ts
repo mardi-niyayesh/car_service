@@ -16,8 +16,6 @@ describe('PaymentService', (): void => {
     redis = mockDeep<RedisService>();
     prisma = mockDeep<PrismaService>();
     service = new PaymentService(prisma, redis);
-
-    prisma.$transaction.mockImplementation(async (fn) => fn(prisma));
   });
 
   afterEach((): void => {
