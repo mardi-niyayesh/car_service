@@ -5,6 +5,7 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 import {describe, beforeEach, afterEach, expect, it, vi} from "vitest";
 import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
 import {CarRent, Payment, PaymentStatus, RentStatus} from "@/modules/prisma/generated/client";
+import {ConflictException} from "@nestjs/common";
 
 describe('PaymentService', (): void => {
   let prisma: PrismaMock;
@@ -158,6 +159,33 @@ describe('PaymentService', (): void => {
       expect(prisma.carRent.update).not.toHaveBeenCalled();
 
       mockMathRandom.mockRestore();
+    });
+
+    // error: already paid
+    it('should throw ConflictException when payment already exists and is successful', async (): Promise<void> => {
+      const carRentWithExistingPayment = {
+        ...mockCarRent,
+        payment: {
+          ...mockPayment,
+          status: PaymentStatus.SUCCESS,
+        },
+      };
+
+      prisma.carRent.findUnique.mockResolvedValue(carRentWithExistingPayment as unknown as CarRent);
+
+      // noinspection ES6RedundantAwait
+      await expect(service.payment(mockUserId, mockCarRentId))
+        .rejects
+        .toThrow(ConflictException);
+
+      await expect(service.payment(mockUserId, mockCarRentId))
+        .rejects
+        .toMatchObject({
+          response: {
+            message: 'This car rent has already been paid.',
+            error: 'Payment Already Exists'
+          }
+        });
     });
   });
 });
