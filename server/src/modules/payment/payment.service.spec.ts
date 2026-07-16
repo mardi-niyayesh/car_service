@@ -5,7 +5,7 @@ import {PrismaService} from "@/modules/prisma/prisma.service";
 import {describe, beforeEach, afterEach, expect, it, vi} from "vitest";
 import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
 import {CarRent, Payment, PaymentStatus, RentStatus} from "@/modules/prisma/generated/client";
-import {ConflictException} from "@nestjs/common";
+import {ConflictException, NotFoundException} from "@nestjs/common";
 
 describe('PaymentService', (): void => {
   let prisma: PrismaMock;
@@ -266,6 +266,18 @@ describe('PaymentService', (): void => {
       expect(prisma.carRent.update).not.toHaveBeenCalled();
 
       mockMathRandom.mockRestore();
+    });
+
+    // edge case: car rent belongs to different user
+    it('should throw NotFoundException when car rent belongs to another user', async (): Promise<void> => {
+      prisma.carRent.findUnique.mockResolvedValue(null);
+
+      const differentUserId = 'user-456';
+
+      // noinspection ES6RedundantAwait
+      await expect(service.payment(differentUserId, mockCarRentId))
+        .rejects
+        .toThrow(NotFoundException);
     });
   });
 });
