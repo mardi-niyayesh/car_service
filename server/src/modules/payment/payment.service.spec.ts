@@ -187,5 +187,50 @@ describe('PaymentService', (): void => {
           }
         });
     });
+
+    // success: retry failed payment
+    it('should retry payment when previous payment failed', async (): Promise<void> => {
+      const carRentWithFailedPayment = {
+        ...mockCarRent,
+        payment: {
+          ...mockPayment,
+          id: mockPaymentId,
+          status: PaymentStatus.FAILED,
+          transaction_id: null,
+        },
+      };
+
+      const updatedPayment = {
+        ...mockPayment,
+        status: PaymentStatus.SUCCESS,
+        transaction_id: 'TXN-1234567890-xyz789',
+      };
+
+      prisma.carRent.findUnique.mockResolvedValue(carRentWithFailedPayment as unknown as CarRent);
+      prisma.payment.update.mockResolvedValue(updatedPayment as unknown as Payment);
+      prisma.carRent.update.mockResolvedValue({
+        ...mockCarRent,
+        status: RentStatus.ACTIVE,
+      } as unknown as CarRent);
+
+      const mockMathRandom = vi.spyOn(Math, 'random').mockReturnValue(0.5);
+
+      const result = await service.payment(mockUserId, mockCarRentId, 80);
+
+      expect(result.message).toBe('Payment completed successfully.');
+      expect(result.data.payment.status).toBe(PaymentStatus.SUCCESS);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.payment.update).toHaveBeenCalledWith({
+        where: {id: mockPaymentId},
+        data: {
+          status: PaymentStatus.SUCCESS,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          transaction_id: expect.stringContaining('TXN-'),
+        }
+      });
+
+      mockMathRandom.mockRestore();
+    });
   });
 });
