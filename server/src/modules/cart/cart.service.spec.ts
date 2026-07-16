@@ -150,6 +150,9 @@ describe('CartService', (): void => {
           carRents: {
             take: mockPagination.limit,
             skip: mockPagination.offset,
+            where: {
+              status: 'PENDING',
+            },
             orderBy: {
               created_at: mockPagination.orderByLower,
             },
@@ -239,6 +242,9 @@ describe('CartService', (): void => {
           carRents: {
             take: mockPagination.limit,
             skip: mockPagination.offset,
+            where: {
+              status: 'PENDING',
+            },
             orderBy: {
               created_at: mockPagination.orderByLower,
             },
