@@ -128,5 +128,36 @@ describe('PaymentService', (): void => {
 
       mockMathRandom.mockRestore();
     });
+
+    // success: payment failed
+    it('should process payment as failed when successRate is too low', async (): Promise<void> => {
+      const carRentWithPayment = {
+        ...mockCarRent,
+        payment: null,
+      };
+
+      const failedPayment = {
+        ...mockPayment,
+        status: PaymentStatus.FAILED,
+        transaction_id: null,
+      };
+
+      prisma.carRent.findUnique.mockResolvedValue(carRentWithPayment as unknown as CarRent);
+      prisma.payment.create.mockResolvedValue(failedPayment as unknown as Payment);
+
+      // Mock Math.random to return a value that ensures failure (> 80)
+      const mockMathRandom = vi.spyOn(Math, 'random').mockReturnValue(0.9);
+
+      const result = await service.payment(mockUserId, mockCarRentId, 80);
+
+      expect(result.message).toBe('Payment failed. Please try again.');
+      expect(result.data.payment.status).toBe(PaymentStatus.FAILED);
+      expect(result.data.payment.transaction_id).toBeNull();
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.carRent.update).not.toHaveBeenCalled();
+
+      mockMathRandom.mockRestore();
+    });
   });
 });
