@@ -232,5 +232,40 @@ describe('PaymentService', (): void => {
 
       mockMathRandom.mockRestore();
     });
+
+    // edge case: retry failed payment with failure again
+    it('should keep payment as failed when retry also fails', async (): Promise<void> => {
+      const carRentWithFailedPayment = {
+        ...mockCarRent,
+        payment: {
+          ...mockPayment,
+          id: mockPaymentId,
+          status: PaymentStatus.FAILED,
+          transaction_id: null,
+        },
+      };
+
+      const updatedPayment = {
+        ...mockPayment,
+        status: PaymentStatus.FAILED,
+        transaction_id: null,
+      };
+
+      prisma.carRent.findUnique.mockResolvedValue(carRentWithFailedPayment as unknown as CarRent);
+      prisma.payment.update.mockResolvedValue(updatedPayment as unknown as Payment);
+
+      const mockMathRandom = vi.spyOn(Math, 'random').mockReturnValue(0.9);
+
+      const result = await service.payment(mockUserId, mockCarRentId, 80);
+
+      expect(result.message).toBe('Payment failed. Please try again.');
+      expect(result.data.payment.status).toBe(PaymentStatus.FAILED);
+      expect(result.data.payment.transaction_id).toBeNull();
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.carRent.update).not.toHaveBeenCalled();
+
+      mockMathRandom.mockRestore();
+    });
   });
 });
