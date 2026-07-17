@@ -280,4 +280,43 @@ describe('PaymentService', (): void => {
         .toThrow(NotFoundException);
     });
   });
+
+  /** ================================================
+   * Find All Payments
+   * ================================================
+   */
+  describe('findAll()', (): void => {
+    const mockCartId = 'cart-456';
+    const mockDate = new Date();
+
+    const mockPayments = [
+      {
+        id: 'pay-1',
+        status: PaymentStatus.SUCCESS,
+        amount: 400000,
+        transaction_id: 'TXN-123-abc',
+        car_rent_id: 'rent-1',
+        created_at: mockDate,
+        updated_at: mockDate,
+      },
+      {
+        id: 'pay-2',
+        status: PaymentStatus.FAILED,
+        amount: 150000,
+        transaction_id: null,
+        car_rent_id: 'rent-2',
+        created_at: new Date(mockDate.getTime() - 86400000), // yesterday
+        updated_at: new Date(mockDate.getTime() - 86400000),
+      },
+    ];
+
+    const mockPaginationInput = {
+      limit: 10,
+      offset: 0,
+      page: 1,
+      orderByLower: 'desc',
+      orderByUpper: 'DESC',
+      status: PaymentStatus.SUCCESS,
+    };
+  });
 });
