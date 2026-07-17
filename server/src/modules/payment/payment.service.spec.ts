@@ -416,5 +416,37 @@ describe('PaymentService', (): void => {
       expect(result.data.payments).toEqual([]);
       expect(result.message).toBe('Payments find successfully.');
     });
+
+    // success: with custom pagination
+    it('should apply correct pagination and sorting parameters', async (): Promise<void> => {
+      const customPagination: FindAllValidatorType = {
+        limit: 5,
+        offset: 10,
+        page: 3,
+        orderByLower: 'asc',
+        orderByUpper: 'ASC',
+        status: PaymentStatus.FAILED,
+      };
+
+      prisma.payment.count.mockResolvedValue(12);
+      prisma.payment.findMany.mockResolvedValue([mockPayments[1]] as unknown as Payment[]);
+
+      await service.findAll(mockCartId, customPagination);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.payment.findMany).toHaveBeenCalledWith({
+        where: {
+          status: PaymentStatus.FAILED,
+          car_rent: {
+            cart_id: mockCartId
+          }
+        },
+        take: 5,
+        skip: 10,
+        orderBy: {
+          created_at: 'asc'
+        }
+      });
+    });
   });
 });
