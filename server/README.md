@@ -122,6 +122,7 @@ maintainability, and fully standardized API responses.
    ```bash
    npm run prisma:setup
    npm run seed:roles
+   npm run seed:users
    ```
    **Finish.**<br><br><br>
 
