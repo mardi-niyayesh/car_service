@@ -318,5 +318,62 @@ describe('PaymentService', (): void => {
       orderByUpper: 'DESC',
       status: PaymentStatus.SUCCESS,
     };
+
+    // success
+    it('should return paginated list of payments with filters applied', async (): Promise<void> => {
+      prisma.payment.count.mockResolvedValue(2);
+      prisma.payment.findMany.mockResolvedValue(mockPayments as unknown as Payment[]);
+
+      const result = await service.findAll(mockCartId, mockPaginationInput);
+
+      // 1. Test response structure
+      expect(result).toHaveProperty('message');
+      expect(result).toHaveProperty('data');
+      expect(result.data).toHaveProperty('count');
+      expect(result.data).toHaveProperty('payments');
+
+      // 2. Test message
+      expect(result.message).toBe('Payments find successfully.');
+
+      // 3. Test count and payments array
+      expect(result.data.count).toBe(2);
+      expect(Array.isArray(result.data.payments)).toBe(true);
+      expect(result.data.payments.length).toBe(2);
+
+      // 4. Test payment structure
+      const [firstPayment] = result.data.payments;
+      expect(firstPayment.id).toBe(mockPayments[0].id);
+      expect(firstPayment.status).toBe(PaymentStatus.SUCCESS);
+      expect(firstPayment.amount).toBe(400000);
+      expect(firstPayment.transaction_id).toBeDefined();
+      expect(firstPayment.car_rent_id).toBe('rent-1');
+
+      // 5. Verify count call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.payment.count).toHaveBeenCalledWith({
+        where: {
+          status: mockPaginationInput.status,
+          car_rent: {
+            cart_id: mockCartId
+          }
+        }
+      });
+
+      // 6. Verify findMany call
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.payment.findMany).toHaveBeenCalledWith({
+        where: {
+          status: mockPaginationInput.status,
+          car_rent: {
+            cart_id: mockCartId
+          }
+        },
+        take: mockPaginationInput.limit,
+        skip: mockPaginationInput.offset,
+        orderBy: {
+          created_at: mockPaginationInput.orderByLower
+        }
+      });
+    })
   });
 });
