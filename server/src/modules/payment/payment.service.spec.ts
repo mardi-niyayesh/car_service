@@ -448,5 +448,28 @@ describe('PaymentService', (): void => {
         }
       });
     });
+
+    // edge case: cart with no payments
+    it('should handle cart_id that has no associated payments', async (): Promise<void> => {
+      const emptyCartId = 'cart-999';
+
+      prisma.payment.count.mockResolvedValue(0);
+      prisma.payment.findMany.mockResolvedValue([]);
+
+      const result = await service.findAll(emptyCartId, mockPaginationInput);
+
+      expect(result.data.count).toBe(0);
+      expect(result.data.payments).toEqual([]);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.payment.count).toHaveBeenCalledWith({
+        where: {
+          status: mockPaginationInput.status,
+          car_rent: {
+            cart_id: emptyCartId
+          }
+        }
+      });
+    });
   });
 });
