@@ -403,5 +403,18 @@ describe('PaymentService', (): void => {
         }
       });
     });
+
+
+    // success: empty payments
+    it('should return count 0 and empty array when no payments exist', async (): Promise<void> => {
+      prisma.payment.count.mockResolvedValue(0);
+      prisma.payment.findMany.mockResolvedValue([]);
+
+      const result = await service.findAll(mockCartId, mockPaginationInput);
+
+      expect(result.data.count).toBe(0);
+      expect(result.data.payments).toEqual([]);
+      expect(result.message).toBe('Payments find successfully.');
+    });
   });
 });
