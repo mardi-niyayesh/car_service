@@ -6,6 +6,7 @@ import {ConflictException, NotFoundException} from "@nestjs/common";
 import {describe, beforeEach, afterEach, expect, it, vi} from "vitest";
 import {type DeepMockProxy, mockDeep, mockReset} from "vitest-mock-extended";
 import {CarRent, Payment, PaymentStatus, RentStatus} from "@/modules/prisma/generated/client";
+import {FindAllValidatorType} from "@/modules/payment/dto";
 
 describe('PaymentService', (): void => {
   let prisma: PrismaMock;
@@ -310,7 +311,7 @@ describe('PaymentService', (): void => {
       },
     ];
 
-    const mockPaginationInput = {
+    const mockPaginationInput: FindAllValidatorType = {
       limit: 10,
       offset: 0,
       page: 1,
@@ -374,6 +375,33 @@ describe('PaymentService', (): void => {
           created_at: mockPaginationInput.orderByLower
         }
       });
-    })
+    });
+
+    // success: no status filter
+    it('should return all payments when status filter is not provided', async (): Promise<void> => {
+      const paginationWithoutStatus: FindAllValidatorType = {
+        limit: 10,
+        offset: 0,
+        page: 1,
+        orderByLower: 'desc',
+        orderByUpper: 'DESC',
+        status: undefined,
+      };
+
+      prisma.payment.count.mockResolvedValue(2);
+      prisma.payment.findMany.mockResolvedValue(mockPayments as unknown as Payment[]);
+
+      await service.findAll(mockCartId, paginationWithoutStatus);
+
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(prisma.payment.count).toHaveBeenCalledWith({
+        where: {
+          status: undefined,
+          car_rent: {
+            cart_id: mockCartId
+          }
+        }
+      });
+    });
   });
 });
