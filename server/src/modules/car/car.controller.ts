@@ -141,4 +141,11 @@ export class CarController {
   ): Promise<ApiResponse<CommentListAndUser>> {
     return this.carService.findAllComments(id, pagination);
   }
+
+  @Get(':id/rent-dates')
+  getRentedDatesCar(
+    @Param("id", new ZodPipe(UUIDv4Validator)) id: string
+  ) {
+    return this.carService.getRentedDatesCar(id);
+  }
 }
