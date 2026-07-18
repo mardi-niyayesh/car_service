@@ -58,6 +58,7 @@ export class CleanerJobs {
   async checkEndCarRent() {
     const now: Date = new Date();
     now.setHours(0, 0, 0, 0);
+    now.setSeconds(now.getSeconds() + 10);
 
     await this.prisma.carRent.updateMany({
       where: {
