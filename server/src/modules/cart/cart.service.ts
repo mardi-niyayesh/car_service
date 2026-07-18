@@ -4,8 +4,8 @@ import {RentStatus} from "@/modules/prisma/generated/enums";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {eventsEmitter, PaginationValidatorType} from "@/common";
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
+import type {CarRentWhereInput} from "@/modules/prisma/generated/models/CarRent";
 import type {ApiResponse, BaseException, CartResponse, CreateCartSignup, UserAccess, CarRentResponse, RemoveCarRentResponse} from "@/types";
-import {CarRentWhereInput} from "@/modules/prisma/generated/models/CarRent";
 
 @Injectable()
 export class CartService {
