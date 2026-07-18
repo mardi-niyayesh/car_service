@@ -246,4 +246,5 @@ export const GetRentedDatesCarDecorator = () => applyDecorators(
   Public(),
   ApiOperation(CarDto.getRentedDatesCarOperation),
   ApiParam(UUID4Dto('id')),
+  ApiOkResponse({type: CarDto.GetDatesOkRes})
 );
