@@ -2,7 +2,7 @@ import * as CartDto from "../dto";
 import {ONE_HOUR_MS} from "@/lib";
 import {applyDecorators, HttpCode, HttpStatus} from "@nestjs/common";
 import {Cacheable, CacheEvict, CacheEvictDecorator, getUnauthorizedResponse, PaginationDecoratorQueries, UUID4Dto} from "@/common";
-import {ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiUnauthorizedResponse} from "@nestjs/swagger";
+import {ApiBody, ApiConflictResponse, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiUnauthorizedResponse} from "@nestjs/swagger";
 
 export const selfCartCacheKey = 'self-cart';
 const cartCacheKey = [selfCartCacheKey];
@@ -17,6 +17,7 @@ export const GetCartDecorators = () => applyDecorators(
     extraKeys: cartCacheKey,
   }),
   PaginationDecoratorQueries(),
+  ApiQuery(CartDto.getCartStatus),
   ApiOperation(CartDto.getCartOperation),
   ApiOkResponse({type: CartDto.GetCartOk}),
   ApiUnauthorizedResponse({type: getUnauthorizedResponse('carts')})
