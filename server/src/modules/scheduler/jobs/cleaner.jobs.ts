@@ -57,6 +57,7 @@ export class CleanerJobs {
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async checkEndCarRent() {
     const now: Date = new Date();
+    now.setHours(0, 0, 0, 0);
 
     await this.prisma.carRent.updateMany({
       where: {
