@@ -244,5 +244,6 @@ export const FindAllCommentsDecorator = () => applyDecorators(
 export const GetRentedDatesCarDecorator = () => applyDecorators(
   HttpCode(HttpStatus.OK),
   Public(),
+  ApiOperation(CarDto.getRentedDatesCarOperation),
   ApiParam(UUID4Dto('id')),
 );

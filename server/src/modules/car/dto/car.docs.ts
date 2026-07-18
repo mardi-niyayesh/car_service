@@ -117,3 +117,46 @@ export const findAllCommentsOperation: ApiOperationOptions = {
 
   > **📌 Note:** Returns paginated comments with user details and rating. Comments are ordered by creation date.`
 };
+
+export const getRentedDatesCarOperation: ApiOperationOptions = {
+  operationId: 'get_rented_dates_car',
+  summary: "Get all rented date intervals for a car",
+  description: `
+  - ## 🔓 PUBLIC ENDPOINT (No authentication required)
+  
+  Get all date ranges where the car is reserved.
+  Includes rentals with status **PENDING** (in cart) or **ACTIVE** (confirmed/ongoing).
+  
+  ### 📝 Example Request
+  \`\`\`http
+  GET /cars/123e4567-e89b-12d3-a456-426614174000/rent-dates
+  \`\`\`
+
+  ### ✅ Example Response
+  \`\`\`json
+  {
+    "message": "Get dates successfully.",
+    "data": {
+      "count": 3,
+      "dates": [
+        {
+          "id": "rent_1",
+          "start_date": "2026-07-15T00:00:00.000Z",
+          "end_date": "2026-07-20T00:00:00.000Z",
+          "status": "PENDING"
+        },
+        {
+          "id": "rent_2",
+          "start_date": "2026-07-25T00:00:00.000Z",
+          "end_date": "2026-07-28T00:00:00.000Z",
+          "status": "ACTIVE"
+        }
+      ]
+    }
+  }
+  \`\`\`
+
+  > **📌 Note:** Useful for booking calendars to show unavailable dates.
+  > Dates are ordered by start_date ascending.
+  `
+};
