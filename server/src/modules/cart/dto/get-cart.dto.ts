@@ -1,10 +1,10 @@
+import z from "zod";
 import {exampleDate} from "@/lib";
 import type {CartResponse} from "@/types";
-import {BasePaginationValidator, getBaseOkResponseSchema, getSafePaginationValidator} from "@/common";
-import z from "zod";
+import {ApiQueryOptions} from "@nestjs/swagger";
 import {exampleCarRent} from "./add-to-cart.dto";
 import {RentStatus} from "@/modules/prisma/generated/enums";
-import {ApiQueryOptions} from "@nestjs/swagger";
+import {BasePaginationValidator, getBaseOkResponseSchema, getSafePaginationValidator} from "@/common";
 
 export const GetCartValidator = getSafePaginationValidator(z.object({
   rent_status: z.enum(RentStatus).optional(),
