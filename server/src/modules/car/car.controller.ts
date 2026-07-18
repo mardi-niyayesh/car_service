@@ -142,7 +142,21 @@ export class CarController {
     return this.carService.findAllComments(id, pagination);
   }
 
+  /**
+   * Get all rented date intervals for a specific car.
+   *
+   * Returns date ranges where the car is reserved (PENDING in cart or ACTIVE rental).
+   * Useful for displaying unavailable dates on booking calendars.
+   *
+   * @param id - Car UUID from route parameter
+   * @returns Object with carId and array of rented dates (start_date, end_date, status, cartId)
+   *
+   * @public - Accessible to all authenticated users
+   *
+   * @example GET /cars/123e4567-e89b-12d3-a456-426614174000/rent-dates
+   */
   @Get(':id/rent-dates')
+  @CarDecorator.GetRentedDatesCarDecorator()
   getRentedDatesCar(
     @Param("id", new ZodPipe(UUIDv4Validator)) id: string
   ) {

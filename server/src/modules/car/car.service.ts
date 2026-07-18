@@ -5,7 +5,7 @@ import {PaginationValidatorType, PREFIX_PUBLIC_PATH} from "@/common";
 import {checkConflictRecord, checkPrismaError, deleteOneFile} from "@/lib";
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import type {CommentWhereInput} from "@/modules/prisma/generated/models/Comment";
-import type {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, CommentListAndUser, SafeCarNCategory} from "@/types";
+import {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, CommentListAndUser, GetRentedDatesCarResponse, SafeCarNCategory} from "@/types";
 
 @Injectable()
 export class CarService {constructor(private readonly prisma: PrismaService) {}
@@ -312,6 +312,42 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
       data: {
         count,
         comments,
+      }
+    };
+  }
+
+  /**
+   * Get all rental dates for a specific car.
+   *
+   * @param car_id - Car UUID
+   * @returns Object with total count and list of rental dates (id, status, start_date, end_date)
+   *
+   * @throws {NotFoundException} If car doesn't exist
+   */
+  async getRentedDatesCar(car_id: string): Promise<ApiResponse<GetRentedDatesCarResponse>> {
+    const count: number = await this.prisma.carRent.count({
+      where: {
+        car_id,
+      },
+    });
+
+    const dates = await this.prisma.carRent.findMany({
+      where: {
+        car_id,
+      },
+      select: {
+        id: true,
+        status: true,
+        end_date: true,
+        start_date: true,
+      },
+    });
+
+    return {
+      message: "Get dates successfully.",
+      data: {
+        count,
+        dates,
       }
     };
   }
