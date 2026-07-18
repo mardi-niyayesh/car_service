@@ -53,4 +53,21 @@ export class CleanerJobs {
       await this.redis.deletePrefix(finalKey);
     }
   }
+
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async checkEndCarRent() {
+    const now: Date = new Date();
+
+    await this.prisma.carRent.updateMany({
+      where: {
+        status: RentStatus.ACTIVE,
+        end_date: {
+          lte: now
+        }
+      },
+      data: {
+        status: RentStatus.COMPLETED,
+      }
+    });
+  }
 }
