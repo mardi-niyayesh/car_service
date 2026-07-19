@@ -36,7 +36,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 // Dashboard pages
-import AddressPages from "./pages/AddressPages";
+
 import ReservePages from "./pages/ReservePages";
 import CardPages from "./pages/CardPages";
 import LogoutPage from "./pages/LogoutPage";
@@ -97,7 +97,6 @@ function App() {
 
         {/* ------- Dashboard Layout (User Panel) ------- */}
         <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route path="address" element={<AddressPages />} />
           <Route path="reserve" element={<ReservePages />} />
           <Route path="card" element={<CardPages />} />
           <Route path="logout" element={<LogoutPage />} />
