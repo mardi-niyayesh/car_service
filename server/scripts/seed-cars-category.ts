@@ -2,9 +2,9 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-import {INestApplicationContext} from "@nestjs/common";
-import {NestFactory} from "@nestjs/core";
 import {CliModule} from "@/modules";
+import {NestFactory} from "@nestjs/core";
+import {INestApplicationContext} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {Car, Category} from "@/modules/prisma/generated/client";
 
