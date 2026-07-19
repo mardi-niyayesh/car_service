@@ -67,10 +67,6 @@ const LogoutPage = () => {
         setErrorMessage("خطای سرور. لطفاً بعداً دوباره تلاش کنید.");
         setIsErrorModalOpen(true);
       }
-    } catch (err) {
-      console.log("خطا :", err);
-      setErrorMessage("خطا در برقراری ارتباط با سرور. لطفا مجدد تلاش کنید");
-      setIsErrorModalOpen(true);
     } finally {
       setIsLoading(false);
     }

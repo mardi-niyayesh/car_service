@@ -6,7 +6,7 @@ type CategoryType = {
   name: string;
   description: string;
   slug: string;
-  category_id:string
+  category_id: string;
 };
 
 export const useCategories = (page = 1, limit = 10) => {
@@ -18,14 +18,12 @@ export const useCategories = (page = 1, limit = 10) => {
     try {
       setLoading(true);
       const res = await axiosClient.get(
-        `/categories?page=${page}&limit=${limit}&order=desc`
+        `/categories?page=${page}&limit=${limit}&order=desc`,
       );
       const allCat = res.data.response.data.categories;
       const count = res.data.response.data.count;
       setCategories(allCat);
       setTotalCount(count);
-    } catch (err) {
-      console.log("Error fetching categories:", err);
     } finally {
       setLoading(false);
     }

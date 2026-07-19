@@ -10,9 +10,7 @@ type PermissionType = {
 
 const DescriptionRolePage = () => {
   const [roles, setRoles] = useState<PermissionType[]>([]);
-  //now page
   const [page, setPage] = useState(1);
-  //All page
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
 
@@ -31,10 +29,6 @@ const DescriptionRolePage = () => {
       const TotalPages = Math.ceil(totalpermession / 10);
 
       setTotalPages(TotalPages);
-    } catch (error) {
-      console.error("Error fetching roles:", error);
-      setRoles([]);
-      setTotalPages(1);
     } finally {
       setLoading(false);
     }

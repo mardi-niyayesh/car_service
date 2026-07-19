@@ -64,7 +64,7 @@ const ResetPasswordPage = () => {
       }
     },
     onError: (error: any) => {
-      console.error("خطا:", error);
+      
       setErrorMessage(error?.message || "خطا در ارتباط با سرور");
       setIsErrorModalOpen(true);
     },

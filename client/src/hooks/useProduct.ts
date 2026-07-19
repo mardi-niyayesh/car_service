@@ -14,17 +14,12 @@ export const useProduct = (page = 1, limit = 10) => {
       );
       const DataCar = response.data.response.data;
       const AllProduct = DataCar.cars;
-      console.log("responst to get All Products :", AllProduct);
+
       setAllProduct(AllProduct);
-
       const totlalItem = DataCar.count;
-      console.log("total items product", totlalItem);
-
       const CountItem = Math.ceil(totlalItem / 5);
 
       setTotalPage(CountItem);
-    } catch (err) {
-      console.log("Error in Gt All Products :", err);
     } finally {
       setLoading(false);
     }
