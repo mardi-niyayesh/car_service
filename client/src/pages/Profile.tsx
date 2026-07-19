@@ -1,5 +1,6 @@
 import { useUser } from "../hooks/useUser";
 import { Link } from "react-router-dom";
+
 const Profile = () => {
   const { user } = useUser();
 

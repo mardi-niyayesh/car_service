@@ -1,10 +1,12 @@
 import ComponentTableProduct from "../components/PanelAdmin/ProductForm/ComponentTableProduct";
 import { Link } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
+
 const ProductPage = () => {
   const { hasPermission, hasRole } = useUser();
   const hasCreatProductPerm =
     hasPermission("product.create") || hasRole("product_manager");
+    
   return (
     <div className="flex flex-col md:flex-row  md:gap-4 p-3 md:p-4 min-h-screen">
       <div className="flex-1 ">

@@ -47,7 +47,6 @@ const ErrorModal = ({
     >
       <div className="text-center">
         <div className="mb-4 text-red-500">
-          {/* آیکون خطا */}
           <svg
             className="w-16 h-16 mx-auto"
             fill="none"

@@ -26,7 +26,7 @@ export const registerUser = async (userData: RegisterFormData) => {
 
 export const loginUser = async (userData: LoginFormData) => {
   try {
-    console.log("data send to server :", userData);
+    
 
     const response = await fetch("/api/auth/login", {
       method: "POST",
@@ -37,7 +37,7 @@ export const loginUser = async (userData: LoginFormData) => {
     console.log("statuse Response:", response.status);
 
     const data = await response.json();
-    console.log("Response to server:", data);
+   
     if (data.response?.data?.accessToken) {
       setAxiosToken(data.response.data.accessToken);
     }
@@ -57,7 +57,7 @@ export const forgotPassword = async (email: string) => {
     });
 
     const data = await response.json();
-    console.log("Response to server:", data);
+   
     return data;
   } catch (err) {
     console.error("Error Request:", err);
@@ -73,9 +73,7 @@ export const resetPassword = async ({ password, token }: ResetPasswordtype) => {
       body: JSON.stringify({ password, token }),
     });
     const data = await response.json();
-    if (!response.ok) {
-      console.log("Error to set again password");
-    }
+   
     return data;
   } catch (err) {
     console.log("Error to set again password :", err);

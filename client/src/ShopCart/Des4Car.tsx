@@ -1,8 +1,6 @@
 import { useProduct } from "../hooks/useProduct";
 import { useParams } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
-import { AiOutlineHeart } from "react-icons/ai";
-import { FaRegComment } from "react-icons/fa";
 const Des4Car = () => {
   const { allProduct } = useProduct();
   const { slug } = useParams();
