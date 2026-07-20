@@ -8,6 +8,7 @@ import {INestApplicationContext} from "@nestjs/common";
 import {PrismaService} from "@/modules/prisma/prisma.service";
 import {Car, Category} from "@/modules/prisma/generated/client";
 
+// Categories data
 const categoryData: Omit<Category, 'id' | 'created_at' | 'updated_at'>[] = [
   {
     name: 'Tehran',
@@ -89,6 +90,7 @@ async function bootstrap(): Promise<void> {
   const prisma: PrismaService = app.get(PrismaService);
 
   await prisma.$transaction(async (tx) => {
+    // Create categories and skip duplicates
     const categories = await tx.category.createManyAndReturn({
       data: categoryData,
       select: {
@@ -97,6 +99,7 @@ async function bootstrap(): Promise<void> {
       skipDuplicates: true
     });
 
+    // Cars data
     const carData: Omit<Car, 'id' | 'created_at' | 'updated_at'>[] = [
       {
         name: 'Peugeot 206',
@@ -308,6 +311,7 @@ async function bootstrap(): Promise<void> {
       },
     ];
 
+    // Create cars and skip duplicates
     await tx.car.createMany({
       data: carData,
       skipDuplicates: true
