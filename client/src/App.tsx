@@ -116,6 +116,8 @@ function App() {
               </GaurdRoute>
             }
           />
+          <Route path="updatePassword" element={<ComponnetUpdetePassword />} />
+          <Route path="updateUser" element={<ComponentFormUpdateUser />} />
           <Route
             path="users/detail/:userId"
             element={
