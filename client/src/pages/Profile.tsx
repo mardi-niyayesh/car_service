@@ -1,8 +1,12 @@
 import { useUser } from "../hooks/useUser";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Profile = () => {
   const { user } = useUser();
+  const location = useLocation();
+  const basePath = location.pathname.startsWith("/panel")
+    ? "/panel"
+    : "/dashboard";
 
   return (
     <div className="w-full max-w-3xl m-auto  p-4 sm:p-6">
@@ -62,14 +66,14 @@ const Profile = () => {
             />
           </div>
 
-          <Link to="/dashboard/updateUser">
+          <Link to={`${basePath}/updateUser`}>
             <div className="flex items-center justify-end gap-5 cursor-pointer">
               <p className="text-yellow-500 hover:text-yellow-600">
                 ویرایش اطلاعات پروفایل
               </p>
             </div>
           </Link>
-          <Link to="/dashboard/updatePassword">
+          <Link to={`${basePath}/updatePassword`}>
             <div className="flex items-center justify-end gap-5 cursor-pointer">
               <p className="text-yellow-500 hover:text-yellow-600">
                 ویرایش رمز عبور
