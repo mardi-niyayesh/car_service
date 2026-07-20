@@ -14,7 +14,7 @@ const ComponentArticleCar = () => {
             alt="اجاره خودرو"
             className="w-100%  h-auto rounded-lg mb-4"
           />
-          <p className="text-[#414141] font-medium text-base md:text-lg mb-2 line-clamp-2">
+          <p className="text-[#5c5a5a] font-bold  md:text-lg mb-2 line-clamp-2">
             {item.title}
           </p>
           <p className="text-[#757575] text-sm md:text-base leading-relaxed line-clamp-3 md:line-clamp-4">

@@ -33,15 +33,13 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         console.log(" Token or user not found in the response.");
       }
     } catch (error: any) {
-      // console.error("Error to rest information user to refresh token:", error);
+      
 
       if (error?.response?.status === 401) {
-        // console.log(" Unauthorized: logging out...");
+        
         setUserState(null);
         setTokenState(null);
         setAxiosToken(null);
-      } else {
-        console.log(" Temporary error, keeping user data.");
       }
     } finally {
       setIsLoading(false);
@@ -78,7 +76,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     setUserState(null);
     setTokenState(null);
     setAxiosToken(null);
-    console.log(" logout to successfully ");
+   
   }, []);
 
   const hasPermission = useCallback(

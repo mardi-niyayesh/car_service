@@ -21,7 +21,7 @@ const DetailCar = () => {
   const [showbtn, setShowbtn] = useState(false);
 
   const findProduct = allProduct.find((pro) => pro.slug === slug);
- 
+
   const productId = findProduct?.id;
 
   const openReplyModal = (commentId: string) => {
@@ -76,7 +76,7 @@ const DetailCar = () => {
             </div>
             {findProduct.description && <div className="mt-2"></div>}
           </div>
-          <div className="left-5 w-1/2">
+          <div className="w-full md:w-1/2 lg:w-2/5 px-5 md:px-0 md:ml-5">
             <HeroBaner />
           </div>
         </div>

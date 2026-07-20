@@ -12,7 +12,7 @@ const ComponentDetail = ({ img, title, des }: description) => {
         alt={title}
         className="w-full max-h-96 object-cover rounded-lg"
       />
-      <h1 className="text-3xl font-bold my-4 text-blue-800">{title}</h1>
+      <h1 className="text-3xl font-bold my-4 text-yellow-500">{title}</h1>
       <p className="text-gray-700 leading-8 text-lg">{des}</p>
     </div>
   );
