@@ -93,7 +93,8 @@ async function bootstrap(): Promise<void> {
       data: categoryData,
       select: {
         id: true
-      }
+      },
+      skipDuplicates: true
     });
 
     const carData: Omit<Car, 'id' | 'created_at' | 'updated_at'>[] = [
@@ -309,7 +310,11 @@ async function bootstrap(): Promise<void> {
 
     await tx.car.createMany({
       data: carData,
+      skipDuplicates: true
     });
+
+    // seed finished
+    console.log(`Seed done — ${categories.length} categories and ${carData.length} cars inserted.`);
   });
 
   await app.close();
