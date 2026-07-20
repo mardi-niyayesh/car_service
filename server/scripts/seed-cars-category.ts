@@ -90,6 +90,8 @@ async function bootstrap(): Promise<void> {
   const prisma: PrismaService = app.get(PrismaService);
 
   await prisma.$transaction(async (tx) => {
+    console.log("Running transaction for seed cars and categories in prisma");
+
     // Create categories and skip duplicates
     const categories = await tx.category.createManyAndReturn({
       data: categoryData,
