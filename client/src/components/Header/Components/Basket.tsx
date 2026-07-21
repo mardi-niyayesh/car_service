@@ -19,10 +19,10 @@ const Basket = () => {
   };
 
   useEffect(() => {
-    fetchAllReserve(); 
+    fetchAllReserve();
 
     const handleCartUpdate = () => {
-      fetchAllReserve(); 
+      fetchAllReserve();
     };
 
     window.addEventListener("cart-updated", handleCartUpdate);
@@ -35,31 +35,40 @@ const Basket = () => {
   return (
     <Link to="/basket">
       <div
-        className="relative inline-flex cursor-pointer items-center justify-between py-2 w-auto rounded-lg
-                   bg-white md:hover:bg-[#FDB713] transition duration-300 ease-in-out group
-                   sm:justify-center sm:px-2 md:border-2 md:border-[#FDB713]"
+        className="inline-flex items-center justify-center gap-2
+                   px-2 py-2 sm:px-3 md:px-5
+                   rounded-full md:rounded-lg
+                   bg-[#FDB713]                  
+                   text-white
+                   hover:bg-yellow-600             
+                   transition-all duration-300 ease-in-out
+                   border border-yellow-500/30   
+                   md:border-0                  
+                   hover:scale-105 md:hover:scale-100
+                   active:scale-95
+                   group"
       >
         <div className="relative">
           <MdOutlineShoppingCart
-            size={30}
-            className="text-[#FDB713] md:group-hover:text-white transition duration-300 ease-in-out
-                       sm:size={24}"
+            size={24}
+            className="text-white transition-transform duration-300 group-hover:scale-110"
           />
 
           {countitem > 0 && (
             <span
               className="absolute -top-2 -right-2 flex items-center justify-center
-                         bg-yellow-600 text-white text-xs font-bold rounded-full
-                         w-5 h-5"
+                         bg-red-500 text-white text-[10px] font-bold rounded-full
+                         min-w-[18px] h-[18px] px-1
+                         ring-2 ring-white"
             >
-              {countitem}
+              {countitem > 99 ? "99+" : countitem}
             </span>
           )}
         </div>
 
-        <button className="text-yellow-600 font-bold hidden md:block md:px-1 font-medium group-hover:text-white transition duration-300 ease-in-out">
+        <span className="hidden md:inline font-medium text-sm lg:text-base">
           سبد خرید
-        </button>
+        </span>
       </div>
     </Link>
   );
