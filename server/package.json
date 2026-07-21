@@ -50,7 +50,6 @@
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.8.0",
     "bcrypt": "^6.0.0",
-    "cache-manager-ioredis-yet": "^2.1.2",
     "cookie-parser": "^1.4.7",
     "dayjs": "^1.11.20",
     "geoip-lite": "^2.0.0",
