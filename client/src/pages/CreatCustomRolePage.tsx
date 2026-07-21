@@ -129,7 +129,7 @@ const CreateCustomRolePage = () => {
       }
 
       const response = await axiosClient.post("/roles", payload);
-      console.log("response create custom role :", response);
+    
       setIsSuccessOpen(true);
       setSuccessMessage("رول با موفقیت ساخته شد :)");
       setTimeout(() => {

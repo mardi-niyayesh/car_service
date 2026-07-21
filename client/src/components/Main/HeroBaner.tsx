@@ -196,20 +196,17 @@ const HeroBaner = () => {
       end_date,
     };
 
-    console.log("Request Body:", requestBody);
-
     setIsLoading(true);
     try {
-      const response = await axiosClient.post("/carts", requestBody);
-      console.log("Success:", response.data);
-
+      await axiosClient.post("/carts", requestBody);
+   
       setISuccessOpen(true);
       setSuccessMessage("ماشین با موفقیت به سبد خرید اضافه شد!");
       setTimeout(() => {
         navigate("/basket");
       }, 3000);
     } catch (error: any) {
-      console.error("Full error object:", error);
+     
       let message = "مشکل در ارتباط با سرور. لطفاً مجدداً تلاش کنید.";
       if (error.response) {
         const status = error.response.status;

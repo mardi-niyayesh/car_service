@@ -31,7 +31,7 @@ const RolesPage = () => {
       const response = await axiosClient.get(
         `/roles?order=desc&limit=5&page=${page}`,
       );
-      console.log("response to request :", response);
+     
       const getAllRoles = response.data.response.data.roles;
       const getCount = response.data.response.data.count;
       const tota = Math.ceil(getCount / 5);
@@ -46,7 +46,7 @@ const RolesPage = () => {
   const handelDleatRole = async (roleId: string) => {
     try {
       const res = await axiosClient.delete(`/roles/${roleId}`);
-      console.log("response to deleat role :", res);
+     
       const status = res.status;
       if (status === 200) {
         setIsSuccessOpen(true);
