@@ -9,28 +9,22 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [token, setTokenState] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  console.log("user:", user);
-  console.log("token:", token);
-
   const fetchUserAndToken = useCallback(async () => {
     setIsLoading(true);
     try {
       const ResponseData = await refreshAuth();
 
-      console.log("Full response from refreshAuth:", ResponseData);
+     
 
       const accessToken = ResponseData?.response?.data?.accessToken;
       const user = ResponseData?.response?.data?.user;
 
       if (accessToken && user) {
-        console.log("Found User:", user);
-        console.log("Found Access Token:", accessToken);
+     
 
         setTokenState(accessToken);
         setUserState(user);
         setAxiosToken(accessToken);
-      } else {
-        console.log(" Token or user not found in the response.");
       }
     } catch (error: any) {
       

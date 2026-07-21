@@ -59,7 +59,7 @@ let tokenUpdateCallback:
 export const initializeTokenRefresh = (
   callback: (token: string | null, user: User | null) => void,
 ) => {
-  console.log("initializeTokenRefresh call");
+
   tokenUpdateCallback = callback;
   if (failedQueue.length) {
     const queue = failedQueue.slice();
@@ -116,9 +116,7 @@ axiosClient.interceptors.response.use(
       originalRequest._retryCount += 1;
 
       try {
-        console.log(
-          ` Attempting to refresh token (attempt ${originalRequest._retryCount})...`,
-        );
+     
         const responseData: RefreshResponse | null = await apiRefreshAuth();
 
         const newToken = responseData?.response?.data?.accessToken;
