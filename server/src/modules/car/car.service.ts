@@ -266,6 +266,8 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
         conflictField: '',
         notFoundField: 'id',
         notFoundResource: 'Car',
+        restrictResource: "car_id",
+        restrictForeignKey: "CarRent or Payment"
       });
     }
   }
