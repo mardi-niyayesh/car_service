@@ -15,14 +15,14 @@ const BanerHeader = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 md:gap-6 mt-8 md:mt-12">
-              <div className="flex items-center justify-center px-6 py-3 md:px-8 md:py-4 gap-3 border-2 border-[#F9F9F9] rounded-lg hover:bg-white/10 transition-all duration-300 group cursor-pointer">
+              <div className="flex  items-center justify-center px-6 py-3 md:px-8 md:py-4 gap-3 border-2 border-[#F9F9F9] rounded-lg hover:bg-white/10 transition-all duration-300 group cursor-pointer">
                 <Link to="contact">
                   <button className="text-[#F9F9F9]">تماس با ما</button>
                 </Link>
               </div>
 
-              <div className="flex items-center justify-center  sm:w-fit md:px-3 px-6 py-3 md:py-1  gap-3 bg-[#FDB713] text-[#000000] rounded-lg hover:bg-[#e6a500] hover:scale-[1.02] transition-all duration-300 shadow-lg cursor-pointer">
-                <button className="font-bold ">رزرو آسان خودرو</button>
+              <div className="flex items-center justify-center mb-3 sm:w-fit md:px-3 px-6 py-3 md:py-1  gap-3 bg-[#FDB713] text-[#000000] rounded-lg hover:bg-[#e6a500] hover:scale-[1.02] transition-all duration-300 shadow-lg cursor-pointer">
+                <button className="font-bold  ">رزرو آسان خودرو</button>
               </div>
             </div>
           </div>

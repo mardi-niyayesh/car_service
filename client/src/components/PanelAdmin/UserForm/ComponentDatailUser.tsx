@@ -24,26 +24,22 @@ type Role = {
 const ComponentDatailUser = () => {
   const { hasRole, hasPermission, user } = useUser();
   const { userId } = useParams<{ userId: string }>();
-  // console.log("userId:", userId);
+
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [WarningMessage, setWarningMessage] = useState("");
   const [alluser, setAllUser] = useState<User | null>(null);
   const [roles, setRoles] = useState<Role[]>([]);
-  //get select rolesId
   const [selectedRoleId, setSelectedRoleId] = useState<string[]>([]);
-  // console.log("selectedRoleId:", selectedRoleId);
-  //for get initial Role
   const [initialRoles, setInitialRoles] = useState<string[]>([]);
-  // console.log("initialRoles:", initialRoles);
+
   const hasRoleAssignOrRoleRevoked =
     hasPermission("role.assign") ||
     hasPermission("role.revoke") ||
     hasRole("user_manager");
 
   const isOwner = user?.roles.includes("owner");
-  console.log("isOwner :", isOwner);
 
   const isMyProfile = user?.id === userId;
   const hasPermessionView =
@@ -51,7 +47,6 @@ const ComponentDatailUser = () => {
 
   const fetchUser = useCallback(async () => {
     if (!userId) {
-      console.log("userId missing.");
       setAllUser(null);
       setRoles([]);
       setSelectedRoleId([]);
@@ -59,7 +54,6 @@ const ComponentDatailUser = () => {
       return;
     }
     try {
-      // Fetch roles Data
       const response = await axiosClient.get(
         `/roles?order=desc&limit=10&page=1`,
       );
@@ -71,23 +65,16 @@ const ComponentDatailUser = () => {
 
       const userData = userResponse.data.response.data.user;
       setAllUser(userData);
-      console.log("User data roles:", userData.roles);
 
       const userRoleNames = Array.isArray(userData.roles) ? userData.roles : [];
 
-      console.log("use rRole Names :", userRoleNames);
-
-      //convert name roles to id Roles
       const userRoleIds = userRole
         .filter((role: Role) => userRoleNames.includes(role.name))
         .map((role: Role) => role.id);
-      console.log("user Role Ids", userRoleIds);
 
       setSelectedRoleId(userRoleIds);
       setInitialRoles(userRoleIds);
     } catch (err) {
-      console.log("Error in get users :", err);
-
       setAllUser(null);
       setRoles([]);
       setSelectedRoleId([]);
@@ -114,7 +101,7 @@ const ComponentDatailUser = () => {
       return true;
     }
   }, []);
-  //roleId = role.id
+
   const isRoleChecked = useCallback(
     (roleId: string) => {
       return selectedRoleId.includes(roleId);
@@ -125,74 +112,71 @@ const ComponentDatailUser = () => {
   const handleSaveChanges = useCallback(async () => {
     if (!userId || roles.length === 0) return;
 
-    // add roles => to selectedRoleId but not initialRoles
     const RolesToAdd = selectedRoleId.filter(
       (id) => !initialRoles.includes(id),
     );
-    console.log("Roles To Add :", RolesToAdd);
-
-    //remove rolse => to initialRoles but not selectedRoleId
     const RolesToRemove = initialRoles.filter(
       (id) => !selectedRoleId.includes(id),
     );
-    console.log("Roles To Remove :", RolesToRemove);
 
-    //get Id self role
     const selfroleId = roles.find((rol) => rol.name === "self")?.id;
-    //get Id owner role
     const ownerroleId = roles.find((rol) => rol.name === "owner")?.id;
 
     const filterRolesToRemove = RolesToRemove.filter(
       (id) => id !== selfroleId && id !== ownerroleId,
     );
-    console.log("filter Roles To Remove :", filterRolesToRemove);
-
     const filterRolesToAdd = RolesToAdd.filter(
       (id) => id !== selfroleId && id !== ownerroleId,
     );
-    console.log("filter Roles To Add :", filterRolesToAdd);
 
     try {
-      if (filterRolesToAdd.length > 0) {
-        const responseAd = await axiosClient.post(`/users/${userId}/roles`, {
-          rolesId: filterRolesToAdd,
+      for (const roleId of filterRolesToAdd) {
+        await axiosClient.post(`/users/${userId}/roles`, {
+          rolesId: [roleId],
         });
-        console.log("response to add roles : ", responseAd);
-        console.log("Add roles:", filterRolesToAdd);
-        setSelectedRoleId(selectedRoleId);
-        setInitialRoles(selectedRoleId);
+
+        setSelectedRoleId((prev) => [...prev, roleId]);
+        setInitialRoles((prev) => [...prev, roleId]);
+
+        setAllUser((prev) => {
+          if (!prev) return prev;
+          const currentRoles = Array.isArray(prev.roles) ? prev.roles : [];
+          const roleName = roles.find((r) => r.id === roleId)?.name;
+          if (roleName && !currentRoles.includes(roleName)) {
+            return { ...prev, roles: [...currentRoles, roleName] };
+          }
+          return prev;
+        });
       }
-      if (filterRolesToRemove.length > 0) {
-        const responseRemov = await axiosClient.delete(
-          `/users/${userId}/roles`,
-          {
-            data: {
-              rolesId: filterRolesToRemove,
-            },
-          },
-        );
-        console.log("response to remove roles : ", responseRemov);
-        console.log("Removed roles:", filterRolesToRemove);
-        setSelectedRoleId((prev) =>
-          prev.filter((id) => !filterRolesToRemove.includes(id)),
-        );
-        setInitialRoles((prev) =>
-          prev.filter((id) => !filterRolesToRemove.includes(id)),
-        );
+
+      for (const roleId of filterRolesToRemove) {
+        await axiosClient.delete(`/users/${userId}/roles`, {
+          data: { rolesId: [roleId] },
+        });
+
+        setSelectedRoleId((prev) => prev.filter((id) => id !== roleId));
+        setInitialRoles((prev) => prev.filter((id) => id !== roleId));
+
+        setAllUser((prev) => {
+          if (!prev) return prev;
+          const roleName = roles.find((r) => r.id === roleId)?.name;
+          const currentRoles = Array.isArray(prev.roles) ? prev.roles : [];
+          return {
+            ...prev,
+            roles: currentRoles.filter((name) => name !== roleName),
+          };
+        });
       }
-      // for updat initialRole
-      setInitialRoles((prev) => [...prev]);
+
       setIsSuccessOpen(true);
-      await fetchUser();
-      setSuccessMessage("تغییرات با موفقیت انجامم شد:)");
+      setSuccessMessage("تغییرات با موفقیت انجام شد :)");
     } catch (err) {
-      console.log("Error in change roles:", err.message);
       setIsWarningOpen(true);
-      await fetchUser();
       setWarningMessage("خطا در انجام تغییرات :(");
+      // در صورت خطا، اطلاعات را از سرور بگیر تا stateها هماهنگ شوند
+      await fetchUser();
     }
   }, [userId, roles, selectedRoleId, initialRoles, fetchUser]);
-
   return (
     <>
       {!alluser ? (
@@ -202,7 +186,7 @@ const ComponentDatailUser = () => {
       ) : (
         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
           <div className="flex items-center gap-4 mb-4">
-            <div className="bg-blue-100 p-3 rounded-full text-blue-600">
+            <div className="bg-yellow-100 p-3 rounded-full text-yellow-600">
               <FaUser size={24} />
             </div>
             <h2 className="text-2xl font-bold text-gray-800">
@@ -225,10 +209,8 @@ const ComponentDatailUser = () => {
               <p className=" text-gray-700">{alluser.age}</p>
             </div>
             <div>
-              <p className=" text-gray-500 font-medium">
-                نقش های فعلی :
-              </p>
-              <p className="text-base text-green-600 font-medium">
+              <p className=" text-gray-500 font-medium">نقش های فعلی :</p>
+              <p className="text-base text-yellow-600 font-medium">
                 {Array.isArray(alluser.roles)
                   ? alluser.roles.join(", ")
                   : alluser.roles}
@@ -292,7 +274,7 @@ const ComponentDatailUser = () => {
           {!isMyProfile && (
             <button
               onClick={handleSaveChanges}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="mt-4 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
             >
               ثبت تغییرات
             </button>

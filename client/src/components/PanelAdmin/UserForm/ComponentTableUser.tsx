@@ -24,15 +24,13 @@ const ComponentTableUser = () => {
         `users?order=desc&limit=5&page=${page}`,
       );
       const data = response.data.response.data;
-      // console.log("data", data);
-      // console.log("all users:", data.users);
+
       setUsers(data.users);
       const totalItems = response.data.response.data.count;
       const calculatedTotalPages = Math.ceil(totalItems / 5);
 
       setTotalPages(calculatedTotalPages);
     } catch (err) {
-      console.error("Error fetching users:", err);
       setUsers([]);
       setTotalPages(1);
     } finally {
@@ -63,7 +61,9 @@ const ComponentTableUser = () => {
                     کاربر
                   </th>
                   <th className="px-4 py-3 font-medium sm:table-cell">ایمیل</th>
-                  <th className="px-4 py-3 font-medium sm:table-cell">نقش</th>
+                  <th className="px-4 py-3 font-medium hidden sm:table-cell">
+                    نقش
+                  </th>
                   <th className="px-4 py-3 font-medium sm:table-cell">
                     جزئیات
                   </th>
@@ -89,12 +89,12 @@ const ComponentTableUser = () => {
                         {user.display_name}
                       </td>
                       <td className="px-4 py-3">{user.email}</td>
-                      <td className="px-4 py-3 text-green-600 font-medium">
+                      <td className="px-4 py-3 text-green-600 font-medium hidden sm:table-cell">
                         {Array.isArray(user.roles)
                           ? user.roles.join(", ")
                           : user.roles}
                       </td>
-                      <td className="font-bold text-blue-600">
+                      <td className=" text-blue-600">
                         <Link to={`detail/${user.id}`}>مشاهده</Link>
                       </td>
                     </tr>

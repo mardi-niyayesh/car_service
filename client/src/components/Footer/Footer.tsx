@@ -1,7 +1,7 @@
 import call from "../../../assets/imges/call-calling.png";
 import email from "../../../assets/imges/sms.png";
 import map from "../../../assets/imges/map.png";
-import logocar from "../../../assets/imges/logo21.png"
+import logocar from "../../../assets/imges/logo21.png";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -15,9 +15,9 @@ const Footer = () => {
             className="border rounded-2xl p-2 border-[#FFFBFB] w-12 h-12 md:w-14 md:h-14"
           />
           <div className="text-[#9A9A9A]  text-right md:text-center">
-            <h2 className="font-medium mb-1">ارتباط با ما</h2>
-            <p className="text-white">0994-5812125</p>
-            <p className="text-white">0921-0629512</p>
+            <h2 className="font-medium mb-1 text-white">ارتباط با ما</h2>
+            <p>0994-5812125</p>
+            <p>0921-0629512</p>
           </div>
         </div>
 
@@ -28,11 +28,9 @@ const Footer = () => {
             className="border rounded-2xl p-2 border-[#FFFBFB] w-12 h-12 md:w-14 md:h-14"
           />
           <div className="text-[#9A9A9A]  text-right md:text-center">
-            <h2 className=" mb-1">ایمیل</h2>
-            <p className="text-white  tracking-wide text-sm ">
-              niyayesh@gmail.com
-            </p>
-            <p className="text-white  md:text-sm tracking-wide text-sm ">homow@proton.me</p>
+            <h2 className=" text-white mb-1">ایمیل</h2>
+            <p>niyayesh@gmail.com</p>
+            <p>homow@proton.me</p>
           </div>
         </div>
 
@@ -43,8 +41,8 @@ const Footer = () => {
             className="border rounded-2xl p-2 border-[#9A9A9A] w-12 h-12 md:w-14 md:h-14"
           />
           <div className="text-[#9A9A9A]  text-right md:text-center">
-            <h2 className="font-medium mb-1">آدرس</h2>
-            <p className="text-white">تهران- خ شادمان</p>
+            <h2 className="font-medium mb-1 text-white">آدرس</h2>
+            <p>تهران- خ شادمان</p>
           </div>
         </div>
       </div>
@@ -52,11 +50,7 @@ const Footer = () => {
       <div className="flex flex-col lg:flex-row items-start justify-between gap-8 md:gap-10 pb-6 md:pb-8 border-b-2 border-[#9A9A9A]">
         <div className="w-full lg:w-2/5">
           <div className="flex items-center mb-4">
-            <img
-              src={logocar}
-              alt="logocar"
-              className="w-[100px]"
-            />
+            <img src={logocar} alt="logocar" className="w-[100px]" />
             <div className="font-bold text-2xl md:text-[24px]">
               <span className="text-[#FFFFFF]">کار</span>
               <span className="text-[#FDB713]">سرویس</span>
@@ -71,9 +65,7 @@ const Footer = () => {
         </div>
 
         <div className="w-full lg:w-1/5">
-          <h3 className="text-white   mb-4 md:mb-6">
-            دسترسی آسان
-          </h3>
+          <h3 className="text-white   mb-4 md:mb-6">دسترسی آسان</h3>
           <ul className="text-[#9A9A9A]  space-y-3 md:space-y-4">
             <li className="hover:text-white cursor-pointer transition-colors">
               <Link to="/questionPage"> سوالات متداول </Link>
@@ -91,9 +83,7 @@ const Footer = () => {
         </div>
 
         <div className="w-full lg:w-2/5">
-          <h3 className="text-white  mb-4">
-            خبرنامه
-          </h3>
+          <h3 className="text-white  mb-4">خبرنامه</h3>
           <p className="text-[#9A9A9A]  mb-4">
             برای دریافت جدیدترین تخفیف‌ها و اخبار در خبرنامه ما عضو شوید
           </p>
@@ -124,7 +114,7 @@ const Footer = () => {
       </div>
 
       <div className="text-[#9A9A9A] text-xs md:text-[14px] text-center py-4 md:py-6">
-        © {new Date().getFullYear()} تمامی حقوق سایت متعلق به کارسرویس  است
+        © {new Date().getFullYear()} تمامی حقوق سایت متعلق به کارسرویس است
       </div>
     </div>
   );

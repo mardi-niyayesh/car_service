@@ -1,6 +1,6 @@
 import { useUser } from "../../../hooks/useUser";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { FaPencilAlt, FaImage, FaRegComment } from "react-icons/fa";
+import { FaPencilAlt, FaRegComment } from "react-icons/fa";
 import axiosClient from "../../../services/axiosClient";
 import { useState } from "react";
 import ComponentPaginat from "../../../Paginate/ComponentPaginat";
@@ -16,7 +16,6 @@ const ComponentTableProduct = () => {
   const [page, setPage] = useState(1);
   const { hasRole, hasPermission } = useUser();
 
-
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [isWarningOpen, setIsWarningOpen] = useState(false);
@@ -29,10 +28,6 @@ const ComponentTableProduct = () => {
 
   const hasUpdateProduct =
     hasPermission("product.update") || hasRole("product_manager");
-
-  const hasUpdateProfile =
-    hasPermission(["product.update", "product.create"]) ||
-    hasRole("product_manager");
 
   const hasViewComment =
     hasPermission("comment.view") || hasRole("comment_manager");
@@ -67,134 +62,120 @@ const ComponentTableProduct = () => {
     navigate(`updateproduct/${id}`);
   };
 
-  const handleupdatProfile = async (slug: string) => {
-    navigate(`updateImg/${slug}`);
-  };
   const handleShowComment = async (id: string) => {
     navigate(`commentoneproduct/${id}`);
   };
-  const handleShowDetailCar = async (slug:string) => {
+  const handleShowDetailCar = async (slug: string) => {
     navigate(`/detailcar/${slug}`);
   };
   return (
     <>
-      <div className="overflow-x-auto rounded-lg shadow-sm border border-gray-200 bg-white">
+      <div className="overflow-x-auto rounded-xl shadow-sm border border-gray-200 bg-white">
         {loading ? (
-          <p className="text-center text-gray-500 py-8">
-            در حال گرفتن همه محصولات ...
-          </p>
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500"></div>
+            <span className="mr-3 text-gray-500">در حال بارگذاری...</span>
+          </div>
         ) : (
-          <table className="min-w-full  text-right text-sm text-gray-700">
-            <thead className="bg-gray-100 text-gray-700 ">
+          <table className="min-w-full text-right text-sm text-gray-700">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
               <tr>
-                <th className="w-12 px-4 py-3 font-medium hidden sm:table-cell">
-                  ردیف
+                <th className="w-12 px-3 py-3.5 font-semibold text-gray-600 hidden sm:table-cell text-xs uppercase tracking-wider">
+                  #
                 </th>
-                <th className="w-32 px-4 py-3 font-medium">عنوان </th>
-                <th className="w-56 px-4 py-3 font-medium">قیمت</th>
-                <th className="w-20 px-4 py-3 font-medium hidden sm:table-cell">
+                <th className="px-3 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider min-w-[100px]">
+                  عنوان
+                </th>
+                <th className="px-3 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider min-w-[100px] hidden sm:table-cell">
+                  قیمت
+                </th>
+                <th className="px-3 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider hidden md:table-cell min-w-[100px]">
                   کمپانی
                 </th>
-                <th className="w-20 px-4 py-3 font-medium hidden sm:table-cell">
+                <th className="px-3 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider hidden lg:table-cell min-w-[100px]">
                   لینک
                 </th>
                 {hasDeleteProduct && (
-                  <th className="w-20 px-4 py-3 font-medium"> حذف</th>
+                  <th className="w-14 px-3 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider text-center">
+                    حذف
+                  </th>
                 )}
                 {hasUpdateProduct && (
-                  <th className="w-20 px-4 py-3 font-medium"> اپدیت</th>
-                )}
-                {hasUpdateProfile && (
-                  <th className="w-20 px-4 py-3 font-medium"> عکس</th>
+                  <th className="w-14 px-3 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider text-center">
+                    ویرایش
+                  </th>
                 )}
                 {hasViewComment && (
-                  <th className="w-20 px-4 py-3 font-medium"> کامنت</th>
+                  <th className="w-14 px-3 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider text-center">
+                    کامنت
+                  </th>
                 )}
-                <th className="w-20 px-4 py-3 font-medium"> مشاهده</th>
+                <th className="w-14 px-3 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider text-center">
+                  مشاهده
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {allProduct?.map((product, index) => {
-                return (
-                  <tr
-                    className="hover:bg-gray-300 transition-colors"
-                    key={product.id}
-                  >
-                    <td className="px-4 py-3 hidden sm:table-cell">
-                      {index + 1}
-                    </td>
-                    <td className="px-4 py-3">{product.name} </td>
-                    <td className="px-4 py-3">{product.price_per_day}</td>
-                    <td className="px-4 py-3 text-blue-400 font-medium hidden sm:table-cell">
-                      {product.company}
-                    </td>
-                    <td className="px-4 py-3 text-blue-400 font-medium hidden sm:table-cell">
-                      {product.slug}
-                    </td>
+              {allProduct?.map((product, index) => (
+                <tr
+                  key={product.id}
+                  className="hover:bg-yellow-50 transition-colors duration-150 group"
+                >
+                  <td className="px-3 py-3.5 text-gray-400 text-sm hidden sm:table-cell">
+                    {index + 1}
+                  </td>
+                  <td className="px-3 py-3.5 font-medium text-gray-800">
+                    {product.name}
+                  </td>
+                  <td className="px-3 py-3.5 text-gray-700 hidden sm:table-cell">
+                    {product.price_per_day.toLocaleString()} تومان
+                  </td>
+                  <td className="px-3 py-3.5 text-blue-500 font-medium hidden md:table-cell">
+                    {product.company}
+                  </td>
+                  <td className="px-3 py-3.5 text-gray-400 text-xs font-mono hidden lg:table-cell truncate max-w-[120px]">
+                    {product.slug}
+                  </td>
 
-                    {hasDeleteProduct && (
-                      <td>
-                        {
-                          <RiDeleteBinLine
-                            size={18}
-                            color="red"
-                            opacity={0.8}
-                            className="cursor-pointer"
-                            onClick={() => handleDeleatProduct(product.id)}
-                          />
-                        }
-                      </td>
-                    )}
-                    {hasUpdateProduct && (
-                      <td>
-                        {
-                          <FaPencilAlt
-                            size={18}
-                            color="blue"
-                            opacity={0.5}
-                            className="cursor-pointer"
-                            onClick={() => handleupdatProduct}
-                          />
-                        }
-                      </td>
-                    )}
-
-                    {hasUpdateProfile && (
-                      <td>
-                        {
-                          <FaImage
-                            size={18}
-                            color="green"
-                            opacity={0.5}
-                            className="cursor-pointer"
-                            onClick={() => handleupdatProfile(product.id)}
-                          />
-                        }
-                      </td>
-                    )}
-                    {hasViewComment && (
-                      <td>
-                        {
-                          <FaRegComment
-                            size={18}
-                            className="cursor-pointer"
-                            onClick={() => handleShowComment(product.id)}
-                          />
-                        }
-                      </td>
-                    )}
-                    <td>
-                      {
-                        <FaEye
-                          size={18}
-                          className="cursor-pointer"
-                          onClick={() => handleShowDetailCar(product.slug)}
-                        />
-                      }
+                  {hasDeleteProduct && (
+                    <td className="px-3 py-3.5 text-center">
+                      <RiDeleteBinLine
+                        size={18}
+                        className="text-red-400 hover:text-red-600 transition-colors duration-200 cursor-pointer mx-auto"
+                        onClick={() => handleDeleatProduct(product.id)}
+                      />
                     </td>
-                  </tr>
-                );
-              })}
+                  )}
+
+                  {hasUpdateProduct && (
+                    <td className="px-3 py-3.5 text-center">
+                      <FaPencilAlt
+                        size={16}
+                        className="text-blue-400 hover:text-blue-600 transition-colors duration-200 cursor-pointer mx-auto"
+                        onClick={() => handleupdatProduct(product.id)}
+                      />
+                    </td>
+                  )}
+
+                  {hasViewComment && (
+                    <td className="px-3 py-3.5 text-center">
+                      <FaRegComment
+                        size={18}
+                        className="text-gray-400 hover:text-yellow-500 transition-colors duration-200 cursor-pointer mx-auto"
+                        onClick={() => handleShowComment(product.id)}
+                      />
+                    </td>
+                  )}
+
+                  <td className="px-3 py-3.5 text-center">
+                    <FaEye
+                      size={18}
+                      className="text-gray-400 hover:text-yellow-500 transition-colors duration-200 cursor-pointer mx-auto"
+                      onClick={() => handleShowDetailCar(product.slug)}
+                    />
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         )}

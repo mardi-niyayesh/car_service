@@ -25,10 +25,10 @@ const FavoriteCarPage = () => {
       setTotalPages(calculatedTotalPages);
 
       const favoritesArray = DataCar?.favorites || [];
-      console.log("response all favorite :", favoritesArray);
+
       setFavoriteCar(favoritesArray);
     } catch (err) {
-      console.log("Error in get all list favorite:", err);
+      // console.log("Error in get all list favorite:", err);
     }
   }, [page]);
 
@@ -54,13 +54,12 @@ const FavoriteCarPage = () => {
               key={favorit.id}
               className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col sm:flex-row gap-4 p-4 border border-gray-100"
             >
-              <div className="flex-shrink-0 flex justify-center">
-                <img
-                  src={`/${favorit.car.image}`}
-                  alt={favorit.car.name || "تصویر خودرو"}
-                  className="w-32 h-32 object-cover rounded-lg sm:w-28 sm:h-28"
-                />
-              </div>
+              <img
+                src={`/${favorit.car.image}`}
+                alt={favorit.car.name || "تصویر خودرو"}
+                className="w-32 h-32 object-cover rounded-lg sm:w-28 sm:h-28"
+              />
+
               <div className="flex-1 space-y-1 text-right">
                 <p className="text-gray-600">
                   <span>خودرو:</span>

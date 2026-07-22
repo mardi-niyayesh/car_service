@@ -9,39 +9,31 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   const [token, setTokenState] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  console.log("user:", user);
-  console.log("token:", token);
-
   const fetchUserAndToken = useCallback(async () => {
     setIsLoading(true);
     try {
       const ResponseData = await refreshAuth();
 
-      console.log("Full response from refreshAuth:", ResponseData);
+     
 
       const accessToken = ResponseData?.response?.data?.accessToken;
       const user = ResponseData?.response?.data?.user;
 
       if (accessToken && user) {
-        console.log("Found User:", user);
-        console.log("Found Access Token:", accessToken);
+     
 
         setTokenState(accessToken);
         setUserState(user);
         setAxiosToken(accessToken);
-      } else {
-        console.log(" Token or user not found in the response.");
       }
     } catch (error: any) {
-      // console.error("Error to rest information user to refresh token:", error);
+      
 
       if (error?.response?.status === 401) {
-        // console.log(" Unauthorized: logging out...");
+        
         setUserState(null);
         setTokenState(null);
         setAxiosToken(null);
-      } else {
-        console.log(" Temporary error, keeping user data.");
       }
     } finally {
       setIsLoading(false);
@@ -78,7 +70,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     setUserState(null);
     setTokenState(null);
     setAxiosToken(null);
-    console.log(" logout to successfully ");
+   
   }, []);
 
   const hasPermission = useCallback(

@@ -44,10 +44,17 @@ const ItemDes = [
   },
 ];
 
+const imgs = [
+  { id: 1, img: station1 },
+  { id: 1, img: station2 },
+  { id: 1, img: station3 },
+  { id: 1, img: station4 },
+];
+
 const DesCar = () => {
   return (
     <>
-      <div className="container mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
         {ItemDes.map((item) => (
           <DescriptionComponent
             key={item.id}
@@ -56,11 +63,16 @@ const DesCar = () => {
             type={item.type}
           />
         ))}
-        <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4">
-          <img src={station1} alt="" />
-          <img src={station2} alt="" />
-          <img src={station3} alt="" />
-          <img src={station4} alt="" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 p-4">
+          {imgs.map((src, id) => (
+            <div key={id} className="overflow-hidden rounded-xl shadow-md">
+              <img
+                src={src.img}
+                alt={`تصویر ایستگاه ${id + 1}`}
+                className="w-full h-48 sm:h-56 md:h-64 lg:h-48 object-cover hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+          ))}
         </div>
       </div>
     </>

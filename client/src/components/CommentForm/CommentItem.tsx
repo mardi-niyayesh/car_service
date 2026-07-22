@@ -1,4 +1,4 @@
-import { FaUser, FaStar, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import { FaUser, FaStar } from "react-icons/fa";
 import { type CommentWithReplies } from "./buildCommentTree";
 import { FaReply } from "react-icons/fa";
 
@@ -37,23 +37,14 @@ const CommentItem = ({
         <p className="text-gray-700 mb-4 leading-relaxed ">{comment.content}</p>
 
         <div className="flex justify-between items-center border-t border-gray-50 pt-3 mt-1">
-          <div className="flex gap-4 text-gray-500">
-            <button className="flex items-center justify-center gap-1 hover:text-blue-500 transition-colors duration-200 cursor-pointer">
-              <FaThumbsUp size={18} />
-              <span className="text-[18px]">لایک</span>
-            </button>
-            <button className="flex items-center justify-center gap-1 hover:text-red-500 transition-colors duration-200 cursor-pointer">
-              <FaThumbsDown size={18}/>
-              <span className="text-[18px]">دیسلایک</span>
-            </button>
-          </div>
+          <div className="flex gap-4 text-gray-500"></div>
           {onReply && (
             <button
               onClick={() => onReply(comment.id)}
               className=" bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800 px-3 py-1.5 rounded-full transition-all duration-200 flex items-center gap-1"
             >
               <FaReply size={15} />
-              <span >پاسخ</span>
+              <span>پاسخ</span>
             </button>
           )}
         </div>

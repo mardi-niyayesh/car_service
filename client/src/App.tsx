@@ -58,7 +58,6 @@ import CreateCategory from "./components/PanelAdmin/CategoryForm/CreateCategory"
 import UpdateCategory from "./components/PanelAdmin/CategoryForm/UpdateCategory";
 import ComponentCreatpoduct from "./components/PanelAdmin/ProductForm/ComponentCreatpoduct";
 import ComponentUpdateProduct from "./components/PanelAdmin/ProductForm/ComponentUpdateProduct";
-import ComponentImgProduct from "./components/PanelAdmin/ProductForm/ComponentImgProduct";
 import ComponentTableComment from "./components/CommentForm/ComponentTableComment";
 
 function App() {
@@ -116,6 +115,8 @@ function App() {
               </GaurdRoute>
             }
           />
+          <Route path="updatePassword" element={<ComponnetUpdetePassword />} />
+          <Route path="updateUser" element={<ComponentFormUpdateUser />} />
           <Route
             path="users/detail/:userId"
             element={
@@ -168,14 +169,7 @@ function App() {
               </GaurdRoute>
             }
           />
-          <Route
-            path="product/updateImg/:id"
-            element={
-              <GaurdRoute requiredPermission="product.update">
-                <ComponentImgProduct />
-              </GaurdRoute>
-            }
-          />
+
           <Route
             path="product/commentoneproduct/:id"
             element={

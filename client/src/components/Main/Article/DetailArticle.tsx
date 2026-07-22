@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 const DetailArticle = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  // console.log(id);
 
   const AllArt = Article.find((article) => article.id === parseInt(id));
   
