@@ -4,8 +4,8 @@ dotenv.config();
 
 import {ROLES} from "@/common";
 import "tsconfig-paths/register";
-import {formatZodError, hashSecret} from "@/lib";
 import {NestFactory} from "@nestjs/core";
+import {formatZodError, hashSecret} from "@/lib";
 import {CliModule} from "@/modules/cli/cli.module";
 import * as readline from "node:readline/promises";
 import {PrismaService} from "@/modules/prisma/prisma.service";
