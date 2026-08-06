@@ -35,7 +35,7 @@ const ComponentTableCategory = (): React.ReactElement => {
       setIsSuccessOpen(true);
       setSuccessMessage("دسته بندی با موفقیت حذف شد");
       refetch();
-    } catch (err) {
+    } catch (err:any) {
       console.log("error in deleat category :", err);
       if (err.response?.status === 403) {
         setIsWarningOpen(true);

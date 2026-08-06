@@ -4,6 +4,7 @@ import SuccessModal from "../../Modal/SuccessModal";
 import WarningModal from "../../Modal/WarningModal ";
 import { FiTrash } from "react-icons/fi";
 import ComponentPaginat from "../../Paginate/ComponentPaginat";
+import { MdPayment } from "react-icons/md";
 
 export type Car = {
   name: string;
@@ -79,8 +80,9 @@ const BasketComponent = () => {
       await fetchAllReserve();
       window.dispatchEvent(new Event("cart-updated"));
     } catch (err: any) {
+      const status = err.response?.status;
       console.log("Error in deleat car ", err);
-      if (err.response?.status === 400) {
+      if (status === 400) {
         setIsWarningOpen(true);
         setSuccessMessage(
           "ماشین مورد نظر در دیتابیس وجود ندارد لطفا صفحه را رفرش کنید",
@@ -89,6 +91,39 @@ const BasketComponent = () => {
         setIsWarningOpen(true);
         setWarningMessage(
           "خطایی در سرور رخ داده است لطفا لحاظاتی بعد دوباره تلاش کنید",
+        );
+      }
+    }
+  };
+
+  const handlePaymentItem = async (id: string) => {
+    try {
+      const resPay = await axiosClient.post(`payments/${id}`);
+      console.log("response to payment car :", resPay.data);
+
+      if (resPay.data.success === true) {
+        setIsSuccessOpen(true);
+        setSuccessMessage("پرداخت با موفقیت انجام شد.");
+        await fetchAllReserve();
+        window.dispatchEvent(new Event("cart-updated"));
+      } else {
+        setIsWarningOpen(true);
+        setWarningMessage("پرداخت ناموفق بود لطفاً دوباره تلاش کنید.");
+      }
+    } catch (err: any) {
+      console.error("Error in payment item:", err);
+      const status = err.response?.status;
+
+      if (status === 409) {
+        setIsWarningOpen(true);
+        setWarningMessage("این سفارش قبلا پرداخت شده است");
+      } else if (status === 404) {
+        setIsWarningOpen(true);
+        setWarningMessage("سفارش مورد نظر یافت نشد. لطفاً صفحه را رفرش کنید.");
+      } else {
+        setIsWarningOpen(true);
+        setWarningMessage(
+          "خطایی در پرداخت رخ داده است. لطفاً چند لحظه بعد تلاش کنید. ",
         );
       }
     }
@@ -162,12 +197,20 @@ const BasketComponent = () => {
                       })()}
                     </span>
                   </div>
-                  <button
-                    onClick={() => handleDeletItemBasket(rent.id)}
-                    className=" mt-4 border-2 flex items-center border-red-500 text-red-600 hover:bg-red-500 hover:text-white  px-2 rounded-lg transition"
-                  >
-                    <FiTrash className="" /> حذف
-                  </button>
+                  <div className="flex  gap-3">
+                    <button
+                      onClick={() => handleDeletItemBasket(rent.id)}
+                      className=" mt-4 border-2 flex items-center border-red-500 text-red-600 hover:bg-red-500 hover:text-white  px-2 rounded-lg transition"
+                    >
+                      <FiTrash className="" /> حذف
+                    </button>
+                    <button
+                      onClick={() => handlePaymentItem(rent.id)}
+                      className=" gap-1 mt-4 border-2 flex items-center border-green-500 text-green-600 hover:bg-green-500 hover:text-white  px-2 rounded-lg transition"
+                    >
+                      <MdPayment /> پرداخت
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

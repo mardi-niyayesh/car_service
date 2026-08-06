@@ -193,7 +193,7 @@ model Car {
   can_rent Boolean @default(true) @db.Boolean
 
   category_id String   @db.Uuid
-  category    Category @relation(fields: [category_id], references: [id])
+  category    Category @relation(fields: [category_id], references: [id], onDelete: Restrict)
 
   creator_id String? @db.Uuid
   creator    User?   @relation("carsCreator", fields: [creator_id], references: [id], onDelete: SetNull)

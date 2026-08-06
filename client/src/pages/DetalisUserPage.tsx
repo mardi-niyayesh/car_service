@@ -6,7 +6,7 @@ const DetalisUserPage = () => {
       <div className="flex-1">
         <div className="mb-4">
           <Link to="/panel/users">
-            <span className="hover:text-[#4b33b5] text-[20px]  sm:text-[20px] md:text-[20px] font-bold">
+            <span className="text-yellow-600 text-[20px]  sm:text-[20px] md:text-[20px] font-bold">
               کاربران/
             </span>
           </Link>

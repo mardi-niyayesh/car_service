@@ -33,16 +33,11 @@ const RolesPage = () => {
       );
       console.log("response to request :", response);
       const getAllRoles = response.data.response.data.roles;
-      console.log("response get alll roles :", getAllRoles);
-
       const getCount = response.data.response.data.count;
-      console.log("get count all roles :", getCount);
       const tota = Math.ceil(getCount / 5);
 
       setTotalPage(tota);
       setRoles(getAllRoles);
-    } catch (err) {
-      console.log("Error in get all roles :", err);
     } finally {
       setLoading(false);
     }
@@ -60,9 +55,7 @@ const RolesPage = () => {
         setRoles((prevRoles) => prevRoles.filter((role) => role.id !== roleId));
         fetchGetRoles();
       }
-    } catch (err:any) {
-      console.error("خطا در حذف نقش:", err.message);
-
+    } catch (err: any) {
       if (err.response) {
         if (err.response.status === 404) {
           setIsWarningOpen(true);

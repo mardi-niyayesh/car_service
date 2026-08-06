@@ -1,6 +1,6 @@
 import type {BaseException} from "@/types";
 import {Prisma} from "@/modules/prisma/generated/client";
-import {ConflictException, NotFoundException} from "@nestjs/common";
+import {BadRequestException, ConflictException, NotFoundException} from "@nestjs/common";
 
 interface CheckPrismaErrorParams {
   e: Error;
@@ -8,10 +8,12 @@ interface CheckPrismaErrorParams {
   conflictField: string;
   notFoundField?: string;
   notFoundResource?: string;
+  restrictResource?: string;
+  restrictForeignKey?: string;
 }
 
 export function checkPrismaError(data: CheckPrismaErrorParams): never {
-  const {conflictField, notFoundField, notFoundResource, mainResource, e} = data;
+  const {restrictForeignKey, restrictResource, conflictField, notFoundField, notFoundResource, mainResource, e} = data;
 
   if (e instanceof Prisma.PrismaClientKnownRequestError) {
     switch (e.code) {
@@ -23,9 +25,16 @@ export function checkPrismaError(data: CheckPrismaErrorParams): never {
       }
 
       case 'P2003': {
+        if (restrictForeignKey && restrictResource) {
+          throw new BadRequestException({
+            message: `Cannot delete ${mainResource} because it has related ${restrictResource}(s). Please remove ${restrictForeignKey} first.`,
+            error: `Foreign key constraint failed on ${restrictForeignKey}`
+          } as BaseException);
+        }
+
         throw new NotFoundException({
-          message: `${notFoundResource} not exist exists in database, please change ${notFoundField}`,
-          error: `${notFoundResource} not exists`
+          message: `${notFoundResource || mainResource} not found or has related records, please check ${notFoundField || 'id'}`,
+          error: `${notFoundResource || mainResource} not found or has dependencies`
         } as BaseException);
       }
 

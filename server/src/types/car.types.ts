@@ -1,6 +1,6 @@
 import type {ListWithCount} from "./response.types";
 import type {SafeCategory} from "@/types/category.types";
-import type {Car, Category} from "@/modules/prisma/generated/client";
+import type {Car, CarRent, Category} from "@/modules/prisma/generated/client";
 
 /** car without creator_id */
 export type SafeCar = Omit<Car, "creator_id">;
@@ -29,3 +29,7 @@ export interface CarResponse {
 export type CarsResponse = ListWithCount<{
   cars: SafeCarNCategory['car'][];
 }>;
+
+export type GetRentedDatesCarResponse = ListWithCount<{
+  dates: Pick<CarRent, "id" | "start_date" | "end_date" | "status">[];
+}>

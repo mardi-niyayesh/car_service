@@ -31,7 +31,7 @@ export interface CreateCartSignup {
 export type CartResponse = ListWithCount<{
   cart: CartIncludeResponseType & {
     total_price: number;
-    user: Pick<UserAccess, 'permissions' | 'roles' | 'display_name'> & {
+    user: Pick<UserAccess, 'display_name'> & {
       id: string;
     }
   };

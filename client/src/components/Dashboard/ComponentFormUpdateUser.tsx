@@ -45,7 +45,6 @@ const ComponentFormUpdateUser = () => {
     try {
       const result = await FetchUpdateUser(payload);
       if (result.ok) {
-        console.log("success in updat information user:", result);
         setSuccessMessage(result.message);
         setInterval(() => {
           navigate("/panel/profile");
@@ -58,9 +57,7 @@ const ComponentFormUpdateUser = () => {
       }
 
       reset();
-    } catch (err) {
-      console.log("Error in update information user :", err);
-      console.log("Full error response:", err.response?.data);
+    } catch (err: any) {
       setWarningMessage(err.response?.data?.message);
       setIsWarningOpen(true);
     }

@@ -56,11 +56,14 @@ const ContainerHeader = () => {
             <Logo />
             <SearchButton />
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             {user ? (
               user.roles.length === 1 && user.roles[0] === "self" ? (
                 <Link to="/dashboard">
-                  <span className="text-lg  border-2 p-3 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white">
+                  <span
+                    className="text-lg border-0 p-1 rounded-none bg-transparent text-white 
+                         md:border-2 md:p-3 md:rounded-lg md:bg-yellow-500 md:hover:bg-yellow-600"
+                  >
                     {user.display_name}
                     <IoChevronDown
                       size={18}
@@ -70,7 +73,10 @@ const ContainerHeader = () => {
                 </Link>
               ) : (
                 <Link to="/panel">
-                  <span className="text-lg font-semibold text-white border-2 p-3 rounded-lg bg-yellow-500 text-white">
+                  <span
+                    className="text-lg font-semibold border-0  rounded-none bg-transparent text-white 
+                         md:border-2 md:p-3 md:rounded-lg md:bg-yellow-500 md:hover:bg-yellow-600"
+                  >
                     {user.display_name}
                     <IoChevronDown
                       size={18}

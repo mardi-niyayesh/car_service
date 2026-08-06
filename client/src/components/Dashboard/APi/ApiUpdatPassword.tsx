@@ -4,7 +4,6 @@ type UpdateUserData = {
   newPassword: string;
 };
 
-//Updata Email and Age User
 export const useUpdatePassword = () => {
   const FetchUpdatepassword = async (data: UpdateUserData) => {
     try {
@@ -14,8 +13,6 @@ export const useUpdatePassword = () => {
       });
 
       if (response.status === 200) {
-        console.log("Update successful, status:", response.data);
-
         return {
           ok: true,
           message: " رمز عبور شما با موفقیت به روز رسانی شد",
@@ -25,8 +22,7 @@ export const useUpdatePassword = () => {
         ok: false,
         message: "خطایی در به روز رسانی رمز عبور رخ داد ",
       };
-    } catch (err) {
-      console.error("Error updatePassword :", err);
+    } catch (err:any) {
       const status = err.response?.status;
 
       if (status === 401) {

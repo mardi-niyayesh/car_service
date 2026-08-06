@@ -36,7 +36,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 // Dashboard pages
-import AddressPages from "./pages/AddressPages";
+
 import ReservePages from "./pages/ReservePages";
 import CardPages from "./pages/CardPages";
 import LogoutPage from "./pages/LogoutPage";
@@ -58,7 +58,6 @@ import CreateCategory from "./components/PanelAdmin/CategoryForm/CreateCategory"
 import UpdateCategory from "./components/PanelAdmin/CategoryForm/UpdateCategory";
 import ComponentCreatpoduct from "./components/PanelAdmin/ProductForm/ComponentCreatpoduct";
 import ComponentUpdateProduct from "./components/PanelAdmin/ProductForm/ComponentUpdateProduct";
-import ComponentImgProduct from "./components/PanelAdmin/ProductForm/ComponentImgProduct";
 import ComponentTableComment from "./components/CommentForm/ComponentTableComment";
 
 function App() {
@@ -97,7 +96,6 @@ function App() {
 
         {/* ------- Dashboard Layout (User Panel) ------- */}
         <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route path="address" element={<AddressPages />} />
           <Route path="reserve" element={<ReservePages />} />
           <Route path="card" element={<CardPages />} />
           <Route path="logout" element={<LogoutPage />} />
@@ -117,6 +115,8 @@ function App() {
               </GaurdRoute>
             }
           />
+          <Route path="updatePassword" element={<ComponnetUpdetePassword />} />
+          <Route path="updateUser" element={<ComponentFormUpdateUser />} />
           <Route
             path="users/detail/:userId"
             element={
@@ -134,14 +134,7 @@ function App() {
             }
           />
 
-          <Route
-            path="category"
-            element={
-              <GaurdRoute requiredPermission="category.view">
-                <CategoryPage />
-              </GaurdRoute>
-            }
-          />
+          <Route path="category" element={<CategoryPage />} />
           <Route
             path="category/update/:id"
             element={
@@ -159,14 +152,7 @@ function App() {
             }
           />
 
-          <Route
-            path="product"
-            element={
-              <GaurdRoute requiredPermission="product.view">
-                <ProductPage />
-              </GaurdRoute>
-            }
-          />
+          <Route path="product" element={<ProductPage />} />
           <Route
             path="product/creatproduct"
             element={
@@ -183,14 +169,7 @@ function App() {
               </GaurdRoute>
             }
           />
-          <Route
-            path="product/updateImg/:id"
-            element={
-              <GaurdRoute requiredPermission="product.update">
-                <ComponentImgProduct />
-              </GaurdRoute>
-            }
-          />
+
           <Route
             path="product/commentoneproduct/:id"
             element={

@@ -1,6 +1,7 @@
 import {RedisKey} from "@/lib";
 import {Injectable} from '@nestjs/common';
 import {Cron, CronExpression} from "@nestjs/schedule";
+import {selfCartCacheKey} from "@/modules/cart/decorators";
 import {RedisService} from "@/modules/redis/redis.service";
 import {RentStatus} from "@/modules/prisma/generated/enums";
 import {PrismaService} from "@/modules/prisma/prisma.service";
@@ -47,9 +48,28 @@ export class CleanerJobs {
     });
 
     if (result.count > 0) {
-      const key = RedisKey.build("cart", 'self_cart');
+      const key = RedisKey.build("cart", selfCartCacheKey);
       const finalKey = `*${key}*`;
       await this.redis.deletePrefix(finalKey);
     }
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async checkEndCarRent() {
+    const now: Date = new Date();
+    now.setHours(0, 0, 0, 0);
+    now.setSeconds(now.getSeconds() + 10);
+
+    await this.prisma.carRent.updateMany({
+      where: {
+        status: RentStatus.ACTIVE,
+        end_date: {
+          lte: now
+        }
+      },
+      data: {
+        status: RentStatus.COMPLETED,
+      }
+    });
   }
 }

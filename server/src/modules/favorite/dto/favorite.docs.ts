@@ -60,11 +60,12 @@ export const favoriteCheckOperation: ApiOperationOptions = {
 export const favoriteDeleteOperation: ApiOperationOptions = {
   summary: 'remove car from user favorites',
   description: `
-  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_SELF}\`\n
+  - # **🔐 PERMISSIONS REQUIRED:** \`${PERMISSIONS.USER_SELF}\`
   
-  Removes a specific car from the authenticated user's favorites list.
+  Removes a specific car from the authenticated user's favorites list with car id.
   **Access restricted to users with permission: (user.self) only.**
   
+  - **Path Parameter:** \`car id\` (string) - The unique identifier of the car to be removed from favorites.
   - Validates that the favorite exists before removal.
   - Returns the removed favorite record upon successful deletion.
   - If the favorite does not exist, returns a not found error.

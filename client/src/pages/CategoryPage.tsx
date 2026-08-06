@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const CategoryPage = () => {
   const { hasPermission, hasRole } = useUser();
   const hasCreatPermession =
-    hasPermission("category.creat") || hasRole("category_manager");
+    hasPermission("category.create") || hasRole("category_manager");
 
   return (
     <div className="flex flex-col md:flex-row  md:gap-4 p-3 md:p-4 min-h-screen">

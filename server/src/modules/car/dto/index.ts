@@ -3,5 +3,6 @@ export * from "./update.dto";
 export * from "./create.dto";
 export * from "./find-all.dto";
 export * from "./find-one.dto";
+export * from "./get-dates.dto";
 export * from "./upload-image.dto";
 export * from "./find-all-comments.dto";

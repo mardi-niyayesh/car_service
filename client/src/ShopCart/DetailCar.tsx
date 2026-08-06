@@ -21,7 +21,7 @@ const DetailCar = () => {
   const [showbtn, setShowbtn] = useState(false);
 
   const findProduct = allProduct.find((pro) => pro.slug === slug);
- 
+
   const productId = findProduct?.id;
 
   const openReplyModal = (commentId: string) => {
@@ -63,7 +63,7 @@ const DetailCar = () => {
               <Des3Car />
               <button
                 onClick={handleClick}
-                className="bg-yellow-500 w-full hover:bg-yellow-600 cursor-pointer  text-center text-whitep p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto"
+                className="bg-yellow-500 w-full text-white hover:bg-yellow-600 cursor-pointer  text-center text-whitep p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto"
               >
                 {showbtn ? "نمایش قوانین رزو" : "مخفی کردن قوانین رزو"}
               </button>
@@ -76,7 +76,7 @@ const DetailCar = () => {
             </div>
             {findProduct.description && <div className="mt-2"></div>}
           </div>
-          <div className="left-5 w-1/2">
+          <div className="w-full md:w-1/2 lg:w-2/5 px-5 md:px-0 md:ml-5">
             <HeroBaner />
           </div>
         </div>

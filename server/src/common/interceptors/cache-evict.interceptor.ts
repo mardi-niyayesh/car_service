@@ -14,6 +14,21 @@ export class CacheEvictInterceptor implements NestInterceptor {
     private readonly redisService: RedisService,
   ) {}
 
+  async deleteAction(key: string, action: 'delete' | 'deletePrefix') {
+    try {
+      if (action === 'delete') {
+        await this.redisService.delete(key);
+      } else {
+        await this.redisService.deletePrefix(key);
+      }
+    } catch (e) {
+      throw new InternalServerErrorException({
+        message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a cache key',
+        error: (e as Error).name ?? 'error in deleting cache',
+      } as BaseException);
+    }
+  }
+
   intercept(ctx: ExecutionContext, next: CallHandler<unknown>): Observable<unknown> | Promise<Observable<unknown>> {
     const cacheParams = this.reflector.getAllAndOverride<CacheEvictDecorator>(CACHE_EVICT_KEY, [
       ctx.getClass(),
@@ -26,53 +41,43 @@ export class CacheEvictInterceptor implements NestInterceptor {
       map(async data => {
 
         if ('resource' in cacheParams && !('findPrefix' in cacheParams)) {
+
+          // if cache params exist
           if (cacheParams?.force) {
-            try {
-              await this.redisService.deletePrefix(`*${cacheParams.resource}*`);
-              return data;
-            } catch (e) {
-              throw new InternalServerErrorException({
-                message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a resource cache',
-                error: (e as Error).name ?? 'error in deleting cache',
-              } as BaseException);
-            }
+            const finalKey = `*${cacheParams.resource}*`;
+            await this.deleteAction(finalKey, 'deletePrefix');
+            return data;
+          }
+
+          if (cacheParams?.forcePagination) {
+            const finalKey = `*${cacheParams.resource}:list*`;
+            await this.deleteAction(finalKey, 'deletePrefix');
+            return data;
           }
 
           const key: string = RedisKey.keyPrefix({
             ctx,
-            resource: cacheParams.resource,
-            pagination: cacheParams.pagination,
-            query: cacheParams.query,
             self: cacheParams.self,
+            query: cacheParams.query,
+            resource: cacheParams.resource,
             paramsKey: cacheParams.paramsKey,
             extraKeys: cacheParams.extraKeys,
           });
 
-          try {
-            if (cacheParams.prefixAfterBuildKey) {
-              const finalKey = `*${key}*`;
-              await this.redisService.deletePrefix(finalKey);
-            } else {
-              await this.redisService.delete(key);
-            }
-          } catch (e) {
-            throw new InternalServerErrorException({
-              message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a cache key',
-              error: (e as Error).name ?? 'error in deleting cache',
-            } as BaseException);
+          if (cacheParams.prefixAfterBuildKey) {
+            const finalKey = `*${key}*`;
+            await this.deleteAction(finalKey, 'deletePrefix');
+            return data;
+          } else {
+            await this.deleteAction(key, 'delete');
+            return data;
           }
         }
 
         if ('prefix' in cacheParams && cacheParams.prefix?.trim()) {
-          try {
-            const finalKey = `*${cacheParams.prefix}*`;
-            await this.redisService.deletePrefix(finalKey);
-          } catch (e) {
-            throw new InternalServerErrorException({
-              message: (e as Error).message ?? (e as Error).cause ?? 'error in cache-evict.interceptor while deleting a prefix cache',
-              error: (e as Error).name ?? 'error in deleting cache',
-            } as BaseException);
-          }
+          const finalKey = `*${cacheParams.prefix}*`;
+          await this.deleteAction(finalKey, 'deletePrefix');
+          return data;
         }
 
         if ('findPrefix' in cacheParams) {
@@ -86,17 +91,31 @@ export class CacheEvictInterceptor implements NestInterceptor {
             if (cacheParams.findPrefix.extraKeys?.length) {
               const extraKeys: string = cacheParams.findPrefix.extraKeys.join(":");
 
-              const finalKey = `*${cacheParams.resource}:${extraKeys}:${keyParam}=${paramValue}:list*`;
-              await this.redisService.deletePrefix(finalKey);
+              const finalKey = `*${cacheParams.resource}:${extraKeys}:${keyParam}=${paramValue}*`;
+              await this.deleteAction(finalKey, 'deletePrefix');
+              return data;
 
             } else {
+              const replaceKey = cacheParams.findPrefix.paramKeyReplace;
+
+              if (replaceKey) {
+                const finalKey = cacheParams.findPrefix?.listOrSingle === 'single'
+                  ? `*${cacheParams.resource}:${replaceKey}=${paramValue}*`
+                  : `*${cacheParams.resource}:${replaceKey}=${paramValue}*:list`;
+
+                await this.deleteAction(finalKey, 'deletePrefix');
+                return data;
+              }
+
               const finalKey = `*${cacheParams.resource}:${paramValue}:list*`;
-              await this.redisService.deletePrefix(finalKey);
+              await this.deleteAction(finalKey, 'deletePrefix');
+              return data;
             }
 
           } else {
             const finalKey = `*${paramValue}*`;
-            await this.redisService.deletePrefix(finalKey);
+            await this.deleteAction(finalKey, 'delete');
+            return data;
           }
         }
 

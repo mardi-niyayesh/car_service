@@ -48,7 +48,6 @@ function LoginPage() {
       const status = error.response?.status;
       const message = error.response?.data?.message;
 
-      console.error("Errror:", error);
 
       if (status === 500) {
         setErrorMessage("خطای سرور. لطفاً بعداً دوباره تلاش کنید.");

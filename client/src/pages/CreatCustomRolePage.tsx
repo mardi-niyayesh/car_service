@@ -7,7 +7,6 @@ import WarningModal from "../Modal/WarningModal ";
 import { useUser } from "../hooks/useUser";
 import { Link } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
-//
 
 type Permission = {
   id: string;
@@ -67,22 +66,21 @@ const CreateCustomRolePage = () => {
       );
       const getPermission = response.data.response.data.permissions;
       setPermissions(getPermission);
-    } catch (err) {
-      console.error("Error get list permissions :", err);
     } finally {
       setLoading(false);
     }
   };
 
   const fetchAllRoles = async () => {
+    setLoading(true);
     try {
       const response = await axiosClient.get(
         `/roles?order=desc&limit=10&page=1`,
       );
       const getallrole = response.data.response.data.roles;
       setAllRoles(getallrole);
-    } catch (err) {
-      console.log("Error in get All Roles : ", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -138,8 +136,6 @@ const CreateCustomRolePage = () => {
         navigate("/panel/roles");
       }, 2000);
     } catch (err: any) {
-      console.log("Error in response create custom role", err);
-
       if (err.response?.status === 409) {
         setError("name", {
           message: "نام نقش تکراری است",

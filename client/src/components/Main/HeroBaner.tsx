@@ -237,97 +237,106 @@ const HeroBaner = () => {
   };
 
   return (
-    <div className="px-4">
+    <div className="px-3 sm:px-4 md:px-6 py-2 sm:py-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="container w-full bg-white rounded-lg shadow-md p-4 sm:p-6 mx-auto"
+        className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 lg:p-10 transition-all"
       >
-        <div className="grid grid-cols-1 gap-4 mb-6">
-          <div className="col-span-1">
-            <label className="block text-lg font-semibold text-gray-700 mb-2">
-              تاریخ تحویل <span className="text-red-600">*</span>
+        <div className="space-y-5 md:space-y-6">
+          <div>
+            <label className="block text-sm sm:text-base font-semibold text-gray-800 mb-1.5 sm:mb-2">
+              تاریخ تحویل <span className="text-red-500">*</span>
             </label>
-            <div className="flex items-center space-x-3">
-              <div className="relative flex-grow">
-                <div className="absolute inset-y-0 right-0 flex items-center pr-4">
-                  <FaCalendarAlt size={24} className="text-blue-800" />
-                </div>
-                <Controller
-                  name="deliveryDate"
-                  control={control}
-                  rules={{ validate: validateDeliveryDate }}
-                  render={({ field }) => (
-                    <DatePicker
-                      selected={
-                        field.value
-                          ? field.value instanceof Date
-                            ? field.value
-                            : new Date(field.value)
-                          : null
-                      }
-                      onChange={(date: any) => field.onChange(date)}
-                      placeholderText="انتخاب تاریخ تحویل"
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
-                      locale={locale}
-                    />
-                  )}
-                />
-                {errors.deliveryDate && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.deliveryDate.message}
-                  </p>
-                )}
+            <div className="relative">
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 sm:pr-4 pointer-events-none z-10">
+                <FaCalendarAlt className="text-yellow-500 text-xl sm:text-2xl" />
               </div>
-            </div>
-          </div>
-
-          <div className="col-span-1">
-            <label className="block text-lg font-semibold text-gray-700 mb-2">
-              تاریخ بازگشت <span className="text-red-600">*</span>
-            </label>
-            <div className="flex items-center space-x-3">
-              <div className="relative flex-grow">
-                <div className="absolute inset-y-0 right-0 flex items-center pr-4">
-                  <FaCalendarAlt size={24} className="text-blue-800" />
-                </div>
-                <Controller
-                  name="returnDate"
-                  control={control}
-                  rules={{ validate: validateReturnDate }}
-                  render={({ field }) => (
-                    <DatePicker
-                      selected={
-                        field.value
-                          ? field.value instanceof Date
-                            ? field.value
-                            : new Date(field.value)
-                          : null
-                      }
-                      onChange={(date: any) => field.onChange(date)}
-                      placeholderText="انتخاب تاریخ بازگشت"
-                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
-                      locale={locale}
-                    />
-                  )}
-                />
-                {errors.returnDate && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.returnDate.message}
-                  </p>
+              <Controller
+                name="deliveryDate"
+                control={control}
+                rules={{ validate: validateDeliveryDate }}
+                render={({ field }) => (
+                  <DatePicker
+                    selected={
+                      field.value
+                        ? field.value instanceof Date
+                          ? field.value
+                          : new Date(field.value)
+                        : null
+                    }
+                    onChange={(date: any) => field.onChange(date)}
+                    placeholderText="انتخاب تاریخ تحویل"
+                    className={`w-full px-4 py-2.5 sm:py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-200 pr-10 sm:pr-12 text-sm sm:text-base ${
+                      errors.deliveryDate
+                        ? "border-red-500 ring-1 ring-red-500"
+                        : "border-gray-300"
+                    }`}
+                    locale={locale}
+                  />
                 )}
-              </div>
+              />
+              {errors.deliveryDate && (
+                <p className="text-red-500 text-xs sm:text-sm mt-1 mr-1">
+                  {errors.deliveryDate.message}
+                </p>
+              )}
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              توضیحات ماشین <span className="text-gray-400">(اختیاری)</span>
+            <label className="block text-sm sm:text-base font-semibold text-gray-800 mb-1.5 sm:mb-2">
+              تاریخ بازگشت <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 sm:pr-4 pointer-events-none z-10">
+                <FaCalendarAlt className="text-yellow-500 text-xl sm:text-2xl" />
+              </div>
+              <Controller
+                name="returnDate"
+                control={control}
+                rules={{ validate: validateReturnDate }}
+                render={({ field }) => (
+                  <DatePicker
+                    selected={
+                      field.value
+                        ? field.value instanceof Date
+                          ? field.value
+                          : new Date(field.value)
+                        : null
+                    }
+                    onChange={(date: any) => field.onChange(date)}
+                    placeholderText="انتخاب تاریخ بازگشت"
+                    className={`w-full px-4 py-2.5 sm:py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-200 pr-10 sm:pr-12 text-sm sm:text-base ${
+                      errors.returnDate
+                        ? "border-red-500 ring-1 ring-red-500"
+                        : "border-gray-300"
+                    }`}
+                    locale={locale}
+                  />
+                )}
+              />
+              {errors.returnDate && (
+                <p className="text-red-500 text-xs sm:text-sm mt-1 mr-1">
+                  {errors.returnDate.message}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm sm:text-base font-semibold text-gray-800 mb-1.5 sm:mb-2">
+              توضیحات ماشین{" "}
+              <span className="text-gray-400 font-normal text-xs sm:text-sm">
+                (اختیاری)
+              </span>
             </label>
             <input
               type="text"
-              placeholder="توضیحات..."
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ${
-                errors.description ? "border-red-500" : "border-gray-300"
+              placeholder="توضیحات خود را وارد کنید..."
+              className={`w-full px-4 py-2.5 sm:py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-all duration-200 text-sm sm:text-base ${
+                errors.description
+                  ? "border-red-500 ring-1 ring-red-500"
+                  : "border-gray-300"
               }`}
               {...register("description", {
                 minLength: { value: 5, message: "حداقل ۵ کاراکتر وارد کنید" },
@@ -338,7 +347,7 @@ const HeroBaner = () => {
               })}
             />
             {errors.description && (
-              <p className="text-red-500 text-sm mt-1">
+              <p className="text-red-500 text-xs sm:text-sm mt-1 mr-1">
                 {errors.description.message}
               </p>
             )}
@@ -348,18 +357,46 @@ const HeroBaner = () => {
         <button
           type="submit"
           disabled={isLoading}
-          className="bg-yellow-500 w-full hover:bg-yellow-700 text-white p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-yellow-500 hover:bg-yellow-600 active:bg-yellow-700 text-white font-semibold text-sm sm:text-base py-3 sm:py-3.5 px-4 rounded-xl mt-6 md:mt-8 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-[1.01] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:shadow-md"
         >
-          {isLoading ? "در حال ثبت..." : "ثبت درخواست"}
+          {isLoading ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              در حال ثبت...
+            </span>
+          ) : (
+            "ثبت درخواست"
+          )}
         </button>
 
-        <div className="mt-10 flex justify-end">
+        <div className="mt-6 sm:mt-8 flex justify-end">
           <Link
             to="/"
-            className="flex items-center gap-2 text-yellow-500 hover:text-yellow-600 font-semibold"
+            className="inline-flex items-center gap-2 text-yellow-600 hover:text-yellow-700 font-medium text-sm sm:text-base transition-colors duration-200 group"
           >
-            <span>انتقال به رزرو بعدی</span>
-            <FiArrowLeft className="text-lg" />
+            <span className="group-hover:translate-x-1 transition-transform duration-200">
+              انتقال به رزرو بعدی
+            </span>
+            <FiArrowLeft className="text-lg sm:text-xl group-hover:-translate-x-1 transition-transform duration-200" />
           </Link>
         </div>
       </form>

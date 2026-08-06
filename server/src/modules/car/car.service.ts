@@ -5,7 +5,7 @@ import {PaginationValidatorType, PREFIX_PUBLIC_PATH} from "@/common";
 import {checkConflictRecord, checkPrismaError, deleteOneFile} from "@/lib";
 import {ConflictException, Injectable, NotFoundException} from '@nestjs/common';
 import type {CommentWhereInput} from "@/modules/prisma/generated/models/Comment";
-import type {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, CommentListAndUser, SafeCarNCategory} from "@/types";
+import {ApiResponse, BaseException, CarAndCategory, CarResponse, CarsResponse, CommentListAndUser, GetRentedDatesCarResponse, SafeCarNCategory} from "@/types";
 
 @Injectable()
 export class CarService {constructor(private readonly prisma: PrismaService) {}
@@ -56,25 +56,14 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
    * - **Accessible to all users (public endpoint)**
    */
   async findAll(pagination: CarDto.FindAllCarValidatorType): Promise<ApiResponse<CarsResponse>> {
-    const {
-      limit,
-      offset,
-      can_rent,
-      category,
-      orderByLower,
-      order_by_field,
-      price_per_day_lte,
-      price_per_day_gte,
-    } = pagination;
-
     const where: Prisma.CarWhereInput = {
-      can_rent,
+      can_rent: pagination.can_rent,
       price_per_day: {
-        gte: price_per_day_gte,
-        lte: price_per_day_lte,
+        gte: pagination.price_per_day_gte,
+        lte: pagination.price_per_day_lte,
       },
       category: {
-        slug: category,
+        slug: pagination.category,
       }
     };
 
@@ -99,10 +88,10 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
         }
       },
       where,
-      take: limit,
-      skip: offset,
+      take: pagination.limit,
+      skip: pagination.offset,
       orderBy: {
-        [order_by_field]: orderByLower,
+        [pagination.order_by_field]: pagination.orderByLower,
       },
       omit: {creator_id: true}
     });
@@ -277,6 +266,8 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
         conflictField: '',
         notFoundField: 'id',
         notFoundResource: 'Car',
+        restrictResource: "car_id",
+        restrictForeignKey: "CarRent or Payment"
       });
     }
   }
@@ -323,6 +314,42 @@ export class CarService {constructor(private readonly prisma: PrismaService) {}
       data: {
         count,
         comments,
+      }
+    };
+  }
+
+  /**
+   * Get all rental dates for a specific car.
+   *
+   * @param car_id - Car UUID
+   * @returns Object with total count and list of rental dates (id, status, start_date, end_date)
+   *
+   * @throws {NotFoundException} If car doesn't exist
+   */
+  async getRentedDatesCar(car_id: string): Promise<ApiResponse<GetRentedDatesCarResponse>> {
+    const count: number = await this.prisma.carRent.count({
+      where: {
+        car_id,
+      },
+    });
+
+    const dates = await this.prisma.carRent.findMany({
+      where: {
+        car_id,
+      },
+      select: {
+        id: true,
+        status: true,
+        end_date: true,
+        start_date: true,
+      },
+    });
+
+    return {
+      message: "Get dates successfully.",
+      data: {
+        count,
+        dates,
       }
     };
   }

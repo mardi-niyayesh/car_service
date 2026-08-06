@@ -240,3 +240,11 @@ export const FindAllCommentsDecorator = () => applyDecorators(
   PaginationDecoratorQueries(),
   ApiOkResponse({type: CarDto.FindAllCommentsOk})
 );
+
+export const GetRentedDatesCarDecorator = () => applyDecorators(
+  HttpCode(HttpStatus.OK),
+  Public(),
+  ApiOperation(CarDto.getRentedDatesCarOperation),
+  ApiParam(UUID4Dto('id')),
+  ApiOkResponse({type: CarDto.GetDatesOkRes})
+);

@@ -2,7 +2,7 @@ import * as CartDto from "./dto";
 import {CartService} from "./cart.service";
 import {ApiBearerAuth} from "@nestjs/swagger";
 import * as CartDecorator from "./decorators";
-import {PaginationValidator, type PaginationValidatorType, Permission, PERMISSIONS, UUIDv4Validator, ZodPipe} from "@/common";
+import {Permission, PERMISSIONS, UUIDv4Validator, ZodPipe} from "@/common";
 import {Body, Controller, Delete, Get, Param, Post, Query, Req} from '@nestjs/common';
 import type {AccessRequest, ApiResponse, CarRentResponse, CartResponse, RemoveCarRentResponse} from "@/types";
 
@@ -61,7 +61,7 @@ export class CartController {
   @CartDecorator.GetCartDecorators()
   getCart(
     @Req() req: AccessRequest,
-    @Query(new ZodPipe(PaginationValidator)) pagination: PaginationValidatorType
+    @Query(new ZodPipe(CartDto.GetCartValidator)) pagination: CartDto.GetCartValidatorType
   ): Promise<ApiResponse<CartResponse>> {
     return this.cartService.getCart(req.user.userId, req.user, pagination);
   }

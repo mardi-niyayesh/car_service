@@ -1,21 +1,36 @@
 import { Link } from "react-router-dom";
-import { FaUser } from "react-icons/fa"; 
+import { FaUser } from "react-icons/fa";
 
 const AuthButton = () => {
   return (
-    <div
-      className="inline-flex cursor-pointer items-center justify-between py-3 w-auto rounded-lg
-                    md:bg-[#FDB713] transition duration-300 ease-in-out text-white
-                   group
-                   sm:justify-center sm:px-2
-                   md:hover:bg-yellow-600"
+    <Link
+      to="/login"
+      className="inline-flex items-center justify-center gap-2
+                 px-3 py-3 sm:px-3 md:px-5
+                 rounded-full md:rounded-lg
+                 bg-[#FDB713]                 
+                 text-white
+                 hover:bg-yellow-600             
+                 transition-all duration-300 ease-in-out
+                 border border-yellow-500/30   
+                 md:border-0                   
+                 hover:scale-105 md:hover:scale-100
+                 active:scale-95
+                 group"
     >
-      <Link to="/login" className="flex items-center px-3">
-        <FaUser size={20} className="md:block text-white mr-2 pl-1" />
-        <button className="hidden md:block font-medium ">ورود | ثبت نام</button>
-      </Link>
-    </div>
+      <FaUser
+        size={18}
+        className="text-white
+                   transition-transform duration-300
+                   group-hover:scale-110"
+      />
+      <span className="hidden md:inline font-medium text-sm lg:text-base">
+        ورود | ثبت نام
+      </span>
+    </Link>
   );
 };
 
 export default AuthButton;
+
+

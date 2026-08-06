@@ -1,7 +1,24 @@
+import z from "zod";
 import {exampleDate} from "@/lib";
 import type {CartResponse} from "@/types";
-import {getBaseOkResponseSchema} from "@/common";
+import {ApiQueryOptions} from "@nestjs/swagger";
 import {exampleCarRent} from "./add-to-cart.dto";
+import {RentStatus} from "@/modules/prisma/generated/enums";
+import {BasePaginationValidator, getBaseOkResponseSchema, getSafePaginationValidator} from "@/common";
+
+export const GetCartValidator = getSafePaginationValidator(z.object({
+  rent_status: z.enum(RentStatus).optional(),
+}).extend(BasePaginationValidator.shape));
+
+export type GetCartValidatorType = z.infer<typeof GetCartValidator>;
+
+export const getCartStatus: ApiQueryOptions = {
+  type: "string",
+  enum: RentStatus,
+  required: false,
+  name: "rent_status",
+  description: "Car rent status",
+};
 
 export class GetCartOk extends getBaseOkResponseSchema<CartResponse>({
   path: '/carts',
@@ -16,12 +33,6 @@ export class GetCartOk extends getBaseOkResponseSchema<CartResponse>({
         total_price: 40000000,
         user: {
           id: "1dbae5ed-a7bd-4d58-81b0-766e1a4191dd",
-          roles: [
-            "self"
-          ],
-          permissions: [
-            "user.self"
-          ],
           display_name: "owner"
         },
         carRents: [exampleCarRent]

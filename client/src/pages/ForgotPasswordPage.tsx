@@ -48,7 +48,6 @@ const ForgotPasswordPage = () => {
       }
     },
     onError: (error: any) => {
-      console.error("خطا:", error);
 
       if (error?.status === 409 || error?.message?.includes("409")) {
         setWarningMessage(
