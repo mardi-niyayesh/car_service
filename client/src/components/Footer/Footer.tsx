@@ -45,7 +45,7 @@ const Footer = () => {
               p-5
               transition-colors
               duration-300
-              hover:bg-white/[0.03]
+            bg-white/7
 
               sm:p-6
               lg:border-b-0
@@ -63,7 +63,7 @@ const Footer = () => {
                 rounded-xl
                 border
                 border-white/10
-                bg-white/[0.03]
+                 bg-white/7
                 transition-all
                 duration-300
                 group-hover:border-[#FDB713]/40
@@ -111,7 +111,7 @@ const Footer = () => {
               p-5
               transition-colors
               duration-300
-              hover:bg-white/[0.03]
+            bg-white/7
 
               sm:border-l-0
               sm:p-6
@@ -187,7 +187,7 @@ const Footer = () => {
               p-5
               transition-colors
               duration-300
-              hover:bg-white/[0.03]
+              bg-white/7
 
               sm:col-span-2
               sm:p-6
