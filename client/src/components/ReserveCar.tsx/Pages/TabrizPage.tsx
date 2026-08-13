@@ -1,4 +1,4 @@
-import DesCar from "../DesCar";
+
 import ReserveComponent from "../ReserveComponent";
 import Tabrizimg from "../../../../assets/imges/TABRIZ-2.png";
 
@@ -15,7 +15,6 @@ const TabrizPage = () => {
   تا در کوتاه‌ترین زمان ممکن و بدون خستگی به مقصد خود برسید."
       />
 
-      <DesCar />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import ReserveComponent from "../ReserveComponent";
-import DesCar from "../DesCar";
+
 import Nayshabbor from "../../../../assets/imges/neydhaboor.png";
 
 const Nayshaboor = () => {
@@ -17,7 +17,7 @@ const Nayshaboor = () => {
  تا انتهای مقاله با ما همراه باشید. "
       />
 
-      <DesCar />
+  
    
     </div>
   );
