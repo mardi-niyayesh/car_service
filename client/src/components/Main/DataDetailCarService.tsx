@@ -4,7 +4,7 @@ import { FaFileInvoiceDollar } from "react-icons/fa";
 
 const detail = [
   {
-    icon: <GiTowTruck size={100} className="text-gray-500" />,
+    icon: <GiTowTruck size={60} className="text-gray-500" />,
     title: "امداد رسانی در کمتر از 30 دقیقه در هر جای ایران ",
     text: `
    شبکه تحت پوشش کارسرویس که با همکاری شرکای تجاری در خدمت مشتریان قرار گرفته است، شامل 2000 نقطه در سراسر
@@ -14,7 +14,7 @@ const detail = [
             `,
   },
   {
-    icon: <AiFillCar size={100} className="text-gray-500" />,
+    icon: <AiFillCar size={60} className="text-gray-500" />,
     title: "ارائه ماشین های همیشه تمیز و نو",
     text: `
     یکی از دلایل موفقیت و محبوبیت خودروهای کارسرویس نو و تمیز بودن خودروهاست، هر خودرو بعد از هر اجاره سرویس
@@ -29,7 +29,7 @@ const detail = [
             `,
   },
   {
-    icon: <GiDart size={100} className="text-gray-500" />,
+    icon: <GiDart size={60} className="text-gray-500" />,
     title: "رزرو رایگان با امتیاز",
     text: `
     مشترکین کارسرویس می‌توانند با انجام رزرو برای دوستان و همکاران خود، امتیاز رزروهای ایشان را در کاربر خود
@@ -39,7 +39,7 @@ const detail = [
             `,
   },
   {
-    icon: <FaFileInvoiceDollar size={100} className="text-gray-500" />,
+    icon: <FaFileInvoiceDollar size={60} className="text-gray-500" />,
     title: "ارائه فاکتور رسمی",
     text: `
     پرداخت مالیات ، ارائه فاکتور رسمی و عملکرد صحیح طبق قوانین جاری کشور وظیفه‌ای دو‌طرفه می‌باشد و مشتریان
