@@ -157,6 +157,7 @@ const BoxComponentQuestion = ({ title, text, image }: BoxComponentType) => {
                   className="
                     text-justify
                     text-xs
+                    font-medium
                     leading-7
                     text-gray-600
                     sm:text-sm
