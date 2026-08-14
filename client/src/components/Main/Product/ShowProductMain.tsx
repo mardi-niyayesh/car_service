@@ -1,32 +1,59 @@
 import ShowCategoryForm from "../ShowCategoryForm";
-import { FaCar } from "react-icons/fa";
-import { FiArrowLeft } from "react-icons/fi";
-import { Link } from "react-router-dom";
 import AllProductMain from "./AllProductMain";
 
 const ShowProductMain = () => {
   return (
-    <>
-      <div className="text-2xl font-bold items-center flex mt-5 mb-5 justify-center ">
-        <span className="text-[#FDB713]">رزو خودرو در کارسرویس</span>
+    <section className="w-full bg-white py-10 sm:py-12 md:py-14">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-8 text-center sm:mb-10">
+          <div className="mb-3 flex items-center justify-center gap-3">
+            <span className="h-px w-7 bg-[#FDB713] sm:w-10" />
 
-        <FaCar size={25} opacity={0.7} className="mr-2" />
-      </div>
+            <span className="text-xs font-medium tracking-wide text-[#d99a00] sm:text-sm">
+              خدمات رزرو
+            </span>
 
-      <ShowCategoryForm />
-      <div className="flex  justify-end container max-auto">
-        <div className="mt-10 ">
-          <Link
-            to="/reservcar"
-            className="flex items-center justify-end gap-2 hover:text-yellow-600 text-[#FDB713] font-semibold  "
+            <span className="h-px w-7 bg-[#FDB713] sm:w-10" />
+          </div>
+
+          <h2
+            className="
+                text-xl
+                font-extrabold
+                leading-tight
+                text-gray-900
+                sm:text-2xl
+                md:text-3xl
+              "
           >
-            <span> مشاهده ی همه </span>
-            <FiArrowLeft className="text-lg" />
-          </Link>
+            رزرو خودرو در کارسرویس
+          </h2>
+
+          <p
+            className="
+              mx-auto
+              mt-3
+              max-w-xl
+              text-sm
+              leading-7
+              text-gray-500
+              sm:text-base
+              sm:leading-8
+              font-medium
+            "
+          >
+            خودروی موردنظرتان را انتخاب کنید و به‌سادگی رزرو کنید.
+          </p>
+        </div>
+
+        <ShowCategoryForm />
+
+
+        <div className="mt-2 sm:mt-4">
+          <AllProductMain />
         </div>
       </div>
-      <AllProductMain />
-    </>
+    </section>
   );
 };
 

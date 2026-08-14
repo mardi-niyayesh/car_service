@@ -8,6 +8,13 @@ import caresfahan from "../../../assets/imges/caresfahan.png";
 import cartehran from "../../../assets/imges/cartehran.png";
 import carmashhad from "../../../assets/imges/carmashhad.png";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
 import { motion } from "framer-motion";
 
 const Listcar = [
@@ -198,160 +205,144 @@ const Desctiption = () => {
         ))}
 
         <section className="py-10 sm:py-14 md:py-16">
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{
-              once: true,
-              amount: 0.2,
-            }}
-            className="mb-9 sm:mb-11 text-center"
-          >
+          <div className="mb-9 sm:mb-11 text-center">
             <h2
               className="
-                mt-3
-                text-2xl
-                sm:text-3xl
-                md:text-4xl
-                font-extrabold
-                text-gray-900
-              "
+        mt-3
+        text-2xl
+        sm:text-3xl
+        md:text-4xl
+        font-extrabold
+        text-gray-900
+      "
             >
               ماشین‌های لوکس و اقتصادی
             </h2>
 
             <p
               className="
-                mx-auto
-                mt-3
-                max-w-xl
-                text-sm
-                sm:text-base
-                leading-7
-                text-gray-500
-              "
+        mx-auto
+        mt-3
+        max-w-xl
+        px-4
+        text-sm
+        sm:text-base
+        leading-7
+        text-gray-500
+      "
             >
               مجموعه‌ای از خودروهای محبوب برای یک تجربه راحت و مطمئن
             </p>
-          </motion.div>
+          </div>
 
-          {/* Cars */}
+          <Swiper
+            modules={[Pagination, Autoplay]}
+            loop={true}
+            speed={700}
+            autoplay={{
+              delay: 2000,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }}
+            pagination={{
+              clickable: true,
+            }}
+            allowTouchMove={true}
+            grabCursor={true}
+            slidesPerView={1}
+            spaceBetween={16}
+            breakpoints={{
+              640: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
 
-          <div
-            className="
-              grid
-              grid-cols-1
-              sm:grid-cols-2
-              lg:grid-cols-4
-              gap-5
-              sm:gap-6
-            "
+              1024: {
+                slidesPerView: 3,
+                spaceBetween: 24,
+              },
+
+              1280: {
+                slidesPerView: 3,
+                spaceBetween: 24,
+              },
+            }}
+            className="!px-2 !pb-12"
           >
             {Listcar.map((item, index) => (
-              <motion.article
-                key={item.id}
-                custom={index}
-                variants={cardAnimation}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{
-                  once: true,
-                  amount: 0.15,
-                }}
-                whileHover={{
-                  y: -5,
-                  transition: {
-                    duration: 0.3,
-                  },
-                }}
-                whileTap={{
-                  scale: 0.985,
-                }}
-                className="
-                  group
-                  overflow-hidden
-                  rounded-2xl
-                  border
-                  border-gray-200
-                  bg-white
-                  shadow-sm
-                  transition-shadow
-                  duration-300
-                  hover:shadow-xl
-                "
-              >
-                <div className="p-5 pb-2">
-                  <h3
-                    className="
-                      text-lg
-                      sm:text-xl
-                      font-extrabold
-                      text-center
-                      text-gray-800
-                    "
-                  >
-                    {item.title}
-                  </h3>
+              <SwiperSlide key={item.id}>
+                <article
+                  className="
+            group
+            h-full
+            overflow-hidden
+            rounded-2xl
+            border
+            border-gray-200
+            bg-white
+            shadow-sm
+            transition-shadow
+            duration-300
+            hover:shadow-xl
+          "
+                >
+                  <div className="p-5 pb-2">
+                    <h3
+                      className="
+                text-lg
+                sm:text-xl
+                font-extrabold
+                text-center
+                text-gray-800
+              "
+                    >
+                      {item.title}
+                    </h3>
 
-                  <p
-                    className="
-                      mt-2
-                      text-sm
-                      text-center
-                      text-gray-500
-                    "
-                  >
-                    {item.namecar}
-                  </p>
-                </div>
+                    <p className="mt-2 text-sm text-center text-gray-500">
+                      {item.namecar}
+                    </p>
+                  </div>
 
-                <div className="relative px-4 pt-4 pb-5">
-                  <div
-                    className="
-                      absolute
-                      bottom-5
-                      left-5
-                      right-5
-                      h-10
-                      rounded-full
-                      bg-gray-900/15
-                      blur-md
-                      transition-all
-                      duration-500
-                      group-hover:scale-110
-                    "
-                  />
+                  <div className="relative px-4 pt-4 pb-5">
+                    <div
+                      className="
+                absolute
+                bottom-5
+                left-5
+                right-5
+                h-10
+                rounded-full
+                bg-gray-900/15
+                blur-md
+                transition-transform
+                duration-500
+                group-hover:scale-110
+              "
+                    />
 
-                  <motion.img
-                    src={item.imgcar}
-                    alt={item.title}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    decoding="async"
-                    className="
-                      relative
-                      z-10
-                      block
-                      w-[88%]
-                      h-auto
-                      mx-auto
-                      object-contain
-                    "
-                    whileHover={{
-                      scale: 1.04,
-                    }}
-                    transition={{
-                      duration: 0.6,
-                      ease: [0.25, 0.8, 0.25, 1],
-                    }}
-                  />
-                </div>
-              </motion.article>
+                    <img
+                      src={item.imgcar}
+                      alt={item.title}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                      className="
+                relative
+                z-10
+                block
+                w-[88%]
+                h-auto
+                mx-auto
+                object-contain
+              "
+                    />
+                  </div>
+                </article>
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
         </section>
-
-        {Description2.map((item, index) => (
+        {Description2.map((item) => (
           <motion.section
             key={item.id}
             variants={fadeUp}
@@ -668,9 +659,10 @@ const Desctiption = () => {
                 پوشش طلایی کارسرویس برای کاهش تعهد خسارات مشتری
               </h2>
 
-              <div  
+              <div
                 className=" rounded-2xl text-2xl font-medium aligin-center
-                bg-gray-50/70 p-5 sm:p-6 md:p-7 " >
+                bg-gray-50/70 p-5 sm:p-6 md:p-7 "
+              >
                 <p
                   className="
                     whitespace-pre-line
