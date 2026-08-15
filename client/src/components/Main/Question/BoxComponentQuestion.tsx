@@ -6,94 +6,171 @@ type BoxComponentType = {
   image?: string;
 };
 
-const BoxComponentQuestion = (props: BoxComponentType) => {
+const BoxComponentQuestion = ({ title, text, image }: BoxComponentType) => {
   const [showFullText, setShowFullText] = useState(false);
+
+  const toggleAnswer = () => {
+    if (text) {
+      setShowFullText((prev) => !prev);
+    }
+  };
+
   return (
-    <div className="w-full px-2 py-2 sm:px-3 sm:py-3">
-      <div className="bg-white rounded-xl border border-yellow-200 shadow-lg overflow-hidden">
-        <div className="block sm:hidden">
-          {props.image && (
-            <div className="w-full aspect-video">
-              <img
-                src={props.image}
-                alt=""
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
+    <div className="w-full px-2 py-2 sm:px-3">
+      <div
+        className={`
+          overflow-hidden
+          rounded-2xl
+          border
+          bg-white
+          shadow-sm
+          transition-all
+          duration-300
+          ease-out
 
-          <div
-            onClick={() => props.text && setShowFullText(!showFullText)}
-            className="flex items-center justify-between cursor-pointer group px-3 py-3"
-          >
-            <div className="text-[#2D2D2D] font-medium text-sm sm:text-base flex-1 leading-6">
-              {props.title}
-            </div>
-            {props.text && (
-              <div
-                className={`
-                  flex-shrink-0 w-8 h-8 
-                  flex items-center justify-center 
-                  rounded-lg bg-yellow-100 text-gray-600 font-bold text-2xl
-                  transition-all duration-300 
-                  ${showFullText ? "rotate-180" : "rotate-0"}
-                `}
-              >
-                <span>{showFullText ? "−" : "+"}</span>
-              </div>
-            )}
+          ${
+            showFullText
+              ? "border-[#FDB713] shadow-md"
+              : "border-gray-200 hover:border-gray-300 hover:shadow-md"
+          }
+        `}
+      >
+        {image && (
+          <div className="relative w-full overflow-hidden">
+            <img
+              src={image}
+              alt={title}
+              loading="lazy"
+              decoding="async"
+              className="
+                block
+                aspect-video
+                w-full
+                object-cover
+              "
+            />
           </div>
-        </div>
+        )}
 
-        <div className="hidden sm:flex sm:flex-row sm:items-center sm:gap-5 sm:p-5 lg:gap-6 lg:p-6">
-       
-          {props.image && (
-            <div className="w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 flex-shrink-0">
-              <img
-                src={props.image}
-                alt=""
-                className="w-full h-full object-cover rounded-lg"
-              />
-            </div>
-          )}
-          <div
-            onClick={() => props.text && setShowFullText(!showFullText)}
-            className="flex-1 flex items-center justify-between gap-3 cursor-pointer group"
+        <button
+          type="button"
+          onClick={toggleAnswer}
+          disabled={!text}
+          className={`
+            group
+            flex
+            w-full
+            items-center
+            justify-between
+            gap-4
+            px-4
+            py-4
+            text-right
+            sm:px-5
+            sm:py-5
+            lg:px-6
+            transition-all
+            duration-300
+
+            ${showFullText ? "bg-[#FDB713]" : "bg-white hover:bg-gray-50"}
+
+            ${!text ? "cursor-default" : "cursor-pointer"}
+          `}
+        >
+          <span
+            className={`
+              flex-1
+              text-sm
+              font-semibold
+              leading-7
+              sm:text-base
+              md:text-lg
+              transition-colors
+              duration-300
+
+              ${showFullText ? "text-gray-900" : "text-[#2D2D2D]"}
+            `}
           >
-            <div className="text-[#2D2D2D] font-medium text-base sm:text-lg lg:text-xl flex-1">
-              {props.title}
-            </div>
-            {props.text && (
-              <div
-                className={`
-                  flex-shrink-0 w-9 h-9 md:w-10 md:h-10  
-                  flex items-center justify-center 
-                  rounded-lg bg-yellow-100 group-hover:bg-yellow-200 text-gray-600 
-                  font-bold text-xl md:text-2xl transition-all duration-300
-                  ${showFullText ? "rotate-180" : "rotate-0"}
-                `}
-              >
-                <span>{showFullText ? "−" : "+"}</span>
-              </div>
-            )}
-          </div>
-        </div>
+            {title}
+          </span>
+
+          {text && (
+            <span
+              className={`
+                flex
+                h-9
+                w-9
+                shrink-0
+                items-center
+                justify-center
+                rounded-full
+                border
+                text-lg
+                font-medium
+                transition-all
+                duration-300
+                sm:h-10
+                sm:w-10
+                sm:text-xl
+
+                ${
+                  showFullText
+                    ? "rotate-180 border-black/10 bg-white/90 text-gray-800"
+                    : "border-gray-200 bg-gray-50 text-gray-600 group-hover:border-[#FDB713] group-hover:bg-[#fff8df]"
+                }
+              `}
+            >
+              <span className="leading-none">{showFullText ? "−" : "+"}</span>
+            </span>
+          )}
+        </button>
 
         <div
           className={`
-            overflow-hidden transition-all duration-500 ease-in-out
-            ${showFullText ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
+            grid
+            transition-all
+            duration-500
+            ease-[cubic-bezier(0.4,0,0.2,1)]
+
+            ${
+              showFullText
+                ? "grid-rows-[1fr] opacity-100"
+                : "grid-rows-[0fr] opacity-0"
+            }
           `}
         >
-          {props.text && (
-            <div className="px-4 pb-4 sm:px-5 sm:pb-5 lg:px-6 lg:pb-6">
-              <div className="border-t border-gray-100 pt-3 sm:pt-4">
-                <p className="text-gray-600 text-xs sm:text-sm md:text-base leading-6 text-justify">
-                  {props.text}
+          <div className="min-h-0 overflow-hidden">
+            {text && (
+              <div
+                className="
+                  border-t
+                  border-gray-100
+                  px-4
+                  py-4
+                  sm:px-5
+                  sm:py-5
+                  lg:px-6
+                  lg:py-6
+                "
+              >
+                <p
+                  className="
+                    text-justify
+                    text-xs
+                    font-medium
+                    leading-7
+                    text-gray-600
+                    sm:text-sm
+                    sm:leading-8
+                    md:text-base
+                    md:leading-8
+                  "
+                >
+                  {text}
                 </p>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>

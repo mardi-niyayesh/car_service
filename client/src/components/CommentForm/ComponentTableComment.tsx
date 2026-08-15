@@ -21,7 +21,7 @@ type CommentType = {
 const ComponentTableComment = () => {
   const { hasPermission, hasRole } = useUser();
   const { id } = useParams();
-  console.log(id);
+
 
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPages] = useState(1);
@@ -49,14 +49,12 @@ const ComponentTableComment = () => {
 
       const response = await axiosClient.get(endpoint);
       const { comments, count } = response.data.response.data;
-      console.log("response to Get All Comments :", comments);
+      
 
       setAllComment(comments);
       const calculatedTotalPages = Math.ceil(count / 5);
       setTotalPages(calculatedTotalPages);
-    } catch (err) {
-      console.log("Error in get all comment :", err);
-    } finally {
+    }finally {
       setLoading(false);
     }
   };
@@ -75,7 +73,7 @@ const ComponentTableComment = () => {
         fetchAllComment();
       }
     } catch (err: any) {
-      console.log("Error in reject comment : ", err);
+      
       if (err.response?.status === 400) {
         setIsWarningOpen(true);
         setWarningMessage(
@@ -92,7 +90,7 @@ const ComponentTableComment = () => {
         setSuccessMessage("کامنت مورد نظر با موفقیت تایید شد");
       }
     } catch (err: any) {
-      console.log("Error in tick comment :", err);
+    
       if (err.response?.status === 400) {
         setIsWarningOpen(true);
         setWarningMessage(

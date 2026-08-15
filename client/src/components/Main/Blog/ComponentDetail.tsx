@@ -1,5 +1,5 @@
 type description = {
-  id?:number,
+  id?: number;
   img: string;
   title: string;
   des: string;
@@ -12,8 +12,22 @@ const ComponentDetail = ({ img, title, des }: description) => {
         alt={title}
         className="w-full max-h-96 object-cover rounded-lg"
       />
-      <h1 className="text-3xl font-bold my-4 text-yellow-500">{title}</h1>
-      <p className="text-gray-700 leading-8 text-lg">{des}</p>
+      <h1
+        className="
+              mt-10
+                mb-10
+                text-xl
+                font-bold
+                leading-9
+                text-gray-800
+                sm:text-2xl
+                md:text-3xl
+                lg:text-4xl
+              "
+      >
+        {title}
+      </h1>
+      <p className="text-gray-700 leading-8 text-lg font-medium">{des}</p>
     </div>
   );
 };

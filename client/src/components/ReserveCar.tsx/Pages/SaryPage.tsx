@@ -1,5 +1,5 @@
 import ReserveComponent from "../ReserveComponent";
-import DesCar from "../DesCar";
+
 import saryimg from "../../../../assets/imges/sari.png";
 
 const SaryPage = () => {
@@ -16,7 +16,7 @@ const SaryPage = () => {
         />
       </div>
 
-      <DesCar />
+
     </>
   );
 };

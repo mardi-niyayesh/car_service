@@ -31,12 +31,12 @@ const ComponentTableCategory = (): React.ReactElement => {
     if (!window.confirm("آیا از حذف این دسته‌بندی مطمئن هستید؟")) return;
     try {
       const response = await axiosClient.delete(`/categories/${CategoryId}`);
-      console.log("response to deleat category : ", response);
+      
       setIsSuccessOpen(true);
       setSuccessMessage("دسته بندی با موفقیت حذف شد");
       refetch();
     } catch (err:any) {
-      console.log("error in deleat category :", err);
+     
       if (err.response?.status === 403) {
         setIsWarningOpen(true);
         setWarningMessage(

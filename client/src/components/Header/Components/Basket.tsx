@@ -57,9 +57,9 @@ const Basket = () => {
           {countitem > 0 && (
             <span
               className="absolute -top-2 -right-2 flex items-center justify-center
-                         bg-red-500 text-white text-[10px] font-bold rounded-full
+                         bg-white text-yellow-600 text-[15px] font-bold rounded-full
                          min-w-[18px] h-[18px] px-1
-                         ring-2 ring-white"
+                         ring-2 ring-yellow"
             >
               {countitem > 99 ? "99+" : countitem}
             </span>
