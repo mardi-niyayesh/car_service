@@ -5,17 +5,18 @@ import tigoo from "../../../assets/imges/tigoo.png";
 
 import carshiraz from "../../../assets/imges/carshiraz.png";
 import caresfahan from "../../../assets/imges/caresfahan.png";
-import cartehran from "../../../assets/imges/cartehran.png";
+import cartehran from "../../../assets/imges/qeshm-3.png";
 import carmashhad from "../../../assets/imges/carmashhad.png";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Pagination, Autoplay } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const Listcar = [
   {
@@ -85,21 +86,25 @@ const Description3 = [
     id: 1,
     img: carshiraz,
     title: "اجاره خودرو در شیراز",
+    href: "reserve/shiraz",
   },
   {
     id: 2,
     img: caresfahan,
-    title: "اجاره خودرو در اصفهان",
+    title: "اجاره خودرو در تبریز",
+    href: "reserve/tabriz",
   },
   {
     id: 3,
     img: cartehran,
-    title: "اجاره خودرو در تهران",
+    title: "اجاره خودرو در قشم",
+    href: "reserve/qeshm",
   },
   {
     id: 4,
     img: carmashhad,
     title: "اجاره خودرو در مشهد",
+    href: "reserve/mashhad",
   },
 ];
 
@@ -486,26 +491,27 @@ const Desctiption = () => {
             "
           >
             {Description3.map((item, index) => (
-              <motion.article
-                key={item.id}
-                custom={index}
-                variants={cardAnimation}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{
-                  once: true,
-                  amount: 0.15,
-                }}
-                whileHover={{
-                  y: -5,
-                  transition: {
-                    duration: 0.3,
-                  },
-                }}
-                whileTap={{
-                  scale: 0.985,
-                }}
-                className="
+              <Link to={item.href}>
+                <motion.article
+                  key={item.id}
+                  custom={index}
+                  variants={cardAnimation}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{
+                    once: true,
+                    amount: 0.15,
+                  }}
+                  whileHover={{
+                    y: -5,
+                    transition: {
+                      duration: 0.3,
+                    },
+                  }}
+                  whileTap={{
+                    scale: 0.985,
+                  }}
+                  className="
                   group
                   relative
                   h-64
@@ -515,49 +521,47 @@ const Desctiption = () => {
                   bg-gray-900
                   shadow-sm
                 "
-              >
-                <motion.img
-                  src={item.img}
-                  alt={item.title}
-                  loading="lazy"
-                  decoding="async"
-                  className="
+                >
+                  <motion.img
+                    src={item.img}
+                    alt={item.title}
+                    loading="lazy"
+                    decoding="async"
+                    className="
                     absolute
                     inset-0
                     h-full
                     w-full
                     object-cover
                   "
-                  whileHover={{
-                    scale: 1.06,
-                  }}
-                  transition={{
-                    duration: 0.8,
-                    ease: [0.25, 0.8, 0.25, 1],
-                  }}
-                />
+                    whileHover={{
+                      scale: 1.06,
+                    }}
+                    transition={{
+                      duration: 0.8,
+                      ease: [0.25, 0.8, 0.25, 1],
+                    }}
+                  />
 
-                <div
-                  className="
+                  <div
+                    className="
                     absolute
                     inset-0
-                    bg-gradient-to-t
-                    from-black/75
-                    via-black/20
+                
                     to-transparent
                   "
-                />
+                  />
 
-                <div
-                  className="
+                  <div
+                    className="
                     absolute
                     bottom-4
                     left-4
                     right-4
                   "
-                >
-                  <div
-                    className="
+                  >
+                    <div
+                      className="
                       rounded-xl
                       border
                       border-white/20
@@ -566,21 +570,22 @@ const Desctiption = () => {
                       py-3
                       backdrop-blur-md
                     "
-                  >
-                    <p
-                      className="
+                    >
+                      <p
+                        className="
                         text-center
                         text-sm
                         sm:text-base
                         font-bold
                         text-white
                       "
-                    >
-                      {item.title}
-                    </p>
+                      >
+                        {item.title}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </motion.article>
+                </motion.article>
+              </Link>
             ))}
           </div>
         </section>
@@ -596,100 +601,9 @@ const Desctiption = () => {
           className="
             max-w-5xl
             mx-auto
-            py-10
-            sm:py-14
-            md:py-16
+       
           "
-        >
-          <div
-            className="
-              relative
-              overflow-hidden
-              rounded-2xl
-              border
-              border-[#FDB713]/20
-              bg-gradient-to-br
-              from-[#fffaf0]
-              via-white
-              to-gray-50
-              p-5
-              sm:p-7
-              md:p-9
-            "
-          >
-            <div
-              className="
-                absolute
-                right-0
-                top-0
-                h-full
-                w-1
-                bg-[#FDB713]
-              "
-            />
-
-            <div className="pr-3 sm:pr-4">
-              <span
-                className="
-                  inline-flex
-                  rounded-full
-                  bg-[#FDB713]/10
-                  px-3
-                  py-1
-                  text-xs
-                  sm:text-sm
-                  font-bold
-                  text-[#a87500]
-                "
-              >
-                پوشش ویژه کارسرویس
-              </span>
-
-              <h2
-                className="
-                  mt-4
-                  text-xl
-                  sm:text-2xl
-                  md:text-3xl
-                  font-extrabold
-                  leading-relaxed
-                  text-gray-900
-                "
-              >
-                پوشش طلایی کارسرویس برای کاهش تعهد خسارات مشتری
-              </h2>
-
-              <div
-                className=" rounded-2xl text-2xl font-medium aligin-center
-                bg-gray-50/70 p-5 sm:p-6 md:p-7 "
-              >
-                <p
-                  className="
-                    whitespace-pre-line
-                  text-sm
-                  sm:text-base
-                  leading-8
-                  sm:leading-9
-                  text-gray-600
-                  text-justify
-                "
-                >
-                  یکی از مهمترین دغدغه‌های متقاضیان خدمات اجاره ماشین بدون
-                  راننده، خسارات و تصادفات احتمالی در طول سفر است. گرچه همه‌ی
-                  رانندگان سعی می‌کنند با احتیاط و با رعایت قوانین برای حفظ
-                  ایمنی و سلامت جان خود و سایرین رانندگی کنند، اما برخی اوقات به
-                  دلایلی اتفاقات نامطلوبی ممکن است برای آنها به وقوع بیاید.
-                  {"\n\n"}
-                  پوشش طلایی خودرو، خدمتی شبیه به بیمه خودرو است که از طرف شرکت
-                  اجاره خودرو در اختیار مشتری قرار می‌گیرد. خرید پوشش طلایی باعث
-                  کاهش تعهد مشتری در خسارات جزئی و تصادفات شده و همچنین باعث
-                  کاهش تعهد مشتری در زمینه خواب خودرو و حذف تعهد مشتری از افت
-                  خودرو در زمان تصادف می‌گردد.
-                </p>
-              </div>
-            </div>
-          </div>
-        </motion.section>
+        ></motion.section>
       </div>
     </main>
   );
