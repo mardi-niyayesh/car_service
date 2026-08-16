@@ -9,11 +9,11 @@ import CommentForm from "../components/CommentForm/CommentForm";
 import CommentOneProduct from "../components/CommentForm/CommentOneProduct";
 import HeroBaner from "../components/Main/HeroBaner";
 import PubliModal from "../Modal/PubliModal";
+import { motion } from "framer-motion";
 
 const DetailCar = () => {
   const { allProduct } = useProduct();
   const { slug } = useParams();
-
 
   const [isCommentModalOpen, setIsCommentModalOpen] = useState(false);
   const [replyToId, setReplyToId] = useState<string | null>(null);
@@ -53,47 +53,159 @@ const DetailCar = () => {
   return (
     <>
       <div
-        className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8"
+        className="min-h-screen bg-gray-50 px-4 py-8 sm:px-6 lg:px-8"
         dir="rtl"
       >
-        <div className="flex flex-col md:flex-row gap-6 md:justify-between">
-          <div className="md:w-1/2 w-full">
-            <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
-              <Des4Car />
-              <Des3Car />
-              <button
-                onClick={handleClick}
-                className="bg-yellow-500 w-full text-white hover:bg-yellow-600 cursor-pointer  text-center text-whitep p-3 rounded-lg font-medium flex items-center justify-center gap-1.5 m-auto"
+        <div className="mx-auto flex max-w-7xl flex-col gap-8 md:flex-row md:items-start md:justify-between">
+          <div className="w-full md:w-1/2">
+            <div className="grid grid-cols-1 gap-8">
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
               >
-                {showbtn ? "نمایش قوانین رزو" : "مخفی کردن قوانین رزو"}
-              </button>
+                <Des4Car />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.1,
+                  ease: "easeOut",
+                }}
+              >
+                <Des3Car />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{
+                  duration: 0.5,
+                  ease: "easeOut",
+                }}
+              >
+                <button
+                  onClick={handleClick}
+                  className="
+                  flex
+                  w-full
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  bg-yellow-500
+                  p-3.5
+                  text-center
+                  font-semibold
+                  text-white
+                  shadow-sm
+                  transition-all
+                  duration-300
+                  hover:bg-yellow-600
+                  hover:shadow-md
+                  active:scale-[0.98]
+                "
+                >
+                  {showbtn ? "نمایش قوانین رزرو" : "مخفی کردن قوانین رزرو"}
+                </button>
+              </motion.div>
+
               {!showbtn && (
                 <>
-                  <Des2Car />
-                  <Des1Car />
+                  <motion.div
+                    initial={{ opacity: 0, y: 35 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.5,
+                      ease: "easeOut",
+                    }}
+                  >
+                    <Des2Car />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 35 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.5,
+                      delay: 0.1,
+                      ease: "easeOut",
+                    }}
+                  >
+                    <Des1Car />
+                  </motion.div>
                 </>
               )}
             </div>
-            {findProduct.description && <div className="mt-2"></div>}
           </div>
-          <div className="w-full md:w-1/2 lg:w-2/5 px-5 md:px-0 md:ml-5">
-            <HeroBaner />
-          </div>
-        </div>
-        <button
-          onClick={openNewCommentModal}
-          className="bg-yellow-500 text-white px-4 py-2 rounded mt-4"
-        >
-          ثبت دیدگاه جدید
-        </button>
 
-        <CommentOneProduct
-          productId={productId}
-          onReply={openReplyModal}
-          refreshTrigger={refresh}
-        />
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{
+              duration: 0.7,
+              ease: "easeOut",
+            }}
+            className="w-full px-0 md:w-1/2 md:px-0 lg:w-2/5 md:ml-5"
+          >
+            <HeroBaner />
+          </motion.div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5 }}
+          className="mt-8"
+        >
+          <button
+            onClick={openNewCommentModal}
+            className="
+            rounded-xl
+            bg-yellow-500
+            px-5
+            py-3
+            font-semibold
+            text-white
+            shadow-sm
+            transition-all
+            duration-300
+            hover:bg-yellow-600
+            hover:shadow-md
+            active:scale-95
+          "
+          >
+            ثبت دیدگاه جدید
+          </button>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{
+            duration: 0.7,
+            ease: "easeOut",
+          }}
+          className="mt-8"
+        >
+          <CommentOneProduct
+            productId={productId}
+            onReply={openReplyModal}
+            refreshTrigger={refresh}
+          />
+        </motion.div>
       </div>
 
+      {/* Modal */}
       <PubliModal
         isOpen={isCommentModalOpen}
         onClose={() => setIsCommentModalOpen(false)}

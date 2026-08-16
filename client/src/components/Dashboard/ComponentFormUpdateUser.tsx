@@ -3,7 +3,7 @@ import { useUpdateUser } from "./APi/ApiUpdatUser";
 import SuccessModal from "../../Modal/SuccessModal";
 import WarningModal from "../../Modal/WarningModal ";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type FormData = {
   display_name: string;
@@ -41,14 +41,11 @@ const ComponentFormUpdateUser = () => {
       setIsWarningOpen(true);
       return;
     }
-    console.log("Sending payload:", payload);
+
     try {
       const result = await FetchUpdateUser(payload);
       if (result.ok) {
         setSuccessMessage(result.message);
-        setInterval(() => {
-          navigate("/panel/profile");
-        }, 5000);
         setIsSuccessOpen(true);
         reset();
       } else {
@@ -62,6 +59,9 @@ const ComponentFormUpdateUser = () => {
       setIsWarningOpen(true);
     }
   };
+  const goBack = () => {
+    navigate(-1);
+  };
 
   return (
     <>
@@ -70,14 +70,14 @@ const ComponentFormUpdateUser = () => {
         className="border border-[#EDEDED] rounded-xl bg-white shadow-sm"
       >
         <div className="p-6 bg-white">
-          <span className="text-blue-800 text-[20px] font-medium mb-4">
+          <span className="text-yellow-600 text-[20px] font-bold mb-4">
             فرم ویرایش کاربر
           </span>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 mb-8">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mt-4 mb-3">
-                نام کامل<span className="text-gray-400">(اختیاری)</span>
+              <label className="block  font-medium text-gray-700 mt-4 mb-3">
+                نام کامل<span className="text-gray-400 text-sm">(اختیاری)</span>
               </label>
               <input
                 type="text"
@@ -102,8 +102,9 @@ const ComponentFormUpdateUser = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mt-4 mb-3">
-                سن کاربر <span className="text-gray-400">(اختیاری)</span>
+              <label className="block  font-medium text-gray-700 mt-4 mb-3">
+                سن کاربر{" "}
+                <span className="text-gray-400 text-sm">(اختیاری)</span>
               </label>
               <input
                 type="number"
@@ -132,12 +133,19 @@ const ComponentFormUpdateUser = () => {
           </p>
           <button
             type="submit"
-            className="py-3 px-4 cursor-pointer bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 w-full md:w-auto"
+            className="py-3 px-4 cursor-pointer bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition duration-300 w-full md:w-auto"
           >
             ثبت اطلاعات
           </button>
         </div>
       </form>
+      <p
+        onClick={goBack}
+        className="w-fit mr-auto text-gray-500 text-2xl  border p-1 rounded border-gray-0 border-none bg-gray-200 mt-1.5 cursor-pointer"
+      >
+        بازگشت
+      </p>
+
       <SuccessModal
         isOpen={isSuccessOpen}
         onClose={() => setIsSuccessOpen(false)}

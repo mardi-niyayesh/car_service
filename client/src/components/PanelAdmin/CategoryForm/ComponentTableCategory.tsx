@@ -30,13 +30,12 @@ const ComponentTableCategory = (): React.ReactElement => {
   const handleDeleatCategory = async (CategoryId: string) => {
     if (!window.confirm("آیا از حذف این دسته‌بندی مطمئن هستید؟")) return;
     try {
-      const response = await axiosClient.delete(`/categories/${CategoryId}`);
-      
+      await axiosClient.delete(`/categories/${CategoryId}`);
+
       setIsSuccessOpen(true);
       setSuccessMessage("دسته بندی با موفقیت حذف شد");
       refetch();
-    } catch (err:any) {
-     
+    } catch (err: any) {
       if (err.response?.status === 403) {
         setIsWarningOpen(true);
         setWarningMessage(
@@ -92,10 +91,8 @@ const ComponentTableCategory = (): React.ReactElement => {
                   <td>
                     {
                       <RiDeleteBinLine
-                        size={20}
-                        color="red"
-                        opacity={0.8}
-                        className="cursor-pointer"
+                        size={18}
+                        className="text-red-400 hover:text-red-600 transition-colors duration-200 cursor-pointer"
                         onClick={() => handleDeleatCategory(cat.id)}
                       />
                     }
@@ -105,10 +102,8 @@ const ComponentTableCategory = (): React.ReactElement => {
                   <td>
                     {
                       <FaPencilAlt
-                        size={20}
-                        color="blue"
-                        opacity={0.5}
-                        className="cursor-pointer"
+                        size={16}
+                        className="text-blue-400 hover:text-blue-600 transition-colors duration-200 cursor-pointer"
                         onClick={() => handleupdatCategory(cat.id)}
                       />
                     }

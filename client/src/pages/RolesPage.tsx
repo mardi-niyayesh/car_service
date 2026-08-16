@@ -31,7 +31,7 @@ const RolesPage = () => {
       const response = await axiosClient.get(
         `/roles?order=desc&limit=5&page=${page}`,
       );
-     
+
       const getAllRoles = response.data.response.data.roles;
       const getCount = response.data.response.data.count;
       const tota = Math.ceil(getCount / 5);
@@ -46,7 +46,7 @@ const RolesPage = () => {
   const handelDleatRole = async (roleId: string) => {
     try {
       const res = await axiosClient.delete(`/roles/${roleId}`);
-     
+
       const status = res.status;
       if (status === 200) {
         setIsSuccessOpen(true);
@@ -212,26 +212,91 @@ const RolesPage = () => {
         onClose={() => setIsWarningOpen(false)}
         message={WarningMessage}
       />
-      <div className="bg-gray-50 border border-gray-200 rounded-md p-4 mb-6 mt-6">
-        <h2 className="font-medium text-blue-800 mb-2">
-          نکاتی در مورد حذف نقش :
-        </h2>
-        <ul className="list-disc pr-5 space-y-1 text-[18px] text-gray-500 ">
-          <li>حتی مالک سیستم نمی‌تواند نقش‌های پایه‌ای سیستم را حذف کند.</li>
-          <li>
-            حتی با مجوز role.delete هم نمی‌توانید نقش‌های حساس (شروع با user. یا
-            role.) را حذف کنید.
-          </li>
-          <li>
-            فقط مالک سیستم می‌تواند نقش‌های CUSTOM دارای مجوزهای user/role را
-            حذف کند.
-          </li>
-          <li>
-            حتی اگر نقش مورد نظر دارای یک مجوز حساس باشد ( با user/role) شروع
-            شده باشد و با حتی داشتن مجوز role.deleat نمیتوانید حذفش کنید فقط
-            owner قادر به حذف نقش های کاستوم حساس می باشد
-          </li>
-        </ul>
+      <div
+        className="
+    mb-6
+    mt-6
+    overflow-hidden
+    rounded-2xl
+    border
+    border-gray-200
+    bg-white
+    shadow-sm
+  "
+      >
+        <div
+          className="
+      flex
+      items-center
+      gap-3
+      border-b
+      border-gray-200
+      bg-gray-50
+      px-4
+      py-3
+      sm:px-5
+    "
+        >
+          <div
+            className="
+        flex
+        h-8
+        w-8
+        shrink-0
+        items-center
+        justify-center
+        rounded-lg
+        bg-blue-50
+        text-blue-600
+      "
+          >
+            <span className="text-2xl">⚠️ </span>
+          </div>
+
+          <h2 className="text-sm font-bold text-gray-800 sm:text-base">
+            نکاتی در مورد حذف نقش
+          </h2>
+        </div>
+
+        {/* Content */}
+        <div className="px-4 py-4 sm:px-5 sm:py-5">
+          <ul
+            className="
+        space-y-3
+        pr-5
+        text-right
+        text-sm
+        leading-7
+        text-gray-600
+        marker:text-blue-500
+        sm:text-[15px]
+      "
+          >
+            <li className="border-b border-gray-100 pb-3">
+              حتی مالک سیستم نمی‌تواند نقش‌های پایه‌ای سیستم را حذف کند.
+            </li>
+
+            <li className="border-b border-gray-100 pb-3">
+              حتی با مجوز{" "}
+              <span className="font-semibold text-gray-800">role.delete</span>{" "}
+              هم نمی‌توانید نقش‌های حساس (شروع با user. یا role.) را حذف کنید.
+            </li>
+
+            <li className="border-b border-gray-100 pb-3">
+              فقط مالک سیستم می‌تواند نقش‌های{" "}
+              <span className="font-semibold text-gray-800">CUSTOM</span> دارای
+              مجوزهای user/role را حذف کند.
+            </li>
+
+            <li>
+              حتی اگر نقش مورد نظر دارای یک مجوز حساس باشد (با user/role شروع
+              شده باشد)، با داشتن مجوز{" "}
+              <span className="font-semibold text-gray-800">role.delete</span>{" "}
+              نمی‌توانید آن را حذف کنید؛ فقط owner قادر به حذف نقش‌های کاستوم
+              حساس است.
+            </li>
+          </ul>
+        </div>
       </div>
     </>
   );

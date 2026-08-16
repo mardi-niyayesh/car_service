@@ -15,12 +15,9 @@ import RolsPage from "./pages/RolsPage";
 import QuestionPage from "./pages/QuestionPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ComponentQeshm from "./components/ReserveCar.tsx/Pages/QeshmPage";
-import ComponentSary from "./components/ReserveCar.tsx/Pages/SaryPage";
 import ShirazPage from "./components/ReserveCar.tsx/Pages/ShirazPage";
 import TabrizPage from "./components/ReserveCar.tsx/Pages/TabrizPage";
 import MashhadPage from "./components/ReserveCar.tsx/Pages/MashhadPage";
-import Nayshaboor from "./components/ReserveCar.tsx/Pages/Nayshaboor";
-import YazdPage from "./components/ReserveCar.tsx/Pages/YazdPage";
 import BlogDetail from "./components/Main/Blog/BlogDetail";
 import BlogPage from "./pages/BlogPage";
 import DetailArticle from "./components/Main/Article/DetailArticle";
@@ -74,12 +71,11 @@ function App() {
           <Route path="/roles" element={<RolsPage />} />
           <Route path="/questionPage" element={<QuestionPage />} />
           <Route path="/reserve/qeshm" element={<ComponentQeshm />} />
-          <Route path="/reserve/sary" element={<ComponentSary />} />
+        
           <Route path="/reserve/shiraz" element={<ShirazPage />} />
           <Route path="/reserve/tabriz" element={<TabrizPage />} />
           <Route path="/reserve/mashhad" element={<MashhadPage />} />
-          <Route path="/reserve/Yazd" element={<YazdPage />} />
-          <Route path="/reserve/neyshaboor" element={<Nayshaboor />} />
+   
           <Route path="/articles/:id" element={<DetailArticle />} />
           <Route path="/category/:slug" element={<ProductComponent />} />
           <Route path="/detailcar/:slug" element={<DetailCar />} />
