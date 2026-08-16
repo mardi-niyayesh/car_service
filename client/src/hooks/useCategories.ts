@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axiosClient from "../services/axiosClient";
 
-type CategoryType = {
+export type CategoryType = {
   id: string;
   name: string;
   description: string;
