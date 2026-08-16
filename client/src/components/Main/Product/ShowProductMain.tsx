@@ -1,6 +1,4 @@
 import ShowCategoryForm from "../ShowCategoryForm";
-import AllProductMain from "./AllProductMain";
-
 const ShowProductMain = () => {
   return (
     <section className="w-full bg-white py-10 sm:py-12 md:py-14">
@@ -47,11 +45,6 @@ const ShowProductMain = () => {
         </div>
 
         <ShowCategoryForm />
-
-
-        <div className="mt-2 sm:mt-4">
-          <AllProductMain />
-        </div>
       </div>
     </section>
   );
