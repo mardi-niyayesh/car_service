@@ -1,6 +1,5 @@
-import call from "../../../assets/imges/call-calling.png";
-import email from "../../../assets/imges/sms.png";
-import map from "../../../assets/imges/map.png";
+import { FaPhone } from "react-icons/fa";
+import { FiMapPin, FiMail } from "react-icons/fi";
 import logocar from "../../../assets/imges/logo21.png";
 import { Link } from "react-router-dom";
 
@@ -70,11 +69,7 @@ const Footer = () => {
                 group-hover:bg-[#FDB713]/10
               "
             >
-              <img
-                src={call}
-                alt="تماس با ما"
-                className="h-7 w-7 object-contain"
-              />
+              <FaPhone />
             </div>
 
             <div className="min-w-0 text-right">
@@ -138,7 +133,7 @@ const Footer = () => {
                 group-hover:bg-[#FDB713]/10
               "
             >
-              <img src={email} alt="ایمیل" className="h-7 w-7 object-contain" />
+              <FiMail size={22} />
             </div>
 
             <div className="min-w-0 text-right">
@@ -148,7 +143,7 @@ const Footer = () => {
 
               <div className="space-y-0.5 text-xs sm:text-sm">
                 <a
-                  href="mailto:niyayesh@gmail.com"
+                  href="mailto: niyayeshammardii@gmail.com"
                   className="
         block
         break-all
@@ -158,7 +153,7 @@ const Footer = () => {
         hover:text-[#FDB713]
       "
                 >
-                  niyayesh@gmail.com
+                  niyayeshammardii@gmail.com
                 </a>
 
                 <a
@@ -213,7 +208,7 @@ const Footer = () => {
                 group-hover:bg-[#FDB713]/10
               "
             >
-              <img src={map} alt="آدرس" className="h-7 w-7 object-contain" />
+              <FiMapPin />
             </div>
 
             <div className="text-right">

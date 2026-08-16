@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import profilUser from "../../../assets/imges/Ellipse 114.png";
-import logout from "../../../assets/imges/logout.png";
+import { FiLogOut } from "react-icons/fi";
 import { useUser } from "../../hooks/useUser";
 import { FaUser } from "react-icons/fa";
 import { HiOutlineHome } from "react-icons/hi";
@@ -135,9 +135,7 @@ const HeaderDashbord = () => {
                 sm:w-10
               "
             >
-              <img
-                src={logout}
-                alt="خروج"
+              <FiLogOut
                 className="
                   h-4
                   w-4
