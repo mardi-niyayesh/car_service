@@ -3,10 +3,10 @@ import hunda from "../../../assets/imges/hunda.png";
 import sorena from "../../../assets/imges/sorentoo.png";
 import tigoo from "../../../assets/imges/tigoo.png";
 
-import carshiraz from "../../../assets/imges/carshiraz.png";
-import caresfahan from "../../../assets/imges/caresfahan.png";
+import carshiraz from "../../../assets/imges/shiraz-2.png";
+import caresfahan from "../../../assets/imges/TABRIZ-2.png";
 import cartehran from "../../../assets/imges/qeshm-3.png";
-import carmashhad from "../../../assets/imges/carmashhad.png";
+import carmashhad from "../../../assets/imges/mashhad-2.png";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
