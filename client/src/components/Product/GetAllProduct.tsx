@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FaStar, FaHeart } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import { AiOutlineHeart } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 import { type ProductFormType } from "../PanelAdmin/ProductForm/ProductFormComponent";
@@ -9,6 +9,7 @@ import WarningModal from "../../Modal/WarningModal ";
 import SuccessModal from "../../Modal/SuccessModal";
 import ErrorModal from "../../Modal/ErrorModal";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 type ProductProps = {
   product: ProductFormType;
@@ -20,21 +21,14 @@ const GetAllProduct = ({ product }: ProductProps) => {
 
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+
   const [isWarningOpen, setIsWarningOpen] = useState(false);
   const [warningMessage, setWarningMessage] = useState("");
+
   const [isErrorOpen, setIsErrorOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const [favoriteId, setFavoriteId] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
-
-  if (!product) {
-    return (
-      <div className="text-center text-gray-500 py-8">
-        در این دسته بندی محصولی وجود ندارد
-      </div>
-    );
-  }
 
   const handleClickBtn = (slug: string) => {
     navigate(`/detailcar/${slug}`);
@@ -44,24 +38,21 @@ const GetAllProduct = ({ product }: ProductProps) => {
     const checkFavorite = async () => {
       if (!user) {
         setIsLiked(false);
-        setFavoriteId(null);
+
         return;
       }
+
       try {
         const response = await axiosClient.get(`favorites/check/${product.id}`);
+
         const data = response.data.response.data;
-        const isFav = data.is_favorite;
-        const favId = data.favorite_id || null;
 
-        setIsLiked(isFav);
-        setFavoriteId(isFav ? favId : null);
-      } catch (err: any) {
-        console.log("Error in checked favorit car :", err);
-
+        setIsLiked(data.is_favorite);
+      } catch (err) {
         setIsLiked(false);
-        setFavoriteId(null);
       }
     };
+
     checkFavorite();
   }, [product.id, user]);
 
@@ -74,19 +65,17 @@ const GetAllProduct = ({ product }: ProductProps) => {
 
     try {
       if (!isLiked) {
-        const response = await axiosClient.post(`favorites/${product.id}`);
-        const newFav = response.data.response.data.favorite;
-        console.log("new favorite :", newFav.id);
+        await axiosClient.post(`favorites/${product.id}`);
 
-        setFavoriteId(newFav.id);
         setIsLiked(true);
+
         setIsSuccessOpen(true);
         setSuccessMessage("این ماشین به علاقه مندی ها اضافه شد");
       } else {
         await axiosClient.delete(`favorites/${product.id}`);
-        console.log("favoriteId for delete:", favoriteId);
-        setFavoriteId(null);
+
         setIsLiked(false);
+
         setIsSuccessOpen(true);
         setSuccessMessage("این ماشین از علاقه مندی ها حذف شد");
       }
@@ -96,20 +85,24 @@ const GetAllProduct = ({ product }: ProductProps) => {
           const checkRes = await axiosClient.get(
             `favorites/check/${product.id}`,
           );
+
           const checkData = checkRes.data.response.data;
+
           setIsLiked(checkData.is_favorite);
-          setFavoriteId(checkData.is_favorite ? checkData.favorite_id : null);
+
           setIsWarningOpen(true);
-          setWarningMessage(" :) این ماشین قبلا توسط شما لایک شده است");
+
+          setWarningMessage(":) این ماشین قبلا توسط شما لایک شده است");
         } catch {
           setIsWarningOpen(true);
           setWarningMessage("خطا در دریافت اطلاعات");
         }
       } else if (err.response?.status === 404) {
         setIsLiked(false);
-        setFavoriteId(null);
+
         setIsWarningOpen(true);
-        setWarningMessage("این ماشین  در لیست علاقه‌مندی‌های شما وجود ندارد");
+
+        setWarningMessage("این ماشین در لیست علاقه‌مندی‌های شما وجود ندارد");
       } else {
         setIsErrorOpen(true);
         setErrorMessage("خطا در سرور");
@@ -117,94 +110,297 @@ const GetAllProduct = ({ product }: ProductProps) => {
     }
   };
 
+  if (!product) {
+    return (
+      <div className="py-8 text-center text-gray-500">
+        در این دسته بندی محصولی وجود ندارد
+      </div>
+    );
+  }
+
   return (
     <>
-      <div>
-        <div className="w-full border-2 border-[#D7D7D7] p-4 mt-10 rounded-2xl ">
-          <img src={`/${product.image}`} alt={product.name} />
-          <div className="flex justify-between items-center mt-4">
-            <h2 className="font-bold text-[18px] text-[#0C0C0C] mb-2">
+      <motion.article
+        initial={{
+          opacity: 0,
+          y: 15,
+        }}
+        whileInView={{
+          opacity: 1,
+          y: 0,
+        }}
+        viewport={{
+          once: true,
+          amount: 0.1,
+        }}
+        transition={{
+          duration: 0.4,
+          ease: "easeOut",
+        }}
+        whileHover={{
+          y: -4,
+        }}
+        className="
+          group
+          flex
+          h-full
+          w-full
+          min-w-0
+          flex-col
+          overflow-hidden
+          rounded-2xl
+          border
+          border-gray-200
+          bg-white
+          shadow-sm
+          transition-shadow
+          duration-300
+          hover:shadow-lg
+        "
+      >
+        <div
+          className="
+            relative
+            flex
+            w-full
+            items-center
+            justify-center
+            overflow-hidden
+            bg-gray-50
+            px-4
+            py-5
+            sm:px-5
+            sm:py-6
+          "
+        >
+          <motion.img
+            src={`/${product.image}`}
+            alt={product.name}
+            loading="lazy"
+            decoding="async"
+            whileHover={{
+              scale: 1.03,
+            }}
+            transition={{
+              duration: 0.4,
+              ease: "easeOut",
+            }}
+            className="
+              block
+              h-auto
+              max-h-44
+              w-full
+              max-w-[280px]
+              object-contain
+              sm:max-h-48
+              md:max-h-52
+            "
+          />
+        </div>
+
+        <div
+          className="
+            flex
+            flex-1
+            flex-col
+            p-3.5
+            sm:p-4
+            md:p-5
+          "
+        >
+          <div
+            className="
+              flex
+              min-w-0
+              items-center
+              justify-between
+              gap-2
+            "
+          >
+            <h2
+              className="
+                min-w-0
+                flex-1
+                truncate
+                text-base
+                font-bold
+                text-gray-900
+                sm:text-lg
+              "
+            >
               {product.name}
             </h2>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 bg-gray-50/80 px-3 py-1.5 rounded-full border border-gray-100 hover:bg-gray-100 transition-colors duration-200">
-                {isLiked ? (
-                  <FaHeart
-                    color="#ef4444"
-                    size={18}
-                    onClick={handleToggleLike}
-                    className="cursor-pointer hover:scale-110 transition-transform duration-200 active:scale-90"
-                  />
-                ) : (
-                  <AiOutlineHeart
-                    color="#ef4444"
-                    size={18}
-                    onClick={handleToggleLike}
-                    className="cursor-pointer hover:scale-110 transition-transform duration-200 active:scale-90"
-                  />
-                )}
-                <span className="text-sm font-medium text-gray-700 min-w-[12px] text-center">
-                  {product?._count?.users_favorites || 0}
-                </span>
-              </div>
 
-              <div className="flex items-center gap-1.5 bg-gray-50/80 px-3 py-1.5 rounded-full border border-gray-100 hover:bg-gray-100 transition-colors duration-200">
-                <FaRegComment color="#3b82f6" opacity={0.8} size={17} />
-                <span className="text-sm font-medium text-gray-700 min-w-[12px] text-center">
-                  {product?._count?.comments || 0}
-                </span>
-              </div>
+            <button
+              type="button"
+              onClick={handleToggleLike}
+              aria-label={
+                isLiked ? "حذف از علاقه مندی" : "افزودن به علاقه مندی"
+              }
+              className="
+                flex
+                h-9
+                w-9
+                shrink-0
+                items-center
+                justify-center
+                rounded-full
+                bg-gray-50
+                transition-all
+                duration-200
+                hover:bg-red-50
+                active:scale-90
+              "
+            >
+              <motion.span
+                animate={{
+                  scale: isLiked ? [1, 1.2, 1] : 1,
+                }}
+                transition={{
+                  duration: 0.25,
+                }}
+              >
+                {isLiked ? (
+                  <FaHeart size={17} className="text-red-500" />
+                ) : (
+                  <AiOutlineHeart size={20} className="text-red-500" />
+                )}
+              </motion.span>
+            </button>
+          </div>
+
+          <div className="mt-3 flex items-center gap-2">
+            <div
+              className="
+                flex
+                items-center
+                gap-1
+                rounded-full
+                bg-gray-50
+                px-2.5
+                py-1
+                text-xs
+                text-gray-600
+              "
+            >
+              <FaHeart size={12} className="text-red-400" />
+
+              <span>{product?._count?.users_favorites || 0}</span>
+            </div>
+
+            <div
+              className="
+                flex
+                items-center
+                gap-1
+                rounded-full
+                bg-gray-50
+                px-2.5
+                py-1
+                text-xs
+                text-gray-600
+              "
+            >
+              <FaRegComment size={12} className="text-blue-400" />
+
+              <span>{product?._count?.comments || 0}</span>
             </div>
           </div>
 
-          <div className="text-[#5a5656] text-[18px] mb-2">
-            <span>کمپانی:</span>
-            <span>{product.company}</span>
-          </div>
-          <div className="flex items-center justify-between mb-2 bg-yellow-50 rounded border-r-3 border-yellow-300 p-1">
-            <div className="flex items-center justify-center">
-              <span className="text-[#212121] ">هزینه :</span>
-              <span className="text-[#05164D] font-bold">
-                {product.price_per_day}
+          <div className="mt-4 flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className=" truncate text-[12px] font-bold text-gray-800    ">
+                کمپانی :
+              </span>
+
+              <span className="shrink-0 text-xs text-gray-400 sm:text-sm ">
+                {product.company}
               </span>
             </div>
-            <p className="text-[#212121] text-[18px]">روزانه</p>
-          </div>
-          <div className="text-gray-500  text-[18px] mb-2">
-            <span>قابل اجاره هست؟</span>
-            <span>{product.can_rent ? "بله" : "خیر"}</span>
-          </div>
-          <div className="flex justify-between items-center text-[18px] mb-2 mt-2">
-            <p>امتیاز :</p>
-            <div className="flex ">
-              {Array.from({ length: product.rate }, (_, index) => (
-                <FaStar key={index} color="gold" size={15} />
-              ))}
+
+            <div
+              className="
+      flex
+      shrink-0
+      items-center
+      gap-1.5
+      px-2.5
+      py-1.5
+      sm:px-3
+      sm:py-2
+    "
+            >
+              <span className="text-[10px] text-gray-500 sm:text-xs">
+                روزانه
+              </span>
+
+              <span className="text-xs font-extrabold text-[#05164D] sm:text-sm">
+                {product.price_per_day}
+              </span>
+
+              <span className="text-[10px] font-medium text-gray-400 sm:text-xs">
+                تومان
+              </span>
             </div>
           </div>
-          <p className="text-[#212121]  text-[18px] mb-2">
+
+          <p
+            className="
+              text-sm
+              text-gray-500
+            "
+          >
             {product.description}
           </p>
 
-          <button
-            className="bg-yellow-500 text-[#FFFFFF] w-full px-4 py-2 rounded-2xl hover:bg-yellow-600 cursor-pointer"
+          <motion.button
+            type="button"
             onClick={() => handleClickBtn(product.slug)}
+            whileTap={{
+              scale: 0.97,
+            }}
+            className="
+              mt-auto
+              pt-4
+            "
           >
-            درخواست رزرو
-          </button>
+            <span
+              className="
+                block
+                w-full
+                rounded-xl
+                bg-[#FDB713]
+                px-4
+                py-2.5
+                text-sm
+                font-bold
+                text-white
+                shadow-sm
+                transition-all
+                duration-300
+                hover:bg-[#E5A500]
+                hover:shadow-md
+                sm:py-3
+              "
+            >
+              درخواست رزرو
+            </span>
+          </motion.button>
         </div>
-      </div>
+      </motion.article>
 
       <SuccessModal
         isOpen={isSuccessOpen}
         onClose={() => setIsSuccessOpen(false)}
         message={successMessage}
       />
+
       <WarningModal
         isOpen={isWarningOpen}
         onClose={() => setIsWarningOpen(false)}
         message={warningMessage}
       />
+
       <ErrorModal
         isOpen={isErrorOpen}
         onClose={() => setIsErrorOpen(false)}

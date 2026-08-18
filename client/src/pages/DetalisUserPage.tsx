@@ -1,21 +1,75 @@
+
 import { Link } from "react-router-dom";
+import { FaAngleLeft } from "react-icons/fa";
 import ComponentDatailUser from "../components/PanelAdmin/UserForm/ComponentDatailUser";
+
 const DetalisUserPage = () => {
   return (
-    <div className="flex flex-col md:flex-row  md:gap-4 p-3 md:p-4 min-h-screen">
-      <div className="flex-1">
-        <div className="mb-4">
-          <Link to="/panel/users">
-            <span className="text-yellow-600 text-[20px]  sm:text-[20px] md:text-[20px] font-bold">
-              کاربران/
-            </span>
-          </Link>
+    <div className="min-h-screen  p-3 sm:p-4 md:p-6">
+      <div className="mx-auto w-full max-w-7xl">
 
-          <span className="hover:text-[#4b33b5] text-[20px]  sm:text-[20px] md:text-[20px] font-bold">
-            جزعیات کابران
+        <div
+          className="
+            mb-5
+            flex
+            flex-wrap
+            items-center
+            gap-2
+            px-4
+            py-3
+            sm:px-5
+            sm:py-4
+          "
+        >
+        
+          <Link
+            to="/panel/users"
+            className="
+              group
+              flex
+              items-center
+              gap-1.5
+              text-sm
+              font-bold
+              text-[#c58b00]
+              transition-colors
+              duration-200
+              sm:text-base
+            "
+          >
+            <span>کاربران</span>
+
+            <FaAngleLeft
+              size={14}
+              className="
+                transition-transform
+                duration-200
+                group-hover:-translate-x-1
+              "
+            />
+          </Link>
+          <span
+            className="
+              text-sm
+              font-semibold
+              text-gray-700
+              sm:text-base
+            "
+          >
+            جزئیات کاربر
           </span>
         </div>
-        <div className="flex flex-col gap-4 ">
+
+        <div
+          className="
+            overflow-hidden
+            rounded-2xl
+            border
+            border-gray-200
+            bg-white
+            shadow-sm
+          "
+        >
           <ComponentDatailUser />
         </div>
       </div>
@@ -24,3 +78,4 @@ const DetalisUserPage = () => {
 };
 
 export default DetalisUserPage;
+

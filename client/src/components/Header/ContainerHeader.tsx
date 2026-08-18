@@ -1,4 +1,4 @@
-
+import Logo from "./Components/Logo";
 import AuthButton from "./Components/AuthButton";
 import Basket from "./Components/Basket";
 import MenuHeader from "./Components/MenuHeader";
@@ -27,10 +27,13 @@ const ContainerHeader = () => {
             justify-between
             gap-3
             sm:min-h-20
-            md:min-h-21
+            md:min-h-[84px]
           "
         >
-
+          {/* Logo */}
+          <div className="shrink-0">
+            <Logo />
+          </div>
 
 
           <div

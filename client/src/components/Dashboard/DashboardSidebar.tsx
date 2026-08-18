@@ -1,12 +1,12 @@
-import ArrowLeft from "../../../assets/imges/Arrowleft.png";
-import card from "../../../assets/imges/card-pos.png";
-import reserv from "../../../assets/imges/reserve.png";
+import { FiArrowLeft } from "react-icons/fi";
+import { FaCreditCard } from "react-icons/fa";
+import { MdOutlineEventAvailable } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { AiFillHeart } from "react-icons/ai";
 
 const Menu = [
-  { to: "reserve", label: "رزروها", icon: reserv },
-  { to: "card", label: "پرداخت", icon: card },
+  { to: "reserve", label: "رزروها", icon: <MdOutlineEventAvailable/> },
+  { to: "card", label: "پرداخت", icon: <FaCreditCard/> },
   { to: "favorite_cars", label: "علاقه مندی", icon: <AiFillHeart opacity={0.5}/> },
 ];
 const DashboardSidebar = () => {
@@ -71,11 +71,7 @@ const MenuItems = () => {
                 {item.label}
               </p>
             </div>
-            <img
-              src={ArrowLeft}
-              alt="ArrowLeft"
-              className="w-4 h-4 md:w-5 :h-5 opacity-60 group-hover:invert transition-all duration-300"
-            />
+      <FiArrowLeft/>
           </div>
         </Link>
       ))}

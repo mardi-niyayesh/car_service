@@ -319,7 +319,7 @@ const CreateCustomRolePage = () => {
             )}
 
             <Link to="description">
-              <p className="text-blue-800 mt-3 hover:text-blue-600">
+              <p className="text-blue-800 mt-3 hover:text-blue-600 font-medium text-[14px]">
                 قبل از دادن نقش، می‌توانید برای خواندن توضیحات هر نقش کلیک کنید
               </p>
             </Link>

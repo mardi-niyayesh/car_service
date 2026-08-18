@@ -1,81 +1,52 @@
 import { useState } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { FaRegCalendarAlt, FaChevronDown } from "react-icons/fa";
 
-const menuItems = [
-  {
-    id: 1,
-    label: "خانه",
-    path: "/",
-  },
-  {
-    id: 2,
-    label: "رزرو",
-
-    dropdownItems: [
-      {
-        id: 4,
-        label: "رزرو خودرو در مشهد",
-        path: "/reserve/mashhad",
-      },
-      {
-        id: 5,
-        label: "رزرو خودرو در تبریز",
-        path: "/reserve/tabriz",
-      },
-      {
-        id: 6,
-        label: "رزرو خودرو در شیراز",
-        path: "/reserve/shiraz",
-      },
-      {
-        id: 7,
-        label: "رزرو خودرو در ساری",
-        path: "/reserve/sary",
-      },
-      {
-        id: 8,
-        label: "رزرو خودرو در قشم",
-        path: "/reserve/qeshm",
-      },
-      {
-        id: 9,
-        label: "رزرو خودرو در نیشابور",
-        path: "/reserve/neyshaboor",
-      },
-      {
-        id: 10,
-        label: "رزرو خودرو در یزد",
-        path: "/reserve/yazd",
-      },
-    ],
-  },
-  {
-    id: 3,
-    label: "بلاگ",
-    path: "/blog",
-  },
-  {
-    id: 4,
-    label: "درباره ما",
-    path: "/about",
-  },
-  {
-    id: 5,
-    label: "تماس ما",
-    path: "/contact",
-  },
-];
+import { useCategories } from "../../../hooks/useCategories";
 
 const MenuHeader = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [isReserveOpen, setIsReserveOpen] = useState(false);
 
-  const isActive = (path) => {
+  const { categories, loading } = useCategories();
+
+  const menuItems = [
+    {
+      id: 1,
+      name: "خانه",
+      label: "خانه",
+      path: "/",
+    },
+    {
+      id: 2,
+      name: "رزرو",
+      label: "رزرو",
+      categories: true,
+    },
+    {
+      id: 3,
+      name: "بلاگ",
+      label: "بلاگ",
+      path: "/blog",
+    },
+    {
+      id: 4,
+      name: "درباره ما",
+      label: "درباره ما",
+      path: "/about",
+    },
+    {
+      id: 5,
+      name: "تماس با ما",
+      label: "تماس با ما",
+      path: "/contact",
+    },
+  ];
+
+  const isActive = (path: string) => {
     if (path === "/") {
       return location.pathname === "/";
     }
@@ -83,15 +54,20 @@ const MenuHeader = () => {
     return location.pathname.startsWith(path);
   };
 
+  const handleCategoryClick = (slug: string) => {
+    navigate(`/category/${slug}`);
+    setIsReserveOpen(false);
+  };
+
   return (
     <>
-      <nav className="hidden md:block w-full bg-white">
+      <nav className="hidden w-full bg-white md:block">
         <div className="container mx-auto px-4">
-          <ul className="flex items-center justify-staet gap-2 lg:gap-4">
+          <ul className="flex items-center justify-start gap-2 lg:gap-4">
             {menuItems.map((item) => {
               const active = item.path ? isActive(item.path) : false;
 
-              if (item.dropdownItems) {
+              if (item.categories) {
                 return (
                   <li
                     key={item.id}
@@ -123,7 +99,7 @@ const MenuHeader = () => {
                     >
                       <FaRegCalendarAlt className="text-base" />
 
-                      <span>{item.label}</span>
+                      <span>{item.name}</span>
 
                       <motion.span
                         animate={{
@@ -188,47 +164,72 @@ const MenuHeader = () => {
                             shadow-xl
                           "
                         >
-                          {item.dropdownItems.map((option, index) => (
-                            <motion.button
-                              key={option.id}
-                              type="button"
-                              initial={{
-                                opacity: 0,
-                                x: 8,
-                              }}
-                              animate={{
-                                opacity: 1,
-                                x: 0,
-                              }}
-                              transition={{
-                                duration: 0.2,
-                                delay: index * 0.025,
-                              }}
-                              onClick={() => {
-                                navigate(option.path);
-                                setIsReserveOpen(false);
-                              }}
-                              className="
-                                 flex
-  w-full
-  items-center
-  rounded-xl
-  px-4
-  py-3
-  text-right
-  text-sm
-  font-semibold
-  text-gray-700
-  transition-all
-  duration-200
-  hover:bg-[#FDB713]/10
-  hover:pr-5
-  hover:text-[#c58b00]
-                              "
-                            >
-                              {option.label}
-                            </motion.button>
-                          ))}
+                          <div
+                            className="
+                              mb-1
+                              px-3
+                              py-2
+                              text-right
+                              text-xs
+                              font-bold
+                              text-gray-400
+                            "
+                          >
+                            انتخاب دسته‌بندی
+                          </div>
+
+                          <div className="max-h-[320px] overflow-y-auto">
+                            {loading ? (
+                              <div className="px-4 py-3 text-right text-sm text-gray-400">
+                                در حال دریافت دسته‌بندی‌ها...
+                              </div>
+                            ) : categories.length > 0 ? (
+                              categories.map((category, index) => (
+                                <motion.button
+                                  key={category.id}
+                                  type="button"
+                                  initial={{
+                                    opacity: 0,
+                                    x: 8,
+                                  }}
+                                  animate={{
+                                    opacity: 1,
+                                    x: 0,
+                                  }}
+                                  transition={{
+                                    duration: 0.2,
+                                    delay: index * 0.025,
+                                  }}
+                                  onClick={() =>
+                                    handleCategoryClick(category.slug)
+                                  }
+                                  className="
+                                    flex
+                                    w-full
+                                    items-center
+                                    rounded-xl
+                                    px-4
+                                    py-3
+                                    text-right
+                                    text-sm
+                                    font-semibold
+                                    text-gray-700
+                                    transition-all
+                                    duration-200
+                                    hover:bg-[#FDB713]/10
+                                    hover:pr-5
+                                    hover:text-[#c58b00]
+                                  "
+                                >
+                                  {category.name}
+                                </motion.button>
+                              ))
+                            ) : (
+                              <div className="px-4 py-3 text-right text-sm text-gray-400">
+                                دسته‌بندی‌ای وجود ندارد
+                              </div>
+                            )}
+                          </div>
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -259,8 +260,6 @@ const MenuHeader = () => {
                       }
                     `}
                   >
-                
-
                     <span>{item.label}</span>
 
                     {active && (
@@ -320,11 +319,18 @@ const MenuHeader = () => {
         {menuItems.map((item) => {
           const active = item.path ? isActive(item.path) : false;
 
-          if (item.dropdownItems) {
+          if (item.categories) {
             return (
               <div
                 key={item.id}
-                className="relative flex h-full w-1/5 items-center justify-center"
+                className="
+                  relative
+                  flex
+                  h-full
+                  w-1/5
+                  items-center
+                  justify-center
+                "
               >
                 <motion.button
                   type="button"
@@ -405,6 +411,7 @@ const MenuHeader = () => {
                         z-50
                         w-60
                         translate-x-1/2
+                        overflow-hidden
                         rounded-2xl
                         border
                         border-gray-100
@@ -413,47 +420,68 @@ const MenuHeader = () => {
                         shadow-2xl
                       "
                     >
-                      <div className="mb-1 px-3 py-2 text-right text-xs font-bold text-gray-400">
-                        انتخاب شهر
+                      <div
+                        className="
+                          mb-1
+                          px-3
+                          py-2
+                          text-right
+                          text-xs
+                          font-bold
+                          text-gray-400
+                        "
+                      >
+                        انتخاب دسته‌بندی
                       </div>
 
                       <div className="max-h-[300px] overflow-y-auto">
-                        {item.dropdownItems.map((option, index) => (
-                          <motion.button
-                            key={option.id}
-                            type="button"
-                            initial={{
-                              opacity: 0,
-                              y: 5,
-                            }}
-                            animate={{
-                              opacity: 1,
-                              y: 0,
-                            }}
-                            transition={{
-                              delay: index * 0.025,
-                            }}
-                            onClick={() => {
-                              navigate(option.path);
-                              setIsReserveOpen(false);
-                            }}
-                            className="
-                              w-full
-                              rounded-xl
-                              px-3
-                              py-2.5
-                              text-right
-                              text-xs
-                              text-gray-600
-                              transition-colors
-                              duration-200
-                              hover:bg-[#FDB713]/10
-                              hover:text-[#c58b00]
-                            "
-                          >
-                            {option.label}
-                          </motion.button>
-                        ))}
+                        {loading ? (
+                          <div className="px-3 py-3 text-right text-xs text-gray-400">
+                            در حال دریافت...
+                          </div>
+                        ) : categories.length > 0 ? (
+                          categories.map((category, index) => (
+                            <motion.button
+                              key={category.id}
+                              type="button"
+                              initial={{
+                                opacity: 0,
+                                y: 5,
+                              }}
+                              animate={{
+                                opacity: 1,
+                                y: 0,
+                              }}
+                              transition={{
+                                duration: 0.2,
+                                delay: index * 0.025,
+                              }}
+                              onClick={() => handleCategoryClick(category.slug)}
+                              className="
+                                flex
+                                w-full
+                                items-center
+                                rounded-xl
+                                px-3
+                                py-2.5
+                                text-right
+                                text-xs
+                                font-semibold
+                                text-gray-600
+                                transition-all
+                                duration-200
+                                hover:bg-[#FDB713]/10
+                                hover:text-[#c58b00]
+                              "
+                            >
+                              {category.name}
+                            </motion.button>
+                          ))
+                        ) : (
+                          <div className="px-3 py-3 text-right text-xs text-gray-400">
+                            دسته‌بندی‌ای وجود ندارد
+                          </div>
+                        )}
                       </div>
                     </motion.div>
                   )}
@@ -468,7 +496,14 @@ const MenuHeader = () => {
               whileTap={{
                 scale: 0.9,
               }}
-              className="relative flex h-full w-1/5 items-center justify-center"
+              className="
+                relative
+                flex
+                h-full
+                w-1/5
+                items-center
+                justify-center
+              "
             >
               <Link
                 to={item.path}
@@ -506,7 +541,7 @@ const MenuHeader = () => {
                     className="
                       absolute
                       bottom-1
-                      h-0.75
+                      h-[3px]
                       w-8
                       rounded-full
                       bg-[#FDB713]
