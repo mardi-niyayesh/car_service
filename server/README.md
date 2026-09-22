@@ -28,7 +28,7 @@ maintainability, and fully standardized API responses.
 
 | Tech           | Version | Description                   |
 |----------------|---------|-------------------------------|
-| **typescript** | ^5.7.3  | Schema validation             |
+| **typescript** | ^5.7.3  | Type-safe JavaScript          |
 | **nestjs**     | ^11.0.1 | NestJS core utilities         |
 | **postgreSQL** | ^16.11  | Modern Database               |
 | **pg**         | ^8.18.0 | PostgreSQL driver             |
