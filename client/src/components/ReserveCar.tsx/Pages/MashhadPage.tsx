@@ -1,5 +1,5 @@
 import ReserveComponent from "../ReserveComponent";
-import DesCar from "../DesCar";
+
 import Maddhad from "../../../../assets/imges/mashhad-2.png";
 
 const MashhadPage = () => {
@@ -14,7 +14,7 @@ const MashhadPage = () => {
          SUV با بهترین قیمت و شرایط آسان در اختیار شما قرار دارد."
       />
 
-      <DesCar />
+      
     </div>
   );
 };

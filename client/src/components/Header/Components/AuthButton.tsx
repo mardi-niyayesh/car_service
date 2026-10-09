@@ -1,36 +1,102 @@
 import { Link } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 
-const AuthButton = () => {
+type AuthButtonProps = {
+  isLoggedIn?: boolean;
+  userName?: string;
+};
+
+const AuthButton = ({
+  isLoggedIn = false,
+  userName = "",
+}: AuthButtonProps) => {
   return (
     <Link
-      to="/login"
-      className="inline-flex items-center justify-center gap-2
-                 px-3 py-3 sm:px-3 md:px-5
-                 rounded-full md:rounded-lg
-                 bg-[#FDB713]                 
-                 text-white
-                 hover:bg-yellow-600             
-                 transition-all duration-300 ease-in-out
-                 border border-yellow-500/30   
-                 md:border-0                   
-                 hover:scale-105 md:hover:scale-100
-                 active:scale-95
-                 group"
+      to={isLoggedIn ? "/profile" : "/login"}
+      className="
+        group
+        inline-flex
+        min-w-0
+        max-w-full
+        items-center
+        justify-center
+        gap-2
+
+        rounded-full
+        border
+        border-[#FDB713]/40
+        bg-[#FDB713]
+
+        px-3
+        py-2.5
+        sm:px-4
+        md:rounded-xl
+        md:px-5
+        md:py-3
+
+        text-white
+
+        shadow-sm
+        transition-all
+        duration-300
+        ease-out
+
+        hover:-translate-y-0.5
+        hover:bg-[#E5A500]
+        hover:shadow-md
+
+        active:translate-y-0
+        active:scale-[0.98]
+      "
     >
       <FaUser
-        size={18}
-        className="text-white
-                   transition-transform duration-300
-                   group-hover:scale-110"
+        size={17}
+        className="
+          shrink-0
+          text-white
+          transition-transform
+          duration-300
+          ease-out
+          group-hover:scale-110
+        "
       />
-      <span className="hidden md:inline font-medium text-sm lg:text-base">
-        ورود | ثبت نام
-      </span>
+
+      {isLoggedIn ? (
+        <span
+          className="
+            min-w-0
+            max-w-[90px]
+            truncate
+
+            text-xs
+            font-semibold
+
+            sm:max-w-[130px]
+            sm:text-sm
+
+            md:max-w-[180px]
+            md:text-base
+          "
+          title={userName}
+        >
+          {userName}
+        </span>
+      ) : (
+        <span
+          className="
+            hidden
+            font-semibold
+            md:inline
+            text-sm
+            lg:text-base
+            whitespace-nowrap
+          "
+        >
+          ورود | ثبت نام
+        </span>
+      )}
     </Link>
   );
 };
 
 export default AuthButton;
-
-

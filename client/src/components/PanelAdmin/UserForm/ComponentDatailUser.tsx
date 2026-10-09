@@ -210,7 +210,7 @@ const ComponentDatailUser = () => {
             </div>
             <div>
               <p className=" text-gray-500 font-medium">نقش های فعلی :</p>
-              <p className="text-base text-yellow-600 font-medium">
+              <p className="text-base text-green-600 font-medium">
                 {Array.isArray(alluser.roles)
                   ? alluser.roles.join(", ")
                   : alluser.roles}

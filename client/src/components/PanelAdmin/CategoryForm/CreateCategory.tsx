@@ -25,7 +25,7 @@ const CreateCategory = () => {
         payload.description = String(data.description).trim();
       }
       const response = await axiosClient.post("/categories", payload);
-      console.log("response create:", response.data);
+      
       if (response.status === 201) {
         setSuccessMessage("دسته بندی جدید با موفقیت ساخته شد");
         setIsSuccessOpen(true);
@@ -34,7 +34,7 @@ const CreateCategory = () => {
         }, 2000);
       }
     } catch (err: any) {
-      console.error("Error create:", err.message);
+     
       if (err.response?.status === 403) {
         setWarningMessage(
           "شما دسترسی لازم برای ایجاد دسته بندی جدید را ندارید.",

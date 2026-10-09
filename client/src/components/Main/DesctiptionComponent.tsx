@@ -20,13 +20,13 @@ const DescriptionComponent: React.FC<CardType> = ({
       </p>
       <div className="text-[#353535] text-sm sm:text-base md:text-[14px] lg:text-base leading-relaxed text-justify">
         {type === "multiple_paragraphs" ? (
-          <ol>
+          <ol className='font-medium'>
             {(descriptions || []).map((text: string, index: number) => (
               <li key={index}>{text}</li>
             ))}
           </ol>
         ) : type === "single_paragraph" ? (
-          <p>{description}</p>
+        <p className='font-medium'>{description}</p>
         ) : null}
       </div>
     </div>

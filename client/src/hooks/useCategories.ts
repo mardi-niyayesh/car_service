@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axiosClient from "../services/axiosClient";
 
-type CategoryType = {
+export type CategoryType = {
   id: string;
   name: string;
   description: string;
@@ -9,7 +9,7 @@ type CategoryType = {
   category_id: string;
 };
 
-export const useCategories = (page = 1, limit = 10) => {
+export const useCategories = (page = 1, limit = 11) => {
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);

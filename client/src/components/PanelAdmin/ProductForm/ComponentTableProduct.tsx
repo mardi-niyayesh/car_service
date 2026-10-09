@@ -1,6 +1,6 @@
 import { useUser } from "../../../hooks/useUser";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { FaPencilAlt, FaRegComment } from "react-icons/fa";
+import { FaPencilAlt, FaRegComment,FaEye } from "react-icons/fa";
 import axiosClient from "../../../services/axiosClient";
 import { useState } from "react";
 import ComponentPaginat from "../../../Paginate/ComponentPaginat";
@@ -9,7 +9,7 @@ import WarningModal from "../../../Modal/WarningModal ";
 import ErrorModal from "../../../Modal/ErrorModal";
 import { useNavigate } from "react-router-dom";
 import { useProduct } from "../../../hooks/useProduct";
-import { FaEye } from "react-icons/fa";
+
 const ComponentTableProduct = () => {
   const { loading, allProduct, refetch, totalPage } = useProduct();
   const navigate = useNavigate();
@@ -58,8 +58,8 @@ const ComponentTableProduct = () => {
       }
     }
   };
-  const handleupdatProduct = async (id: string) => {
-    navigate(`updateproduct/${id}`);
+  const handleupdatProduct = async (slug: string) => {
+    navigate(`updateproduct/${slug}`);
   };
 
   const handleShowComment = async (id: string) => {
@@ -152,7 +152,7 @@ const ComponentTableProduct = () => {
                       <FaPencilAlt
                         size={16}
                         className="text-blue-400 hover:text-blue-600 transition-colors duration-200 cursor-pointer mx-auto"
-                        onClick={() => handleupdatProduct(product.id)}
+                        onClick={() => handleupdatProduct(product.slug)}
                       />
                     </td>
                   )}

@@ -1,5 +1,5 @@
 import ReserveComponent from "../ReserveComponent";
-import DesCar from "../DesCar";
+
 import qeshm from "../../../../assets/imges/qeshm-3.png";
 
 const QeshmPage = () => {
@@ -18,7 +18,7 @@ const QeshmPage = () => {
          از جاذبه‌های زیبای جزیره قشم دیدن کنید."
       />
 
-      <DesCar />
+
     </div>
   );
 };

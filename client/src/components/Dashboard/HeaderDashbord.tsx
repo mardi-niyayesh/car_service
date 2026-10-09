@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import profilUser from "../../../assets/imges/Ellipse 114.png";
-import logout from "../../../assets/imges/logout.png";
+import { FiLogOut } from "react-icons/fi";
 import { useUser } from "../../hooks/useUser";
 import { FaUser } from "react-icons/fa";
 import { HiOutlineHome } from "react-icons/hi";
@@ -15,37 +15,215 @@ const HeaderDashbord = () => {
   const isMainPanel = location.pathname === "/panel";
 
   return (
-    <div>
-      <header className="flex justify-between items-center w-full px-6 py-4 bg-white border-b border-gray-300 sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <img
-            src={profilUser}
-            alt="profilUser"
-            className="w-12 h-12 rounded-full"
-          />
-          <div className="flex-1">
-            <p className="font-bold  text-[#353535] max-w-[200px]">
-              {user?.display_name || "کاربر "}
-            </p>
-            <p className="text-[#727272] font-medium text-[14px] max-w-[200px]">
-              {user?.email || "example@email.com"}
-            </p>
+    <div className="w-full">
+      <header
+        className="
+          sticky
+          top-0
+          z-40
+          w-full
+          border-b
+          border-gray-100
+          bg-white/95
+          backdrop-blur-md
+          shadow-[0_2px_12px_rgba(0,0,0,0.04)]
+        "
+      >
+        <div
+          className="
+            mx-auto
+            flex
+            w-full
+            max-w-[1600px]
+            items-center
+            justify-between
+            gap-4
+            px-4
+            py-3
+            sm:px-6
+            sm:py-4
+            lg:px-8
+          "
+        >
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="relative shrink-0">
+              <img
+                src={profilUser}
+                alt="پروفایل کاربر"
+                className="
+                  h-10
+                  w-10
+                  rounded-full
+                  border-2
+                  border-white
+                  object-cover
+                  shadow-sm
+                  sm:h-12
+                  sm:w-12
+                "
+              />
+
+              <span
+                className="
+                  absolute
+                  bottom-0
+                  right-0
+                  h-2.5
+                  w-2.5
+                  rounded-full
+                  border-2
+                  border-white
+                  bg-green-500
+                  sm:h-3
+                  sm:w-3
+                "
+              />
+            </div>
+
+            <div className="min-w-0">
+              <p
+                className="
+                  max-w-[150px]
+                  truncate
+                  text-sm
+                  font-bold
+                  text-gray-800
+                  sm:max-w-[220px]
+                  sm:text-base
+                "
+              >
+                {user?.display_name || "کاربر"}
+              </p>
+
+              <p
+                className="
+                  mt-0.5
+                  max-w-[150px]
+                  truncate
+                  text-[11px]
+                  font-medium
+                  text-gray-400
+                  sm:max-w-[220px]
+                  sm:text-xs
+                "
+              >
+                {user?.email || "example@email.com"}
+              </p>
+            </div>
           </div>
-        </div>
-        <div className="flex items-center justify-between gap-2">
-          <Link to="logout">
-            <img
-              src={logout}
-              alt="logout"
-              className="w-5 h-5 md:w-6 md:h-5 group-hover:brightness-0 group-hover:invert transition-all duration-300"
-            />
-          </Link>
-          <Link to="Profile">
-            <FaUser style={{ opacity: 0.5, cursor: "pointer" }} size={18} />
-          </Link>
-          <Link to="/">
-            <HiOutlineHome size={22} style={{ opacity: 0.6 }} />
-          </Link>
+
+          <nav className="flex shrink-0 items-center gap-1.5 ">
+            <Link
+              to="logout"
+              aria-label="خروج"
+              className="
+                group
+                flex
+                h-9
+                w-9
+                items-center
+                justify-center
+                rounded-xl
+                border
+              
+                transition-all
+                duration-200
+              border-red-100
+                bg-red-50
+                active:scale-95
+                sm:h-10
+                sm:w-10
+              "
+            >
+              <FiLogOut
+                className="
+                  h-4
+                  w-4
+                  opacity-60
+                  transition-all
+                  duration-200
+                  group-hover:opacity-100
+                  sm:h-5
+                  sm:w-5
+                "
+              />
+            </Link>
+
+            <Link
+              to="Profile"
+              aria-label="پروفایل"
+              className="
+                group
+                flex
+                h-9
+                w-9
+                items-center
+                justify-center
+                rounded-xl
+                border
+                text-gray-500
+                transition-all
+                duration-200
+              border-[#FDB713]/30
+                bg-[#FDB713]/10
+                hover:text-[#c58b00]
+                  active:scale-90
+                  active:bg-[#FDB713]/30
+                 active:text-[#c58b00]
+                sm:h-10
+                sm:w-10
+              "
+            >
+              <FaUser
+                size={15}
+                className="
+                  opacity-60
+                  transition-opacity
+                  duration-200
+                  group-hover:opacity-100
+                  sm:text-base
+                "
+              />
+            </Link>
+
+            <Link
+              to="/"
+              aria-label="صفحه اصلی"
+              className="
+                group
+                flex
+                h-9
+                w-9
+                items-center
+                justify-center
+                rounded-xl
+                border
+               
+                text-gray-500
+                transition-all
+                duration-200
+              border-[#FDB713]/30
+              bg-[#FDB713]/10
+                hover:text-[#c58b00]
+                   active:scale-90
+                  active:bg-[#FDB713]/30
+                 active:text-[#c58b00]
+                
+                sm:h-10
+                sm:w-10
+              "
+            >
+              <HiOutlineHome
+                size={19}
+                className="
+                  opacity-60
+                  transition-opacity
+                  duration-200
+                  group-hover:opacity-100
+                "
+              />
+            </Link>
+          </nav>
         </div>
       </header>
 
