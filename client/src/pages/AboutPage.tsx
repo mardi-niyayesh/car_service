@@ -37,7 +37,7 @@ const AboutPage = () => {
             loading="eager"
             decoding="async"
             className="
-            w-full h-64
+            w-full h-64  
             "
           />
 

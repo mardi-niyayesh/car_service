@@ -3,6 +3,7 @@ import CategorySection from "./CategorySection";
 
 const CategorySections = () => {
   const { loading, categories } = useCategories();
+  console.log("category :", categories);
 
   if (loading) {
     return (
